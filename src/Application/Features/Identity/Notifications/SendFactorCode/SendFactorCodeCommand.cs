@@ -26,16 +26,19 @@ public class SendFactorCodeNotificationHandler : INotificationHandler<SendFactor
     public async Task Handle(SendFactorCodeNotification notification, CancellationToken cancellationToken)
     {
         var subject = _localizer["Your Verification Code"];
-        var sendMailResult = await _mailService.SendAsync(
+        await _mailService.SendAsync(
             notification.Email,
             subject,
             "_authenticatorcode",
             new
             {
-                notification.AuthenticatorCode, _settings.AppName, notification.Email, notification.UserName,
-                _settings.Company
+                AuthenticatorCode = notification.AuthenticatorCode, 
+                AppName = _settings.AppName, 
+                Email = notification.Email, 
+                UserName = notification.UserName,
+                Company = _settings.Company
             });
-        _logger.LogInformation("Verification Code email sent to {Email}. Authenticator Code:{AuthenticatorCode} sending result {Successful} {ErrorMessages}",
-            notification.Email, notification.AuthenticatorCode,sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
+        _logger.LogInformation("Verification Code email sent to {Email}. Authenticator Code:{AuthenticatorCode}", 
+            notification.Email, notification.AuthenticatorCode);
     }
 }

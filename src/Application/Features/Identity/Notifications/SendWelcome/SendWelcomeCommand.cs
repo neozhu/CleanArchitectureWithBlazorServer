@@ -26,15 +26,18 @@ public class SendWelcomeNotificationHandler : INotificationHandler<SendWelcomeNo
     public async Task Handle(SendWelcomeNotification notification, CancellationToken cancellationToken)
     {
         var subject = string.Format(_localizer["Welcome to {0}"], _settings.AppName);
-        var sendMailResult = await _mailService.SendAsync(
+        await _mailService.SendAsync(
             notification.Email,
             subject,
             "_welcome",
             new
             {
-                notification.LoginUrl, _settings.AppName, notification.Email, notification.UserName, _settings.Company
+                LoginUrl = notification.LoginUrl, 
+                AppName = _settings.AppName, 
+                Email = notification.Email, 
+                UserName = notification.UserName, 
+                Company = _settings.Company
             });
-        _logger.LogInformation("Welcome email sent to {Email}. sending result {Successful} {ErrorMessages}",
-            notification.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
+        _logger.LogInformation("Welcome email sent to {Email}.", notification.Email);
     }
 }

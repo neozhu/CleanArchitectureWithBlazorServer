@@ -5,48 +5,76 @@
     <title>Welcome</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
         }
 
         .container {
-            background-color: #fff;
-            padding: 20px;
-            max-width: 600px;
-            margin: auto;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            padding: 40px 30px;
+            max-width: 500px;
+            margin: 20px auto;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: #000000;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+
+        p {
+            margin: 0 0 16px 0;
+            font-size: 14px;
+            color: #495057;
         }
 
         .button {
             display: inline-block;
-            background-color: #007bff;
+            background-color: #000000;
             color: #ffffff;
-            padding: 10px 20px;
+            padding: 12px 24px;
             text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            border-radius: 2px;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 20px 0;
+            text-align: center;
+            transition: background-color 0.2s ease;
         }
 
-        p {
-            line-height: 1.6;
+        .button:hover {
+            background-color: #333333;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            font-size: 13px;
+            color: #6c757d;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h2>Welcome to @Model.AppName</h2>
-        <p>Dear @Model.UserName,</p>
-        <p>Thank you for joining @Model.AppName. We're here to ensure you have the best experience.</p>
+        <h2>Welcome to {{ app_name }}</h2>
+        <p>Dear {{ user_name }},</p>
+        <p>Thank you for joining {{ app_name }}. We're here to ensure you have the best experience.</p>
         <p>You can log in to your account here:</p>
-        <a href="@Model.LoginUrl" class="button">Log In</a>
-        <p>Best wishes,<br>The @Model.Company Team</p>
+        <a href="{{ login_url }}" class="button">Log In</a>
+        <div class="footer">
+            <p>Best wishes,<br>The {{ company }} Team</p>
+        </div>
     </div>
 </body>
 </html>
