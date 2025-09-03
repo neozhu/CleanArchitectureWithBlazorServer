@@ -22,13 +22,11 @@
     }
     else
     {
-        <MudIcon Class="ml-4 mr-2"
-                 Color="Color.Primary"
-                 Icon="@Icons.Custom.Brands.MudBlazor"
-                 Size="Size.Large" />
+        <MudIcon Class="ml-4 mr-2" Color="Color.Primary" Icon="@Icons.Custom.Brands.MudBlazor" Size="Size.Large" />
     }
 
-    <MudMenu AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" LockScroll="true" Class="flex-grow-1" Disabled="!_hasSwitchPermission">
+    <MudMenu AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" LockScroll="true" Class="flex-grow-1"
+        Disabled="!_hasSwitchPermission">
         <ActivatorContent>
             <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="flex-grow-1">
                 <MudStack Spacing="0">
@@ -56,7 +54,7 @@
 
                 @if (_availableTenants != null)
                 {
-                    if(_availableTenants.Count == 0)
+                    if (_availableTenants.Count == 0)
                     {
                         <MudMenuItem Disabled="true">
                             <div class="d-flex align-center">
@@ -126,11 +124,7 @@
 
     private async Task LoadAvailableTenants()
     {
-
-      
-            _availableTenants = await TenantSwitchService.GetAvailableTenantsAsync();
-       
-
+        _availableTenants = await TenantSwitchService.GetAvailableTenantsAsync();
     }
 
     private async Task SwitchToTenant(string tenantId)

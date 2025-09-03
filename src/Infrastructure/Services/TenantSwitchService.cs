@@ -105,6 +105,9 @@ public class TenantSwitchService : ITenantSwitchService
             if (user == null || tenant == null)
                 return Result.Failure("User or tenant not found");
 
+            // Record the original tenant ID for logging
+            var originalTenantId = user.TenantId;
+
             // Get user's current role names
             var currentRoleNames = await userManager.GetRolesAsync(user);
 
@@ -206,6 +209,10 @@ public class TenantSwitchService : ITenantSwitchService
             
             // Update user claims
             await RefreshUserClaimsAsync(user, userManager);
+            
+            // Log successful tenant switch
+            _logger.LogInformation("User {UserId} ({UserName}) successfully switched from tenant {OriginalTenantId} to tenant {NewTenantId} ({TenantName})", 
+                userId, user.UserName, originalTenantId ?? "null", tenantId, tenant.Name);
             
             // Record switch result
             var result = Result.Success();
