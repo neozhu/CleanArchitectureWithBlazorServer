@@ -4,9 +4,9 @@ public enum DocumentListView
 {
     [Description("All")] All,
     [Description("My Document")] My,
-    [Description("Created Today")] TODAY,
+    [Description("CreatedAt Today")] TODAY,
 
-    [Description("Created within the last 30 days")]
+    [Description("CreatedAt within the last 30 days")]
     LAST_30_DAYS
 }
 

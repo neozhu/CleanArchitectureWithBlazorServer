@@ -36,7 +36,7 @@ public class ApplicationDbContext : IdentityDbContext<
         
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
+        builder.ApplyGlobalFilters<ISoftDelete>(s => s.DeletedAt == null);
     }
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

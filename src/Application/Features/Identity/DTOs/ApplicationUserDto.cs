@@ -54,9 +54,9 @@ public class ApplicationUserDto
     public DateTime? LastModified { get; set; }
     [Description("Last Modified By")]
     public string? LastModifiedBy { get; set; }
-    [Description("Created")]
+    [Description("CreatedAt")]
     public DateTime? Created { get; set; }
-    [Description("Created By")]
+    [Description("CreatedAt By")]
     public string? CreatedBy { get; set; }
  
     public UserProfile ToUserProfile()

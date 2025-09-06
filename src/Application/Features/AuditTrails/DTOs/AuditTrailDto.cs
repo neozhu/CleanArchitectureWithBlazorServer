@@ -14,7 +14,7 @@ public class AuditTrailDto
     [Description("User Id")] public string? UserId { get; set; }
     [Description("Audit Type")] public AuditType? AuditType { get; set; }
     [Description("Table Name")] public string? TableName { get; set; }
-    [Description("Created DateTime")] public DateTime DateTime { get; set; }
+    [Description("CreatedAt DateTime")] public DateTime DateTime { get; set; }
     [Description("Old Values")] public Dictionary<string, object?>? OldValues { get; set; }
     [Description("New Values")] public Dictionary<string, object?>? NewValues { get; set; }
     [Description("Affected Columns")] public List<string>? AffectedColumns { get; set; }

@@ -39,7 +39,7 @@ public class GetRiskSummaryStatisticsQueryHandler : IRequestHandler<GetRiskSumma
             CriticalRiskUsers = summaries.Count(x => x.RiskLevel == SecurityRiskLevel.Critical),
             AverageRiskScore = summaries.Any() ? summaries.Average(x => x.RiskScore) : 0,
             TotalRiskAnalyses = summaries.Count,
-            LastAnalysisTime = summaries.Any() ? summaries.Max(x => x.LastModified ?? x.Created) : null
+            LastAnalysisTime = summaries.Any() ? summaries.Max(x => x.LastModifiedAt ?? x.CreatedAt) : null
         };
 
         return statistics;

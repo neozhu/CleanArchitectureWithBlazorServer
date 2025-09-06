@@ -9,7 +9,7 @@ public enum LoginAuditListView
     All,
     [Description("My Login History")]
     My,
-    [Description("Created Today")]
+    [Description("CreatedAt Today")]
     TODAY,
     [Description("View of the last 30 days")]
     LAST_30_DAYS,

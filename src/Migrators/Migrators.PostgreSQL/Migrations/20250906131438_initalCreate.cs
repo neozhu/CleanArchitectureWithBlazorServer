@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class initalCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,10 +23,10 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     email = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
                     phone_number = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
                     country = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
-                    created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    created_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
-                    last_modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    created_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
+                    last_modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    last_modified_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,10 +57,10 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     value = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     text = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    created_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
-                    last_modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    created_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
+                    last_modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    last_modified_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -79,10 +79,10 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     unit = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
                     price = table.Column<decimal>(type: "numeric", nullable: false),
                     pictures = table.Column<string>(type: "text", nullable: true),
-                    created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    created_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
-                    last_modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    created_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
+                    last_modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    last_modified_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -131,10 +131,10 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: false),
                     tenant_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
                     description = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
-                    created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    created_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
-                    last_modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    created_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
+                    last_modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    last_modified_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
                     name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     normalized_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     concurrency_stamp = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
@@ -348,23 +348,23 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     url = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
                     document_type = table.Column<string>(type: "text", nullable: false),
                     tenant_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
-                    created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    created_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
-                    last_modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    created_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
+                    last_modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    last_modified_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_documents", x => x.id);
                     table.ForeignKey(
-                        name: "fk_documents_asp_net_users_created_by",
-                        column: x => x.created_by,
+                        name: "fk_documents_asp_net_users_created_by_id",
+                        column: x => x.created_by_id,
                         principalTable: "AspNetUsers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "fk_documents_asp_net_users_last_modified_by",
-                        column: x => x.last_modified_by,
+                        name: "fk_documents_asp_net_users_last_modified_by_id",
+                        column: x => x.last_modified_by_id,
                         principalTable: "AspNetUsers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -389,10 +389,10 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     region = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     provider = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     success = table.Column<bool>(type: "boolean", nullable: false),
-                    created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    created_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
-                    last_modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    created_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
+                    last_modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    last_modified_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -417,10 +417,10 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     risk_score = table.Column<int>(type: "integer", nullable: false),
                     description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     advice = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    created_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
-                    last_modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    last_modified_by = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
+                    created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    created_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true),
+                    last_modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    last_modified_by_id = table.Column<string>(type: "character varying(450)", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -491,14 +491,14 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_documents_created_by",
+                name: "ix_documents_created_by_id",
                 table: "documents",
-                column: "created_by");
+                column: "created_by_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_documents_last_modified_by",
+                name: "ix_documents_last_modified_by_id",
                 table: "documents",
-                column: "last_modified_by");
+                column: "last_modified_by_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_documents_tenant_id",

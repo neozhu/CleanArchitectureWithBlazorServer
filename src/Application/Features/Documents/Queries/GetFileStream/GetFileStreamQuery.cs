@@ -47,7 +47,7 @@ public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (st
     {
         public DocumentsQuery(string userId, string tenantId, string keyword)
         {
-            Query.Where(p => (p.CreatedBy == userId && p.IsPublic == false) || p.IsPublic == true)
+            Query.Where(p => (p.CreatedById == userId && p.IsPublic == false) || p.IsPublic == true)
                 .Where(x => x.TenantId == tenantId, !string.IsNullOrEmpty(tenantId))
                 .Where(x => x.Title!.Contains(keyword) || x.Description!.Contains(keyword),
                     !string.IsNullOrEmpty(keyword));

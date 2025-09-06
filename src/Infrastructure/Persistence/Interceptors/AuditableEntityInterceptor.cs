@@ -101,24 +101,24 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
 
     private static void SetCreationAuditInfo(IAuditableEntity entity, string userId, string tenantId, DateTime now)
     {
-        entity.CreatedBy = userId;
-        entity.Created = now;
+        entity.CreatedById = userId;
+        entity.CreatedAt = now;
         if (entity is IMustHaveTenant mustTenant && mustTenant.TenantId==null) mustTenant.TenantId = tenantId;
         if (entity is IMayHaveTenant mayTenant && mayTenant.TenantId==null) mayTenant.TenantId = tenantId;
     }
 
     private static void SetModificationAuditInfo(IAuditableEntity entity, string userId, DateTime now)
     {
-        entity.LastModifiedBy = userId;
-        entity.LastModified = now;
+        entity.LastModifiedById = userId;
+        entity.LastModifiedAt = now;
     }
 
     private static void SetDeletionAuditInfo(EntityEntry entry, string userId, DateTime now)
     {
         if (entry.Entity is ISoftDelete softDelete)
         {
-            softDelete.DeletedBy = userId;
-            softDelete.Deleted = now;
+            softDelete.DeletedById = userId;
+            softDelete.DeletedAt = now;
             entry.State = EntityState.Modified;
         }
     }

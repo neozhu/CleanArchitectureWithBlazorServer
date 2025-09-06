@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250731121111_initialCreate")]
-    partial class initialCreate
+    [Migration("20250906131438_initalCreate")]
+    partial class initalCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -103,14 +103,14 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(450)")
                         .HasColumnName("country");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("created");
+                        .HasColumnName("created_at");
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("CreatedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("created_by");
+                        .HasColumnName("created_by_id");
 
                     b.Property<string>("Description")
                         .HasMaxLength(450)
@@ -122,14 +122,14 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(450)")
                         .HasColumnName("email");
 
-                    b.Property<DateTime?>("LastModified")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_modified");
+                        .HasColumnName("last_modified_at");
 
-                    b.Property<string>("LastModifiedBy")
+                    b.Property<string>("LastModifiedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("last_modified_by");
+                        .HasColumnName("last_modified_by_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -162,14 +162,14 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(4000)")
                         .HasColumnName("content");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("created");
+                        .HasColumnName("created_at");
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("CreatedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("created_by");
+                        .HasColumnName("created_by_id");
 
                     b.Property<string>("Description")
                         .HasMaxLength(450)
@@ -185,14 +185,14 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_public");
 
-                    b.Property<DateTime?>("LastModified")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_modified");
+                        .HasColumnName("last_modified_at");
 
-                    b.Property<string>("LastModifiedBy")
+                    b.Property<string>("LastModifiedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("last_modified_by");
+                        .HasColumnName("last_modified_by_id");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer")
@@ -216,11 +216,11 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.HasKey("Id")
                         .HasName("pk_documents");
 
-                    b.HasIndex("CreatedBy")
-                        .HasDatabaseName("ix_documents_created_by");
+                    b.HasIndex("CreatedById")
+                        .HasDatabaseName("ix_documents_created_by_id");
 
-                    b.HasIndex("LastModifiedBy")
-                        .HasDatabaseName("ix_documents_last_modified_by");
+                    b.HasIndex("LastModifiedById")
+                        .HasDatabaseName("ix_documents_last_modified_by_id");
 
                     b.HasIndex("TenantId")
                         .HasDatabaseName("ix_documents_tenant_id");
@@ -237,28 +237,28 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("created");
+                        .HasColumnName("created_at");
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("CreatedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("created_by");
+                        .HasColumnName("created_by_id");
 
                     b.Property<string>("Description")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("description");
 
-                    b.Property<DateTime?>("LastModified")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_modified");
+                        .HasColumnName("last_modified_at");
 
-                    b.Property<string>("LastModifiedBy")
+                    b.Property<string>("LastModifiedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("last_modified_by");
+                        .HasColumnName("last_modified_by_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -300,28 +300,28 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(450)")
                         .HasColumnName("brand");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("created");
+                        .HasColumnName("created_at");
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("CreatedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("created_by");
+                        .HasColumnName("created_by_id");
 
                     b.Property<string>("Description")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
                         .HasColumnName("description");
 
-                    b.Property<DateTime?>("LastModified")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_modified");
+                        .HasColumnName("last_modified_at");
 
-                    b.Property<string>("LastModifiedBy")
+                    b.Property<string>("LastModifiedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("last_modified_by");
+                        .HasColumnName("last_modified_by_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -459,28 +459,28 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(450)")
                         .HasColumnName("concurrency_stamp");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("created");
+                        .HasColumnName("created_at");
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("CreatedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("created_by");
+                        .HasColumnName("created_by_id");
 
                     b.Property<string>("Description")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
                         .HasColumnName("description");
 
-                    b.Property<DateTime?>("LastModified")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_modified");
+                        .HasColumnName("last_modified_at");
 
-                    b.Property<string>("LastModifiedBy")
+                    b.Property<string>("LastModifiedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("last_modified_by");
+                        .HasColumnName("last_modified_by_id");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -839,28 +839,28 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(1000)")
                         .HasColumnName("browser_info");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("created");
+                        .HasColumnName("created_at");
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("CreatedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("created_by");
+                        .HasColumnName("created_by_id");
 
                     b.Property<string>("IpAddress")
                         .HasMaxLength(45)
                         .HasColumnType("character varying(45)")
                         .HasColumnName("ip_address");
 
-                    b.Property<DateTime?>("LastModified")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_modified");
+                        .HasColumnName("last_modified_at");
 
-                    b.Property<string>("LastModifiedBy")
+                    b.Property<string>("LastModifiedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("last_modified_by");
+                        .HasColumnName("last_modified_by_id");
 
                     b.Property<DateTime>("LoginTimeUtc")
                         .HasColumnType("timestamp without time zone")
@@ -922,28 +922,28 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(1000)")
                         .HasColumnName("advice");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("created");
+                        .HasColumnName("created_at");
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("CreatedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("created_by");
+                        .HasColumnName("created_by_id");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)")
                         .HasColumnName("description");
 
-                    b.Property<DateTime?>("LastModified")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_modified");
+                        .HasColumnName("last_modified_at");
 
-                    b.Property<string>("LastModifiedBy")
+                    b.Property<string>("LastModifiedById")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
-                        .HasColumnName("last_modified_by");
+                        .HasColumnName("last_modified_by_id");
 
                     b.Property<string>("RiskLevel")
                         .IsRequired()
@@ -1018,15 +1018,15 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                 {
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "CreatedByUser")
                         .WithMany()
-                        .HasForeignKey("CreatedBy")
+                        .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_documents_asp_net_users_created_by");
+                        .HasConstraintName("fk_documents_asp_net_users_created_by_id");
 
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifiedByUser")
                         .WithMany()
-                        .HasForeignKey("LastModifiedBy")
+                        .HasForeignKey("LastModifiedById")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_documents_asp_net_users_last_modified_by");
+                        .HasConstraintName("fk_documents_asp_net_users_last_modified_by_id");
 
                     b.HasOne("CleanArchitecture.Blazor.Domain.Entities.Tenant", "Tenant")
                         .WithMany()

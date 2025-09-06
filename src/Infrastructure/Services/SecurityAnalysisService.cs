@@ -367,7 +367,7 @@ public class SecurityAnalysisService : ISecurityAnalysisService
                 existingSummary.RiskScore = analysisResult.RiskScore;
                 existingSummary.Description = description;
                 existingSummary.Advice = advice;
-                existingSummary.LastModified = DateTime.UtcNow;
+                existingSummary.LastModifiedAt = DateTime.UtcNow;
             }
         }
         else

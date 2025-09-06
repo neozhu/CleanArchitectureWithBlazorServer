@@ -15,11 +15,11 @@ public class DocumentConfiguration : IEntityTypeConfiguration<Document>
         builder.Ignore(e => e.DomainEvents);
         builder.HasOne(x => x.CreatedByUser)
             .WithMany()
-            .HasForeignKey(x => x.CreatedBy)
+            .HasForeignKey(x => x.CreatedById)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(x => x.LastModifiedByUser)
             .WithMany()
-            .HasForeignKey(x => x.LastModifiedBy)
+            .HasForeignKey(x => x.LastModifiedById)
             .OnDelete(DeleteBehavior.Restrict);
         builder.Navigation(e => e.CreatedByUser).AutoInclude();
         builder.Navigation(e => e.LastModifiedByUser).AutoInclude();

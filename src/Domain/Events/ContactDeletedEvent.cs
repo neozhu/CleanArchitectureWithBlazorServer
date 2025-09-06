@@ -5,7 +5,7 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-08
+//     CreatedAt Date: 2024-11-08
 //     Last Modified: 2024-11-08
 //     Description: 
 //       Represents a domain event that occurs when a new contact is deleted.

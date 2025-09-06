@@ -5,7 +5,7 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2025-07-18
+//     CreatedAt Date: 2025-07-18
 //     Last Modified: 2025-07-18
 //     Description: 
 //       Defines the available views for filtering contacts and provides advanced 
@@ -28,9 +28,9 @@ public enum ContactListView
     All,
     [Description("My")]
     My,
-    [Description("Created Toady")]
+    [Description("CreatedAt Toady")]
     TODAY,
-    [Description("Created within the last 30 days")]
+    [Description("CreatedAt within the last 30 days")]
     LAST_30_DAYS
 }
 /// <summary>

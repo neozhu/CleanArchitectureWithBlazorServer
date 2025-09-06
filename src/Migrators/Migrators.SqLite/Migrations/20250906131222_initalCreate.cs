@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class initalCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,10 +22,10 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     Email = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     Country = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,10 +56,10 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     Value = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
                     Text = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     Description = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -78,10 +78,10 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     Unit = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     Price = table.Column<decimal>(type: "TEXT", nullable: false),
                     Pictures = table.Column<string>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -130,10 +130,10 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     Id = table.Column<string>(type: "TEXT", maxLength: 450, nullable: false),
                     TenantId = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     Description = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
@@ -347,23 +347,23 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     URL = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     DocumentType = table.Column<string>(type: "TEXT", nullable: false),
                     TenantId = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Documents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Documents_AspNetUsers_CreatedBy",
-                        column: x => x.CreatedBy,
+                        name: "FK_Documents_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Documents_AspNetUsers_LastModifiedBy",
-                        column: x => x.LastModifiedBy,
+                        name: "FK_Documents_AspNetUsers_LastModifiedById",
+                        column: x => x.LastModifiedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -388,10 +388,10 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     Region = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     Provider = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     Success = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -416,10 +416,10 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     RiskScore = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
                     Advice = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedById = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -490,14 +490,14 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Documents_CreatedBy",
+                name: "IX_Documents_CreatedById",
                 table: "Documents",
-                column: "CreatedBy");
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Documents_LastModifiedBy",
+                name: "IX_Documents_LastModifiedById",
                 table: "Documents",
-                column: "LastModifiedBy");
+                column: "LastModifiedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Documents_TenantId",

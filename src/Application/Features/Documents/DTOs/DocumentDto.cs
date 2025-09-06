@@ -18,7 +18,7 @@ public class DocumentDto
     [Description("Tenant Name")] public string? TenantName { get; set; }
     [Description("Status")] public JobStatus Status { get; set; } = JobStatus.NotStart;
     [Description("Content")] public string? Content { get; set; }
-    [Description("Created By User")] public ApplicationUserDto? CreatedByUser { get; set; }
+    [Description("CreatedAt By User")] public ApplicationUserDto? CreatedByUser { get; set; }
     private class Mapping : Profile
     {
         public Mapping()
