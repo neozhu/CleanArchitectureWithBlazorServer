@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Application.Common.Constants.Roles;
-using CleanArchitecture.Blazor.Application.Common.Constants.User;
+using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Domain.Identity;
 
@@ -101,8 +99,8 @@ public class ApplicationDbContextInitializer
 
     private async Task SeedRolesAsync()
     {
-        var adminRoleName = RoleName.Admin;
-        var userRoleName = RoleName.Basic;
+        var adminRoleName = Roles.Admin;
+        var userRoleName = Roles.Basic;
 
         if (await _roleManager.RoleExistsAsync(adminRoleName)) return;
 
@@ -142,11 +140,11 @@ public class ApplicationDbContextInitializer
         _logger.LogInformation("Seeding users...");
         var adminUser = new ApplicationUser
         {
-            UserName = UserName.Administrator,
+            UserName = Users.Administrator,
             Provider = "Local",
             IsActive = true,
             TenantId = (await _context.Tenants.FirstAsync()).Id,
-            DisplayName = UserName.Administrator,
+            DisplayName = Users.Administrator,
             Email = "admin@example.com",
             EmailConfirmed = true,
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80",
@@ -157,11 +155,11 @@ public class ApplicationDbContextInitializer
 
         var demoUser = new ApplicationUser
         {
-            UserName = UserName.Demo,
+            UserName = Users.Demo,
             IsActive = true,
             Provider = "Local",
             TenantId = (await _context.Tenants.FirstAsync()).Id,
-            DisplayName = UserName.Demo,
+            DisplayName = Users.Demo,
             Email = "demo@example.com",
             EmailConfirmed = true,
             LanguageCode = "de-DE",
@@ -169,11 +167,11 @@ public class ApplicationDbContextInitializer
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80"
         };
 
-        await _userManager.CreateAsync(adminUser, UserName.DefaultPassword);
-        await _userManager.AddToRoleAsync(adminUser, RoleName.Admin);
+        await _userManager.CreateAsync(adminUser, Users.DefaultPassword);
+        await _userManager.AddToRoleAsync(adminUser, Roles.Admin);
 
-        await _userManager.CreateAsync(demoUser, UserName.DefaultPassword);
-        await _userManager.AddToRoleAsync(demoUser, RoleName.Basic);
+        await _userManager.CreateAsync(demoUser, Users.DefaultPassword);
+        await _userManager.AddToRoleAsync(demoUser, Roles.Basic);
     }
 
     private async Task SeedDataAsync()

@@ -94,7 +94,7 @@
 
         StackTrace = Exception.StackTrace;
         var sanitizedUri = Navigation.Uri.Replace("\n", "").Replace("\r", "");
-        Logger.LogError(Exception, "{Message}. request url: {@url} {@UserName}", Message, sanitizedUri, userName);
+        Logger.LogError(Exception, "{Message}. request url: {@url} {@Users}", Message, sanitizedUri, userName);
     }
 
     private void OnRefresh()

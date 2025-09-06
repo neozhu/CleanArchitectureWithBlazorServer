@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Application.Common.Constants.Cache;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Constants;
 
 /// <summary>
 /// Provides constants for user-related cache keys.

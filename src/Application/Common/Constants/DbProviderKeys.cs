@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Application.Common.Constants.Database;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Constants;
 
 public class DbProviderKeys
 {

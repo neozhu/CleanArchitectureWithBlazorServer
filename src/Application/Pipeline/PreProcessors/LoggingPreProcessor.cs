@@ -20,7 +20,7 @@ public class LoggingPreProcessor<TRequest> : IRequestPreProcessor<TRequest> wher
     {
         var requestName = nameof(TRequest);
         var userName = _userContextAccessor.Current?.UserName;
-        _logger.LogTrace("Processing request of type {RequestName} with details {@Request} by user {UserName}",
+        _logger.LogTrace("Processing request of type {RequestName} with details {@Request} by user {Users}",
          requestName, request, userName);
         return Task.CompletedTask;
     }

@@ -29,7 +29,7 @@ public class GlobalExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<T
             var requestName = typeof(TRequest).Name;
             var userName = _userContextAccessor.Current?.UserName;
             _logger.LogError(ex,
-                "Request: {RequestName} by User: {UserName} failed. Error: {ErrorMessage}. Request Details: {@Request}",
+                "Request: {RequestName} by User: {Users} failed. Error: {ErrorMessage}. Request Details: {@Request}",
                 requestName,
                 userName,
                 ex.Message,

@@ -15,8 +15,6 @@
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Roles.Components
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
 @using System.Linq.Expressions
-@using CleanArchitecture.Blazor.Application.Common.Constants.Roles
-@using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes
 @using System.Security.Claims
 @using System.Globalization
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
@@ -410,7 +408,7 @@
 
         Snackbar.Add(Localizer["New user created successfully"], Severity.Info);
         await AssignRolesToUserAsync(newUser, model.AssignedRoles);
-        Logger.LogInformation("User created: {UserName} (ID: {UserId})", newUser.UserName, newUser.Id);
+        Logger.LogInformation("User created: {Users} (ID: {UserId})", newUser.UserName, newUser.Id);
         await UserService.RefreshAsync();
         await RefreshDataGrid();
     }
@@ -515,7 +513,7 @@
         var result = await _userManager.DeleteAsync(user);
         if (result.Succeeded)
         {
-            Logger.LogInformation("User deleted: {UserName} (ID: {UserId})", user.UserName, user.Id);
+            Logger.LogInformation("User deleted: {Users} (ID: {UserId})", user.UserName, user.Id);
             Snackbar.Add(ConstantString.DeleteSuccess, Severity.Info);
             await RefreshDataGrid();
             await UserService.RefreshAsync();
@@ -551,7 +549,7 @@
                 Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
                 return;
             }
-            Logger.LogInformation("User deleted: {UserName} (ID: {UserId})", user.UserName, user.Id);
+            Logger.LogInformation("User deleted: {Users} (ID: {UserId})", user.UserName, user.Id);
         }
         Snackbar.Add(ConstantString.DeleteSuccess, Severity.Info);
         await RefreshDataGrid();
@@ -573,7 +571,7 @@
             new Dictionary<string, object?> { ["userId"] = model.Id, ["code"] = code, ["returnUrl"] = "/" });
         await Mediator.Publish(new UserActivationNotification(callbackUrl, model.Email, model.Id, model.UserName));
         Snackbar.Add(string.Format(Localizer["Verification email sent to {0}"], model.Email), Severity.Info);
-        Logger.LogInformation("Verification email sent to {UserName} (ID: {UserId})", model.UserName, model.Id);
+        Logger.LogInformation("Verification email sent to {Users} (ID: {UserId})", model.UserName, model.Id);
     }
 
     private async Task SendResetPasswordEmail(ApplicationUserDto model)
@@ -768,7 +766,7 @@
         try
         {
             using var stream = new MemoryStream();
-            await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
+            await file.OpenReadStream(GlobalVariables.MaxAllowedSize).CopyToAsync(stream);
             var importResult = await ImportUsersFromExcelAsync(stream);
             if (importResult?.Succeeded == true)
             {
@@ -812,7 +810,7 @@
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRolesAsync(user, new[] { RoleName.Basic });
+                    await _userManager.AddToRolesAsync(user, new[] { Roles.Basic });
                 }
                 else
                 {
@@ -833,7 +831,7 @@
             new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
         await Mediator.Publish(new SendWelcomeNotification(callbackUrl, email, userName));
-        Logger.LogInformation("User {UserName} activated successfully!", userName);
+        Logger.LogInformation("User {Users} activated successfully!", userName);
     }
 
     #endregion

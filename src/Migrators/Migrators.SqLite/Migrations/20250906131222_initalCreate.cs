@@ -549,7 +549,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UserLoginRiskSummaries_UserName",
                 table: "UserLoginRiskSummaries",
-                column: "UserName");
+                column: "Users");
         }
 
         /// <inheritdoc />

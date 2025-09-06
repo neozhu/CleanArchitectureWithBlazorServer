@@ -10,7 +10,7 @@
 @inject IValidationService Validator
 @inject IUploadService UploadService
 @inject ITenantService TenantsService
-@inject IStringLocalizer<Users> L
+@inject IStringLocalizer<Identity.Users.Users> L
 
 <MudForm Model="@Model" @ref="_form" Validation="@Validator.ValidateValue(Model)">
     <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden" />
@@ -148,7 +148,7 @@
     private async Task UploadPhoto(IBrowserFile file)
     {
         using var ms = new MemoryStream();
-        await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(ms);
+        await file.OpenReadStream(GlobalVariables.MaxAllowedSize).CopyToAsync(ms);
         var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(ms,128,128,80);
         var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, resizedStream.ToArray(), overwrite: true, Model.Id);
         Model.ProfilePictureDataUrl = await UploadService.UploadAsync(uploadRequest);

@@ -4,10 +4,10 @@ using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Blazor.Application.Common.Constants.Cache;
 using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 using Microsoft.AspNetCore.Identity;
 using ZiggyCreatures.Caching.Fusion;
+using CleanArchitecture.Blazor.Application.Common.Constants;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Identity;
 

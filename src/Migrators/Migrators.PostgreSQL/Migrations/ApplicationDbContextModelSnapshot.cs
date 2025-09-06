@@ -403,7 +403,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("time_stamp");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
                         .HasColumnName("user_name");
@@ -678,7 +678,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("two_factor_enabled");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
                         .HasColumnName("user_name");
@@ -883,7 +883,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(450)")
                         .HasColumnName("user_id");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
@@ -957,7 +957,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(450)")
                         .HasColumnName("user_id");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
@@ -969,7 +969,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_user_login_risk_summaries_user_id");
 
-                    b.HasIndex("UserName")
+                    b.HasIndex("Users")
                         .HasDatabaseName("ix_user_login_risk_summaries_user_name");
 
                     b.ToTable("user_login_risk_summaries", (string)null);

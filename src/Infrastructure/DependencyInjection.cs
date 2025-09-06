@@ -6,9 +6,6 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
-using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Application.Common.Constants.Database;
-using CleanArchitecture.Blazor.Application.Common.Constants.User;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
@@ -21,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Http;
+using CleanArchitecture.Blazor.Application.Common.Constants;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 public static class DependencyInjection
@@ -270,7 +268,7 @@ public static class DependencyInjection
             .AddScoped<IUserProfileState, UserProfileState>()
             .AddAuthorizationCore(options =>
             {
-                options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));
+                options.AddPolicy("CanPurge", policy => policy.RequireUserName(Users.Administrator));
                 // Here I stored necessary permissions/roles in a constant
                 foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c =>
                              c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))

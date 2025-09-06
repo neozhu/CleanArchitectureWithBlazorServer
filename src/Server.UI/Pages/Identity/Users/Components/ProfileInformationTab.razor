@@ -243,7 +243,7 @@ else
     {
         if (ProfileModel == null) return;
         
-        using var fileStream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
+        using var fileStream = file.OpenReadStream(GlobalVariables.MaxAllowedSize);
         using var memoryStream = new MemoryStream();
         await fileStream.CopyToAsync(memoryStream);
         byte[] fileData = memoryStream.ToArray();

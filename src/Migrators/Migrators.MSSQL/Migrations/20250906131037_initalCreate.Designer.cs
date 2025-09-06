@@ -332,7 +332,7 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
@@ -553,7 +553,7 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -721,7 +721,7 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -780,7 +780,7 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -789,7 +789,7 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserName");
+                    b.HasIndex("Users");
 
                     b.ToTable("UserLoginRiskSummaries");
                 });

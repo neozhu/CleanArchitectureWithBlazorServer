@@ -409,7 +409,7 @@
     {
         _uploading = true;
         var stream = new MemoryStream();
-        await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
+        await file.OpenReadStream(GlobalVariables.MaxAllowedSize).CopyToAsync(stream);
         var command = new ImportProductsCommand(file.Name, stream.ToArray());
         var result = await Mediator.Send(command);
         if (result.Succeeded)

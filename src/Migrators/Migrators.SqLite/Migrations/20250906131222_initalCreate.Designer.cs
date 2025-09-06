@@ -314,7 +314,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
@@ -532,7 +532,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
@@ -695,7 +695,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -752,7 +752,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Users")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -761,7 +761,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserName");
+                    b.HasIndex("Users");
 
                     b.ToTable("UserLoginRiskSummaries");
                 });

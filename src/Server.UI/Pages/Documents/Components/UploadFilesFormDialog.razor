@@ -85,7 +85,7 @@
             {
                 foreach (var file in files)
                 {
-                    using (var stream = file.OpenReadStream(GlobalVariable.MaxAllowedSize))
+                    using (var stream = file.OpenReadStream(GlobalVariables.MaxAllowedSize))
                     {
                         while (true)
                         {
@@ -146,7 +146,7 @@
                 {
                     try
                     {
-                        var filestream = uploaded.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
+                        var filestream = uploaded.File.OpenReadStream(GlobalVariables.MaxAllowedSize);
                         var imgStream = new MemoryStream();
                         await filestream.CopyToAsync(imgStream);
                         imgStream.Position = 0;

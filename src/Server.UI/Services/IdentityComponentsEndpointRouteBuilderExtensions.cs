@@ -1,13 +1,13 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
 using CleanArchitecture.Blazor.Domain.Identity;
-using CleanArchitecture.Blazor.Application.Common.Constants.Roles;
 using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using CleanArchitecture.Blazor.Application.Common.Constants;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
@@ -320,17 +320,17 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                             false);
                 if (result.Succeeded)
                 {
-                    logger.LogInformation("User {UserName} logged in with external provider {Provider}.", info.Principal.Identity?.Name, info.LoginProvider);
+                    logger.LogInformation("User {Users} logged in with external provider {Provider}.", info.Principal.Identity?.Name, info.LoginProvider);
                     return Results.Redirect(string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl);
                 }
                 else if (result.IsLockedOut)
                 {
-                    logger.LogWarning("User {UserName} is locked out.", info.Principal.Identity?.Name);
+                    logger.LogWarning("User {Users} is locked out.", info.Principal.Identity?.Name);
                     return Results.Redirect("/account/lockout");
                 }
                 else if (result.IsNotAllowed)
                 {
-                    logger.LogWarning("User {UserName} is not allowed to log in.", info.Principal.Identity?.Name);
+                    logger.LogWarning("User {Users} is not allowed to log in.", info.Principal.Identity?.Name);
                     return Results.Redirect("/account/invaliduser");
                 }
             }
@@ -389,13 +389,13 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             };
             
             // Ensure the basic role exists for the tenant
-            var role = await roleManager.Roles.Where(x => x.TenantId == user.TenantId && x.Name == RoleName.Basic).FirstOrDefaultAsync();
+            var role = await roleManager.Roles.Where(x => x.TenantId == user.TenantId && x.Name == Roles.Basic).FirstOrDefaultAsync();
             if (role is null)
             {
                 role = new ApplicationRole
                 {
-                    Name = RoleName.Basic,
-                    NormalizedName = RoleName.Basic.ToUpperInvariant(),
+                    Name = Roles.Basic,
+                    NormalizedName = Roles.Basic.ToUpperInvariant(),
                     TenantId = user.TenantId
                 };
                 var roleResult = await roleManager.CreateAsync(role);
@@ -452,7 +452,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
         {
             // Sign out the current user and clear authentication cookies
             await signInManager.SignOutAsync().ConfigureAwait(false);
-            logger.LogInformation("{UserName} has logged out.", user.Identity?.Name);
+            logger.LogInformation("{Users} has logged out.", user.Identity?.Name);
             return TypedResults.LocalRedirect($"{returnUrl}");
         }).RequireAuthorization().DisableAntiforgery();
 

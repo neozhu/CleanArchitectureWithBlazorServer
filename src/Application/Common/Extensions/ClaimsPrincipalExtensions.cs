@@ -1,10 +1,9 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Security.Claims;
 using CleanArchitecture.Blazor.Application.Common.Security;
-using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Application.Common.Constants.Roles;
+using CleanArchitecture.Blazor.Application.Common.Constants;
 
 namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
@@ -34,7 +33,7 @@ public static class ClaimsPrincipalExtensions
             ProfilePictureDataUrl: claimsPrincipal.GetProfilePictureDataUrl(),
             DisplayName: claimsPrincipal.GetDisplayName(),
             PhoneNumber: claimsPrincipal.GetPhoneNumber(),
-            DefaultRole: roles?.Length > 0 ? roles.First() : RoleName.Basic,
+            DefaultRole: roles?.Length > 0 ? roles.First() : Roles.Basic,
             AssignedRoles: roles,
             IsActive: true,
             TenantId: claimsPrincipal.GetTenantId(),

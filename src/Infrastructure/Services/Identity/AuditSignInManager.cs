@@ -100,7 +100,7 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
             {
-                _logger.LogWarning("HttpContext is null, cannot log login audit for user {UserName}", userName);
+                _logger.LogWarning("HttpContext is null, cannot log login audit for user {Users}", userName);
                 return;
             }
 
@@ -127,7 +127,7 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to log login audit for user {UserName}", userName);
+            _logger.LogError(ex, "Failed to log login audit for user {Users}", userName);
             // Don't throw - login audit failure shouldn't break the login process
         }
     }

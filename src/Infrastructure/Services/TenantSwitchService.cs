@@ -1,9 +1,9 @@
-﻿using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Application.Common.Security;
+﻿using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Domain.Identity;
 using ZiggyCreatures.Caching.Fusion;
+using CleanArchitecture.Blazor.Application.Common.Constants;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
@@ -211,7 +211,7 @@ public class TenantSwitchService : ITenantSwitchService
             await RefreshUserClaimsAsync(user, userManager);
             
             // Log successful tenant switch
-            _logger.LogInformation("User {UserId} ({UserName}) successfully switched from tenant {OriginalTenantId} to tenant {NewTenantId} ({TenantName})", 
+            _logger.LogInformation("User {UserId} ({Users}) successfully switched from tenant {OriginalTenantId} to tenant {NewTenantId} ({TenantName})", 
                 userId, user.UserName, originalTenantId ?? "null", tenantId, tenant.Name);
             
             // Record switch result
@@ -390,7 +390,7 @@ public class TenantSwitchService : ITenantSwitchService
             var createResult = await roleManager.CreateAsync(newRole);
             if (!createResult.Succeeded)
             {
-                _logger.LogError("Failed to create role {RoleName} in target tenant {TargetTenantId}: {Errors}", 
+                _logger.LogError("Failed to create role {Roles} in target tenant {TargetTenantId}: {Errors}", 
                     roleName, targetTenantId, string.Join(", ", createResult.Errors.Select(e => e.Description)));
                 return null;
             }
@@ -405,7 +405,7 @@ public class TenantSwitchService : ITenantSwitchService
                         var addClaimResult = await roleManager.AddClaimAsync(newRole, new Claim(claim.ClaimType, claim.ClaimValue));
                         if (!addClaimResult.Succeeded)
                         {
-                            _logger.LogError("Failed to add claim {ClaimType}:{ClaimValue} to role {RoleName}: {Errors}", 
+                            _logger.LogError("Failed to add claim {ClaimType}:{ClaimValue} to role {Roles}: {Errors}", 
                                 claim.ClaimType, claim.ClaimValue, roleName, string.Join(", ", addClaimResult.Errors.Select(e => e.Description)));
                         }
                     }
@@ -416,7 +416,7 @@ public class TenantSwitchService : ITenantSwitchService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to clone role {RoleName} from tenant {SourceTenantId} to tenant {TargetTenantId}", 
+            _logger.LogError(ex, "Failed to clone role {Roles} from tenant {SourceTenantId} to tenant {TargetTenantId}", 
                 roleName, sourceTenantId, targetTenantId);
             return null;
         }

@@ -2,8 +2,6 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Domain.Identity
-@using CleanArchitecture.Blazor.Application.Common.Constants.Localization
-@using CleanArchitecture.Blazor.Application.Common.Constants.Roles
 @using Microsoft.AspNetCore.WebUtilities
 @using System.Text
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
@@ -148,12 +146,12 @@
         user.Email = Input.Email;
         user.UserName = Input.UserName;
         user.Created = DateTime.UtcNow;
-        var role = await _roleManager.Roles.Where(x=>x.TenantId== Input.TenantId && x.Name==RoleName.Basic).FirstOrDefaultAsync();
+        var role = await _roleManager.Roles.Where(x=>x.TenantId== Input.TenantId && x.Name==Roles.Basic).FirstOrDefaultAsync();
         if (role is null){
             role = new ApplicationRole
             {
-                Name = RoleName.Basic,
-                NormalizedName = RoleName.Basic.ToUpperInvariant(),
+                Name = Roles.Basic,
+                NormalizedName = Roles.Basic.ToUpperInvariant(),
                 TenantId = Input.TenantId
             };
             var roleResult = await _roleManager.CreateAsync(role);
@@ -172,7 +170,7 @@
             return;
         }
 
-        result = await _userManager.AddToRoleAsync(user, RoleName.Basic);
+        result = await _userManager.AddToRoleAsync(user, Roles.Basic);
         if (!result.Succeeded)
         {
             message = string.Join(", ", result.Errors.Select(error => error.Description));
@@ -185,7 +183,7 @@
             Input.UserName,
             userId,
             Input.TenantId,
-            RoleName.Basic);
+            Roles.Basic);
         if (_userManager.Options.SignIn.RequireConfirmedEmail)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
