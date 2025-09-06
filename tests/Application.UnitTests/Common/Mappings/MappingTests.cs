@@ -60,7 +60,6 @@ public class MappingTests
         if (type.GetConstructor(Type.EmptyTypes) != null)
             return Activator.CreateInstance(type);
 
-        // Type without parameterless constructor
-        return FormatterServices.GetUninitializedObject(type);
+        throw new InvalidOperationException($"Type {type.FullName} does not have a parameterless constructor.");
     }
 }

@@ -459,7 +459,7 @@
                 new Dictionary<string, Func<ApplicationRoleDto, object?>>
                 {
                     { _localizer["Id"], item => item.Id },
-                    { _localizer["Tenant Name"], item => item.Tenant.Name },
+                    { _localizer["Tenant Name"], item => item.Tenant?.Name },
                     { _localizer["Name"], item => item.Name },
                     { _localizer["Normalized Name"], item => item.NormalizedName },
                     { _localizer["Description"], item => item.Description }

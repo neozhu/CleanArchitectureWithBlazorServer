@@ -280,7 +280,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             // Configure authentication properties for the external provider
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             logger.LogInformation("Redirecting to external login provider {Provider} with return URL {ReturnUrl}", provider, returnUrl);
-            return TypedResults.Challenge(properties, [provider]);
+            return TypedResults.Challenge(properties, [provider??string.Empty]);
         });
 
         // Configure external login callback handling endpoint

@@ -114,7 +114,7 @@
                 Navigation.ToAbsoluteUri(IdentityComponentsEndpointRouteBuilderExtensions.PerformLinkExternalLogin).AbsoluteUri,
                 new Dictionary<string, object?> {
                     ["action"] = Uri.EscapeDataString(LoginCallback ?? LoginCallbackAction),
-                    ["tenantId"] = Uri.EscapeDataString(Input.TenantId),
+                    ["tenantId"] = Uri.EscapeDataString(Input.TenantId??string.Empty),
                     ["email"] = Uri.EscapeDataString(Input.Email),
                     ["returnUrl"] = Uri.EscapeDataString(ReturnUrl ?? "/"),
                     ["timezoneId"] = Uri.EscapeDataString(Input.TimeZoneId),

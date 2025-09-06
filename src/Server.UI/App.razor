@@ -2,8 +2,9 @@
 @inject IHttpContextAccessor accessor
 @inject IAntiforgery Antiforgery
 @{
-    // 在首次加载时把 Token 写进 Cookie，并拿到 RequestToken
-    var tokens = Antiforgery.GetAndStoreTokens(accessor.HttpContext);
+    var tokens = accessor.HttpContext is not null
+        ? Antiforgery.GetAndStoreTokens(accessor.HttpContext)
+        : null;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +18,7 @@
     <link href="@Assets["css/app.css"]" rel="stylesheet"/>
     <HeadOutlet @rendermode="RenderModeForPage"/>
     <ImportMap />
-    <meta name="xsrf-token" content="@tokens.RequestToken" />
+    <meta name="xsrf-token" content="@(tokens?.RequestToken)" />
     <!-- Enhanced SEO Meta Tags -->
     <meta name="description" content="Enterprise-ready Blazor Server application template built with Clean Architecture principles, featuring comprehensive dashboard, user management, and modern web technologies." />
     <meta name="keywords" content="Blazor Server, Clean Architecture, Dashboard, .NET, Enterprise Application, Web Development, CQRS, MudBlazor, Authentication, Authorization" />
