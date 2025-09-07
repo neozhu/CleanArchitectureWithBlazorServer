@@ -18,7 +18,7 @@ public class DocumentDto
     [Description("Tenant Name")] public string? TenantName { get; set; }
     [Description("Status")] public JobStatus Status { get; set; } = JobStatus.NotStart;
     [Description("Content")] public string? Content { get; set; }
-    [Description("CreatedAt By User")] public ApplicationUserDto? CreatedByUser { get; set; }
+    [Description("Created By")] public ApplicationUserDto? CreatedBy { get; set; }
     private class Mapping : Profile
     {
         public Mapping()
@@ -27,8 +27,8 @@ public class DocumentDto
                 .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant!.Name));
             CreateMap<DocumentDto, Document>(MemberList.None)
                 .ForMember(x => x.Tenant, s => s.Ignore())
-                .ForMember(x => x.CreatedByUser, s => s.Ignore())
-                .ForMember(x => x.LastModifiedByUser, s => s.Ignore());
+                .ForMember(x => x.CreatedBy, s => s.Ignore())
+                .ForMember(x => x.LastModifiedBy, s => s.Ignore());
         }
     }
 }

@@ -20,8 +20,8 @@ public class Document : BaseAuditableEntity, IMayHaveTenant, IAuditTrial
     public virtual Tenant? Tenant { get; set; }
     public string? TenantId { get; set; }
 
-    public virtual ApplicationUser? CreatedByUser { get;set;}
-    public virtual ApplicationUser? LastModifiedByUser { get; set; }
+    public virtual ApplicationUser? CreatedBy { get;set;}
+    public virtual ApplicationUser? LastModifiedBy { get; set; }
 }
 
 public enum DocumentType

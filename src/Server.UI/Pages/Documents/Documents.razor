@@ -179,18 +179,18 @@
                 </div>
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.CreatedByUser" Title="@_localizer[_currentDto.GetMemberDescription(x => x.CreatedByUser)]">
+        <PropertyColumn Property="x => x.CreatedBy" Title="@_localizer[_currentDto.GetMemberDescription(x => x.CreatedBy)]">
             <CellTemplate>
-                @if (UserProfile?.UserId == context.Item.CreatedByUser?.Id)
+                @if (UserProfile?.UserId == context.Item.CreatedBy?.Id)
                 {
                     <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary">Me</MudChip>
                 }
                 else
                 {
                     <div class="d-flex flex-column">
-                        <MudText>@context.Item.CreatedByUser?.DisplayName</MudText>
+                        <MudText>@context.Item.CreatedBy?.DisplayName</MudText>
                         <MudText Typo="Typo.body2" Class="mud-text-secondary">
-                            @context.Item.CreatedByUser?.Email
+                            @context.Item.CreatedBy?.Email
                         </MudText>
                     </div>
                 }

@@ -13,16 +13,16 @@ public class DocumentConfiguration : IEntityTypeConfiguration<Document>
         builder.Property(t => t.DocumentType).HasConversion<string>();
         builder.Property(x => x.Content).HasMaxLength(4000);
         builder.Ignore(e => e.DomainEvents);
-        builder.HasOne(x => x.CreatedByUser)
+        builder.HasOne(x => x.CreatedBy)
             .WithMany()
             .HasForeignKey(x => x.CreatedById)
             .OnDelete(DeleteBehavior.Restrict);
-        builder.HasOne(x => x.LastModifiedByUser)
+        builder.HasOne(x => x.LastModifiedBy)
             .WithMany()
             .HasForeignKey(x => x.LastModifiedById)
             .OnDelete(DeleteBehavior.Restrict);
-        builder.Navigation(e => e.CreatedByUser).AutoInclude();
-        builder.Navigation(e => e.LastModifiedByUser).AutoInclude();
+        builder.Navigation(e => e.CreatedBy).AutoInclude();
+        builder.Navigation(e => e.LastModifiedBy).AutoInclude();
         builder.Navigation(e => e.Tenant).AutoInclude();
     }
 }
