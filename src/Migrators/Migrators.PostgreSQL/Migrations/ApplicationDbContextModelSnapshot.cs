@@ -403,7 +403,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("time_stamp");
 
-                    b.Property<string>("Users")
+                    b.Property<string>("UserName")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
                         .HasColumnName("user_name");
@@ -568,9 +568,9 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(450)")
                         .HasColumnName("concurrency_stamp");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("created");
+                        .HasColumnName("created_at");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(450)
@@ -599,9 +599,9 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(450)")
                         .HasColumnName("language_code");
 
-                    b.Property<DateTime?>("LastModified")
+                    b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_modified");
+                        .HasColumnName("last_modified_at");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean")
@@ -678,7 +678,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("two_factor_enabled");
 
-                    b.Property<string>("Users")
+                    b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
                         .HasColumnName("user_name");
@@ -883,7 +883,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(450)")
                         .HasColumnName("user_id");
 
-                    b.Property<string>("Users")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
@@ -957,7 +957,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(450)")
                         .HasColumnName("user_id");
 
-                    b.Property<string>("Users")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
@@ -969,7 +969,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_user_login_risk_summaries_user_id");
 
-                    b.HasIndex("Users")
+                    b.HasIndex("UserName")
                         .HasDatabaseName("ix_user_login_risk_summaries_user_name");
 
                     b.ToTable("user_login_risk_summaries", (string)null);

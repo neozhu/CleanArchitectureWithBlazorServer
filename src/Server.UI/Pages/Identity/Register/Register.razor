@@ -145,7 +145,7 @@
         user.TimeZoneId = Input.TimeZoneId;
         user.Email = Input.Email;
         user.UserName = Input.UserName;
-        user.Created = DateTime.UtcNow;
+        user.CreatedAt = DateTime.UtcNow;
         var role = await _roleManager.Roles.Where(x=>x.TenantId== Input.TenantId && x.Name==Roles.Basic).FirstOrDefaultAsync();
         if (role is null){
             role = new ApplicationRole

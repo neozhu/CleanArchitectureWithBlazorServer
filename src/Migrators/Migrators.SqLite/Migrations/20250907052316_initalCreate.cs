@@ -162,8 +162,8 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     RefreshToken = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     SuperiorId = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     TimeZoneId = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     LanguageCode = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -549,7 +549,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UserLoginRiskSummaries_UserName",
                 table: "UserLoginRiskSummaries",
-                column: "Users");
+                column: "UserName");
         }
 
         /// <inheritdoc />

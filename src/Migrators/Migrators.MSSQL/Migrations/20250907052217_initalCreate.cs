@@ -162,8 +162,8 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                     RefreshToken = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SuperiorId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TimeZoneId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
                     LanguageCode = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -552,7 +552,7 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UserLoginRiskSummaries_UserName",
                 table: "UserLoginRiskSummaries",
-                column: "Users");
+                column: "UserName");
         }
 
         /// <inheritdoc />

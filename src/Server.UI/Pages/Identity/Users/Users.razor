@@ -396,7 +396,7 @@
             IsActive = model.IsActive,
             LanguageCode = model.LanguageCode,
             TimeZoneId = model.TimeZoneId,
-            Created = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow
         };
 
         var result = await _userManager.CreateAsync(newUser);
@@ -434,7 +434,7 @@
         user.SuperiorId = model.Superior?.Id;
         user.LanguageCode = model.LanguageCode;
         user.TimeZoneId = model.TimeZoneId;
-        user.LastModified = DateTime.UtcNow;
+        user.LastModifiedAt = DateTime.UtcNow;
         var updateResult = await _userManager.UpdateAsync(user);
         if (updateResult.Succeeded)
         {
@@ -639,7 +639,7 @@
     {
         user.IsActive = true;
         user.LockoutEnd = null;
-        user.LastModified = DateTime.UtcNow;
+        user.LastModifiedAt = DateTime.UtcNow;
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {
@@ -657,7 +657,7 @@
     {
         user.IsActive = false;
         user.LockoutEnd = DateTimeOffset.MaxValue;
-        user.LastModified = DateTime.UtcNow;
+        user.LastModifiedAt = DateTime.UtcNow;
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {

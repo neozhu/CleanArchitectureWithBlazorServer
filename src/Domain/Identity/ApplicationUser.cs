@@ -31,8 +31,8 @@ public class ApplicationUser : IdentityUser
 
     public string? SuperiorId { get; set; } = null;
     public ApplicationUser? Superior { get; set; } = null;
-    public DateTime? Created { get; set; }
-    public DateTime? LastModified { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? LastModifiedAt { get; set; }
     public string? TimeZoneId { get; set; }
     public string? LanguageCode { get; set; }
 }
