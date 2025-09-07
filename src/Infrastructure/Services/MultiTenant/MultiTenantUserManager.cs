@@ -188,7 +188,7 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
             var httpContext = httpContextAccessor.HttpContext;
             if (httpContext == null)
             {
-                logger.LogWarning("HttpContext is null, cannot log password check failure for user {Users}", userName);
+                logger.LogWarning("HttpContext is null, cannot log password check failure for user {UserName}", userName);
                 return;
             }
 
@@ -216,7 +216,7 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to log password check failure for user {Users}", userName);
+            logger.LogError(ex, "Failed to log password check failure for user {UserName}", userName);
             // Don't throw - audit failure shouldn't break the password check process
         }
     }

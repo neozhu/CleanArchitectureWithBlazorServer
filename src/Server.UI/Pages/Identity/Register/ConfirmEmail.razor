@@ -54,7 +54,7 @@
                     new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
                 await Mediator.Publish(new SendWelcomeNotification(callbackUrl, user.Email!, user.UserName!));
-                Logger.LogInformation("{Users} Activated Successfully!", user.Email);
+                Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
                 user.IsActive = true;
                 await _userManager.UpdateAsync(user);
             }

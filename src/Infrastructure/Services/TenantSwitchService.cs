@@ -211,7 +211,7 @@ public class TenantSwitchService : ITenantSwitchService
             await RefreshUserClaimsAsync(user, userManager);
             
             // Log successful tenant switch
-            _logger.LogInformation("User {UserId} ({Users}) successfully switched from tenant {OriginalTenantId} to tenant {NewTenantId} ({TenantName})", 
+            _logger.LogInformation("User {UserId} ({UserName}) successfully switched from tenant {OriginalTenantId} to tenant {NewTenantId} ({TenantName})", 
                 userId, user.UserName, originalTenantId ?? "null", tenantId, tenant.Name);
             
             // Record switch result

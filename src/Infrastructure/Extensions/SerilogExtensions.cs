@@ -119,7 +119,7 @@ public static class SerilogExtensions
                 },
                 new()
                 {
-                    ColumnName = "Users", PropertyName = "Users",AllowNull=true, DataType = SqlDbType.NVarChar
+                    ColumnName = "UserName", PropertyName = "UserName",AllowNull=true, DataType = SqlDbType.NVarChar
                 },
                 new()
                 {
@@ -155,7 +155,7 @@ public static class SerilogExtensions
             { "exception", new ExceptionColumnWriter(NpgsqlDbType.Text) },
             { "properties", new PropertiesColumnWriter(NpgsqlDbType.Varchar) },
             { "log_event", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-            { "user_name", new SinglePropertyColumnWriter("Users", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
+            { "user_name", new SinglePropertyColumnWriter("UserName", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
             { "client_ip", new SinglePropertyColumnWriter("ClientIP", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
             {
                 "client_agent",
@@ -227,7 +227,7 @@ internal class UserInfoEnricher : ILogEventEnricher
             ? headers["User-Agent"].ToString()
             : "";
 
-        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("Users", userName));
+        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("UserName", userName));
         logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ClientIP", clientIp));
         logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ClientAgent", clientAgent));
     }

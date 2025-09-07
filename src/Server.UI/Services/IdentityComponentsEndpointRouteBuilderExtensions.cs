@@ -320,17 +320,17 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                             false);
                 if (result.Succeeded)
                 {
-                    logger.LogInformation("User {Users} logged in with external provider {Provider}.", info.Principal.Identity?.Name, info.LoginProvider);
+                    logger.LogInformation("User {UserName} logged in with external provider {Provider}.", info.Principal.Identity?.Name, info.LoginProvider);
                     return Results.Redirect(string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl);
                 }
                 else if (result.IsLockedOut)
                 {
-                    logger.LogWarning("User {Users} is locked out.", info.Principal.Identity?.Name);
+                    logger.LogWarning("User {UserName} is locked out.", info.Principal.Identity?.Name);
                     return Results.Redirect("/account/lockout");
                 }
                 else if (result.IsNotAllowed)
                 {
-                    logger.LogWarning("User {Users} is not allowed to log in.", info.Principal.Identity?.Name);
+                    logger.LogWarning("User {UserName} is not allowed to log in.", info.Principal.Identity?.Name);
                     return Results.Redirect("/account/invaliduser");
                 }
             }
@@ -452,7 +452,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
         {
             // Sign out the current user and clear authentication cookies
             await signInManager.SignOutAsync().ConfigureAwait(false);
-            logger.LogInformation("{Users} has logged out.", user.Identity?.Name);
+            logger.LogInformation("{UserName} has logged out.", user.Identity?.Name);
             return TypedResults.LocalRedirect($"{returnUrl}");
         }).RequireAuthorization().DisableAntiforgery();
 
