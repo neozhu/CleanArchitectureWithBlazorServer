@@ -150,7 +150,8 @@ public class ApplicationDbContextInitializer
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80",
             LanguageCode="en-US",
             TimeZoneId= "Asia/Shanghai",
-            TwoFactorEnabled = false
+            TwoFactorEnabled = false,
+            CreatedAt=DateTime.UtcNow
         };
 
         var demoUser = new ApplicationUser
@@ -164,7 +165,8 @@ public class ApplicationDbContextInitializer
             EmailConfirmed = true,
             LanguageCode = "de-DE",
             TimeZoneId = "Europe/Berlin",
-            ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80"
+            ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80",
+            CreatedAt = DateTime.UtcNow
         };
 
         await _userManager.CreateAsync(adminUser, Users.DefaultPassword);

@@ -214,9 +214,9 @@
                 </div>
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.LastModified" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.LastModified)]">
+        <PropertyColumn Property="x => x.LastModifiedAt" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.LastModifiedAt)]">
             <CellTemplate>
-                <UtcToLocal UTCDateTime="@(context.Item.LastModified ?? context.Item.Created)" Format="yyyy-MM-dd" />
+                <UtcToLocal UTCDateTime="@(context.Item.LastModifiedAt ?? context.Item.CreatedAt)" Format="yyyy-MM-dd HH:mm:ss" />
             </CellTemplate>
         </PropertyColumn>
     </Columns>

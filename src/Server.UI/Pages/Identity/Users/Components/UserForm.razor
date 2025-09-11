@@ -100,10 +100,10 @@
         </MudItem>
 
         <MudItem sm="6" xs="12">
-            <MudTextField T="string" Disabled Value="@(Model.Created.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x => x.Created)]" />
+            <ReadOnlyField   Value="@(Model.CreatedAt.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x => x.CreatedAt)]" />
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField T="string" Disabled Value="@(Model.LastModified.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x => x.LastModified)]" />
+            <ReadOnlyField  Value="@(Model.LastModifiedAt.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x => x.LastModifiedAt)]" />
         </MudItem>
     </MudGrid>
 </MudForm>
