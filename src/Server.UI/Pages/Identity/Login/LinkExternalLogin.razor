@@ -16,124 +16,120 @@
 @inject IStringLocalizer<LinkExternalLogin> L
 
 <PageTitle>@L["External Login"]</PageTitle>
+<MudStack Spacing="2">
+	<MudText Typo="Typo.h4" GutterBottom="true">@L["External Login"]</MudText>
+	<MudText Typo="Typo.h6" GutterBottom="true">@string.Format(L["Associate your {0} account"], Provider)</MudText>
 
-<MudText Typo="Typo.h4" GutterBottom="true">@L["External Login"]</MudText>
-<MudText Typo="Typo.h6" GutterBottom="true">@string.Format(L["Associate your {0} account"], Provider)</MudText>
+	<MudText Typo="Typo.body1">@string.Format(L["Authentication with {0} has been completed successfully. Please provide the required information below to complete your account registration and access the system"], Provider)</MudText>
 
-<MudText Typo="Typo.body1">@string.Format(L["Authentication with {0} has been completed successfully. Please provide the required information below to complete your account registration and access the system"], Provider)</MudText>
+	<EditForm Model="Input" OnValidSubmit="OnValidSubmitAsync" FormName="confirmation">
+		<DataAnnotationsValidator />
+		<StatusMessage Message="@message" Error="true" />
+		<MudStack Spacing="2">
+			<MultiTenantAutocomplete @bind-Value="Input.Tenant"
+									 T="TenantDto"
+									 Label="@L["Tenant"]"
+									 Variant="Variant.Outlined"
+									 HelperText="Select your organization or tenant"
+									 Required="true"
+									 For="@(() => Input.Tenant)" />
 
 
-<div class="d-flex flex-column gap-y-3">
-    <div class="d-flex flex-column">
-        <EditForm Model="Input" OnValidSubmit="OnValidSubmitAsync" FormName="confirmation">
-            <DataAnnotationsValidator/>
-            <StatusMessage Message="@message" Error="true"/>
-            
-            <MultiTenantAutocomplete @bind-Value="Input.Tenant"
-                                     T="TenantDto"
-                                     Label="@L["Tenant"]"
-                                     Variant="Variant.Outlined"
-                                     HelperText="Select your organization or tenant"
-                                     Required="true"
-                                     Class="my-4"
-                                     For="@(() => Input.Tenant)" />
 
-             
-            
-            <MudTextField T="string" 
-                          @bind-Value="Input.Email" 
-                          Label="@L["Email"]" 
-                          Variant="Variant.Outlined" 
-                          Margin="Margin.Normal"
-                          InputType="InputType.Email"
-                          HelperText="Enter your professional email address"
-                          Required="true"
-                          RequiredError="Email address is required"
-                          Validation="@(new EmailAddressAttribute() { ErrorMessage = "Please enter a valid email address" })"
-                          Placeholder="your.email@company.com"/>
+			<MudTextField T="string"
+						  @bind-Value="Input.Email"
+						  Label="@L["Email"]"
+						  Variant="Variant.Outlined"
+						  Margin="Margin.Normal"
+						  InputType="InputType.Email"
+						  HelperText="Enter your professional email address"
+						  Required="true"
+						  RequiredError="Email address is required"
+						  Validation="@(new EmailAddressAttribute() { ErrorMessage = "Please enter a valid email address" })"
+						  Placeholder="your.email@company.com" />
 
-            <TimeZoneAutocomplete @bind-Value="Input.TimeZoneId"
-                                  T="string"
-                                  Label="@L["Time Zone"]"
-                                  Variant="Variant.Outlined"
-                                  Required="true"
-                                  Class="my-4"
-                                  For="@(() => Input.TimeZoneId)" />
-            <LanguageAutocomplete @bind-Value="Input.LanguageCode"
-                                  T="string"
-                                  Label="@L["Language"]"
-                                  Variant="Variant.Outlined"
-                                  Required="true"
-                                  Class="my-4"
-                                  For="@(() => Input.LanguageCode)" />
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       Size="Size.Large"
-                       ButtonType="ButtonType.Submit"
-                       FullWidth="true"
-                       Class="mt-4">
-                <MudText>@L["Complete Registration"]</MudText>
-            </MudButton>
-        </EditForm>
-    </div>
-</div>
+			<TimeZoneAutocomplete @bind-Value="Input.TimeZoneId"
+								  T="string"
+								  Label="@L["Time Zone"]"
+								  Variant="Variant.Outlined"
+								  Required="true"
+								  For="@(() => Input.TimeZoneId)" />
+			<LanguageAutocomplete @bind-Value="Input.LanguageCode"
+								  T="string"
+								  Label="@L["Language"]"
+								  Variant="Variant.Outlined"
+								  Required="true"
+								  For="@(() => Input.LanguageCode)" />
+			<MudButton Variant="Variant.Filled"
+					   Color="Color.Primary"
+					   Size="Size.Large"
+					   ButtonType="ButtonType.Submit"
+					   FullWidth="true">
+				@L["Complete Registration"]
+			</MudButton>
+		</MudStack>
+	</EditForm>
+</MudStack>
 
 @code {
-    public const string PageUrl = "/account/linkexternallogin";
-    public const string LoginCallbackAction = "LoginCallback";
+	public const string PageUrl = "/account/linkexternallogin";
+	public const string LoginCallbackAction = "LoginCallback";
 
-    private string? message;
-
-
-
-    private InputModel Input { get; set; } = new();
-    [SupplyParameterFromQuery] private string? Provider { get; set; }
-    [SupplyParameterFromQuery] private string? Email { get; set; }
-    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
-    [SupplyParameterFromQuery] private string? LoginCallback { get; set; }
+	private string? message;
 
 
 
-    protected override void OnInitialized()
-    {
-        if (string.IsNullOrWhiteSpace(Provider))
-        {
-            message = L["Provider is not set."];
-        
-        }
-        Input.Email = Email ?? "";
-    }
+	private InputModel Input { get; set; } = new();
+	[SupplyParameterFromQuery] private string? Provider { get; set; }
+	[SupplyParameterFromQuery] private string? Email { get; set; }
+	[SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+	[SupplyParameterFromQuery] private string? LoginCallback { get; set; }
 
 
 
-    private  Task OnValidSubmitAsync()
-    {
-        var url = Navigation.GetUriWithQueryParameters(
-                Navigation.ToAbsoluteUri(IdentityComponentsEndpointRouteBuilderExtensions.PerformLinkExternalLogin).AbsoluteUri,
-                new Dictionary<string, object?> {
-                    ["action"] = Uri.EscapeDataString(LoginCallback ?? LoginCallbackAction),
-                    ["tenantId"] = Uri.EscapeDataString(Input.TenantId??string.Empty),
-                    ["email"] = Uri.EscapeDataString(Input.Email),
-                    ["returnUrl"] = Uri.EscapeDataString(ReturnUrl ?? "/"),
-                    ["timezoneId"] = Uri.EscapeDataString(Input.TimeZoneId),
-                    ["languageCode"] = Uri.EscapeDataString(Input.LanguageCode)
-                });
-        Navigation.NavigateTo(url, forceLoad: true);
-        return Task.CompletedTask;
-    }
+	protected override void OnInitialized()
+	{
+		if (string.IsNullOrWhiteSpace(Provider))
+		{
+			message = L["Provider is not set."];
 
-    
+		}
+		Input.Email = Email ?? "";
+	}
 
-    private sealed class InputModel
-    {
-        [Required] [EmailAddress] public string Email { get; set; } = "";
-        [Required] public string? TenantId => Tenant?.Id;
-        [Required] [Display(Name = "Time Zone")]
-        public string TimeZoneId { get; set; } = TimeZoneInfo.Local.Id;
-        [Required] [Display(Name = "Language")]
-        public string LanguageCode { get; set; } = CultureInfo.CurrentCulture.Name;
-        [Required]
-        public TenantDto? Tenant { get; set; }
-    }
+
+
+	private Task OnValidSubmitAsync()
+	{
+		var url = Navigation.GetUriWithQueryParameters(
+				Navigation.ToAbsoluteUri(IdentityComponentsEndpointRouteBuilderExtensions.PerformLinkExternalLogin).AbsoluteUri,
+				new Dictionary<string, object?>
+				{
+					["action"] = Uri.EscapeDataString(LoginCallback ?? LoginCallbackAction),
+					["tenantId"] = Uri.EscapeDataString(Input.TenantId ?? string.Empty),
+					["email"] = Uri.EscapeDataString(Input.Email),
+					["returnUrl"] = Uri.EscapeDataString(ReturnUrl ?? "/"),
+					["timezoneId"] = Uri.EscapeDataString(Input.TimeZoneId),
+					["languageCode"] = Uri.EscapeDataString(Input.LanguageCode)
+				});
+		Navigation.NavigateTo(url, forceLoad: true);
+		return Task.CompletedTask;
+	}
+
+
+
+	private sealed class InputModel
+	{
+		[Required][EmailAddress] public string Email { get; set; } = "";
+		[Required] public string? TenantId => Tenant?.Id;
+		[Required]
+		[Display(Name = "Time Zone")]
+		public string TimeZoneId { get; set; } = TimeZoneInfo.Local.Id;
+		[Required]
+		[Display(Name = "Language")]
+		public string LanguageCode { get; set; } = CultureInfo.CurrentCulture.Name;
+		[Required]
+		public TenantDto? Tenant { get; set; }
+	}
 
 }

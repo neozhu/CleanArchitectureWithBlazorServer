@@ -10,58 +10,58 @@
 
 @inject ILogger<ConfirmEmail> Logger
 <PageTitle>@L["Confirm email"]</PageTitle>
-
-<MudText Typo="Typo.h4" GutterBottom="true">@L["Confirm email"]</MudText>
-<StatusMessage Message="@statusMessage" Error="@error" />
-<MudButton href="@Login.PageUrl">@L["Return to Login"]</MudButton>
-
+<MudStack Spacing="2">
+	<MudText Typo="Typo.h4" GutterBottom="true">@L["Confirm email"]</MudText>
+	<StatusMessage Message="@statusMessage" Error="@error" />
+	<MudButton href="@Login.PageUrl">@L["Return to Login"]</MudButton>
+</MudStack>
 @code {
-    public const string PageUrl = "/account/confirmemail";
-    private UserManager<ApplicationUser> _userManager = null!;
+	public const string PageUrl = "/account/confirmemail";
+	private UserManager<ApplicationUser> _userManager = null!;
 
-    private string? statusMessage;
+	private string? statusMessage;
 
 
-    [SupplyParameterFromQuery] private string? UserId { get; set; }
+	[SupplyParameterFromQuery] private string? UserId { get; set; }
 
-    [SupplyParameterFromQuery] private string? Code { get; set; }
-    private bool error { get; set; }
+	[SupplyParameterFromQuery] private string? Code { get; set; }
+	private bool error { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+	protected override async Task OnInitializedAsync()
+	{
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
 
-        if (UserId is null || Code is null)
-        {
-            Navigation.NavigateTo(Login.PageUrl);
-            return;
-        }
+		if (UserId is null || Code is null)
+		{
+			Navigation.NavigateTo(Login.PageUrl);
+			return;
+		}
 
-        var user = await _userManager.FindByIdAsync(UserId);
-        if (user is null)
-        {
-            statusMessage = L[$"There was an error confirming your email. Please contact support or try again. (User ID: {UserId})"];
-            error = true;
-        }
-        else
-        {
-            var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
-            var result = await _userManager.ConfirmEmailAsync(user, code);
-            if (result.Succeeded)
-            {
-                var callbackUrl = Navigation.GetUriWithQueryParameters(
-                    Navigation.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
-                    new Dictionary<string, object?> { ["returnUrl"] = "/" });
+		var user = await _userManager.FindByIdAsync(UserId);
+		if (user is null)
+		{
+			statusMessage = L[$"There was an error confirming your email. Please contact support or try again. (User ID: {UserId})"];
+			error = true;
+		}
+		else
+		{
+			var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
+			var result = await _userManager.ConfirmEmailAsync(user, code);
+			if (result.Succeeded)
+			{
+				var callbackUrl = Navigation.GetUriWithQueryParameters(
+					Navigation.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
+					new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
-                await Mediator.Publish(new SendWelcomeNotification(callbackUrl, user.Email!, user.UserName!));
-                Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
-                user.IsActive = true;
-                await _userManager.UpdateAsync(user);
-            }
+				await Mediator.Publish(new SendWelcomeNotification(callbackUrl, user.Email!, user.UserName!));
+				Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
+				user.IsActive = true;
+				await _userManager.UpdateAsync(user);
+			}
 
-            statusMessage = result.Succeeded ? L["Thank you for confirming your email. Your account is now active."] : L["There was an error confirming your email. Please contact support or try again."];
-            error = !result.Succeeded;
-        }
-    }
+			statusMessage = result.Succeeded ? L["Thank you for confirming your email. Your account is now active."] : L["There was an error confirming your email. Please contact support or try again."];
+			error = !result.Succeeded;
+		}
+	}
 
 }

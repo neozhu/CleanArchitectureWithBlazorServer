@@ -3,11 +3,11 @@
 @inject IStringLocalizer<InvalidUser> L
 <PageTitle>@L["Access Denied"]</PageTitle>
 
-<div class="d-flex flex-column align-center">
+<MudStack Spacing="2">
     <MudText Typo="Typo.h4" GutterBottom="true">@L["Access Denied"]</MudText>
     <StatusMessage Error="true" Message="@L["Your account is not allowed to sign in. This may be due to your account being inactive, email not confirmed, or other restrictions. Please contact support for assistance."]"/>
     
-    <div class="d-flex gap-4 mt-4">
+	<MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
         <MudButton Href="@Login.PageUrl" 
                    Variant="Variant.Filled" 
                    Color="Color.Primary" 
@@ -21,8 +21,8 @@
                    Size="Size.Medium">
             @L["Go Home"]
         </MudButton>
-    </div>
-</div>
+	</MudStack>
+</MudStack>
 
 @code{
     public const string PageUrl = "/account/invaliduser";

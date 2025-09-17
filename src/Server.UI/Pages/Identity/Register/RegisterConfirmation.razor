@@ -9,53 +9,53 @@
 
 @inject IStringLocalizer<RegisterConfirmation> L
 <PageTitle>@L["Register confirmation"]</PageTitle>
+<MudStack Spacing="2">
+	<MudText Typo="Typo.h4" GutterBottom="true">@L["Register confirmation"]</MudText>
 
-<MudText Typo="Typo.h4" GutterBottom="true">@L["Register confirmation"]</MudText>
+	<StatusMessage Message="@statusMessage" Error="@error" />
 
-<StatusMessage Message="@statusMessage" Error="@error"/>
-
-@if (EmailConfirmationLink is not null)
-{
-    <MudText>@L["For testing purposes, you can directly access the email confirmation link below."]</MudText>
-    <MudButton href="@EmailConfirmationLink" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">
-        <MudText>@L["Confirm Account"]</MudText>
-    </MudButton>
-}
-else
-{
-    <MudText Typo="Typo.body1">@L["Please check your email and follow the instructions to confirm your account."]</MudText>
-}
-
+	@if (EmailConfirmationLink is not null)
+	{
+		<MudText>@L["For testing purposes, you can directly access the email confirmation link below."]</MudText>
+		<MudButton href="@EmailConfirmationLink" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">
+			<MudText>@L["Confirm Account"]</MudText>
+		</MudButton>
+	}
+	else
+	{
+		<MudText Typo="Typo.body1">@L["Please check your email and follow the instructions to confirm your account."]</MudText>
+	}
+</MudStack>
 @code {
-    private UserManager<ApplicationUser> _userManager = null!;
+	private UserManager<ApplicationUser> _userManager = null!;
 
 
-    public const string PageUrl = "/account/registerconfirmation";
-    [SupplyParameterFromQuery] private string? EmailConfirmationLink { get; set; }
-    private string? statusMessage;
-    private bool error = false;
+	public const string PageUrl = "/account/registerconfirmation";
+	[SupplyParameterFromQuery] private string? EmailConfirmationLink { get; set; }
+	private string? statusMessage;
+	private bool error = false;
 
-    [SupplyParameterFromQuery] private string? Email { get; set; }
+	[SupplyParameterFromQuery] private string? Email { get; set; }
 
 
 
-    protected override async Task OnInitializedAsync()
-    {
+	protected override async Task OnInitializedAsync()
+	{
 
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
 
-        if (Email is null)
-        {
-            Navigation.NavigateTo("/");
-            return;
-        }
+		if (Email is null)
+		{
+			Navigation.NavigateTo("/");
+			return;
+		}
 
-        var user = await _userManager.FindByEmailAsync(Email);
-        if (user is null)
-        {
-            statusMessage = L["Error finding user for unspecified email"];
-            error = true;
-        }
-    }
+		var user = await _userManager.FindByEmailAsync(Email);
+		if (user is null)
+		{
+			statusMessage = L["Error finding user for unspecified email"];
+			error = true;
+		}
+	}
 
 }

@@ -1,7 +1,7 @@
-@if (Dense)
+﻿@if (Dense)
 {
     <!-- Dense mode: Pure d-flex layout, Label fixed width for consistent alignment, Value adapts to remaining space -->
-    <div class="d-flex align-center py-1">
+    <div class="d-flex align-center">
         <!-- Label area: Fixed width for consistent cross-column alignment -->
         <div class="flex-shrink-0 pr-3" style="width: 140px;">
             <span class="mud-typography mud-typography-body2 mud-text-secondary" style="font-weight: 500;">
@@ -35,7 +35,7 @@
 else
 {
     <!-- Standard mode: Label on top, value below, pure CSS implementation -->
-    <div class="mb-3">
+    <div>
         <div class="mb-1">
             <span class="mud-typography mud-typography-body2 mud-text-secondary" style="font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                 @Label

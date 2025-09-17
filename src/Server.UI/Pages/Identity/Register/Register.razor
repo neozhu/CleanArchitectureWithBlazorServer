@@ -17,244 +17,238 @@
 
 <PageTitle>@Title</PageTitle>
 
-<div class="d-flex flex-column gap-y-3">
-    <div class="d-flex flex-column">
-        <EditForm Model="Input"  OnValidSubmit="RegisterUser" FormName="register">
-            <DataAnnotationsValidator />
-            <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
-            <MudText>
-                @L["Have an account?"] <MudLink Href="@Login.PageUrl">@L["Sign In"]</MudLink>
-            </MudText>
-          
-            <MultiTenantAutocomplete @bind-Value="Input.Tenant"
-                        T="TenantDto"
-                        Label="@L["Tenant"]"
-                        Variant="Variant.Outlined"
-                        Required="true"
-                        Class="my-4"
-                        For="@(() => Input.Tenant)" />
-            <MudTextField @bind-Value="Input.UserName" 
-                          Label="@L["User Name"]"
-                          Variant="Variant.Outlined"
-                          Required="true"
-                          Placeholder="user name"
-                          Class="my-4"
-                          For="@(() => Input.UserName)" />
+
+<EditForm Model="Input" OnValidSubmit="RegisterUser" FormName="register">
+	<DataAnnotationsValidator />
+	<MudStack Spacing="2">
+		<MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
+		<MudText>
+			@L["Have an account?"] <MudLink Href="@Login.PageUrl">@L["Sign In"]</MudLink>
+		</MudText>
+
+		<MultiTenantAutocomplete @bind-Value="Input.Tenant"
+								 T="TenantDto"
+								 Label="@L["Tenant"]"
+								 Variant="Variant.Outlined"
+								 Required="true"
+								 For="@(() => Input.Tenant)" />
+		<MudTextField @bind-Value="Input.UserName"
+					  Label="@L["User Name"]"
+					  Variant="Variant.Outlined"
+					  Required="true"
+					  Placeholder="user name"
+					  For="@(() => Input.UserName)" />
 
 
-            <MudTextField @bind-Value="Input.Email" 
-                          Label="@L["E-mail"]"
-                          Variant="Variant.Outlined"
-                          Required="true"
-                          Placeholder="email"
-                          Class="my-4"
-                          For="@(() => Input.Email)" />
+		<MudTextField @bind-Value="Input.Email"
+					  Label="@L["E-mail"]"
+					  Variant="Variant.Outlined"
+					  Required="true"
+					  Placeholder="email"
+					  For="@(() => Input.Email)" />
 
-            <MudTextField @bind-Value="Input.Password" 
-                          Label="@L["Password"]"
-                          Variant="Variant.Outlined"
-                          Required="true"
-                          InputType="@(isPasswordVisible ? InputType.Text : InputType.Password)"
-                          Placeholder="password"
-                          Class="my-4"
-                          For="@(() => Input.Password)"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@(isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
-                          OnAdornmentClick="@(() => isPasswordVisible = !isPasswordVisible)" />
-            <MudTextField @bind-Value="Input.ConfirmPassword" 
-                          Label="@L["Confirm Password"]"
-                          Variant="Variant.Outlined"
-                          Required="true"
-                          InputType="@(isConfirmPasswordVisible ? InputType.Text : InputType.Password)"
-                          Placeholder="Confirm password"
-                          Class="my-4"
-                          For="@(() => Input.ConfirmPassword)"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@(isConfirmPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
-                          OnAdornmentClick="@(() => isConfirmPasswordVisible = !isConfirmPasswordVisible)" />
-            <TimeZoneAutocomplete @bind-Value="Input.TimeZoneId" 
-                     T="string"
-                     Label="@L["Time Zone"]"
-                     Variant="Variant.Outlined"
-                     Required="true"
-                     Class="my-4"
-                     For="@(() => Input.TimeZoneId)" />
-            <LanguageAutocomplete @bind-Value="Input.LanguageCode"
-                    T="string"
-                    Label="@L["Language"]"
-                    Variant="Variant.Outlined"
-                    Required="true"
-                    Class="my-4"
-                    For="@(() => Input.LanguageCode)" />
-            <div Class="d-flex justify-space-between align-center mb-1">
-                <MudCheckBox @bind-Value="Input.AgreeToTerms" 
-                             Label="@L["I agree to the terms and privacy"]"
-                             Required="true"
-                             For="@(() => Input.AgreeToTerms)" />
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.AgreeToTerms" class="mud-input-error" />
-                    </div>
-                </div>
-            </div>
+		<MudTextField @bind-Value="Input.Password"
+					  Label="@L["Password"]"
+					  Variant="Variant.Outlined"
+					  Required="true"
+					  InputType="@(isPasswordVisible? InputType.Text: InputType.Password)"
+					  Placeholder="password"
+					  For="@(() => Input.Password)"
+					  Adornment="Adornment.End"
+					  AdornmentIcon="@(isPasswordVisible? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+					  OnAdornmentClick="@(() => isPasswordVisible = !isPasswordVisible)" />
+		<MudTextField @bind-Value="Input.ConfirmPassword"
+					  Label="@L["Confirm Password"]"
+					  Variant="Variant.Outlined"
+					  Required="true"
+					  InputType="@(isConfirmPasswordVisible? InputType.Text: InputType.Password)"
+					  Placeholder="Confirm password"
+					  For="@(() => Input.ConfirmPassword)"
+					  Adornment="Adornment.End"
+					  AdornmentIcon="@(isConfirmPasswordVisible? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+					  OnAdornmentClick="@(() => isConfirmPasswordVisible = !isConfirmPasswordVisible)" />
+		<TimeZoneAutocomplete @bind-Value="Input.TimeZoneId"
+							  T="string"
+							  Label="@L["Time Zone"]"
+							  Variant="Variant.Outlined"
+							  Required="true"
+							  For="@(() => Input.TimeZoneId)" />
+		<LanguageAutocomplete @bind-Value="Input.LanguageCode"
+							  T="string"
+							  Label="@L["Language"]"
+							  Variant="Variant.Outlined"
+							  Required="true"
+							  For="@(() => Input.LanguageCode)" />
+		<div Class="d-flex justify-space-between align-center mb-1">
+			<MudCheckBox @bind-Value="Input.AgreeToTerms"
+						 Label="@L["I agree to the terms and privacy"]"
+						 Required="true"
+						 For="@(() => Input.AgreeToTerms)" />
+			<div class="mud-input-helper-text mud-input-error">
+				<div class="d-flex">
+					<ValidationMessage For="() => Input.AgreeToTerms" class="mud-input-error" />
+				</div>
+			</div>
+		</div>
 
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       Size="Size.Large"
-                       ButtonType="ButtonType.Submit"
-                       FullWidth="true">
-                <MudText>@L["Register"]</MudText>
-            </MudButton>
-        </EditForm>
-    </div>
-</div>
+		<MudButton Variant="Variant.Filled"
+				   Color="Color.Primary"
+				   Size="Size.Large"
+				   ButtonType="ButtonType.Submit"
+				   FullWidth="true">
+			<MudText>@L["Register"]</MudText>
+		</MudButton>
+	</MudStack>
+</EditForm>
+
 
 @code {
 
-    public const string PageUrl = "/account/register";
-    private string Title = "Sign Up";
+	public const string PageUrl = "/account/register";
+	private string Title = "Sign Up";
 
-    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
-    private string? message;
-    private bool isPasswordVisible = false;
-    private bool isConfirmPasswordVisible = false;
+	[SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+	private string? message;
+	private bool isPasswordVisible = false;
+	private bool isConfirmPasswordVisible = false;
 
-    private InputModel Input { get; set; } = new();
-    private UserManager<ApplicationUser> _userManager = null!;
-    private RoleManager<ApplicationRole> _roleManager = null!;
-    private SignInManager<ApplicationUser> _signInManager = null!;
+	private InputModel Input { get; set; } = new();
+	private UserManager<ApplicationUser> _userManager = null!;
+	private RoleManager<ApplicationRole> _roleManager = null!;
+	private SignInManager<ApplicationUser> _signInManager = null!;
 
 
-    protected override  Task OnInitializedAsync()
-    {
-        Title = L["Sign Up"];
+	protected override Task OnInitializedAsync()
+	{
+		Title = L["Sign Up"];
 
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
-        _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+		_roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+		_signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
 
-        return Task.CompletedTask;
+		return Task.CompletedTask;
 
-    }
+	}
 
-    public async Task RegisterUser(EditContext editContext)
-    {
-        var user = new ApplicationUser();
-        user.TenantId = Input.TenantId;
-        user.LanguageCode = Input.LanguageCode;
-        user.TimeZoneId = Input.TimeZoneId;
-        user.Email = Input.Email;
-        user.UserName = Input.UserName;
-        user.CreatedAt = DateTime.UtcNow;
-        var role = await _roleManager.Roles.Where(x=>x.TenantId== Input.TenantId && x.Name==Roles.Basic).FirstOrDefaultAsync();
-        if (role is null){
-            role = new ApplicationRole
-            {
-                Name = Roles.Basic,
-                NormalizedName = Roles.Basic.ToUpperInvariant(),
-                TenantId = Input.TenantId
-            };
-            var roleResult = await _roleManager.CreateAsync(role);
-            if (!roleResult.Succeeded)
-            {
-                message = string.Join(", ", roleResult.Errors.Select(error => error.Description));
-                Snackbar.Add(message, Severity.Error);
-                return;
-            }
-        }
-        var result = await _userManager.CreateAsync(user, Input.Password);
-        if (!result.Succeeded)
-        {
-            message = string.Join(", ", result.Errors.Select(error => error.Description));
-            Snackbar.Add(message, Severity.Error);
-            return;
-        }
+	public async Task RegisterUser(EditContext editContext)
+	{
+		var user = new ApplicationUser();
+		user.TenantId = Input.TenantId;
+		user.LanguageCode = Input.LanguageCode;
+		user.TimeZoneId = Input.TimeZoneId;
+		user.Email = Input.Email;
+		user.UserName = Input.UserName;
+		user.CreatedAt = DateTime.UtcNow;
+		var role = await _roleManager.Roles.Where(x => x.TenantId == Input.TenantId && x.Name == Roles.Basic).FirstOrDefaultAsync();
+		if (role is null)
+		{
+			role = new ApplicationRole
+			{
+				Name = Roles.Basic,
+				NormalizedName = Roles.Basic.ToUpperInvariant(),
+				TenantId = Input.TenantId
+			};
+			var roleResult = await _roleManager.CreateAsync(role);
+			if (!roleResult.Succeeded)
+			{
+				message = string.Join(", ", roleResult.Errors.Select(error => error.Description));
+				Snackbar.Add(message, Severity.Error);
+				return;
+			}
+		}
+		var result = await _userManager.CreateAsync(user, Input.Password);
+		if (!result.Succeeded)
+		{
+			message = string.Join(", ", result.Errors.Select(error => error.Description));
+			Snackbar.Add(message, Severity.Error);
+			return;
+		}
 
-        result = await _userManager.AddToRoleAsync(user, Roles.Basic);
-        if (!result.Succeeded)
-        {
-            message = string.Join(", ", result.Errors.Select(error => error.Description));
-            Snackbar.Add(message, Severity.Error);
-            return;
-        }
+		result = await _userManager.AddToRoleAsync(user, Roles.Basic);
+		if (!result.Succeeded)
+		{
+			message = string.Join(", ", result.Errors.Select(error => error.Description));
+			Snackbar.Add(message, Severity.Error);
+			return;
+		}
 
-        var userId = await _userManager.GetUserIdAsync(user);
-        Logger.LogInformation("New user account created. User ID: {UserId}, Tenant ID: {TenantId}.",
-            Input.UserName,
-            userId,
-            Input.TenantId,
-            Roles.Basic);
-        if (_userManager.Options.SignIn.RequireConfirmedEmail)
-        {
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Navigation.GetUriWithQueryParameters(
-                Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
-                new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = "/" });
-            await Mediator.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.UserName));
-            var url = Navigation.GetUriWithQueryParameters(
-                Navigation.ToAbsoluteUri(RegisterConfirmation.PageUrl).AbsoluteUri,
-                new Dictionary<string, object?> { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
-            Navigation.NavigateTo(url);
-        }
-        else if (_userManager.Options.SignIn.RequireConfirmedAccount)
-        {
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Navigation.GetUriWithQueryParameters(
-                Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
-                new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
-            var url = Navigation.GetUriWithQueryParameters(
-                Navigation.ToAbsoluteUri(RegisterConfirmation.PageUrl).AbsoluteUri,
-                new Dictionary<string, object?> { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
-            Navigation.NavigateTo(url);
-        }
-        else
-        {
+		var userId = await _userManager.GetUserIdAsync(user);
+		Logger.LogInformation("New user account created. User ID: {UserId}, Tenant ID: {TenantId}.",
+			Input.UserName,
+			userId,
+			Input.TenantId,
+			Roles.Basic);
+		if (_userManager.Options.SignIn.RequireConfirmedEmail)
+		{
+			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+			var callbackUrl = Navigation.GetUriWithQueryParameters(
+				Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
+				new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = "/" });
+			await Mediator.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.UserName));
+			var url = Navigation.GetUriWithQueryParameters(
+				Navigation.ToAbsoluteUri(RegisterConfirmation.PageUrl).AbsoluteUri,
+				new Dictionary<string, object?> { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
+			Navigation.NavigateTo(url);
+		}
+		else if (_userManager.Options.SignIn.RequireConfirmedAccount)
+		{
+			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+			var callbackUrl = Navigation.GetUriWithQueryParameters(
+				Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
+				new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
+			var url = Navigation.GetUriWithQueryParameters(
+				Navigation.ToAbsoluteUri(RegisterConfirmation.PageUrl).AbsoluteUri,
+				new Dictionary<string, object?> { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
+			Navigation.NavigateTo(url);
+		}
+		else
+		{
 
-            Navigation.NavigateTo(Login.PageUrl);
-        }
-    }
+			Navigation.NavigateTo(Login.PageUrl);
+		}
+	}
 
-    
 
-   
 
-    public sealed class InputModel
-    {
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
-        public string UserName { get; set; } = "";
 
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; } = "";
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; } = "";
+	public sealed class InputModel
+	{
+		[Required]
+		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
+		public string UserName { get; set; } = "";
 
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string? ConfirmPassword { get; set; } = "";
+		[Required]
+		[EmailAddress]
+		[Display(Name = "Email")]
+		public string Email { get; set; } = "";
 
-        [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to the terms.")]
-        public bool AgreeToTerms { get; set; } = true;
+		[Required]
+		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+		[DataType(DataType.Password)]
+		[Display(Name = "Password")]
+		public string Password { get; set; } = "";
 
-        [Required]
-        [Display(Name = "Tenant Id")]
-        public string? TenantId => Tenant?.Id;
-        [Display(Name = "Time Zone")]
-        public string? TimeZoneId { get; set; } = TimeZoneInfo.Local.Id;
-        [Display(Name = "Language")]
-        public string? LanguageCode { get; set; } = CultureInfo.CurrentCulture.Name;
-        [Display(Name = "Tenant")]
-        [Required]
-        public TenantDto? Tenant { get; set; } = null;
-    }
+		[DataType(DataType.Password)]
+		[Display(Name = "Confirm password")]
+		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+		public string? ConfirmPassword { get; set; } = "";
+
+		[Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to the terms.")]
+		public bool AgreeToTerms { get; set; } = true;
+
+		[Required]
+		[Display(Name = "Tenant Id")]
+		public string? TenantId => Tenant?.Id;
+		[Display(Name = "Time Zone")]
+		public string? TimeZoneId { get; set; } = TimeZoneInfo.Local.Id;
+		[Display(Name = "Language")]
+		public string? LanguageCode { get; set; } = CultureInfo.CurrentCulture.Name;
+		[Display(Name = "Tenant")]
+		[Required]
+		public TenantDto? Tenant { get; set; } = null;
+	}
 
 }

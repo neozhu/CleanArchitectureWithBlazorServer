@@ -15,152 +15,152 @@
 
 <PageTitle>@_title</PageTitle>
 
-<div class="d-flex flex-column gap-y-3">
-    <div class="d-flex flex-column">
-        <EditForm Model="Input" OnValidSubmit="OnSubmit" FormName="login">
-            <DataAnnotationsValidator />
-            <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
-            <MudText>
-                @L["Do not have an account?"] <MudLink Href="@Register.PageUrl" Target="_self">@L["Sign Up"]</MudLink>
-            </MudText>
-            <!--user name-->
-            <MudTextField @bind-Value="Input.UserName"
-                          Label="@L["User name"]"
-                          Variant="Variant.Outlined"
-                          For="@(() => Input.UserName)"
-                          AutoFocus="true"
-                          Required="true"
-                          RequiredError="@L["User name is required"]"
-                          Class="my-4" />
-            <!--password-->
-            <MudTextField @bind-Value="Input.Password"
-                          Label="@L["Password"]"
-                          Variant="Variant.Outlined"
-                          For="@(() => Input.Password)"
-                          InputType="@_passwordInputType"
-                          Required="true"
-                          RequiredError="@L["Password is required"]"
-                          Class="my-4"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@_passwordIcon"
-                          OnAdornmentClick="TogglePasswordVisibility" />
+
+<div class="d-flex flex-column  gap-y-2">
+	<EditForm Model="Input" OnValidSubmit="OnSubmit" FormName="login">
+		<DataAnnotationsValidator />
+		<MudStack Spacing="2">
+			<MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
+			<MudText>
+				@L["Do not have an account?"] <MudLink Href="@Register.PageUrl" Target="_self">@L["Sign Up"]</MudLink>
+			</MudText>
+			<!--user name-->
+			<MudTextField @bind-Value="Input.UserName"
+						  Label="@L["User name"]"
+						  Variant="Variant.Outlined"
+						  For="@(() => Input.UserName)"
+						  AutoFocus="true"
+						  Required="true"
+						  RequiredError="@L["User name is required"]" />
+			<!--password-->
+			<MudTextField @bind-Value="Input.Password"
+						  Label="@L["Password"]"
+						  Variant="Variant.Outlined"
+						  For="@(() => Input.Password)"
+						  InputType="@_passwordInputType"
+						  Required="true"
+						  RequiredError="@L["Password is required"]"
+						  Adornment="Adornment.End"
+						  AdornmentIcon="@_passwordIcon"
+						  OnAdornmentClick="TogglePasswordVisibility" />
 
 
-            <div Class="d-flex justify-space-between align-center mb-1">
-                <MudCheckBox @bind-Value="Input.RememberMe"
-                             For="@(() => Input.RememberMe)"
-                             Color="Color.Primary">
-                    @L["Remember me"]
-                </MudCheckBox>
-                <MudLink Href="@Forgot.PageUrl">@L["Forgot password?"]</MudLink>
-            </div>
+			<div Class="d-flex justify-space-between align-center mb-1">
+				<MudCheckBox @bind-Value="Input.RememberMe"
+							 For="@(() => Input.RememberMe)"
+							 Color="Color.Primary">
+					@L["Remember me"]
+				</MudCheckBox>
+				<MudLink Href="@Forgot.PageUrl">@L["Forgot password?"]</MudLink>
+			</div>
 
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       Size="Size.Large"
-                       ButtonType="ButtonType.Submit"
-                       FullWidth="true">
-                <MudText>@L["Sign In"]</MudText>
-            </MudButton>
-        </EditForm>
+			<MudButton Variant="Variant.Filled"
+					   Color="Color.Primary"
+					   Size="Size.Large"
+					   ButtonType="ButtonType.Submit"
+					   FullWidth="true">
+				<MudText>@L["Sign In"]</MudText>
+			</MudButton>
+		</MudStack>
+	</EditForm>
 
-    </div>
-    <div class="d-flex flex-column">
 
-        <ExternalLoginPicker />
+	<div class="d-flex flex-column">
 
-    </div>
+		<ExternalLoginPicker />
+
+	</div>
 </div>
 
 @code {
-    private UserManager<ApplicationUser> _userManager = null!;
-    private SignInManager<ApplicationUser> _signInManager = null!;
+	private UserManager<ApplicationUser> _userManager = null!;
+	private SignInManager<ApplicationUser> _signInManager = null!;
 
-    public const string PageUrl = "/account/login";
-    private string? errorMessage;
-    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
-    private string _title = "Sign In";
-    private AuthenticationScheme[] externalLogins = [];
+	public const string PageUrl = "/account/login";
+	private string? errorMessage;
+	[SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+	private string _title = "Sign In";
+	private AuthenticationScheme[] externalLogins = [];
 
-    // Password visibility toggle
-    private bool _passwordVisible = false;
-    private InputType _passwordInputType = InputType.Password;
-    private string _passwordIcon = Icons.Material.Filled.VisibilityOff;
-    private IJSObjectReference? _auth;
-    private InputModel Input { get; set; } = new()
-    {
-        UserName = "administrator",
-        Password = "Password123!",
-        RememberMe = true
-    };
+	// Password visibility toggle
+	private bool _passwordVisible = false;
+	private InputType _passwordInputType = InputType.Password;
+	private string _passwordIcon = Icons.Material.Filled.VisibilityOff;
+	private IJSObjectReference? _auth;
+	private InputModel Input { get; set; } = new()
+	{
+		UserName = "administrator",
+		Password = "Password123!",
+		RememberMe = true
+	};
 
-    private void TogglePasswordVisibility()
-    {
-        _passwordVisible = !_passwordVisible;
-        _passwordInputType = _passwordVisible ? InputType.Text : InputType.Password;
-        _passwordIcon = _passwordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
-    }
+	private void TogglePasswordVisibility()
+	{
+		_passwordVisible = !_passwordVisible;
+		_passwordInputType = _passwordVisible ? InputType.Text : InputType.Password;
+		_passwordIcon = _passwordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+	}
 
-    protected override Task OnInitializedAsync()
-    {
-        _title = L["Sign In"];
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
-        return Task.CompletedTask;
-    }
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-            _auth = await JS.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
-    }
+	protected override Task OnInitializedAsync()
+	{
+		_title = L["Sign In"];
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+		_signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+		return Task.CompletedTask;
+	}
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+			_auth = await JS.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
+	}
 
-    public async Task OnSubmit()
-    {
-        // Check if the user exists
-        var user = await _userManager.FindByNameAsync(Input.UserName);
-        if (user == null)
-        {
-            errorMessage = L["The specified user does not exist."];
-            Snackbar.Add(errorMessage, Severity.Error);
-            return;
-        }
-        else if (!user.IsActive)
-        {
-            errorMessage = L["Your account is inactive. Please contact support for assistance."];
-            Snackbar.Add(errorMessage, Severity.Error);
-            return;
-        }
-        var result = await _userManager.CheckPasswordAsync(user, Input.Password);
-        if (result)
-        {
+	public async Task OnSubmit()
+	{
+		// Check if the user exists
+		var user = await _userManager.FindByNameAsync(Input.UserName);
+		if (user == null)
+		{
+			errorMessage = L["The specified user does not exist."];
+			Snackbar.Add(errorMessage, Severity.Error);
+			return;
+		}
+		else if (!user.IsActive)
+		{
+			errorMessage = L["Your account is inactive. Please contact support for assistance."];
+			Snackbar.Add(errorMessage, Severity.Error);
+			return;
+		}
+		var result = await _userManager.CheckPasswordAsync(user, Input.Password);
+		if (result)
+		{
 
-            if (_auth is null) return;
-            await _auth.InvokeVoidAsync("postLogin", new
-            {
-                userName = Input.UserName,
-                password = Input.Password,
-                rememberMe = Input.RememberMe,
-                returnUrl = ReturnUrl
-            });
-        }
-        else
-        {
-            errorMessage = L["The username or password is incorrect. Please try again."];
-            Snackbar.Add(errorMessage, Severity.Error);
-        }
-    }
+			if (_auth is null) return;
+			await _auth.InvokeVoidAsync("postLogin", new
+			{
+				userName = Input.UserName,
+				password = Input.Password,
+				rememberMe = Input.RememberMe,
+				returnUrl = ReturnUrl
+			});
+		}
+		else
+		{
+			errorMessage = L["The username or password is incorrect. Please try again."];
+			Snackbar.Add(errorMessage, Severity.Error);
+		}
+	}
 
-    public sealed class InputModel
-    {
-        [Required(ErrorMessage = "User name is required")]
-        [StringLength(100, ErrorMessage = "Name length can't be more than 100.")]
-        public string UserName { get; set; } = "";
+	public sealed class InputModel
+	{
+		[Required(ErrorMessage = "User name is required")]
+		[StringLength(100, ErrorMessage = "Name length can't be more than 100.")]
+		public string UserName { get; set; } = "";
 
-        [Required(ErrorMessage = "Password is required")]
-        [StringLength(30, ErrorMessage = "Password must be at least 6 characters long.", MinimumLength = 6)]
-        public string Password { get; set; } = "";
+		[Required(ErrorMessage = "Password is required")]
+		[StringLength(30, ErrorMessage = "Password must be at least 6 characters long.", MinimumLength = 6)]
+		public string Password { get; set; } = "";
 
-        public bool RememberMe { get; set; } = true;
-    }
+		public bool RememberMe { get; set; } = true;
+	}
 
 }

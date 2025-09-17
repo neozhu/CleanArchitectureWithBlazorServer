@@ -2,10 +2,10 @@
 @inject IStringLocalizer<Lockout> L
 <PageTitle>@L["Locked out"]</PageTitle>
 
-
+<MudStack Spacing="2">
 <MudText Typo="Typo.h4" GutterBottom="true">@L["Locked out"]</MudText>
 <MudText Typo="Typo.body1">@L["This account has been locked due to multiple unsuccessful login attempts. Please try again later or contact support if you need assistance."]</MudText>
-
+</MudStack>
 @code {
     public const string PageUrl = "/account/lockout";
 }

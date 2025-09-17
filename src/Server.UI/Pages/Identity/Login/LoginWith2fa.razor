@@ -9,105 +9,101 @@
 
 
 <PageTitle>@L["Two-factor authentication"]</PageTitle>
-<MudText Typo="Typo.h4" GutterBottom="true">@L["Two-factor authentication"]</MudText>
+<div class="d-flex flex-column gap-y-2">
+	<MudText Typo="Typo.h4" GutterBottom="true">@L["Two-factor authentication"]</MudText>
 
-<MudText Typo="Typo.body1">@L["Your login is secured with two-factor authentication. Please enter the verification code from your authenticator app on your mobile device."]</MudText>
+	<MudText Typo="Typo.body1">@L["Your login is secured with two-factor authentication. Please enter the verification code from your authenticator app on your mobile device."]</MudText>
 
-<div class="d-flex flex-column gap-y-3">
-    <div class="d-flex flex-column">
-        <EditForm Model="Input" FormName="login-with-2fa" OnValidSubmit="OnValidSubmitAsync">
-            <input type="hidden" name="ReturnUrl" value="@ReturnUrl"/>
-            <input type="hidden" name="RememberMe" value="@RememberMe"/>
-            <DataAnnotationsValidator/>
-    
-            <MudTextField @bind-Value="Input.TwoFactorCode" 
-                          Label="@L["Authenticator code"]"
-                          Variant="Variant.Outlined"
-                          Class="my-4"
-                          Required="true"
-                          RequiredError="@L["Authenticator code is required."]"
-                          For="@(() => Input.TwoFactorCode)" 
-                          HelperText="@L["Enter the 6-7 digit code from your mobile authenticator app"]"
-                          InputType="InputType.Text"
-                          Immediate="true"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="Icons.Material.Filled.Security"
-                          AdornmentColor="Color.Primary" />
+	<EditForm Model="Input" FormName="login-with-2fa" OnValidSubmit="OnValidSubmitAsync">
+		<input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
+		<input type="hidden" name="RememberMe" value="@RememberMe" />
+		<DataAnnotationsValidator />
+		<MudStack Spacing="2">
+			<MudTextField @bind-Value="Input.TwoFactorCode"
+						  Label="@L["Authenticator code"]"
+						  Variant="Variant.Outlined"
+						  Required="true"
+						  RequiredError="@L["Authenticator code is required."]"
+						  For="@(() => Input.TwoFactorCode)"
+						  HelperText="@L["Enter the 6-7 digit code from your mobile authenticator app"]"
+						  InputType="InputType.Text"
+						  Immediate="true"
+						  Adornment="Adornment.End"
+						  AdornmentIcon="Icons.Material.Filled.Security"
+						  AdornmentColor="Color.Primary" />
 
-            <MudCheckBox @bind-Value="Input.RememberMachine" 
-                         Label="@L["Remember this machine"]"
-                         Color="Color.Primary"
-                          />
-            <div>
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           Size="Size.Large"
-                           ButtonType="ButtonType.Submit"
-                           FullWidth="true"
-                           StartIcon="Icons.Material.Filled.Login"
-                           Class="mt-3">
-                    @L["Sign In"]
-                </MudButton>
-            </div>
-        </EditForm>
-    </div>
+			<MudCheckBox @bind-Value="Input.RememberMachine"
+						 Label="@L["Remember this machine"]"
+						 Color="Color.Primary" />
 
-    
-    <MudText Typo="Typo.body1">
-        @L["If you do not have access to your authenticator device, you may"]
-    </MudText>
-    <MudButton Variant="Variant.Outlined" 
-               Color="Color.Primary"
-               href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")"
-               StartIcon="Icons.Material.Filled.Key"
-               Class="mt-2">
-        @L["Log in with a recovery code"]
-    </MudButton>
-   
+			<MudButton Variant="Variant.Filled"
+					   Color="Color.Primary"
+					   Size="Size.Large"
+					   ButtonType="ButtonType.Submit"
+					   FullWidth="true"
+					   StartIcon="Icons.Material.Filled.Login">
+				@L["Sign In"]
+			</MudButton>
+		</MudStack>
+	</EditForm>
+
+
+
+	<MudText Typo="Typo.body1">
+		@L["If you do not have access to your authenticator device, you may"]
+	</MudText>
+	<MudButton Variant="Variant.Outlined"
+			   Color="Color.Primary"
+			   href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")"
+			   StartIcon="Icons.Material.Filled.Key"
+			   Class="mt-2">
+		@L["Log in with a recovery code"]
+	</MudButton>
+
 </div>
 
 @code {
-    public const string PageUrl = "/account/loginwith2fa";
-    private SignInManager<ApplicationUser> _signInManager = null!;
-    private UserManager<ApplicationUser> _userManager = null!;
-
- 
-
-    private InputModel Input { get; set; } = new();
-
-    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
-
-    [SupplyParameterFromQuery] private bool RememberMe { get; set; }
+	public const string PageUrl = "/account/loginwith2fa";
+	private SignInManager<ApplicationUser> _signInManager = null!;
+	private UserManager<ApplicationUser> _userManager = null!;
 
 
-    protected override  Task OnInitializedAsync()
-    {
-        _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        // Ensure the user has gone through the username & password screen first
-        return Task.CompletedTask;
-    }
 
-    private  Task OnValidSubmitAsync()
-    {
-        var authenticatorCode = Input.TwoFactorCode!.Replace(" ", string.Empty).Replace("-", string.Empty);
-        var url = Navigation.GetUriWithQueryParameters(
-                Navigation.ToAbsoluteUri(IdentityComponentsEndpointRouteBuilderExtensions.TwofaVerify).AbsoluteUri,
-                new Dictionary<string, object?> { ["token"] = Uri.EscapeDataString(authenticatorCode), ["returnUrl"] = Uri.EscapeDataString(ReturnUrl??"/"), ["remember"] = Input.RememberMachine });
-        Navigation.NavigateTo(url, forceLoad: true);
-        return Task.CompletedTask;
-    }
+	private InputModel Input { get; set; } = new();
 
-    private sealed class InputModel
-    {
-        [Required]
-        [StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-        [DataType(DataType.Text)]
-        [Display(Name = "Authenticator code")]
-        public string? TwoFactorCode { get; set; }
+	[SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
-        [Display(Name = "Remember this machine")]
-        public bool RememberMachine { get; set; }
-    }
+	[SupplyParameterFromQuery] private bool RememberMe { get; set; }
+
+
+	protected override Task OnInitializedAsync()
+	{
+		_signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+		// Ensure the user has gone through the username & password screen first
+		return Task.CompletedTask;
+	}
+
+	private Task OnValidSubmitAsync()
+	{
+		var authenticatorCode = Input.TwoFactorCode!.Replace(" ", string.Empty).Replace("-", string.Empty);
+		var url = Navigation.GetUriWithQueryParameters(
+				Navigation.ToAbsoluteUri(IdentityComponentsEndpointRouteBuilderExtensions.TwofaVerify).AbsoluteUri,
+				new Dictionary<string, object?> { ["token"] = Uri.EscapeDataString(authenticatorCode), ["returnUrl"] = Uri.EscapeDataString(ReturnUrl ?? "/"), ["remember"] = Input.RememberMachine });
+		Navigation.NavigateTo(url, forceLoad: true);
+		return Task.CompletedTask;
+	}
+
+	private sealed class InputModel
+	{
+		[Required]
+		[StringLength(7, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+		[DataType(DataType.Text)]
+		[Display(Name = "Authenticator code")]
+		public string? TwoFactorCode { get; set; }
+
+		[Display(Name = "Remember this machine")]
+		public bool RememberMachine { get; set; }
+	}
 
 }

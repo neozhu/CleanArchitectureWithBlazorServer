@@ -13,82 +13,81 @@
 <PageTitle>@Title</PageTitle>
 
 <EditForm Model="Input" FormName="forgot-password" OnValidSubmit="OnValidSubmitAsync" method="post">
-    <DataAnnotationsValidator/>
+	<DataAnnotationsValidator />
+	<MudStack Spacing="2">
+		<MudText Typo="Typo.h4" GutterBottom="true">@L["Forgot Password?"]</MudText>
+		<MudText Typo="Typo.body1">@L["Please enter your registered email address. We will send you a password reset link if the account exists."]</MudText>
 
-    <MudText Typo="Typo.h4" GutterBottom="true">@L["Forgot Password?"]</MudText>
-    <MudText Typo="Typo.body1">@L["Please enter your registered email address. We will send you a password reset link if the account exists."]</MudText>
-
-    <MudTextField @bind-Value="Input.Email" 
-                  Label="@L["E-mail"]" 
-                  Variant="Variant.Outlined"
-                  InputType="InputType.Email"
-                  Placeholder="name@example.com"
-                  Immediate="true"
-                  FullWidth="true"
-                  Class="my-4"
-                  For="@(() => Input.Email)" />
-    <MudButton Variant="Variant.Filled"
-               Color="Color.Primary"
-               Size="Size.Large"
-               ButtonType="ButtonType.Submit"
-               FullWidth="true"
-               Class="mt-3">
-        <MudText>@L["Send E-mail"]</MudText>
-    </MudButton>
+		<MudTextField @bind-Value="Input.Email"
+					  Label="@L["E-mail"]"
+					  Variant="Variant.Outlined"
+					  InputType="InputType.Email"
+					  Placeholder="name@example.com"
+					  Immediate="true"
+					  FullWidth="true"
+					  For="@(() => Input.Email)" />
+		<MudButton Variant="Variant.Filled"
+				   Color="Color.Primary"
+				   Size="Size.Large"
+				   ButtonType="ButtonType.Submit"
+				   FullWidth="true">
+			@L["Send E-mail"]
+		</MudButton>
+	</MudStack>
 </EditForm>
 
 @code {
-    public const string PageUrl = "/account/forgot-password";
-    public string Title = "Forgot Password";
-    private UserManager<ApplicationUser> _userManager = null!;
-    private InputModel Input { get; set; } = new();
-    private readonly string _resetPasswordToken = string.Empty;
-    private string _inputToken = string.Empty;
-    private string? _message;
+	public const string PageUrl = "/account/forgot-password";
+	public string Title = "Forgot Password";
+	private UserManager<ApplicationUser> _userManager = null!;
+	private InputModel Input { get; set; } = new();
+	private readonly string _resetPasswordToken = string.Empty;
+	private string _inputToken = string.Empty;
+	private string? _message;
 
-    protected override Task OnInitializedAsync()
-    {
-        Title = L["Forgot Password"];
+	protected override Task OnInitializedAsync()
+	{
+		Title = L["Forgot Password"];
 
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        return Task.CompletedTask;
-    }
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+		return Task.CompletedTask;
+	}
 
-    private async Task OnValidSubmitAsync()
-    {
-        var user = await _userManager.FindByEmailAsync(Input.Email);
-        if (user is null)
-        {
-            _message = L["If an account with this email exists, a password reset link will be sent."];
-            Snackbar.Add(_message, Severity.Error);
-            return;
-        }
+	private async Task OnValidSubmitAsync()
+	{
+		var user = await _userManager.FindByEmailAsync(Input.Email);
+		if (user is null)
+		{
+			_message = L["If an account with this email exists, a password reset link will be sent."];
+			Snackbar.Add(_message, Severity.Error);
+			return;
+		}
 
-        if (!await _userManager.IsEmailConfirmedAsync(user))
-        {
-            _message = L["Your email address has not been confirmed. Please check your inbox for a confirmation email or request a new one."];
-            Snackbar.Add(_message, Severity.Error);
-            return;
-        }
+		if (!await _userManager.IsEmailConfirmedAsync(user))
+		{
+			_message = L["Your email address has not been confirmed. Please check your inbox for a confirmation email or request a new one."];
+			Snackbar.Add(_message, Severity.Error);
+			return;
+		}
 
-        var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = Navigation.GetUriWithQueryParameters(
-            Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
-            new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
-        await Mediator.Publish(new ResetPasswordNotification(callbackUrl, user.Email!, user.UserName!));
-        Logger.LogInformation("Rest password email sent to {0}.", Input.Email);
-        var url = Navigation.GetUriWithQueryParameters(
-               Navigation.ToAbsoluteUri(ForgotPasswordConfirmation.PageUrl).AbsoluteUri,
-               new Dictionary<string, object?> { ["ResetPasswordLink"] = callbackUrl });
-        Navigation.NavigateTo(url);
-  
-    }
+		var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+		code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+		var callbackUrl = Navigation.GetUriWithQueryParameters(
+			Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
+			new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
+		await Mediator.Publish(new ResetPasswordNotification(callbackUrl, user.Email!, user.UserName!));
+		Logger.LogInformation("Rest password email sent to {0}.", Input.Email);
+		var url = Navigation.GetUriWithQueryParameters(
+			   Navigation.ToAbsoluteUri(ForgotPasswordConfirmation.PageUrl).AbsoluteUri,
+			   new Dictionary<string, object?> { ["ResetPasswordLink"] = callbackUrl });
+		Navigation.NavigateTo(url);
+
+	}
 
 
-    private sealed class InputModel
-    {
-        [Required] [EmailAddress] public string Email { get; set; } = "";
-    }
+	private sealed class InputModel
+	{
+		[Required][EmailAddress] public string Email { get; set; } = "";
+	}
 
 }
