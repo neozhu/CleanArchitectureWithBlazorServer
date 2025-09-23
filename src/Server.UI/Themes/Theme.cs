@@ -136,23 +136,23 @@ public static class Theme
                 {
                     FontSize = ".875rem",
                     FontWeight = "500",
-                    LineHeight = "1.25rem",
+                    LineHeight = "1.75rem",
                     LetterSpacing = "normal",
                     TextTransform = "none"
                 },
                 Subtitle1 = new Subtitle1Typography
                 {
-                    FontSize = ".875rem",
+                    FontSize = "1rem",
                     FontWeight = "500",
-                    LineHeight = "1.25rem",
+                    LineHeight = "1.5rem",
                     LetterSpacing = "0",
                 },
                 Subtitle2 = new Subtitle2Typography
                 {
                     FontSize = ".75rem",
                     FontWeight = "500",
-                    LineHeight = "1rem",
-                    LetterSpacing = "0"
+                    LineHeight = "1.25rem",
+                    LetterSpacing = ".00714em"
                 },
                 Body1 = new Body1Typography
                 {
@@ -172,14 +172,14 @@ public static class Theme
                 {
                     FontSize = "0.75rem", 
                     FontWeight = "400",
-                    LineHeight = "1rem",
+                    LineHeight = "1.5rem",
                     LetterSpacing = "0"
                 },
                 Overline = new OverlineTypography
                 {
                     FontSize = "0.75rem",
                     FontWeight = "400",
-                    LineHeight = "1rem",
+                    LineHeight = "1.75rem",
                     LetterSpacing = "0",
                     TextTransform = "none"
                 }
