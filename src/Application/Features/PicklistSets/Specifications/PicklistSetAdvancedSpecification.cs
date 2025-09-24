@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications;
+namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications;
 #nullable disable warnings
 public class PicklistSetAdvancedSpecification : Specification<PicklistSet>
 {

@@ -1,4 +1,4 @@
-﻿@page "/pages/documents"
+@page "/pages/documents"
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.GetFileStream
@@ -42,7 +42,7 @@
                                    Value="Query.ListView"
                                    ValueChanged="OnChangedListView"
                                    Dense="true"
-                                   Label="@_localizer["List View"]">
+                                   Label="@AppStrings.ListView">
                     </MudEnumSelect>
                 </MudStack>
             </MudStack>
@@ -52,7 +52,7 @@
                     <MudButton Disabled="@_isLoading"
                                OnClick="OnRefresh"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
                     @if (_accessRights.Create)
                     {
@@ -66,7 +66,7 @@
                         <MudButton StartIcon="@Icons.Material.Outlined.Delete"
                                    Disabled="@(!_selectedDocuments.Any())"
                                    OnClick="OnDeleteChecked">
-                            @ConstantString.Delete
+                            @AppStrings.Delete
                         </MudButton>
                     }
                 </MudToolBar>
@@ -74,7 +74,7 @@
                 {
                     <MudTextField T="string" Value="@Query.Keyword"
                                   ValueChanged="OnSearch"
-                                  Placeholder="@ConstantString.Search"
+                                  Placeholder="@AppStrings.Search"
                                   Adornment="Adornment.End"
                                   AdornmentIcon="@Icons.Material.Filled.Search"
                                   IconSize="Size.Small">
@@ -85,7 +85,7 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn ShowInFooter="false" />
-        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
+        <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Actions" Sortable="false">
             <CellTemplate>
                 @if (_accessRights.Edit || _accessRights.Delete)
                 {
@@ -95,19 +95,19 @@
                         @if (_accessRights.Edit)
                         {
                             <MudMenuItem OnClick="@(() => OnEdit(context.Item))">
-                                @ConstantString.Edit
+                                @AppStrings.Edit
                             </MudMenuItem>
                         }
                         @if (_accessRights.Delete)
                         {
                             <MudMenuItem OnClick="@(() => OnDelete(context.Item))">
-                                @ConstantString.Delete
+                                @AppStrings.Delete
                             </MudMenuItem>
                         }
                         @if (_accessRights.Download)
                         {
                             <MudMenuItem Disabled="@_isDownloading" OnClick="@(() => OnDownload(context.Item))">
-                                @ConstantString.Download
+                                @AppStrings.Download
                             </MudMenuItem>
                         }
                     </MudMenu>
@@ -118,7 +118,7 @@
                                StartIcon="@Icons.Material.Filled.DoNotTouch"
                                IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
-                        @ConstantString.NoAllowed
+                        @AppStrings.NoAllowed
                     </MudButton>
                 }
             </CellTemplate>
@@ -203,10 +203,10 @@
         </PropertyColumn>
     </Columns>
     <NoRecordsContent>
-        <MudText>@ConstantString.NoRecords</MudText>
+        <MudText>@AppStrings.NoRecords</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>@ConstantString.Loading</MudText>
+        <MudText>@AppStrings.Loading</MudText>
     </LoadingContent>
     <PagerContent>
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
@@ -350,7 +350,7 @@
         if (result is not null && !result.Canceled)
         {
             await _dataGrid.ReloadServerData();
-            Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
+            Snackbar.Add(AppStrings.UploadSuccess, Severity.Info);
         }
     }
 
@@ -363,7 +363,7 @@
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = await DialogService.ShowAsync<DocumentFormDialog>(
-            string.Format(ConstantString.EditTheItem, _localizer["Document"]),
+             _localizer["Edit the document"],
             parameters, options);
         var result = await dialog.Result;
         if (result is not null && !result.Canceled)
@@ -375,10 +375,10 @@
     private async Task OnDelete(DocumentDto dto)
     {
         var command = new DeleteDocumentCommand(new[] { dto.Id });
-        var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Title);
+        var contentText = string.Format(AppStrings.DeleteConfirmation, dto.Title);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(
             command,
-            string.Format(ConstantString.DeleteTheItem, _localizer["Document"]),
+            string.Format(AppStrings.DeleteTheItem, _localizer["Document"]),
             contentText,
             async () =>
             {
@@ -390,10 +390,10 @@
     private async Task OnDeleteChecked()
     {
         var command = new DeleteDocumentCommand(_selectedDocuments.Select(x => x.Id).ToArray());
-        var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedDocuments.Count);
+        var contentText = string.Format(AppStrings.DeleteConfirmWithSelected, _selectedDocuments.Count);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(
             command,
-            string.Format(ConstantString.DeleteTheItem, _localizer["Document"]),
+            string.Format(AppStrings.DeleteTheItem, _localizer["Document"]),
             contentText,
             async () =>
             {

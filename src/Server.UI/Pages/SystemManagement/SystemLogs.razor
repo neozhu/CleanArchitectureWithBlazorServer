@@ -1,4 +1,4 @@
-﻿@page "/system/logs"
+@page "/system/logs"
 @using CleanArchitecture.Blazor.Application.Features.SystemLogs.Caching
 @using CleanArchitecture.Blazor.Application.Features.SystemLogs.DTOs
 @using CleanArchitecture.Blazor.Application.Features.SystemLogs.Queries.PaginationQuery
@@ -37,7 +37,7 @@
                     <MudButton 
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
                     @if (_accessRights.Purge)
                     {
@@ -196,10 +196,10 @@
         </MudCard>
     </ChildRowContent>
     <NoRecordsContent>
-        <MudText>@ConstantString.NoRecords</MudText>
+        <MudText>@AppStrings.NoRecords</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>@ConstantString.Loading</MudText>
+        <MudText>@AppStrings.Loading</MudText>
     </LoadingContent>
     <PagerContent>
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />

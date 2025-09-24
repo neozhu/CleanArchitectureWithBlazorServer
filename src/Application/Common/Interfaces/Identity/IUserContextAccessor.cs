@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 /// <summary>
 /// Interface for accessing and managing user context with support for nested contexts.

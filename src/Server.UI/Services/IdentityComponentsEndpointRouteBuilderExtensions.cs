@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using System.Text.Json;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login;

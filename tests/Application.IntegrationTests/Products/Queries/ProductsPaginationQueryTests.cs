@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 using CleanArchitecture.Blazor.Domain.Entities;

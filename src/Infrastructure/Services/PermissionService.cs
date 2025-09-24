@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using CleanArchitecture.Blazor.Application.Common.Security;
 

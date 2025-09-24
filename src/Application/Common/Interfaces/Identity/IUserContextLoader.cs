@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 

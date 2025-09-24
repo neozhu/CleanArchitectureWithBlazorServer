@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Infrastructure.Configurations;
+namespace CleanArchitecture.Blazor.Infrastructure.Configurations;
 
 public class MinioOptions
 {

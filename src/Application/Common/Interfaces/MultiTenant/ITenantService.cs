@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 

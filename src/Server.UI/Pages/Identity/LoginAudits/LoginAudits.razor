@@ -1,4 +1,4 @@
-﻿@page "/pages/identity/loginaudits"
+@page "/pages/identity/loginaudits"
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Specifications
@@ -40,7 +40,7 @@
                     <MudButton 
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
                 </MudToolBar>
                 <MudStack Row Spacing="1">
@@ -97,7 +97,7 @@
         <MudText>@L["No login audit records found"]</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>@ConstantString.Loading</MudText>
+        <MudText>@AppStrings.Loading</MudText>
     </LoadingContent>
     <PagerContent>
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />

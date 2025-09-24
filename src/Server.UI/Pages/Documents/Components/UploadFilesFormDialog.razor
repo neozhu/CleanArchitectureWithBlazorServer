@@ -1,4 +1,4 @@
-﻿@using SixLabors.ImageSharp.Processing
+@using SixLabors.ImageSharp.Processing
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats.Png
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
@@ -38,7 +38,7 @@
     </DialogContent>
     <DialogActions>
 
-        <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!_uploadedFiles.Any())" OnClick="Clear">@ConstantString.Clear</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!_uploadedFiles.Any())" OnClick="Clear">@AppStrings.Clear</MudButton>
         <MudFileUpload @ref="@_fileUpload" T="IReadOnlyList<IBrowserFile>" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="LoadFiles">
             <ActivatorContent>
                 <MudLoadingButton Loading="@_uploading" Variant="Variant.Filled"  
@@ -49,7 +49,7 @@
             </ActivatorContent>
         </MudFileUpload>
 
-        <MudLoadingButton Loading="@_processing" Disabled="@(!_uploadedFiles.Any())" Variant="Variant.Filled" OnClick="Submit">@ConstantString.Submit</MudLoadingButton>
+        <MudLoadingButton Loading="@_processing" Disabled="@(!_uploadedFiles.Any())" Variant="Variant.Filled" OnClick="Submit">@AppStrings.Submit</MudLoadingButton>
 
     </DialogActions>
 </MudDialog>

@@ -1,4 +1,4 @@
-﻿@page "/pages/contacts"
+@page "/pages/contacts"
 
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Caching
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
@@ -43,32 +43,32 @@
                     <MudButton Disabled="@_loading"
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
                     @if (_accessRights.Create)
                     {
                         <MudButton StartIcon="@Icons.Material.Outlined.Add"
                                    OnClick="OnCreate">
-                            @ConstantString.New
+                            @AppStrings.New
                         </MudButton>
                     }
-                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
+                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@AppStrings.More">
                         @if (_accessRights.Create)
                         {
-                            <MudMenuItem Disabled="@(_selectedContacts.Count != 1)" OnClick="OnCloneContact">@ConstantString.Clone</MudMenuItem>
+                            <MudMenuItem Disabled="@(_selectedContacts.Count != 1)" OnClick="OnCloneContact">@AppStrings.Clone</MudMenuItem>
                         }
                         @if (_accessRights.Delete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedContacts.Count > 0))"
                                          OnClick="OnDeleteSelectedContacts">
-                                @ConstantString.Delete
+                                @AppStrings.Delete
                             </MudMenuItem>
                         }
                         @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_exporting"
                                          OnClick="OnExport">
-                                @ConstantString.Export
+                                @AppStrings.Export
                             </MudMenuItem>
                         }
                         @if (_accessRights.Import)
@@ -79,7 +79,7 @@
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
                                                    Variant="Variant.Text"
                                                    Disabled="@_uploading">
-                                            @ConstantString.Import
+                                            @AppStrings.Import
                                         </MudButton>
                                     </ActivatorContent>
                                 </MudFileUpload>
@@ -90,7 +90,7 @@
                 <MudStack Row Spacing="1">
                     @if (_accessRights.Search)
                     {
-                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@_contactsQuery.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
+                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@_contactsQuery.Keyword" Placeholder="@AppStrings.Search" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
                     }
@@ -100,7 +100,7 @@
             </ToolBarContent>
             <Columns>
                 <SelectColumn ShowInFooter="false"></SelectColumn>
-                <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
+                <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Actions" Sortable="false">
                     <CellTemplate>
                         @if (_accessRights.Edit || _accessRights.Delete)
                         {
@@ -109,23 +109,23 @@
                                      EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                                 @if (_accessRights.Edit)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnEditContact(context.Item))">@ConstantString.Edit</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnEditContact(context.Item))">@AppStrings.Edit</MudMenuItem>
                                 }
                                 @if (_accessRights.Delete)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnDeleteContact(context.Item))">@ConstantString.Delete</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDeleteContact(context.Item))">@AppStrings.Delete</MudMenuItem>
                                 }
                             </MudMenu>
                         }
                         else
                         {
-                            <MudTooltip Text="@ConstantString.NoAllowed" Delay="300">
+                            <MudTooltip Text="@AppStrings.NoAllowed" Delay="300">
                                 <MudIconButton Variant="Variant.Outlined"  
                                                Disabled="true"
                                                Icon="@Icons.Material.Filled.DoNotTouch"
                                                Size="Size.Small"
                                                Color="Color.Surface">
-                                    @ConstantString.NoAllowed
+                                    @AppStrings.NoAllowed
                                 </MudIconButton>
                             </MudTooltip>
                         }
@@ -145,10 +145,10 @@
 
             </Columns>
             <NoRecordsContent>
-                <MudText>@ConstantString.NoRecords</MudText>
+                <MudText>@AppStrings.NoRecords</MudText>
             </NoRecordsContent>
             <LoadingContent>
-                <MudText>@ConstantString.Loading</MudText>
+                <MudText>@AppStrings.Loading</MudText>
             </LoadingContent>
             <PagerContent>
                 <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
@@ -263,14 +263,14 @@
 
     private Task OnDeleteContact(ContactDto dto)
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Name);
+        var contentText = string.Format(AppStrings.DeleteConfirmation, dto.Name);
         var command = new DeleteContactCommand(new int[] { dto.Id });
         return DeleteContactsInternal(command, contentText); 
     }
 
     private Task OnDeleteSelectedContacts()
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedContacts.Count);
+        var contentText = string.Format(AppStrings.DeleteConfirmWithSelected, _selectedContacts.Count);
         var command = new DeleteContactCommand(_selectedContacts.Select(x => x.Id).ToArray());
         return DeleteContactsInternal(command, contentText);
     }
@@ -279,7 +279,7 @@
     {
         return DialogServiceHelper.ShowDeleteConfirmationDialogAsync(
             command,
-            ConstantString.DeleteConfirmationTitle,
+            AppStrings.DeleteConfirmationTitle,
             contentText,
             async () =>
             {
@@ -307,7 +307,7 @@
                 if (result.Data != null)
                 {
                     await BlazorDownloadFileService.DownloadFileAsync($"{L["Contacts"]}.xlsx", result.Data, contentType:"application/octet-stream");
-                    Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
+                    Snackbar.Add($"{AppStrings.ExportSuccess}", MudBlazor.Severity.Info);
                 }
                 else
                 {
@@ -332,7 +332,7 @@
             async data =>
             {
                 await _contactsGrid.ReloadServerData();
-                Snackbar.Add($"{ConstantString.ImportSuccess}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{AppStrings.ImportSuccess}", MudBlazor.Severity.Info);
             }, errors =>
             {
                 Snackbar.Add($"{errors}", MudBlazor.Severity.Error);

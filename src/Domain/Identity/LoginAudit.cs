@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Domain.Common.Entities;
+using CleanArchitecture.Blazor.Domain.Common.Entities;
 
 namespace CleanArchitecture.Blazor.Domain.Identity;
 public class LoginAudit : BaseAuditableEntity

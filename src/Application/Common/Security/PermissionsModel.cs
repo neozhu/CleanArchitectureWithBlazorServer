@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Security;
+namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class PermissionModel
 {

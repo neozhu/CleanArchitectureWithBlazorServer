@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Pipeline;

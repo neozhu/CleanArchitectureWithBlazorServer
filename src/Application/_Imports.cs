@@ -1,4 +1,4 @@
-﻿global using System.ComponentModel;
+global using System.ComponentModel;
 global using System.Data;
 global using System.Globalization;
 global using System.Linq.Expressions;

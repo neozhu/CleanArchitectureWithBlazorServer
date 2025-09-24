@@ -1,4 +1,4 @@
-﻿@page "/system/audittrails"
+@page "/system/audittrails"
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications
@@ -38,7 +38,7 @@
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
                     <MudButton OnClick="OnRefreshAuditTrails"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
                 </MudToolBar>
                 <MudStack Row Spacing="1" AlignItems="AlignItems.End">
@@ -152,10 +152,10 @@
         </MudCard>
     </ChildRowContent>
     <NoRecordsContent>
-        <MudText>@ConstantString.NoRecords</MudText>
+        <MudText>@AppStrings.NoRecords</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>@ConstantString.Loading</MudText>
+        <MudText>@AppStrings.Loading</MudText>
     </LoadingContent>
     <PagerContent>
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />

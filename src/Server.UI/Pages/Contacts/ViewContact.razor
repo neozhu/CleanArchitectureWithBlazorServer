@@ -1,4 +1,4 @@
-﻿@page "/pages/contacts/view/{id:int}"
+@page "/pages/contacts/view/{id:int}"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById
@@ -78,9 +78,9 @@
     {
         if (_model == null)
             return;
-        var contentText = string.Format(ConstantString.DeleteConfirmation, _model.Name ?? string.Empty);
+        var contentText = string.Format(AppStrings.DeleteConfirmation, _model.Name ?? string.Empty);
         var command = new DeleteContactCommand(new int[] { _model.Id });
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, AppStrings.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(() =>
             {

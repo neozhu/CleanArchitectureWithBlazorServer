@@ -1,4 +1,4 @@
-﻿@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Processing
 @using SixLabors.ImageSharp.Formats.Png
@@ -152,7 +152,7 @@
         var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(ms,128,128,80);
         var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, resizedStream.ToArray(), overwrite: true, Model.Id);
         Model.ProfilePictureDataUrl = await UploadService.UploadAsync(uploadRequest);
-        Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
+        Snackbar.Add(AppStrings.UploadSuccess, Severity.Info);
     }
 
     public async Task Submit()

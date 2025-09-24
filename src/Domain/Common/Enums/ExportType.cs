@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Domain.Common.Enums;
+namespace CleanArchitecture.Blazor.Domain.Common.Enums;
 
 public enum ExportType
 {

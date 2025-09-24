@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
+using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 

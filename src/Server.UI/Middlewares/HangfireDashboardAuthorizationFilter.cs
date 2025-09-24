@@ -1,4 +1,4 @@
-﻿using Hangfire.Dashboard;
+using Hangfire.Dashboard;
 
 namespace CleanArchitecture.Blazor.Server.UI.Middlewares;
 

@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 
 public interface IApplicationSettings
 {

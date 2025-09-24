@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Application.Common.Security;

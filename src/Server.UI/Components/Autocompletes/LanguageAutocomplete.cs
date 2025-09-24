@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Common.Constants;
+using CleanArchitecture.Blazor.Application.Common.Constants;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 

@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 namespace CleanArchitecture.Blazor.Server.UI.Hubs;
 

@@ -1,22 +1,23 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Resources;
 
 namespace CleanArchitecture.Blazor.Application.Common.Constants;
 
-public static class ConstantString
+public static class AppStrings
 {
-    public const string CONSTANTSTRINGRESOURCEID =
-        "CleanArchitecture.Blazor.Application.Resources.Constants.ConstantString";
+    public const string APPSTRINGS_RESOURCE_ID =
+        "CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings";
 
     private static readonly ResourceManager rm;
 
-    static ConstantString()
+    static AppStrings()
     {
-        rm = new ResourceManager(CONSTANTSTRINGRESOURCEID, typeof(ConstantString).Assembly);
+        rm = new ResourceManager(APPSTRINGS_RESOURCE_ID, typeof(AppStrings).Assembly);
     }
 
     //==========================================================//
     //for button text
+     public static string ListView => Localize("List View");
     public static string More => Localize("More");
     public static string Print => Localize("Print");
     public static string GoBack => Localize("Back");
@@ -52,6 +53,8 @@ public static class ConstantString
     public static string Selected => Localize("Selected");
     public static string SelectedTotal => Localize("Selected Total");
     public static string Loading => Localize("Loading...");
+    public static string Waiting => Localize("Waiting...");
+
     public static string NoRecords => Localize("No records found");
     public static string ExportSuccess => Localize("Export successfully");
     public static string ImportSuccess => Localize("Import successfully");
@@ -59,13 +62,8 @@ public static class ConstantString
     public static string DeleteConfirmation => Localize("Are you sure you want to delete \"{0}\"?");
     public static string DeleteConfirmationTitle => Localize("Delete Confirmation");
     public static string DeleteConfirmWithSelected => Localize("Are you sure you want to delete {0} selected items?");
-    public static string CreateAnItem => Localize("Create a new {0}");
-    public static string EditTheItem => Localize("Edit the {0}");
-    public static string ViewTheItem => Localize("View the {0}");
-    public static string ItemHasBeenCreated => Localize("{0} has been created");
-    public static string ItemHasBeenUpdated => Localize("{0} has been updated");
-    public static string ItemHasBeenDeleted => Localize("{0} has been deleted");
-    public static string ItemHasBeenSaved => Localize("{0} has been saved");
+   public static string DeleteTheItem => Localize("Delete the item");
+    public static string DeleteConfirmationWithId => Localize("Are you sure you want to delete the item with ID: {0}?");
     public static string NoAllowed => Localize("No permission");
     public static string AllowedEdit => Localize("Allow edit");
     public static string AllowedDelete => Localize("Allow delete");
@@ -90,11 +88,7 @@ public static class ConstantString
     public static string CreatedBy => Localize("CreatedBy");
     public static string LastModifiedAt => Localize("LastModifiedAt");
     public static string LastModifiedBy => Localize("LastModifiedBy");
-    public static string System => Localize("System");
-    public static string Admin => Localize("Admin");
-    public static string SuperAdmin => Localize("Super Admin");
-    public static string Basic => Localize("Basic");
-    
+ 
     // Success/Failure messages
     public static string SaveSuccess => Localize("Save successfully");
     public static string CreateSuccess => Localize("Create successfully");
@@ -103,10 +97,7 @@ public static class ConstantString
     public static string ExportFail => Localize("Export failed");
     public static string ImportFail => Localize("Import failed");
     
-    // Additional messages
-    public static string Waiting => Localize("Waiting...");
-    public static string DeleteTheItem => Localize("Delete the item");
-    public static string DeleteConfirmationWithId => Localize("Are you sure you want to delete the item with ID: {0}?");
+    
 
     private static string Localize(string key)
     {

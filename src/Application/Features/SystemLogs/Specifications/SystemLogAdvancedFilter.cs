@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.SystemLogs.Specifications;
+namespace CleanArchitecture.Blazor.Application.Features.SystemLogs.Specifications;
 
 public enum SystemLogListView
 {

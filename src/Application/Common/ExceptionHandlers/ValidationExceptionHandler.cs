@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
+namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
 public sealed class
     ValidationExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse,
