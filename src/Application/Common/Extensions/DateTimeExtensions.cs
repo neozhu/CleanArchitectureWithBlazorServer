@@ -1,4 +1,4 @@
-﻿public static class DateTimeExtensions
+public static class DateTimeExtensions
 {
     /// <summary>
     /// Gets a date range based on the provided keyword, similar to Salesforce date keywords.

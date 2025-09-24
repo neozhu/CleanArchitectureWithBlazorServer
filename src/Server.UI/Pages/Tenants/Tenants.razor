@@ -1,4 +1,4 @@
-﻿@page "/system/tenants"
+@page "/system/tenants"
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Caching
@@ -33,13 +33,13 @@
                     <MudButton Disabled="@_loading"
                                OnClick="OnRefreshTenants"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
                     @if (_accessRights.Create)
                     {
                         <MudButton StartIcon="@Icons.Material.Outlined.Add"
                                    OnClick="OnCreateTenant">
-                            @ConstantString.New
+                            @AppStrings.New
                         </MudButton>
                     }
                     @if (_accessRights.Delete)
@@ -47,7 +47,7 @@
                         <MudButton StartIcon="@Icons.Material.Outlined.Delete"
                                    Disabled="@(!_selectedItems.Any())"
                                    OnClick="OnDeleteSelectedTenants">
-                            @ConstantString.Delete
+                            @AppStrings.Delete
                         </MudButton>
                     }
                 </MudToolBar>
@@ -57,7 +57,7 @@
                         <MudTextField T="string"
                                       ValueChanged="OnSearchTenant"
                                       Value="@_tenantsQuery.Keyword"
-                                      Placeholder="@ConstantString.Search"
+                                      Placeholder="@AppStrings.Search"
                                       Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search"
                                       IconSize="Size.Small">
@@ -69,7 +69,7 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn ShowInFooter="false"></SelectColumn>
-        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
+        <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Actions" Sortable="false">
             <CellTemplate>
                 @if (_accessRights.Edit || _accessRights.Delete)
                 {
@@ -83,13 +83,13 @@
                         @if (_accessRights.Edit)
                         {
                             <MudMenuItem OnClick="@(() => OnEditTenant(context.Item))">
-                                @ConstantString.Edit
+                                @AppStrings.Edit
                             </MudMenuItem>
                         }
                         @if (_accessRights.Delete)
                         {
                             <MudMenuItem OnClick="@(() => OnDeleteTenant(context.Item))">
-                                @ConstantString.Delete
+                                @AppStrings.Delete
                             </MudMenuItem>
                         }
                     </MudMenu>
@@ -101,7 +101,7 @@
                                IconColor="Color.Secondary"
                                Size="Size.Small"
                                Color="Color.Surface">
-                        @ConstantString.NoAllowed
+                        @AppStrings.NoAllowed
                     </MudButton>
                 }
             </CellTemplate>
@@ -207,7 +207,7 @@
     private async Task OnDeleteTenant(TenantDto dto)
     {
         var command = new DeleteTenantCommand(new[] { dto.Id });
-        var contentText = string.Format(ConstantString.DeleteConfirmationWithId, dto.Id);
+        var contentText = string.Format(AppStrings.DeleteConfirmationWithId, dto.Id);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, L["Delete the Tenant"], contentText, async () =>
         {
             await InvokeAsync(async () =>
@@ -222,7 +222,7 @@
     private async Task OnDeleteSelectedTenants()
     {
         var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var contentText = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
+        var contentText = string.Format(AppStrings.DeleteConfirmation, _selectedItems.Count);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, L["Delete Selected Tenants"], contentText, async () =>
         {
             await InvokeAsync(async () =>

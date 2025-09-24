@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Common.FusionCache;
+using CleanArchitecture.Blazor.Application.Common.FusionCache;
 using Microsoft.Extensions.Hosting;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;

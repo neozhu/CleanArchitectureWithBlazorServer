@@ -1,4 +1,4 @@
-﻿@page "/pages/contacts/create"
+@page "/pages/contacts/create"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Create
 
 @inherits MudComponentBase
@@ -38,7 +38,7 @@
         </MudForm>
         </MudCardContent>
          <MudCardActions Class="d-flex justify-end gap-2">
-                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="OnSubmit">@ConstantString.Save</MudLoadingButton>
+                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="OnSubmit">@AppStrings.Save</MudLoadingButton>
          </MudCardActions>
         </MudCard>
 </MudContainer>
@@ -73,7 +73,7 @@
             result.Match(
                 data=>
                 {
-                    Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                    Snackbar.Add(AppStrings.SaveSuccess, MudBlazor.Severity.Info);
                     Navigation.NavigateTo($"/pages/Contacts");
                 },
                 errors=>

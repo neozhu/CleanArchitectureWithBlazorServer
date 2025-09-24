@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation;
 
 public record UserActivationNotification(string ActivationUrl, string Email, string UserId, string UserName)
     : INotification;

@@ -1,4 +1,4 @@
-﻿@using CleanArchitecture.Blazor.Server.UI.Components.Sessions
+@using CleanArchitecture.Blazor.Server.UI.Components.Sessions
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Size = SixLabors.ImageSharp.Size
 @using Image = SixLabors.ImageSharp.Image
@@ -100,7 +100,7 @@
                                         <tr @onclick="()=>OnDownloadFile(dto.Url)" style="cursor:pointer">
                                             <td><Thumbnail FileName="@dto.Name" FileUrl="@dto.Url"> </Thumbnail></td>
                                             <td><FileSizeFormatter FileSizeInBytes="@dto.Size"></FileSizeFormatter></td>
-                                            <td style="width:50px"><MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" title="@ConstantString.Delete" OnClick="@(() => DeleteImage(dto))"></MudIconButton></td>
+                                            <td style="width:50px"><MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" title="@AppStrings.Delete" OnClick="@(() => DeleteImage(dto))"></MudIconButton></td>
                                         </tr>
                                     }
                                 </tbody>
@@ -113,9 +113,9 @@
 
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudLoadingButton Loading="@_saveingnew" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
-        <MudLoadingButton Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        <MudButton OnClick="Cancel">@AppStrings.Cancel</MudButton>
+        <MudLoadingButton Loading="@_saveingnew" OnClick="SaveAndNew">@AppStrings.SaveAndNew</MudLoadingButton>
+        <MudLoadingButton Loading="@_saving" OnClick="Submit">@AppStrings.Save</MudLoadingButton>
     </DialogActions>
 </MudDialog>
 
@@ -225,7 +225,7 @@
             data =>
             {
                 MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
+                Snackbar.Add(AppStrings.SaveSuccess, Severity.Info);
             },
             errors =>
             {
@@ -250,7 +250,7 @@
             result.Match(
             data =>
             {
-                Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
+                Snackbar.Add(AppStrings.SaveSuccess, Severity.Info);
                 Refresh?.Invoke();
                 _model = new AddEditProductCommand();
             },

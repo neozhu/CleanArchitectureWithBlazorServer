@@ -1,4 +1,4 @@
-﻿@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
+@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @inherits MudComponentBase
 
@@ -65,8 +65,8 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">@ConstantString.Ok</MudButton>
+        <MudButton OnClick="Cancel">@AppStrings.Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">@AppStrings.Ok</MudButton>
     </DialogActions>
 </MudDialog>
 

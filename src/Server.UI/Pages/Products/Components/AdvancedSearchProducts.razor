@@ -1,9 +1,9 @@
-﻿@using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
+@using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 @inject IStringLocalizer<Products> L
 
 <MudExpansionPanel @bind-Expanded="_advancedSearchExpanded"
                    Style="border-radius: var(--mud-default-borderradius) !important;"
-                   Class="mud-elevation-25 pa-2 mb-3" Text="@ConstantString.AdvancedSearch">
+                   Class="mud-elevation-25 pa-2 mb-3" Text="@AppStrings.AdvancedSearch">
     <MudGrid Spacing="2">
         <MudItem xs="12" sm="6" md="4">
             <MudTextField @bind-Value="TRequest.Name"

@@ -1,4 +1,4 @@
-﻿global using System.Data;
+global using System.Data;
 global using CleanArchitecture.Blazor.Application.Common.Interfaces;
 global using CleanArchitecture.Blazor.Application.Common.Models;
 global using CleanArchitecture.Blazor.Application.Common.Extensions;

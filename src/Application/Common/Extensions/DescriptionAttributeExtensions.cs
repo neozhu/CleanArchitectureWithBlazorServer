@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Extensions;
+namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
 public static class DescriptionAttributeExtensions
 {

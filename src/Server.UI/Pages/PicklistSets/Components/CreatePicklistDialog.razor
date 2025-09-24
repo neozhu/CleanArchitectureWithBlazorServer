@@ -1,4 +1,4 @@
-﻿@using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.AddEdit
+@using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.AddEdit
 @inherits MudComponentBase
 @inject IStringLocalizer<PicklistSets> L
 
@@ -37,8 +37,8 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudLoadingButton Loading="@_saving" Color="Color.Primary" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        <MudButton OnClick="Cancel">@AppStrings.Cancel</MudButton>
+        <MudLoadingButton Loading="@_saving" Color="Color.Primary" OnClick="Submit">@AppStrings.Save</MudLoadingButton>
     </DialogActions>
 </MudDialog>
 
@@ -65,7 +65,7 @@
             if (result.Succeeded)
             {
                 MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
+                Snackbar.Add(AppStrings.SaveSuccess, Severity.Info);
             }
             else
             {

@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Domain.Identity;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 

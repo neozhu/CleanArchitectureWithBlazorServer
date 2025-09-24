@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
 using ZiggyCreatures.Caching.Fusion;
 

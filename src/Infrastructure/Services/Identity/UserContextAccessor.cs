@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
+namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 /// <summary>
 /// Implementation of IUserContextAccessor using AsyncLocal for call chain isolation.

@@ -1,4 +1,4 @@
-﻿@using CleanArchitecture.Blazor.Server.UI.Services
+@using CleanArchitecture.Blazor.Server.UI.Services
 @using CleanArchitecture.Blazor.Application.Common.Models
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using CleanArchitecture.Blazor.Application.Common.Constants
@@ -83,11 +83,11 @@
                     @if (_submitting)
                     {
                         <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
-                        <MudText Class="ms-2">@ConstantString.Waiting </MudText>
+                        <MudText Class="ms-2">@AppStrings.Waiting </MudText>
                     }
                     else
                     {
-                        <MudText>@ConstantString.Save</MudText>
+                        <MudText>@AppStrings.Save</MudText>
                     }
                 </MudButton>
             </MudItem>
@@ -229,7 +229,7 @@ else
                         languageCode: user.LanguageCode);
                     
        
-                    Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
+                    Snackbar.Add(AppStrings.SaveSuccess, Severity.Info);
                 }
             }
         }

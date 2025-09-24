@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome;
 
 public record SendWelcomeNotification(string LoginUrl, string Email, string UserName) : INotification;
 

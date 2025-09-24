@@ -1,4 +1,4 @@
-﻿@using System.Net
+@using System.Net
 @inject ILogger<CustomError> Logger
 @inject IStringLocalizer<CustomError> L
 
@@ -51,7 +51,7 @@
                       Color="Color.Primary" 
                       StartIcon="@Icons.Material.Filled.Refresh"
                       OnClick="OnRefresh">
-                @ConstantString.Refresh
+                @AppStrings.Refresh
             </MudButton>
             
             <MudButton Variant="Variant.Outlined" 

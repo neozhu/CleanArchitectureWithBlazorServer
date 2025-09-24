@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
+using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using MediatR;
 using MediatR.Pipeline;

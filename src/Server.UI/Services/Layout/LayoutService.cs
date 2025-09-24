@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Microsoft.JSInterop;
 

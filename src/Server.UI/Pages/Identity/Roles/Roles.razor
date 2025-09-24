@@ -1,4 +1,4 @@
-﻿@page "/identity/roles"
+@page "/identity/roles"
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -59,26 +59,26 @@
                     <MudButton Disabled="@_isLoading"
                                OnClick="OnRefresh"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
                     @if (_accessRights.Create)
                     {
                         <MudButton StartIcon="@Icons.Material.Outlined.Add"
                                    OnClick="OnCreate">
-                            @ConstantString.New
+                            @AppStrings.New
                         </MudButton>
                     }
-                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
+                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@AppStrings.More">
                         @if (_accessRights.Delete)
                         {
                             <MudMenuItem Disabled="@(!_selectedRoles.Any())" OnClick="OnDeleteChecked">
-                                @ConstantString.Delete
+                                @AppStrings.Delete
                             </MudMenuItem>
                         }
                         @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_isExporting" OnClick="OnExport">
-                                @ConstantString.Export
+                                @AppStrings.Export
                             </MudMenuItem>
                         }
                         @if (_accessRights.Import)
@@ -88,7 +88,7 @@
                                     <ActivatorContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
                                                    Variant="Variant.Text" Disabled="@_isUploading">
-                                            @ConstantString.Import
+                                            @AppStrings.Import
                                         </MudButton>
                                     </ActivatorContent>
                                 </MudFileUpload>
@@ -108,7 +108,7 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn ShowInFooter="false" />
-        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
+        <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Actions" Sortable="false">
             <CellTemplate>
                 @if (_accessRights.Edit || _accessRights.Delete || _accessRights.ManagePermissions)
                 {
@@ -117,11 +117,11 @@
                              IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_accessRights.Edit)
                         {
-                            <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@AppStrings.Edit</MudMenuItem>
                         }
                         @if (_accessRights.Delete)
                         {
-                            <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@AppStrings.Delete</MudMenuItem>
                         }
                         @if (_accessRights.ManagePermissions)
                         {
@@ -133,7 +133,7 @@
                 {
                     <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.DoNotTouch"
                                IconColor="Color.Secondary" Size="Size.Small" Color="Color.Surface">
-                        @ConstantString.NoAllowed
+                        @AppStrings.NoAllowed
                     </MudButton>
                 }
             </CellTemplate>
@@ -324,7 +324,7 @@
             var result = await saveAction(applicationRole);
             if (result.Succeeded)
             {
-                Snackbar.Add(ConstantString.CreateSuccess, Severity.Info);
+                Snackbar.Add(AppStrings.CreateSuccess, Severity.Info);
                 await OnRefresh();
             }
             else
@@ -391,8 +391,8 @@
     private async Task OnDelete(ApplicationRoleDto dto)
     {
         await DialogServiceHelper.ShowConfirmationDialogAsync(
-            ConstantString.DeleteConfirmationTitle,
-            string.Format(ConstantString.DeleteConfirmation, dto.Name),
+            AppStrings.DeleteConfirmationTitle,
+            string.Format(AppStrings.DeleteConfirmation, dto.Name),
             async () =>
             {
                 var rolesToDelete = await _roleManager.Roles.Where(x => x.Id == dto.Id).ToListAsync();
@@ -405,7 +405,7 @@
                         return;
                     }
                 }
-                Snackbar.Add(ConstantString.DeleteSuccess, Severity.Info);
+                Snackbar.Add(AppStrings.DeleteSuccess, Severity.Info);
                 await OnRefresh();
             });
     }
@@ -414,8 +414,8 @@
     private async Task OnDeleteChecked()
     {
         await DialogServiceHelper.ShowConfirmationDialogAsync(
-            ConstantString.DeleteConfirmationTitle,
-            string.Format(ConstantString.DeleteConfirmation, _selectedRoles.Count),
+            AppStrings.DeleteConfirmationTitle,
+            string.Format(AppStrings.DeleteConfirmation, _selectedRoles.Count),
             async () =>
             {
                 var deleteIds = _selectedRoles.Select(x => x.Id).ToArray();
@@ -429,7 +429,7 @@
                         return;
                     }
                 }
-                Snackbar.Add(ConstantString.DeleteSuccess, Severity.Info);
+                Snackbar.Add(AppStrings.DeleteSuccess, Severity.Info);
                 await OnRefresh();
             });
     }
@@ -467,11 +467,11 @@
                 
             // Download the Excel file
             await BlazorDownloadFileService.DownloadFileAsync($"{_localizer["Roles"]}.xlsx", fileData, "application/octet-stream");
-            Snackbar.Add(ConstantString.ExportSuccess, Severity.Info);
+            Snackbar.Add(AppStrings.ExportSuccess, Severity.Info);
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"{ConstantString.ExportFail}: {ex.Message}", Severity.Error);
+            Snackbar.Add($"{AppStrings.ExportFail}: {ex.Message}", Severity.Error);
         }
         finally
         {
@@ -498,7 +498,7 @@
                     await ProcessImportedRolesAsync(importResult.Data);
                     await _dataGrid.ReloadServerData();
                 }
-                Snackbar.Add(ConstantString.ImportSuccess, Severity.Info);
+                Snackbar.Add(AppStrings.ImportSuccess, Severity.Info);
             }
             else if (importResult?.Errors != null)
             {
@@ -510,7 +510,7 @@
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"{ConstantString.ImportFail}: {ex.Message}", Severity.Error);
+            Snackbar.Add($"{AppStrings.ImportFail}: {ex.Message}", Severity.Error);
         }
         finally
         {
