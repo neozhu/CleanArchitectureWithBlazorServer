@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Pipeline.PreProcessors;
+namespace CleanArchitecture.Blazor.Application.Pipeline.PreProcessors;
 
 public sealed class ValidationPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {

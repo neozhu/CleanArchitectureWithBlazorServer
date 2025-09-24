@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.AddEdit;
 using CleanArchitecture.Blazor.Domain.Entities;
 using FluentAssertions;

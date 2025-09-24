@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.IntegrationTests;

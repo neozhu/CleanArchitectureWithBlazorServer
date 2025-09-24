@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications;
+namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications;
 
 public enum PickListView
 {

@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 /// <summary>
 /// Abstraction for loading and assigning permission claims to a specific security principal (user or role).

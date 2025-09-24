@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
+namespace CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
 #nullable disable warnings
 public class AdvancedDocumentsSpecification : Specification<Document>
 {

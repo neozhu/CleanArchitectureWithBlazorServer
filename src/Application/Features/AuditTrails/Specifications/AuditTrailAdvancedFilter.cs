@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
+namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
 
 public enum AuditTrailListView
 {

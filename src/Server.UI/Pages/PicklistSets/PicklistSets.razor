@@ -1,4 +1,4 @@
-﻿@page "/system/picklistset"
+@page "/system/picklistset"
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.PaginationQuery
@@ -44,28 +44,28 @@
                     <MudButton Disabled="@_loading"
                                OnClick="OnRefresh"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
                     @if (_accessRights.Create)
                     {
                         <MudButton StartIcon="@Icons.Material.Outlined.Add"
                         OnClick="OnCreate">
-                            @ConstantString.New
+                            @AppStrings.New
                         </MudButton>
                     }
-                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
+                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@AppStrings.More">
                         @if (_accessRights.Delete)
                         {
                             <MudMenuItem Disabled="@(_selectedItems.Count == 0)"
                             OnClick="OnDeleteChecked">
-                                @ConstantString.Delete
+                                @AppStrings.Delete
                             </MudMenuItem>
                         }
                         @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_exporting"
                             OnClick="OnExport">
-                                @ConstantString.Export
+                                @AppStrings.Export
                             </MudMenuItem>
                         }
                         @if (_accessRights.Import)
@@ -77,7 +77,7 @@
                                         Style="font-weight:400;text-transform:none;"
                                         Variant="Variant.Text"
                                         Disabled="@_uploading">
-                                            @ConstantString.Import
+                                            @AppStrings.Import
                                         </MudButton>
                                     </ActivatorContent>
                                 </MudFileUpload>
@@ -90,7 +90,7 @@
                     {
                         <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true" 
                         ValueChanged="OnPicklistSearch" Style="width:160px" FullWidth="true" />
-                        <MudTextField T="string" Value="@_picklistQuery.Keyword" ValueChanged="OnKeywordSearch" Placeholder="@ConstantString.Search" 
+                        <MudTextField T="string" Value="@_picklistQuery.Keyword" ValueChanged="OnKeywordSearch" Placeholder="@AppStrings.Search" 
                         Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
                     }
                 </MudStack>
@@ -107,12 +107,12 @@
         <PropertyColumn Property="x => x.Value" Title="@L[SelectedItem.GetMemberDescription(x => x.Value)]" />
         <PropertyColumn Property="x => x.Text" Title="@L[SelectedItem.GetMemberDescription(x => x.Text)]" />
         <PropertyColumn Property="x => x.Description" Title="@L[SelectedItem.GetMemberDescription(x => x.Description)]" />
-        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Delete" Sortable="false">
+        <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Delete" Sortable="false">
             <CellTemplate>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" aria-label="@ConstantString.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" aria-label="@AppStrings.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
             </CellTemplate>
             <EditTemplate>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" aria-label="@ConstantString.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" aria-label="@AppStrings.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
             </EditTemplate>
         </TemplateColumn>
     </Columns>
@@ -256,8 +256,8 @@
     private async Task DeleteItem(PicklistSetDto item)
     {
         var command = new DeletePicklistSetCommand(new[] { item.Id });
-        var contentText = string.Format(ConstantString.DeleteConfirmation, item.Name);
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        var contentText = string.Format(AppStrings.DeleteConfirmation, item.Name);
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, AppStrings.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
             {
@@ -270,8 +270,8 @@
     private async Task OnDeleteChecked()
     {
         var command = new DeletePicklistSetCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var contentText = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        var contentText = string.Format(AppStrings.DeleteConfirmation, _selectedItems.Count);
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, AppStrings.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
             {
@@ -293,7 +293,7 @@
             var request = new ExportPicklistSetsQuery { Keyword = _searchString };
             var result = await Mediator.Send(request);
             await BlazorDownloadFileService.DownloadFileAsync($"{L["Picklist"]}.xlsx", result, "application/octet-stream");
-            Snackbar.Add(ConstantString.ExportSuccess, Severity.Info);
+            Snackbar.Add(AppStrings.ExportSuccess, Severity.Info);
         }
         finally
         {
@@ -313,7 +313,7 @@
             if (result.Succeeded)
             {
                 await OnRefresh();
-                Snackbar.Add(ConstantString.ImportSuccess, Severity.Info);
+                Snackbar.Add(AppStrings.ImportSuccess, Severity.Info);
             }
             else
             {

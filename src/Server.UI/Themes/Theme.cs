@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Server.UI.Themes;
+namespace CleanArchitecture.Blazor.Server.UI.Themes;
 
 public static class Theme
 {

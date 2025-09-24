@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Domain.Common.Entities;
+using CleanArchitecture.Blazor.Domain.Common.Entities;
 using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Domain.Identity;

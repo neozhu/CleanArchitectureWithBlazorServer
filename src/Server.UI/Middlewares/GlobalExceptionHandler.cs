@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Server.UI.Middlewares;

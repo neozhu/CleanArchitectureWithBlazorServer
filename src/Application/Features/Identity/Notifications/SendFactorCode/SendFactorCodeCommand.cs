@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendFactorCode;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendFactorCode;
 
 public record SendFactorCodeNotification(string Email, string UserName, string AuthenticatorCode) : INotification;
 

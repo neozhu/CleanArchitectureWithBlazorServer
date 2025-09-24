@@ -1,4 +1,4 @@
-﻿@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 <div class="d-flex justify-content-between">
     <div class="d-flex align-center gap-2">
         <MudBreadcrumbs Items="@BreadcrumbItems"></MudBreadcrumbs>
@@ -8,23 +8,23 @@
 
         @if (OnSaveButtonClick.HasDelegate)
         {
-            <MudLoadingButton Loading="@Saving"  OnClick="@Save">@ConstantString.Save</MudLoadingButton>
+            <MudLoadingButton Loading="@Saving"  OnClick="@Save">@AppStrings.Save</MudLoadingButton>
         }
         @if (OnGoEditClick.HasDelegate)
         {
-            <MudButton OnClick="@GoEdit">@ConstantString.Edit</MudButton>
+            <MudButton OnClick="@GoEdit">@AppStrings.Edit</MudButton>
         }
         @if (OnDeleteClick.HasDelegate || OnPrintClick.HasDelegate)
         {
             <MudMenu Icon="@Icons.Material.Filled.MoreVert" AnchorOrigin="Origin.BottomLeft"
-                     AriaLabel="@ConstantString.More">
+                     AriaLabel="@AppStrings.More">
                 @if (OnDeleteClick.HasDelegate)
                 {
-                    <MudMenuItem OnClick="Delete"> @ConstantString.Delete</MudMenuItem>
+                    <MudMenuItem OnClick="Delete"> @AppStrings.Delete</MudMenuItem>
                 }
                 @if (OnPrintClick.HasDelegate)
                 {
-                    <MudMenuItem OnClick="Print"> @ConstantString.Print</MudMenuItem>
+                    <MudMenuItem OnClick="Print"> @AppStrings.Print</MudMenuItem>
                 }
             </MudMenu>
         }

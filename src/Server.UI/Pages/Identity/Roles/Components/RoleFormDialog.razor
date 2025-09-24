@@ -1,4 +1,4 @@
-﻿@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @inherits MudComponentBase
@@ -39,9 +39,9 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel" >@ConstantString.Cancel</MudButton>
+        <MudButton OnClick="Cancel" >@AppStrings.Cancel</MudButton>
         <MudButton OnClick="Submit" Disabled="@_processing">
-            @ConstantString.Save
+            @AppStrings.Save
         </MudButton>
     </DialogActions>
 </MudDialog>

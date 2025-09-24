@@ -1,16 +1,16 @@
-﻿<MudDialog>
+<MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.QuestionMark" Class="mb-n1" />
-            @ConstantString.DeleteConfirmationTitle
+            @AppStrings.DeleteConfirmationTitle
         </MudText>
     </TitleContent>
     <DialogContent>
         <MudText>@ContentText</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton StartIcon="@Icons.Material.Filled.Cancel" OnClick="Cancel" title="@ConstantString.Cancel">@ConstantString.Cancel</MudButton>
-        <MudButton StartIcon="@Icons.Material.Outlined.Delete" Color="Color.Error"  title="@ConstantString.Delete" OnClick="Submit">@ConstantString.Confirm</MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Cancel" OnClick="Cancel" title="@AppStrings.Cancel">@AppStrings.Cancel</MudButton>
+        <MudButton StartIcon="@Icons.Material.Outlined.Delete" Color="Color.Error"  title="@AppStrings.Delete" OnClick="Submit">@AppStrings.Confirm</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -27,7 +27,7 @@
         result.Match(
           ()=>
           {
-              Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
+              Snackbar.Add($"{AppStrings.DeleteSuccess}", Severity.Info);
               MudDialog.Close(DialogResult.Ok(true));
           },
           errors =>

@@ -1,4 +1,4 @@
-﻿
+
 
 <div Class="pa-4" Style="max-width:600px; margin:auto;">
     <MudText Typo="Typo.h6" Class="mb-4">@Localizer["Two-Factor Authentication (2FA)"]</MudText>
@@ -50,7 +50,7 @@
                     @if (_submitting)
                     {
                         <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
-                        <MudText Class="ms-2">@ConstantString.Waiting</MudText>
+                        <MudText Class="ms-2">@AppStrings.Waiting</MudText>
                     }
                     else
                     {

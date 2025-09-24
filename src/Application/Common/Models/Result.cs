@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Models;
+namespace CleanArchitecture.Blazor.Application.Common.Models;
 
 /// <summary>
 /// Represents the result of an operation.

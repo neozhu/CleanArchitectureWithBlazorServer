@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 

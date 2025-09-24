@@ -1,4 +1,4 @@
-﻿@page "/pages/products"
+@page "/pages/products"
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
@@ -39,7 +39,7 @@
                                    ValueChanged="OnListViewChanged"
                                    Value="_productsQuery.ListView"
                                    Dense="true"
-                                   Label="@L["List View"]">
+                                   Label="@AppStrings.ListView">
                     </MudEnumSelect>
                 </MudStack>
             </MudStack>
@@ -48,39 +48,39 @@
                     <MudButton Disabled="@_loading"
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
                     @if (_accessRights.Create)
                     {
                         <MudButton StartIcon="@Icons.Material.Outlined.Add"
                                    OnClick="OnCreateProduct">
-                            @ConstantString.New
+                            @AppStrings.New
                         </MudButton>
                     }
                     <MudMenu TransformOrigin="Origin.BottomRight"
                              AnchorOrigin="Origin.BottomRight"
                              EndIcon="@Icons.Material.Filled.MoreVert"
-                             Label="@ConstantString.More">
+                             Label="@AppStrings.More">
                         @if (_accessRights.Create)
                         {
                             <MudMenuItem Disabled="@(_selectedItems.Count != 1)" OnClick="OnCloneProduct">
-                                @ConstantString.Clone
+                                @AppStrings.Clone
                             </MudMenuItem>
                         }
                         @if (_accessRights.Delete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
                                          OnClick="OnDeleteSelectedProducts">
-                                @ConstantString.Delete
+                                @AppStrings.Delete
                             </MudMenuItem>
                         }
                         @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_exporting" OnClick="OnExport">
-                                @ConstantString.Export
+                                @AppStrings.Export
                             </MudMenuItem>
                             <MudMenuItem Disabled="@_pdfExporting" OnClick="OnExportPDF">
-                                @ConstantString.ExportPDF
+                                @AppStrings.ExportPDF
                             </MudMenuItem>
                         }
                         @if (_accessRights.Import)
@@ -94,7 +94,7 @@
                                                    Style="font-weight:400;text-transform:none;"
                                                    Variant="Variant.Text"
                                                    Disabled="@_uploading">
-                                            @ConstantString.Import
+                                            @AppStrings.Import
                                         </MudButton>
                                     </ActivatorContent>
                                 </MudFileUpload>
@@ -108,7 +108,7 @@
                         <MudTextField T="string"
                                       ValueChanged="@(s => OnSearch(s))"
                                       Value="@_productsQuery.Keyword"
-                                      Placeholder="@ConstantString.Search"
+                                      Placeholder="@AppStrings.Search"
                                       Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search"
                                       IconSize="Size.Small">
@@ -120,7 +120,7 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn ShowInFooter="false"></SelectColumn>
-        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
+        <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Actions" Sortable="false">
             <CellTemplate>
                 @if (_accessRights.Edit || _accessRights.Delete)
                 {
@@ -133,20 +133,20 @@
                         @if (_accessRights.Edit)
                         {
                             <MudMenuItem OnClick="@(() => OnEditProduct(context.Item))">
-                                @ConstantString.Edit
+                                @AppStrings.Edit
                             </MudMenuItem>
                         }
                         @if (_accessRights.Delete)
                         {
                             <MudMenuItem OnClick="@(() => OnDeleteProduct(context.Item))">
-                                @ConstantString.Delete
+                                @AppStrings.Delete
                             </MudMenuItem>
                         }
                     </MudMenu>
                 }
                 else
                 {
-                    <MudTooltip Text="@ConstantString.NoAllowed" Delay="300">
+                    <MudTooltip Text="@AppStrings.NoAllowed" Delay="300">
                         <MudIconButton Variant="Variant.Outlined"
                                        Disabled="true"
                                        Icon="@Icons.Material.Filled.DoNotTouch"
@@ -159,7 +159,7 @@
         </TemplateColumn>
         <PropertyColumn Property="x => x.Brand" Title="@L[_currentDto.GetMemberDescription(x => x.Brand)]">
             <FooterTemplate>
-                @ConstantString.Selected: @_selectedItems.Count
+                @AppStrings.Selected: @_selectedItems.Count
             </FooterTemplate>
         </PropertyColumn>
         <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x => x.Name)]">
@@ -174,16 +174,16 @@
         </PropertyColumn>
         <PropertyColumn Property="x => x.Price" Title="@L[_currentDto.GetMemberDescription(x => x.Price)]">
             <FooterTemplate>
-                @ConstantString.SelectedTotal: @_selectedItems.Sum(x => x.Price)
+                @AppStrings.SelectedTotal: @_selectedItems.Sum(x => x.Price)
             </FooterTemplate>
         </PropertyColumn>
         <PropertyColumn Property="x => x.Unit" Title="@L[_currentDto.GetMemberDescription(x => x.Unit)]" />
     </Columns>
     <NoRecordsContent>
-        <MudText>@ConstantString.NoRecords</MudText>
+        <MudText>@AppStrings.NoRecords</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>@ConstantString.Loading</MudText>
+        <MudText>@AppStrings.Loading</MudText>
     </LoadingContent>
     <PagerContent>
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
@@ -289,7 +289,7 @@
     private async Task OnCreateProduct()
     {
         var command = new AddEditProductCommand { Pictures = new List<ProductImage>() };
-        await ShowProductEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
+        await ShowProductEditFormDialog( L["New product"], command);
     }
 
     private async Task OnCloneProduct()
@@ -304,20 +304,20 @@
             Unit = copy.Unit,
             Pictures = copy.Pictures
         };
-        await ShowProductEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
+        await ShowProductEditFormDialog(L["Clone the product"], command);
     }
 
     private async Task OnEditProduct(ProductDto dto)
     {
         var command = Mapper.Map<AddEditProductCommand>(dto);
-        await ShowProductEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), command);
+        await ShowProductEditFormDialog(L["Edit the product"], command);
     }
 
     private async Task OnDeleteProduct(ProductDto dto)
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Name);
+        var contentText = string.Format(AppStrings.DeleteConfirmation, dto.Name);
         var command = new DeleteProductCommand(new[] { dto.Id });
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, AppStrings.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
             {
@@ -329,9 +329,9 @@
 
     private async Task OnDeleteSelectedProducts()
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
+        var contentText = string.Format(AppStrings.DeleteConfirmWithSelected, _selectedItems.Count);
         var command = new DeleteProductCommand(_selectedItems.Select(x => x.Id).ToArray());
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, AppStrings.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
             {
@@ -364,7 +364,7 @@
         if (result.Succeeded)
         {
             await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.xlsx", result.Data!, "application/octet-stream");
-            Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
+            Snackbar.Add($"{AppStrings.ExportSuccess}", Severity.Info);
         }
         else
         {
@@ -396,7 +396,7 @@
         if (result.Succeeded)
         {
             await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.pdf", result.Data!, "application/octet-stream");
-            Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
+            Snackbar.Add($"{AppStrings.ExportSuccess}", Severity.Info);
         }
         else
         {
@@ -415,7 +415,7 @@
         if (result.Succeeded)
         {
             await _productsGrid.ReloadServerData();
-            Snackbar.Add($"{ConstantString.ImportSuccess}", Severity.Info);
+            Snackbar.Add($"{AppStrings.ImportSuccess}", Severity.Info);
         }
         else
         {

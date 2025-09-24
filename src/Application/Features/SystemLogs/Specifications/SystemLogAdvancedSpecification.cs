@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.SystemLogs.Queries.PaginationQuery;
+using CleanArchitecture.Blazor.Application.Features.SystemLogs.Queries.PaginationQuery;
 
 namespace CleanArchitecture.Blazor.Application.Features.SystemLogs.Specifications;
 #nullable disable warnings

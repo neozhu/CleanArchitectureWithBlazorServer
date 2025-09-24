@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Common.Extensions;
+using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using Microsoft.AspNetCore.StaticFiles;
 using Minio;

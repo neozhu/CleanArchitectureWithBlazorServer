@@ -1,4 +1,4 @@
-﻿using EntityFramework.Exceptions.Common;
+using EntityFramework.Exceptions.Common;
 using System.Collections.Concurrent;
 
 namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
