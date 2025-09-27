@@ -327,15 +327,22 @@ public static class DependencyInjection
         services.AddFusionCache().WithDefaultEntryOptions(new FusionCacheEntryOptions
         {
             // CACHE DURATION
-            Duration = TimeSpan.FromMinutes(120),
-            // FAIL-SAFE OPTIONS
+            Duration = TimeSpan.FromMinutes(60),
+            // —— Resilience: fail-safe & timeouts ——
+            // Keep fail-safe short: if dependencies are flaky, we can serve a recent value briefly,
+            // but avoid long windows for security-sensitive data.
             IsFailSafeEnabled = true,
-            FailSafeMaxDuration = TimeSpan.FromHours(8),
-            FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
-            // FACTORY TIMEOUTS
-            FactorySoftTimeout = TimeSpan.FromSeconds(10),
-            FactoryHardTimeout = TimeSpan.FromSeconds(30),
-            AllowTimedOutFactoryBackgroundCompletion = true,
+            FailSafeMaxDuration = TimeSpan.FromMinutes(20),
+            FailSafeThrottleDuration = TimeSpan.FromSeconds(15),
+
+            // Factory timeouts mostly affect GetOrSet (not used here), but are kept for consistency.
+            FactorySoftTimeout = TimeSpan.FromMilliseconds(250),
+            FactoryHardTimeout = TimeSpan.FromMilliseconds(1000),
+
+            // —— Anti-stampede ——
+            // Spread expirations to mitigate thundering herds; short lock to avoid long waits.
+            JitterMaxDuration = TimeSpan.FromSeconds(30),
+            LockTimeout = TimeSpan.FromSeconds(1)
         });
         return services;
     }
