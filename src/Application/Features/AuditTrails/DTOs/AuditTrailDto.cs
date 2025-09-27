@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -35,7 +35,7 @@ public class AuditTrailDto
         {
             CreateMap<AuditTrail, AuditTrailDto>(MemberList.None)
                 .ForMember(x => x.PrimaryKey,
-                    s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, DefaultJsonSerializerOptions.Options)));
+                    s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, JsonSerializerOptions.Web)));
         }
     }
 

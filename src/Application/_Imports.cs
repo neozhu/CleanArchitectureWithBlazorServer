@@ -1,4 +1,4 @@
-global using System.ComponentModel;
+﻿global using System.ComponentModel;
 global using System.Data;
 global using System.Globalization;
 global using System.Linq.Expressions;
@@ -8,7 +8,6 @@ global using Ardalis.Specification;
 global using AutoMapper;
 global using AutoMapper.QueryableExtensions;
 global using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
-global using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 global using CleanArchitecture.Blazor.Application.Common.Extensions;
 global using CleanArchitecture.Blazor.Application.Common.Interfaces;
 global using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
