@@ -14,7 +14,7 @@ public class UserPreference
     // List of available primary colors
     public static readonly List<string> PrimaryColors = new()
     {
-        "#2d4275",
+        "#172554",
         "#7f22fe",
         "#5ea500",
         "#fcc800",
