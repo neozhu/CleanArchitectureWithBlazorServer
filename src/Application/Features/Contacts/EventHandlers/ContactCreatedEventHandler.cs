@@ -23,7 +23,8 @@ public class ContactCreatedEventHandler : INotificationHandler<ContactCreatedEve
         }
         public Task Handle(ContactCreatedEvent notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} ", notification.GetType().Name, notification);
+            _logger.LogInformation("Handled domain event '{EventType}' for Contact ID: {ContactId}", 
+                notification.GetType().Name, notification.Item?.Id);
             return Task.CompletedTask;
         }
 }

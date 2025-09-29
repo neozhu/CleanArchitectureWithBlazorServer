@@ -53,9 +53,9 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         Document document;
         if (request.Id > 0)
         {
-            document = await db.Documents.FindAsync(request.Id, cancellationToken);
-            if (document == null) return await Result<int>.FailureAsync(_localizer["Document Not Found!"]);
-            document = _mapper.Map(request, document);
+            var existingDocument = await db.Documents.FindAsync(request.Id, cancellationToken);
+            if (existingDocument == null) return await Result<int>.FailureAsync(_localizer["Document Not Found!"]);
+            document = _mapper.Map(request, existingDocument);
         }
         else
         {
