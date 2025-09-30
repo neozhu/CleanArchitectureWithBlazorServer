@@ -19,9 +19,9 @@ public class PicklistSetChangedEventHandler : INotificationHandler<UpdatedEvent<
 
     public async Task Handle(UpdatedEvent<PicklistSet> notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} ",
+        _logger.LogInformation("Handled domain event '{EventType}' for PicklistSet ID: {PicklistSetId}",
              notification.GetType().Name,
-             notification);
+             notification.Entity?.Id);
         await _picklistService.RefreshAsync();
    
     }

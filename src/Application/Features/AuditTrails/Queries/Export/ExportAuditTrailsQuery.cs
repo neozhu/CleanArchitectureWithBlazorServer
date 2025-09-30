@@ -37,7 +37,7 @@ public class ExportAuditTrailsQueryHandler :
     public async Task<byte[]> Handle(ExportAuditTrailsQuery request, CancellationToken cancellationToken)
     {
         await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
-        var data = await db.AuditTrails.Where(x=>x.TableName.Contains(request.Keyword))
+        var data = await db.AuditTrails.Where(x=>x.TableName != null && x.TableName.Contains(request.Keyword ?? string.Empty))
             .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,

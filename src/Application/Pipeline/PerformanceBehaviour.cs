@@ -56,8 +56,8 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
             var phase = isStartupPhase ? "Startup" : "Runtime";
 
             _logger.LogWarning(
-                "Long-running request [{Phase}]: {RequestName} ({ElapsedMilliseconds}ms) {@Request} by {UserName}",
-                phase, requestName, elapsedMilliseconds, request, userName);
+                "Long-running request [{Phase}]: {RequestName} ({ElapsedMilliseconds}ms) by {UserName}",
+                phase, requestName, elapsedMilliseconds, userName);
         }
 
         return response;
