@@ -1,4 +1,4 @@
-@page "/identity/roles"
+﻿@page "/identity/roles"
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -68,13 +68,14 @@
                             @AppStrings.New
                         </MudButton>
                     }
+					@if (_accessRights.Delete)
+					{
+						<MudButton Disabled="@(!_selectedRoles.Any())" OnClick="OnDeleteChecked" StartIcon="@Icons.Material.Outlined.DeleteOutline">
+							@AppStrings.Delete
+						</MudButton>
+					}
                     <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@AppStrings.More">
-                        @if (_accessRights.Delete)
-                        {
-                            <MudMenuItem Disabled="@(!_selectedRoles.Any())" OnClick="OnDeleteChecked">
-                                @AppStrings.Delete
-                            </MudMenuItem>
-                        }
+                        
                         @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_isExporting" OnClick="OnExport">

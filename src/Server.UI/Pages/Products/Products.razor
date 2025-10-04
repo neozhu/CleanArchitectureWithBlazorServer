@@ -1,4 +1,4 @@
-@page "/pages/products"
+﻿@page "/pages/products"
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
@@ -57,6 +57,14 @@
                             @AppStrings.New
                         </MudButton>
                     }
+					@if (_accessRights.Delete)
+					{
+						<MudButton Disabled="@(!(_selectedItems.Count > 0))"
+								   StartIcon="@Icons.Material.Outlined.DeleteOutline"
+								   OnClick="OnDeleteSelectedProducts">
+							@AppStrings.Delete
+						</MudButton>
+					}
                     <MudMenu TransformOrigin="Origin.BottomRight"
                              AnchorOrigin="Origin.BottomRight"
                              EndIcon="@Icons.Material.Filled.MoreVert"
@@ -67,13 +75,7 @@
                                 @AppStrings.Clone
                             </MudMenuItem>
                         }
-                        @if (_accessRights.Delete)
-                        {
-                            <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                                         OnClick="OnDeleteSelectedProducts">
-                                @AppStrings.Delete
-                            </MudMenuItem>
-                        }
+                        
                         @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_exporting" OnClick="OnExport">

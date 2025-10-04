@@ -1,4 +1,4 @@
-@page "/pages/contacts"
+﻿@page "/pages/contacts"
 
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Caching
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
@@ -52,18 +52,20 @@
                             @AppStrings.New
                         </MudButton>
                     }
+					@if (_accessRights.Delete)
+					{
+						<MudButton Disabled="@(!(_selectedContacts.Count > 0))"
+								   StartIcon="@Icons.Material.Outlined.DeleteOutline"
+									 OnClick="OnDeleteSelectedContacts">
+							@AppStrings.Delete
+						</MudButton>
+					}
                     <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@AppStrings.More">
-                        @if (_accessRights.Create)
+                        @if (_accessRights.Clone)
                         {
                             <MudMenuItem Disabled="@(_selectedContacts.Count != 1)" OnClick="OnCloneContact">@AppStrings.Clone</MudMenuItem>
                         }
-                        @if (_accessRights.Delete)
-                        {
-                            <MudMenuItem Disabled="@(!(_selectedContacts.Count > 0))"
-                                         OnClick="OnDeleteSelectedContacts">
-                                @AppStrings.Delete
-                            </MudMenuItem>
-                        }
+                        
                         @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_exporting"
