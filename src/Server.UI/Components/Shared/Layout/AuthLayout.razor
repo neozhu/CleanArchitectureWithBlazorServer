@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Server.UI.Themes
+﻿@using CleanArchitecture.Blazor.Server.UI.Themes
 @using Microsoft.AspNetCore.Components.Authorization
 @layout MainLayout
 @inherits LayoutComponentBase
@@ -12,7 +12,7 @@
             <MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center" Style="height: 100vh;">
                 <div class="d-flex flex-column mud-width-full">
                     <MudPaper Elevation="25" Class="pa-8" Width="100%" MaxWidth="500px">
-                        <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" Size="Size.Large" Style="width:100px; height:100px;" />
+                        <Logo  Style="width:100px; height:100px;" />
                         @Body
                     </MudPaper>
                 </div>
