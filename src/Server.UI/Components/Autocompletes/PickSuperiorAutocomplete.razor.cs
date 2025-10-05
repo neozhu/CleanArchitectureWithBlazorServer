@@ -1,12 +1,12 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 #nullable disable warnings
-public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
+public class PickSuperiorAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 {
-    public PickSuperiorIdAutocomplete()
+    public PickSuperiorAutocomplete()
     {
         SearchFunc = SearchKeyValues;
         ToStringFunc = dto => dto?.UserName;
@@ -24,9 +24,9 @@ public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
     private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string? value, CancellationToken cancellation)
     {
         var result = UserService.DataSource.Where(x =>
-            x.TenantId != null && x.TenantId.Equals(TenantId) && !x.UserName.Equals(OwnerName));
+            (x.TenantId != null && x.TenantId.Equals(TenantId) || TenantId==null) && !x.UserName.Equals(OwnerName));
         if (!string.IsNullOrWhiteSpace(value))
-            result = UserService.DataSource.Where(x => x.TenantId.Equals(TenantId) && !x.UserName.Equals(OwnerName) &&
+            result = UserService.DataSource.Where(x => (x.TenantId != null && x.TenantId.Equals(TenantId) || TenantId == null) && !x.UserName.Equals(OwnerName) &&
                                                        (x.UserName.Contains(value,
                                                             StringComparison.OrdinalIgnoreCase) ||
                                                         x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)));
