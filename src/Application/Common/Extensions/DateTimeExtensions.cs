@@ -1,4 +1,4 @@
-public static class DateTimeExtensions
+﻿public static class DateTimeExtensions
 {
     /// <summary>
     /// Gets a date range based on the provided keyword, similar to Salesforce date keywords.
@@ -151,21 +151,37 @@ public static class DateTimeExtensions
 
 
     /// <summary>
-    /// Converts the given UTC DateTime? to local time based on the provided time offset, and formats the result.
+    /// Converts a nullable UTC DateTime to a formatted local time string.
+    /// If localTimeOffset is provided, it is treated as a fixed offset from UTC (e.g. +08:00).
+    /// If localTimeOffset is null, the system's local time zone (with DST) is used.
+    /// Returns null if utcTime is null.
     /// </summary>
-    /// <param name="utcTime">The UTC time to be converted. This is a nullable DateTime.</param>
-    /// <param name="localTimeOffset">The local time offset, typically derived from the user's profile.</param>
-    /// <param name="formatter">The date/time format string. Defaults to "yyyy-MM-dd HH:mm:ss".</param>
-    /// <returns>The converted and formatted local time as a string. If the input is null, it returns null.</returns>
+    /// <param name="utcTime">UTC timestamp (Kind should ideally be Utc; if Unspecified it is assumed UTC).</param>
+    /// <param name="localTimeOffset">Optional fixed offset (e.g. TimeSpan.FromHours(8)). If null, TimeZoneInfo.Local is used.</param>
+    /// <param name="formatter">Output format. Default "yyyy-MM-dd HH:mm:ss".</param>
     public static string? ToLocalTime(this DateTime? utcTime, TimeSpan? localTimeOffset, string formatter = "yyyy-MM-dd HH:mm:ss")
     {
-        if (utcTime == null || localTimeOffset==null)
-            return null;
+        if (utcTime is null) return null;
 
-        // Add the local time offset to the UTC time to get the local time
-        var localTime = utcTime.Value + localTimeOffset;
+        // Ensure we treat the source as UTC
+        DateTime utc = utcTime.Value.Kind == DateTimeKind.Utc
+            ? utcTime.Value
+            : DateTime.SpecifyKind(utcTime.Value, DateTimeKind.Utc);
 
-        // Format the local time according to the given formatter
-        return localTime.Value.ToString(formatter);
+        DateTime local;
+
+        if (localTimeOffset.HasValue)
+        {
+            // Use a fixed offset (no DST handling)
+            var dto = new DateTimeOffset(utc, TimeSpan.Zero).ToOffset(localTimeOffset.Value);
+            local = dto.DateTime;
+        }
+        else
+        {
+            // Use system local time zone (handles DST)
+            local = TimeZoneInfo.ConvertTimeFromUtc(utc, TimeZoneInfo.Local);
+        }
+
+        return local.ToString(formatter, CultureInfo.InvariantCulture);
     }
 }

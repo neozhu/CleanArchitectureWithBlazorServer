@@ -1,4 +1,4 @@
-@page "/user/profile"
+﻿@page "/user/profile"
 
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
@@ -8,7 +8,7 @@
 <PageTitle>@_title</PageTitle>
 
 
-<MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6"
+<MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" 
          ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
     <MudTabPanel Text="@Localizer["Profile"]">
         <ProfileInformationTab />

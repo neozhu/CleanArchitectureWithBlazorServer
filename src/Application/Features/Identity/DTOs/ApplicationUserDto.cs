@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
@@ -50,10 +50,10 @@ public class ApplicationUserDto
     : TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId).BaseUtcOffset;
     [Description("Language")]
     public string? LanguageCode { get; set; }
-    [Description("Last Modified DateTime")]
+    [Description("Last Modified At")]
     public DateTime? LastModifiedAt { get; set; }
 
-    [Description("Created DateTime")]
+    [Description("Created At")]
     public DateTime? CreatedAt { get; set; }
   
  

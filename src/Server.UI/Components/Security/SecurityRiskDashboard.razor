@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
+﻿@using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetRiskSummaryStatistics
 @using CleanArchitecture.Blazor.Domain.Enums
 @using MudBlazor
@@ -31,7 +31,7 @@
             <MudGrid>
                 <!-- Total Users -->
                 <MudItem xs="12" sm="6" md="3">
-                    <MudPaper Class="pa-4 text-center" Style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;" Elevation="4">
+                    <MudPaper Class="pa-4 text-center" Style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;" >
                         <MudIcon Icon="@Icons.Material.Filled.People" Size="Size.Large" Color="Color.Inherit" Class="mb-2" />
                         <MudText Typo="Typo.h4" Color="Color.Inherit">@_statistics.TotalUsers</MudText>
                         <MudText Typo="Typo.body2" Color="Color.Inherit">@L["Total Users"]</MudText>
@@ -40,7 +40,7 @@
 
                 <!-- Low Risk -->
                 <MudItem xs="12" sm="6" md="3">
-                    <MudPaper Class="pa-4 text-center" Style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;" Elevation="4">
+                    <MudPaper Class="pa-4 text-center" Style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                         <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Large" Color="Color.Inherit" Class="mb-2" />
                         <MudText Typo="Typo.h4" Color="Color.Inherit">@_statistics.LowRiskUsers</MudText>
                         <MudText Typo="Typo.body2" Color="Color.Inherit">@L["Low Risk"]</MudText>
@@ -50,7 +50,7 @@
 
                 <!-- Medium Risk -->
                 <MudItem xs="12" sm="6" md="3">
-                    <MudPaper Class="pa-4 text-center" Style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;" Elevation="4">
+                    <MudPaper Class="pa-4 text-center" Style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;" >
                         <MudIcon Icon="@Icons.Material.Filled.Warning" Size="Size.Large" Color="Color.Inherit" Class="mb-2" />
                         <MudText Typo="Typo.h4" Color="Color.Inherit">@_statistics.MediumRiskUsers</MudText>
                         <MudText Typo="Typo.body2" Color="Color.Inherit">@L["Medium Risk"]</MudText>
@@ -60,7 +60,7 @@
 
                 <!-- High & Critical Risk -->
                 <MudItem xs="12" sm="6" md="3">
-                    <MudPaper Class="pa-4 text-center" Style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #333;" Elevation="4">
+                    <MudPaper Class="pa-4 text-center" Style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #333;" >
                         <MudIcon Icon="@Icons.Material.Filled.Error" Size="Size.Large" Color="Color.Error" Class="mb-2" />
                         <MudText Typo="Typo.h4" Color="Color.Error">@(_statistics.HighRiskUsers + _statistics.CriticalRiskUsers)</MudText>
                         <MudText Typo="Typo.body2" Color="Color.Error">@L["High Risk"]</MudText>

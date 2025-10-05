@@ -115,7 +115,7 @@
 
 @code{
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
-	[CascadingParameter] public UserProfile? UserProfile { get; set; }
+	[Parameter] public UserProfile? UserProfile { get; set; }
     [Parameter] public ApplicationUserDto Model { get; set; } = default!;
 
     private MudForm? _form;

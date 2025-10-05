@@ -294,13 +294,13 @@
   <data name="Superior" xml:space="preserve">
     <value>上级</value>
   </data>
-  <data name="Created DateTime" xml:space="preserve">
+  <data name="Created At" xml:space="preserve">
     <value>创建时间</value>
   </data>
   <data name="Created By" xml:space="preserve">
     <value>创建者</value>
   </data>
-  <data name="Last Modified DateTime" xml:space="preserve">
+  <data name="Last Modified At" xml:space="preserve">
     <value>上次修改</value>
   </data>
   <data name="Last Modified By" xml:space="preserve">

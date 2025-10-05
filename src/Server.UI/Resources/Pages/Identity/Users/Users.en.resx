@@ -294,14 +294,14 @@
   <data name="Superior" xml:space="preserve">
     <value>Superior</value>
   </data>
-  <data name="Created DateTime" xml:space="preserve">
-    <value>Created DateTime</value>
+  <data name="Created At" xml:space="preserve">
+    <value>Created At</value>
   </data>
   <data name="Created By" xml:space="preserve">
     <value>Created By</value>
   </data>
-  <data name="Last Modified DateTime" xml:space="preserve">
-    <value>Last Modified DateTime</value>
+  <data name="Last Modified At" xml:space="preserve">
+    <value>Last Modified At</value>
   </data>
   <data name="Last Modified By" xml:space="preserve">
     <value>Last Modified By</value>

@@ -231,147 +231,147 @@
 <PermissionsDrawer OnAssignAllChanged="AssignAllPermissionsAsync" Waiting="@_isProcessing" OnOpenChanged="HandlePermissionsDrawerOpenChanged" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="HandlePermissionChangedAsync"></PermissionsDrawer>
 
 @code {
-    #region Fields and Service Injection
+	#region Fields and Service Injection
 
-    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-    [CascadingParameter] public UserProfile? UserProfile { get; set; }
+	[CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+	[CascadingParameter] public UserProfile? UserProfile { get; set; }
 
-    // Data management services
-    private UserManager<ApplicationUser> _userManager = null!;
-    private RoleManager<ApplicationRole> _roleManager = null!;
-    private UserPermissionAssignmentService _permissionAssignmentService = null!;
+	// Data management services
+	private UserManager<ApplicationUser> _userManager = null!;
+	private RoleManager<ApplicationRole> _roleManager = null!;
+	private UserPermissionAssignmentService _permissionAssignmentService = null!;
 
-    // Page state and data
-    private int _defaultPageSize = 15;
-    private HashSet<ApplicationUserDto> _selectedUsers = new();
-    private readonly ApplicationUserDto _currentUserDto = new();
-    private string _searchString = string.Empty;
-    private string _selectedTenantId = string.Empty;
-    private string _title { get; set; } = "Users";
-    private IList<PermissionModel> _permissions = new List<PermissionModel>();
+	// Page state and data
+	private int _defaultPageSize = 15;
+	private HashSet<ApplicationUserDto> _selectedUsers = new();
+	private readonly ApplicationUserDto _currentUserDto = new();
+	private string _searchString = string.Empty;
+	private string _selectedTenantId = string.Empty;
+	private string _title { get; set; } = "Users";
+	private IList<PermissionModel> _permissions = new List<PermissionModel>();
 
-    public bool _canViewOnlineStatus;
-    private bool _isProcessing;
-    private bool _showPermissionsDrawer;
-    private bool _isLoading;
-    private bool _isExporting;
-    private bool _isUploading;
-    private List<ApplicationRoleDto> _roles = new();
-    private string? _searchRole;
+	public bool _canViewOnlineStatus;
+	private bool _isProcessing;
+	private bool _showPermissionsDrawer;
+	private bool _isLoading;
+	private bool _isExporting;
+	private bool _isUploading;
+	private List<ApplicationRoleDto> _roles = new();
+	private string? _searchRole;
 
-    // Permissions control
-    private UsersAccessRights _accessRights = new();
+	// Permissions control
+	private UsersAccessRights _accessRights = new();
 
-    // DataGrid reference
-    private MudDataGrid<ApplicationUserDto> _dataGrid = null!;
+	// DataGrid reference
+	private MudDataGrid<ApplicationUserDto> _dataGrid = null!;
 
-    private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
+	private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
 
-    #endregion
+	#endregion
 
-    #region Lifecycle and Initialization
+	#region Lifecycle and Initialization
 
-    protected override async Task OnInitializedAsync()
-    {
-        _title = Localizer[_currentUserDto.GetClassDescription()];
-        InitializeServices();
-        _accessRights = await PermissionService.GetAccessRightsAsync<UsersAccessRights>();
-        await RoleService.InitializeAsync();
-        _roles = RoleService.DataSource;
-        await  TenantService.InitializeAsync();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		_title = Localizer[_currentUserDto.GetClassDescription()];
+		InitializeServices();
+		_accessRights = await PermissionService.GetAccessRightsAsync<UsersAccessRights>();
+		await RoleService.InitializeAsync();
+		_roles = RoleService.DataSource;
+		await  TenantService.InitializeAsync();
+	}
 
-    private void InitializeServices()
-    {
-        _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        _permissionAssignmentService = ScopedServices.GetRequiredService<UserPermissionAssignmentService>();
-    }
+	private void InitializeServices()
+	{
+		_roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+		_permissionAssignmentService = ScopedServices.GetRequiredService<UserPermissionAssignmentService>();
+	}
 
-    public void Dispose()
-    {
-        // Dispose resources if needed
-    }
+	public void Dispose()
+	{
+		// Dispose resources if needed
+	}
 
-    #endregion
+	#endregion
 
-    #region Data Loading and Searching
+	#region Data Loading and Searching
 
-    private Expression<Func<ApplicationUser, bool>> CreateSearchPredicate()
-    {
-        return x =>
-            (x.UserName!.Contains(_searchString) ||
-             x.Email!.Contains(_searchString) ||
-             x.DisplayName!.Contains(_searchString) ||
-             x.PhoneNumber!.Contains(_searchString) ||
-             x.Provider!.Contains(_searchString)) &&
-            (_searchRole == null || x.UserRoles.Any(ur => ur.Role.Name == _searchRole)) &&
-            (string.IsNullOrEmpty(_selectedTenantId) || x.TenantId == _selectedTenantId);
-    }
+	private Expression<Func<ApplicationUser, bool>> CreateSearchPredicate()
+	{
+		return x =>
+			(x.UserName!.Contains(_searchString) ||
+				x.Email!.Contains(_searchString) ||
+				x.DisplayName!.Contains(_searchString) ||
+				x.PhoneNumber!.Contains(_searchString) ||
+				x.Provider!.Contains(_searchString)) &&
+			(_searchRole == null || x.UserRoles.Any(ur => ur.Role.Name == _searchRole)) &&
+			(string.IsNullOrEmpty(_selectedTenantId) || x.TenantId == _selectedTenantId);
+	}
 
-    private async Task<GridData<ApplicationUserDto>> LoadServerData(GridState<ApplicationUserDto> state)
-    {
-        try
-        {
-            _isLoading = true;
-            var predicate = CreateSearchPredicate();
-            var totalCount = await _userManager.Users.CountAsync(predicate);
-            var data = await _userManager.Users.Where(predicate)
-                .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
-                .Include(x => x.Superior)
-                .ApplySortDefinitions(state)
-                .Skip(state.Page * state.PageSize).Take(state.PageSize)
-                .ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider)
-                .ToListAsync();
+	private async Task<GridData<ApplicationUserDto>> LoadServerData(GridState<ApplicationUserDto> state)
+	{
+		try
+		{
+			_isLoading = true;
+			var predicate = CreateSearchPredicate();
+			var totalCount = await _userManager.Users.CountAsync(predicate);
+			var data = await _userManager.Users.Where(predicate)
+				.Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
+				.Include(x => x.Superior)
+				.ApplySortDefinitions(state)
+				.Skip(state.Page * state.PageSize).Take(state.PageSize)
+				.ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider)
+				.ToListAsync();
 
-            return new GridData<ApplicationUserDto> { TotalItems = totalCount, Items = data };
-        }
-        finally
-        {
-            _isLoading = false;
-        }
-    }
+			return new GridData<ApplicationUserDto> { TotalItems = totalCount, Items = data };
+		}
+		finally
+		{
+			_isLoading = false;
+		}
+	}
 
-    private async Task SearchUsers(string searchText)
-    {
-        if (_isLoading) return;
-        _searchString = searchText.ToLower();
-        await _dataGrid.ReloadServerData();
-    }
+	private async Task SearchUsers(string searchText)
+	{
+		if (_isLoading) return;
+		_searchString = searchText.ToLower();
+		await _dataGrid.ReloadServerData();
+	}
 
-    private async Task SearchByRole(string role)
-    {
-        if (_isLoading) return;
-        _searchRole = role;
-        await _dataGrid.ReloadServerData();
-    }
+	private async Task SearchByRole(string role)
+	{
+		if (_isLoading) return;
+		_searchRole = role;
+		await _dataGrid.ReloadServerData();
+	}
 
-    private async Task TenantListViewChanged(string tenantId)
-    {
-        _selectedTenantId = tenantId;
-        if (!string.IsNullOrEmpty(_selectedTenantId))
-        {
-            _roles = RoleService.DataSource.Where(r => r.TenantId == _selectedTenantId).ToList();
-        }
-        await _dataGrid.ReloadServerData();
-    }
+	private async Task TenantListViewChanged(string tenantId)
+	{
+		_selectedTenantId = tenantId;
+		if (!string.IsNullOrEmpty(_selectedTenantId))
+		{
+			_roles = RoleService.DataSource.Where(r => r.TenantId == _selectedTenantId).ToList();
+		}
+		await _dataGrid.ReloadServerData();
+	}
 
-    private async Task RefreshDataGrid()
-    {
-        _selectedUsers = new HashSet<ApplicationUserDto>();
-        await _dataGrid.ReloadServerData();
-    }
+	private async Task RefreshDataGrid()
+	{
+		_selectedUsers = new HashSet<ApplicationUserDto>();
+		await _dataGrid.ReloadServerData();
+	}
 
-    #endregion
+	#endregion
 
-    #region User Creation, Editing, and Deletion
+	#region User Creation, Editing, and Deletion
 
-    private async Task ShowUserDialog(ApplicationUserDto model, string dialogTitle, Func<ApplicationUserDto, Task> processAction)
-    {
-        var parameters = new DialogParameters<UserFormDialog>
+	private async Task ShowUserDialog(ApplicationUserDto model, string dialogTitle, Func<ApplicationUserDto, Task> processAction)
+	{
+		var parameters = new DialogParameters<UserFormDialog>
         {
             { x => x.Model, model },
-            { x => x.UserProfile, UserProfile }
+			{ x=>x.UserProfile,UserProfile}
         };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = await DialogService.ShowAsync<UserFormDialog>(dialogTitle, parameters, options);
