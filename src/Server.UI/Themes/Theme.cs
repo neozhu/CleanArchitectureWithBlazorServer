@@ -29,7 +29,7 @@ public static class Theme
                 TextSecondary = "#737373", // Neutral gray, hierarchy
                 SecondaryContrastText = "#ffffff", 
                 TextDisabled = "#94a3b8", // Soft gray
-                ActionDefault = "#171717", 
+                ActionDefault = "#262626", 
                 ActionDisabled = "rgba(100, 116, 139, 0.4)",
                 ActionDisabledBackground = "rgba(100, 116, 139, 0.1)",
                 Divider = "#e5e5e5", // Elegant divider
@@ -61,7 +61,7 @@ public static class Theme
                 TextPrimary = "#e5e5e5", // shadcn/ui white text
                 TextSecondary = "#a1a1aa", // Neutral gray secondary text
                 TextDisabled = "rgba(161, 161, 170, 0.5)",
-                ActionDefault = "#f5f5f5", 
+                ActionDefault = "#e5e5e5", 
                 ActionDisabled = "rgba(161, 161, 170, 0.3)",
                 ActionDisabledBackground = "rgba(161, 161, 170, 0.1)",
                 Divider = "rgba(255, 255, 255, 0.1)", // shadcn/ui divider color
