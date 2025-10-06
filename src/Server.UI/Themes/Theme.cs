@@ -58,10 +58,10 @@ public static class Theme
                 AppbarText = "#fafafa",
                 DrawerText = "#fafafa",
                 DrawerBackground = "#0c0a09",
-                TextPrimary = "#e5e5e5", // shadcn/ui white text
+                TextPrimary = "#d4d4d4", // shadcn/ui white text
                 TextSecondary = "#a1a1aa", // Neutral gray secondary text
                 TextDisabled = "rgba(161, 161, 170, 0.5)",
-                ActionDefault = "#e5e5e5", 
+                ActionDefault = "#d4d4d4", 
                 ActionDisabled = "rgba(161, 161, 170, 0.3)",
                 ActionDisabledBackground = "rgba(161, 161, 170, 0.1)",
                 Divider = "rgba(255, 255, 255, 0.1)", // shadcn/ui divider color
