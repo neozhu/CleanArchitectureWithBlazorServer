@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Data;
@@ -97,8 +97,11 @@ public class ExcelService : IExcelService
         using var workbook = new XLWorkbook(new MemoryStream(data));
         if (!workbook.Worksheets.TryGetWorksheet(sheetName, out var ws))
         {
-            var msg = $"Sheet with name {sheetName} does not exist!";
-            return await Result<IEnumerable<TEntity>>.FailureAsync(msg);
+            ws = workbook.Worksheets.Count > 0 ? workbook.Worksheets.First() : null;
+            if (ws is null)
+            {
+                return await Result<IEnumerable<TEntity>>.FailureAsync("Workbook contains no worksheets.");
+            }
         }
 
         // Check if the worksheet contains any cells.
