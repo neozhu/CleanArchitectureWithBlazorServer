@@ -1,4 +1,4 @@
-// Copyright (c) MudBlazor 2021
+﻿// Copyright (c) MudBlazor 2021
 // MudBlazor licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -14,10 +14,10 @@ public class UserPreference
     // List of available primary colors
     public static readonly List<string> PrimaryColors = new()
     {
-        "#172554",
-        "#7f22fe",
+        "#1447e6",
+        "#4c1d95",
         "#5ea500",
-        "#fcc800",
+        "#f97316",
         "#e7000b",
         "#171717"
     };
@@ -25,7 +25,7 @@ public class UserPreference
     // List of available dark primary colors
     public static readonly List<string> DarkPrimaryColors = new()
     {
-        "#2b7fff",
+        "#1447e6",
         "#8e51ff",
         "#5ea500",
         "#ff6900",
