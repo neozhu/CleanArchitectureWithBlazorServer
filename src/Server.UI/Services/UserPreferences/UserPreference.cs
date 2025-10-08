@@ -14,23 +14,25 @@ public class UserPreference
     // List of available primary colors
     public static readonly List<string> PrimaryColors = new()
     {
-        "#1447e6",
+        "#171717",
+        "#1d4ed8",
         "#4c1d95",
         "#5ea500",
         "#f97316",
         "#e7000b",
-        "#171717"
+        
     };
 
     // List of available dark primary colors
     public static readonly List<string> DarkPrimaryColors = new()
     {
-        "#1447e6",
+        "#e5e5e5",
+        "#1d4ed8",
         "#8e51ff",
         "#5ea500",
         "#ff6900",
         "#ff2056",
-        "#e5e5e5"
+        
     };
     /// <summary>
     /// Indicates whether the dark mode is enabled.
@@ -88,35 +90,7 @@ public class UserPreference
     /// </summary>
     public DarkLightMode DarkLightTheme { get; set; }
 
-    /// <summary>
-    /// Adjusts the brightness of a hex color.
-    /// </summary>
-    /// <param name="hexColor">The hex color code.</param>
-    /// <param name="factor">
-    /// The factor by which to adjust brightness (values less than 1 darken the color,
-    /// values greater than 1 lighten the color).
-    /// </param>
-    /// <returns>The adjusted hex color code.</returns>
-    private string AdjustBrightness(string hexColor, double factor)
-    {
-        if (string.IsNullOrWhiteSpace(hexColor))
-            throw new ArgumentException("Color code cannot be null or empty.", nameof(hexColor));
-
-        // Parse the hex color using ColorTranslator
-        Color color = ColorTranslator.FromHtml(hexColor);
-
-        // Convert RGB to HSL
-        ColorToHsl(color, out double h, out double s, out double l);
-
-        // Adjust lightness
-        l = Math.Clamp(l * factor, 0.0, 1.0);
-
-        // Convert HSL back to Color
-        Color adjustedColor = HslToColor(h, s, l);
-
-        // Return the hex representation
-        return ColorTranslator.ToHtml(adjustedColor);
-    }
+     
 
     /// <summary>
     /// Adjusts the color for UI interaction states (hover, focus) with better visual contrast.

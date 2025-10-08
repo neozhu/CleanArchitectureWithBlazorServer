@@ -5,6 +5,8 @@ using CleanArchitecture.Blazor.Application.Features.LoginAudits.Caching;
 using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Domain.Identity;
 using System.Collections.Concurrent;
+using System.Net;
+using System.Text.RegularExpressions;
 using ZiggyCreatures.Caching.Fusion;
 using Microsoft.Extensions.Localization;
 
@@ -19,8 +21,9 @@ public class SecurityAnalysisService : ISecurityAnalysisService
     private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IStringLocalizer<SecurityAnalysisService> _localizer;
     
-    // Cache for IP-based analysis to reduce database queries
-    private static readonly ConcurrentDictionary<string, DateTime> _lastIpAnalysis = new();
+    // Removed static dictionary to avoid unbounded growth & per-process divergence.
+    // Use FusionCache short TTL entries (per-IP throttle) instead.
+    private const string IpThrottlePrefix = "ip-analysis-throttle:"; // key = prefix + normalizedIp
 
     public SecurityAnalysisService(
         ILogger<SecurityAnalysisService> logger,
@@ -46,11 +49,19 @@ public class SecurityAnalysisService : ISecurityAnalysisService
             await CreateOrUpdateRiskSummaryAsync(db, loginAudit.UserId, loginAudit.UserName, 
                 analysisResult, cancellationToken);
 
-            // Invalidate cache for the user's risk summary
-            foreach(var tag in LoginAuditCacheKey.Tags)
+            // Invalidate tags: always invalidate user-specific collections (loginaudits, userloginrisksummary)
+            // Avoid clearing aggregated 'statistics' unless the risk summary changed significantly
+            var tagsToRemove = new List<string>();
+            tagsToRemove.Add("loginaudits");
+            tagsToRemove.Add("userloginrisksummary");
+            // Heuristic: critical or high risk or change in risk level triggers statistics invalidation.
+            if (analysisResult.RiskLevel != SecurityRiskLevel.Low)
             {
-                await _fusionCache.RemoveByTagAsync(tag, token: cancellationToken);
+                tagsToRemove.Add("statistics");
             }
+            var tagRemovalTasks = tagsToRemove.Distinct()
+                .Select(tag => _fusionCache.RemoveByTagAsync(tag, token: cancellationToken).AsTask());
+            await Task.WhenAll(tagRemovalTasks);
             
             _logger.LogInformation("Security analysis completed for user {UserId}. Risk Level: {RiskLevel}, Score: {RiskScore}, Factors: {FactorCount}", 
                 loginAudit.UserId, analysisResult.RiskLevel, analysisResult.RiskScore, analysisResult.RiskFactors.Count);
@@ -129,24 +140,23 @@ public class SecurityAnalysisService : ISecurityAnalysisService
             result.Factors.Add(_localizer["AccountBruteForceFactor", userFailuresInWindow, _options.BruteForceWindowMinutes]);
         }
 
-        // Analyze IP-level brute force (with caching to reduce database load)
-        if (!string.IsNullOrEmpty(currentLogin.IpAddress))
+        // Analyze IP-level brute force with FusionCache throttle (multi-instance friendly if distributed layer configured)
+        if (!string.IsNullOrWhiteSpace(currentLogin.IpAddress))
         {
-            var cacheKey = $"ip_analysis_{currentLogin.IpAddress}";
-            var shouldAnalyzeIp = !_lastIpAnalysis.TryGetValue(cacheKey, out var lastAnalysis) || 
-                                 lastAnalysis < DateTime.UtcNow.AddMinutes(-5); // Analyze IP at most every 5 minutes
-
-            if (shouldAnalyzeIp)
+            var normalizedIp = SecurityAnalysisHeuristics.NormalizeIpForThrottle(currentLogin.IpAddress);
+            var throttleKey = IpThrottlePrefix + normalizedIp;
+            // Try get a throttle marker; if absent, perform analysis and set marker with short TTL.
+            var throttle = await _fusionCache.TryGetAsync<bool>(throttleKey, token: cancellationToken);
+            if (!throttle.HasValue)
             {
                 var ipAnalysisResult = await AnalyzeIpBruteForceAsync(dbContext, currentLogin, bruteForceWindow, cancellationToken);
-                
                 if (ipAnalysisResult.IsTriggered)
                 {
                     result.Score += ipAnalysisResult.Score;
                     result.Factors.AddRange(ipAnalysisResult.Factors);
                 }
-
-                _lastIpAnalysis.TryAdd(cacheKey, DateTime.UtcNow);
+                // Set marker with TTL (configurable? use 5 min default, could expose via options later)
+                await _fusionCache.SetAsync(throttleKey, true, TimeSpan.FromMinutes(5), token: cancellationToken);
             }
         }
 
@@ -193,33 +203,27 @@ public class SecurityAnalysisService : ISecurityAnalysisService
 
         var newFactors = new List<string>();
 
-        // Check for new IP address (more efficient with LINQ)
-        var hasSeenIpBefore = !string.IsNullOrEmpty(currentLogin.IpAddress) && 
-                             userLoginAudits.Any(x => x.Success && 
-                                                     x.IpAddress == currentLogin.IpAddress && 
-                                                     x.Id != currentLogin.Id);
+        // Normalize comparison tokens
+    var currentIpCidr24 = SecurityAnalysisHeuristics.NormalizeIpForHeuristic(currentLogin.IpAddress);
+    var currentRegionLevel = SecurityAnalysisHeuristics.ExtractRegionHierarchy(currentLogin.Region, out var regionDisplay);
+    var currentUaCore = SecurityAnalysisHeuristics.ExtractUserAgentCore(currentLogin.BrowserInfo);
 
-        // Check for new region
-        var hasSeenRegionBefore = !string.IsNullOrEmpty(currentLogin.Region) && 
-                                 userLoginAudits.Any(x => x.Success && 
-                                                         x.Region == currentLogin.Region && 
-                                                         x.Id != currentLogin.Id);
+    bool seenIpSubnet = !string.IsNullOrEmpty(currentIpCidr24) && userLoginAudits.Any(x => x.Success && SecurityAnalysisHeuristics.NormalizeIpForHeuristic(x.IpAddress) == currentIpCidr24 && x.Id != currentLogin.Id);
+    bool seenRegionLevel = !string.IsNullOrEmpty(currentRegionLevel) && userLoginAudits.Any(x => x.Success && SecurityAnalysisHeuristics.ExtractRegionHierarchy(x.Region, out _) == currentRegionLevel && x.Id != currentLogin.Id);
+    bool seenUaCore = !string.IsNullOrEmpty(currentUaCore) && userLoginAudits.Any(x => x.Success && SecurityAnalysisHeuristics.ExtractUserAgentCore(x.BrowserInfo) == currentUaCore && x.Id != currentLogin.Id);
 
-        // Check for new browser info
-        var hasSeenBrowserBefore = !string.IsNullOrEmpty(currentLogin.BrowserInfo) && 
-                                  userLoginAudits.Any(x => x.Success && 
-                                                          x.BrowserInfo == currentLogin.BrowserInfo && 
-                                                          x.Id != currentLogin.Id);
-
-        // Evaluate novelty factors
-        if (!hasSeenIpBefore && !string.IsNullOrEmpty(currentLogin.IpAddress))
-            newFactors.Add(_localizer["NewIpFactor", currentLogin.IpAddress]);
-        
-        if (!hasSeenRegionBefore && !string.IsNullOrEmpty(currentLogin.Region))
-            newFactors.Add(_localizer["NewRegionFactor", currentLogin.Region]);
-        
-        if (!hasSeenBrowserBefore && !string.IsNullOrEmpty(currentLogin.BrowserInfo))
-            newFactors.Add(_localizer["NewBrowserFactor", currentLogin.BrowserInfo]);
+        if (!seenIpSubnet && !string.IsNullOrEmpty(currentIpCidr24))
+        {
+            newFactors.Add(_localizer["NewIpFactor", currentIpCidr24]);
+        }
+        if (!seenRegionLevel && !string.IsNullOrEmpty(regionDisplay))
+        {
+            newFactors.Add(_localizer["NewRegionFactor", regionDisplay]);
+        }
+        if (!seenUaCore && !string.IsNullOrEmpty(currentUaCore))
+        {
+            newFactors.Add(_localizer["NewBrowserFactor", currentUaCore]);
+        }
 
         if (newFactors.Any())
         {
@@ -229,6 +233,11 @@ public class SecurityAnalysisService : ISecurityAnalysisService
 
         return result;
     }
+
+    // ---------------------------------------
+    // Helper methods for relaxed heuristics
+    // ---------------------------------------
+    // helper methods moved to SecurityAnalysisHeuristics for testability
 
     private RiskAnalysisRuleResult AnalyzeUnusualTimeLogin(LoginAudit currentLogin)
     {

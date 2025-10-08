@@ -6,7 +6,8 @@ public sealed class ValidationPreProcessor<TRequest> : IRequestPreProcessor<TReq
 
     public ValidationPreProcessor(IEnumerable<IValidator<TRequest>> validators)
     {
-        _validators = validators.ToList() ?? throw new ArgumentNullException(nameof(validators));
+        if (validators is null) throw new ArgumentNullException(nameof(validators));
+        _validators = validators.ToList();
     }
 
     public async Task Process(TRequest request, CancellationToken cancellationToken)

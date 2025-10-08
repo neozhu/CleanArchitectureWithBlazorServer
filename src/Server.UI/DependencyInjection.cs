@@ -149,11 +149,14 @@ public static class DependencyInjection
         }
         else
         {
-            app.UseExceptionHandler("/Error", true);
+            // Unified exception handling: rely on AddExceptionHandler<GlobalExceptionHandler>() + ProblemDetails.
+            // Removed the conventional "/Error" endpoint handler to avoid duplication/conflict.
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
         
+        // Single global exception handler registration (no path) to activate IExceptionHandler + ProblemDetails pipeline.
+        app.UseExceptionHandler();
         app.UseStatusCodePagesWithRedirects("/404");
         app.MapHealthChecks("/health");
         app.UseAuthentication();
@@ -188,8 +191,7 @@ public static class DependencyInjection
             localizationOptions.RequestCultureProviders.Remove(acceptLanguageProvider);
         }
         app.UseRequestLocalization(localizationOptions);
-        app.UseMiddleware<LocalizationCookiesMiddleware>();
-        app.UseExceptionHandler();
+    app.UseMiddleware<LocalizationCookiesMiddleware>();
         app.UseHangfireDashboard("/jobs", new DashboardOptions
         {
             Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
