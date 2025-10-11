@@ -101,7 +101,7 @@
 @code
 {
     private UserProfile UserProfile => UserProfileState.Value;
-    private List<TenantDto>? _availableTenants;
+	private List<TenantDto>? _availableTenants => UserProfile.AvailableTenants;
     private bool _isSwitching;
     private bool _hasSwitchPermission;
 
@@ -109,7 +109,7 @@
     {
         UserProfileState.Changed += OnUserProfileChanged;
         _hasSwitchPermission = await PermissionService.HasPermissionAsync(Permissions.Users.SwitchTenants);
-        await LoadAvailableTenants();
+        
     }
 
     public void Dispose()
@@ -122,10 +122,7 @@
         InvokeAsync(StateHasChanged);
     }
 
-    private async Task LoadAvailableTenants()
-    {
-        _availableTenants = await TenantSwitchService.GetAvailableTenantsAsync();
-    }
+     
 
     private async Task SwitchToTenant(string tenantId)
     {

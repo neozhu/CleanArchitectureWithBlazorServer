@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Domain.Identity;
@@ -11,6 +11,7 @@ public class ApplicationUser : IdentityUser
         UserRoles = new HashSet<ApplicationUserRole>();
         Logins = new HashSet<ApplicationUserLogin>();
         Tokens = new HashSet<ApplicationUserToken>();
+        TenantUsers = new HashSet<TenantUser>();
     }
 
     public string? DisplayName { get; set; }
@@ -28,7 +29,7 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
     public virtual ICollection<ApplicationUserLogin> Logins { get; set; }
     public virtual ICollection<ApplicationUserToken> Tokens { get; set; }
-
+    public ICollection<TenantUser> TenantUsers { get; set; } 
     public string? SuperiorId { get; set; } = null;
     public ApplicationUser? Superior { get; set; } = null;
     public DateTime? CreatedAt { get; set; }

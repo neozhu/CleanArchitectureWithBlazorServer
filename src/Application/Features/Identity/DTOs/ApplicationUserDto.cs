@@ -55,8 +55,8 @@ public class ApplicationUserDto
 
     [Description("Created At")]
     public DateTime? CreatedAt { get; set; }
-  
- 
+    [Description("Tenants")]
+    public IEnumerable<TenantDto> Tenants { get; set; } = new List<TenantDto>();
     public UserProfile ToUserProfile()
     {
         return new UserProfile(
@@ -75,7 +75,9 @@ public class ApplicationUserDto
             TenantId: TenantId,
             TenantName: Tenant?.Name,
             TimeZoneId: TimeZoneId,
-            LanguageCode: LanguageCode
+            LanguageCode: LanguageCode,
+            Tenant: Tenant,
+            AvailableTenants: Tenants.Select(t => new TenantDto() { Id = t.Id, Name = t.Name, Description = t.Description }).ToList()
         );
     }
 
@@ -94,6 +96,7 @@ public class ApplicationUserDto
                 .ForMember(x => x.LocalTimeOffset, s => s.Ignore())
                 .ForMember(x => x.EmailConfirmed, s => s.MapFrom(y => y.EmailConfirmed))
                 .ForMember(x => x.AssignedRoles, s => s.MapFrom(y => y.UserRoles.Select(r => r.Role.Name)))
+                .ForMember(x => x.Tenants, s => s.MapFrom(y => y.TenantUsers.Select(x => x.Tenant)))
                 .ForMember(x => x.Superior, s => s.MapFrom(y => y.Superior != null ? new ApplicationUserDto()
                 {
                     Id = y.Superior.Id,

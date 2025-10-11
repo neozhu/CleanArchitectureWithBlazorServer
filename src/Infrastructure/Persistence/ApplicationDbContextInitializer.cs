@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Application.Common.Security;
@@ -108,12 +108,12 @@ public class ApplicationDbContextInitializer
         var administratorRole = new ApplicationRole(adminRoleName)
         {
             Description = "Admin Group",
-            TenantId = (await _context.Tenants.FirstAsync()).Id
+            CreatedAt= DateTime.UtcNow,
         };
         var userRole = new ApplicationRole(userRoleName)
         {
             Description = "Basic Group",
-            TenantId = (await _context.Tenants.FirstAsync()).Id
+            CreatedAt = DateTime.UtcNow,
         };
 
         await _roleManager.CreateAsync(administratorRole);
@@ -138,6 +138,7 @@ public class ApplicationDbContextInitializer
         if (await _userManager.Users.AnyAsync()) return;
 
         _logger.LogInformation("Seeding users...");
+        var tenants = await _context.Tenants.ToListAsync();
         var adminUser = new ApplicationUser
         {
             UserName = Users.Administrator,
@@ -151,9 +152,11 @@ public class ApplicationDbContextInitializer
             LanguageCode="en-US",
             TimeZoneId= "Asia/Shanghai",
             TwoFactorEnabled = false,
-            CreatedAt=DateTime.UtcNow
+            CreatedAt=DateTime.UtcNow,
+            TenantUsers = tenants.Select(t => new TenantUser { TenantId = t.Id }).ToList()
         };
-
+        await _userManager.CreateAsync(adminUser, Users.DefaultPassword);
+        await _userManager.AddToRoleAsync(adminUser, Roles.Admin);
         var demoUser = new ApplicationUser
         {
             UserName = Users.Demo,
@@ -161,16 +164,17 @@ public class ApplicationDbContextInitializer
             Provider = "Local",
             TenantId = (await _context.Tenants.FirstAsync()).Id,
             DisplayName = Users.Demo,
+            SuperiorId = adminUser.Id,
             Email = "demo@example.com",
             EmailConfirmed = true,
             LanguageCode = "de-DE",
             TimeZoneId = "Europe/Berlin",
+            TenantUsers = new List<TenantUser> { new TenantUser { TenantId = tenants.First().Id } },
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80",
             CreatedAt = DateTime.UtcNow
         };
 
-        await _userManager.CreateAsync(adminUser, Users.DefaultPassword);
-        await _userManager.AddToRoleAsync(adminUser, Roles.Admin);
+       
 
         await _userManager.CreateAsync(demoUser, Users.DefaultPassword);
         await _userManager.AddToRoleAsync(demoUser, Roles.Basic);

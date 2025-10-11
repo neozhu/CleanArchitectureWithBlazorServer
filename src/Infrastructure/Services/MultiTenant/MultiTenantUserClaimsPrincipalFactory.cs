@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable warnings
 using CleanArchitecture.Blazor.Domain.Identity;
@@ -110,7 +110,7 @@ public class MultiTenantUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
         if (RoleManager.SupportsRoleClaims)
         {
             var roles = (await UserManager.GetRolesAsync(user).ConfigureAwait(false)).ToList();
-            var tenantRoles = await RoleManager.Roles.Where(x => roles.Contains(x.Name) && x.TenantId == user.TenantId).ToListAsync().ConfigureAwait(false);
+            var tenantRoles = await RoleManager.Roles.Where(x => roles.Contains(x.Name)).ToListAsync().ConfigureAwait(false);
 
             foreach (var role in tenantRoles)
             {

@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 using ZiggyCreatures.Caching.Fusion;
 
@@ -35,8 +35,7 @@ public class RoleService : IRoleService, IDisposable
                              var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
                              return await roleManager.Roles
                                  .ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider)
-                                 .OrderBy(x => x.TenantId)
-                                 .ThenBy(x => x.Name)
+                                 .OrderBy(x => x.Name)
                                  .ToListAsync();
                          })
                      ?? new List<ApplicationRoleDto>();
@@ -54,8 +53,7 @@ public class RoleService : IRoleService, IDisposable
                              var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
                              return await roleManager.Roles
                                  .ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider)
-                                 .OrderBy(x => x.TenantId)
-                                 .ThenBy(x => x.Name)
+                                 .OrderBy(x => x.Name)
                                  .ToListAsync();
                          })
                      ?? new List<ApplicationRoleDto>();

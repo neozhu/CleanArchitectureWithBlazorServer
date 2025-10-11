@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
@@ -20,6 +20,7 @@ public class ApplicationDbContext : IdentityDbContext<
     }
 
     public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<TenantUser> TenantUsers { get; set; }
     public DbSet<SystemLog> SystemLogs { get; set; }
     public DbSet<AuditTrail> AuditTrails { get; set; }
     public DbSet<Document> Documents { get; set; }
