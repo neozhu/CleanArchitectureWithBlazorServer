@@ -239,6 +239,7 @@
 	// Data management services
 	private UserManager<ApplicationUser> _userManager = null!;
 	private RoleManager<ApplicationRole> _roleManager = null!;
+	private IApplicationDbContextFactory _dbContextFactory = null!;
 	private UserPermissionAssignmentService _permissionAssignmentService = null!;
 
 	// Page state and data
@@ -285,6 +286,7 @@
 	{
 		_roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
 		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+		_dbContextFactory = ScopedServices.GetRequiredService<IApplicationDbContextFactory>();
 		_permissionAssignmentService = ScopedServices.GetRequiredService<UserPermissionAssignmentService>();
 	}
 
@@ -349,10 +351,6 @@
 	private async Task TenantListViewChanged(string tenantId)
 	{
 		_selectedTenantId = tenantId;
-		if (!string.IsNullOrEmpty(_selectedTenantId))
-		{
-			_roles = RoleService.DataSource.Where(r => r.TenantId == _selectedTenantId).ToList();
-		}
 		await _dataGrid.ReloadServerData();
 	}
 
@@ -389,7 +387,7 @@
             Provider = model.Provider,
             DisplayName = model.DisplayName,
             UserName = model.UserName,
-            TenantId = model.TenantId,
+            TenantId = model.Tenants.FirstOrDefault()?.Id,
             Email = model.Email,
             PhoneNumber = model.PhoneNumber,
             SuperiorId = model.Superior?.Id,
@@ -407,7 +405,15 @@
             Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
             return;
         }
-
+		if (model.Tenants.Any())
+		{
+			var db = await _dbContextFactory.CreateAsync();
+			foreach (var tenant in model.Tenants)
+			{
+				db.TenantUsers.Add(new TenantUser { TenantId = tenant.Id, UserId = newUser.Id });
+			}
+			await db.SaveChangesAsync(default);
+		}
         Snackbar.Add(Localizer["New user created successfully"], Severity.Info);
         await AssignRolesToUserAsync(newUser, model.AssignedRoles);
         Logger.LogInformation("User created: {UserName} (ID: {UserId})", newUser.UserName, newUser.Id);
@@ -424,7 +430,20 @@
         {
             await _userManager.RemoveFromRolesAsync(user, roles);
         }
-
+		var db = await _dbContextFactory.CreateAsync();
+		var tenantUsers = await db.TenantUsers.Where(x => x.UserId == model.Id).ToListAsync();
+		if (tenantUsers.Any())
+		{
+			db.TenantUsers.RemoveRange(tenantUsers);
+		}
+		if (model.Tenants.Any())
+		{
+			foreach (var tenant in model.Tenants)
+			{
+				db.TenantUsers.Add(new TenantUser { TenantId = tenant.Id, UserId = model.Id });
+			}
+			await db.SaveChangesAsync(default);
+		}
         user.Email = model.Email;
         user.PhoneNumber = model.PhoneNumber;
         user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
@@ -432,7 +451,10 @@
         user.Provider = model.Provider;
         user.UserName = model.UserName;
         user.IsActive = model.IsActive;
-        user.TenantId = model.TenantId;
+		if (string.IsNullOrEmpty(user.TenantId) && model.Tenants.Any())
+		{
+			user.TenantId = model.Tenants.First().Id;
+		}
         user.SuperiorId = model.Superior?.Id;
         user.LanguageCode = model.LanguageCode;
         user.TimeZoneId = model.TimeZoneId;
@@ -477,6 +499,8 @@
             Email = "",
             UserName = "",
             AssignedRoles = Array.Empty<string>(),
+			TenantId = UserProfile?.TenantId,
+			Tenant = UserProfile?.Tenant,
             TimeZoneId = TimeZoneInfo.Local.Id,
             LanguageCode = CultureInfo.CurrentCulture.Name
         };

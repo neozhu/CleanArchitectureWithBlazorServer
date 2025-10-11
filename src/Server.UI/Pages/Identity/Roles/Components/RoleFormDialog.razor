@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+﻿@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @inherits MudComponentBase
@@ -8,15 +8,8 @@
     <DialogContent>
         <MudForm Model="Model" @ref="_form">
             <MudGrid>
-                <MudItem sm="6" xs="12">
-                    <MultiTenantAutocomplete @bind-Value="Model.Tenant"
-                                             T="TenantDto"
-                                             Label="@L["Tenant"]"
-                                             Required="true"
-                                             Validation="@(new Func<string, IEnumerable<string>>(ValidateTenant))"
-                                             For="@(() => Model.Tenant)" />
-                </MudItem>
-                <MudItem sm="6" xs="12">
+                
+                <MudItem xs="12">
                     <MudTextField Label="@L[Model.GetMemberDescription(x => x.Name)]" 
                                  @bind-Value="Model.Name"
                                  Required="true"

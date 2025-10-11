@@ -1,3 +1,5 @@
+﻿using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 /// <summary>
@@ -18,6 +20,8 @@ public sealed record UserProfile(
     bool IsActive = true,
     string? TenantId = null,
     string? TenantName = null,
+    TenantDto? Tenant = null,
+    List<TenantDto> AvailableTenants = null!,
     string? TimeZoneId = null,
     string? LanguageCode = null
 )

@@ -1,5 +1,6 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Text.Json;
+using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using CleanArchitecture.Blazor.Application.Common.Constants;
+using static CleanArchitecture.Blazor.Application.Common.Security.Permissions;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
@@ -386,17 +387,19 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 Provider = info.LoginProvider,
                 IsActive = true,
                 EmailConfirmed = true,
+                CreatedAt = DateTime.UtcNow,
+                TenantUsers = new List<TenantUser> { new TenantUser { TenantId = tenantId } }
             };
             
             // Ensure the basic role exists for the tenant
-            var role = await roleManager.Roles.Where(x => x.TenantId == user.TenantId && x.Name == Roles.Basic).FirstOrDefaultAsync();
+            var role = await roleManager.Roles.Where(x=> x.Name == Application.Common.Constants.Roles.Basic).FirstOrDefaultAsync();
             if (role is null)
             {
                 role = new ApplicationRole
                 {
-                    Name = Roles.Basic,
-                    NormalizedName = Roles.Basic.ToUpperInvariant(),
-                    TenantId = user.TenantId
+                    Name = Application.Common.Constants.Roles.Basic,
+                    NormalizedName = Application.Common.Constants.Roles.Basic.ToUpperInvariant(),
+                    CreatedAt= DateTime.UtcNow,
                 };
                 var roleResult = await roleManager.CreateAsync(role);
                 if (!roleResult.Succeeded)
@@ -413,7 +416,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 logger.LogError("Failed to create user.");
                 return Results.BadRequest("Failed to create user.");
             }
-            
+        
             // Assign the user to the basic role
             userResult = await userManager.AddToRoleAsync(user, role.Name!);
             if (!userResult.Succeeded)
