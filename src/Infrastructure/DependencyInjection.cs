@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
@@ -206,8 +206,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
 
-        services.AddScoped<IUserStore<ApplicationUser>, MultiTenantUserStore>();
-        services.AddScoped<UserManager<ApplicationUser>, MultiTenantUserManager>();
+       
         services.AddIdentityCore<ApplicationUser>()
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -217,26 +216,7 @@ public static class DependencyInjection
 
 
 
-        // Replace the default SignInManager with AuditSignInManager
-        var signInManagerDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(SignInManager<ApplicationUser>));
-        if (signInManagerDescriptor != null)
-        {
-            services.Remove(signInManagerDescriptor);
-        }
-        services.AddScoped<SignInManager<ApplicationUser>, AuditSignInManager<ApplicationUser>>();
-
-        // Add the custom role validator MultiTenantRoleValidator to override the default validation logic.
-        // Ensures role names are unique within each tenant.
-        services.AddScoped<IRoleValidator<ApplicationRole>, MultiTenantRoleValidator>();
-
-        // Find the default RoleValidator<ApplicationRole> registration in the service collection.
-        var defaultRoleValidator = services.FirstOrDefault(descriptor => descriptor.ImplementationType == typeof(RoleValidator<ApplicationRole>));
-
-        // If the default role validator is found, remove it to ensure only MultiTenantRoleValidator is used.
-        if (defaultRoleValidator != null)
-        {
-            services.Remove(defaultRoleValidator);
-        }
+         
         services.Configure<IdentityOptions>(options =>
         {
             var identitySettings = configuration.GetRequiredSection(IDENTITY_SETTINGS_KEY).Get<IdentitySettings>();

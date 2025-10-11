@@ -1,4 +1,4 @@
-@page "/account/register"
+﻿@page "/account/register"
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -116,7 +116,7 @@
 	private UserManager<ApplicationUser> _userManager = null!;
 	private RoleManager<ApplicationRole> _roleManager = null!;
 	private SignInManager<ApplicationUser> _signInManager = null!;
-
+	private IApplicationDbContextFactory _applicationDbContextFactory = null!;
 
 	protected override Task OnInitializedAsync()
 	{
@@ -125,6 +125,7 @@
 		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
 		_roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
 		_signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+		_applicationDbContextFactory = ScopedServices.GetRequiredService<IApplicationDbContextFactory>();
 
 		return Task.CompletedTask;
 
@@ -139,14 +140,14 @@
 		user.Email = Input.Email;
 		user.UserName = Input.UserName;
 		user.CreatedAt = DateTime.UtcNow;
-		var role = await _roleManager.Roles.Where(x => x.TenantId == Input.TenantId && x.Name == Roles.Basic).FirstOrDefaultAsync();
+		var role = await _roleManager.Roles.Where(x => x.Name == Roles.Basic).FirstOrDefaultAsync();
 		if (role is null)
 		{
 			role = new ApplicationRole
 			{
 				Name = Roles.Basic,
 				NormalizedName = Roles.Basic.ToUpperInvariant(),
-				TenantId = Input.TenantId
+				CreatedAt = DateTime.UtcNow
 			};
 			var roleResult = await _roleManager.CreateAsync(role);
 			if (!roleResult.Succeeded)
@@ -173,6 +174,14 @@
 		}
 
 		var userId = await _userManager.GetUserIdAsync(user);
+		var dbContext =await _applicationDbContextFactory.CreateAsync();
+		dbContext.TenantUsers.Add(new TenantUser
+		{
+			TenantId = user.TenantId,
+			UserId = userId,
+		
+		});
+		await dbContext.SaveChangesAsync(CancellationToken.None);
 		Logger.LogInformation("New user account created. User ID: {UserId}, Tenant ID: {TenantId}.",
 			Input.UserName,
 			userId,

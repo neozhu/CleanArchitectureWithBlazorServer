@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Common.Security;
+﻿using CleanArchitecture.Blazor.Application.Common.Security;
 using System.ComponentModel;
 using System.Reflection;
 using CleanArchitecture.Blazor.Domain.Identity;
@@ -106,7 +106,7 @@ public class PermissionHelper : IPermissionHelper, IDisposable
             var inheritClaims = new List<Claim>();
             if (roles is not null && roles.Any())
             {
-                var assigendRoles = await roleManager.Roles.Where(x => roles.Contains(x.Name) && x.TenantId == user.TenantId).ToListAsync();
+                var assigendRoles = await roleManager.Roles.Where(x => roles.Contains(x.Name)).ToListAsync();
                 foreach (var role in assigendRoles)
                 {
                     var claims = await roleManager.GetClaimsAsync(role).ConfigureAwait(false);

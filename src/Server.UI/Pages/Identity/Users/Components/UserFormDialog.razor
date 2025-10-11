@@ -1,14 +1,14 @@
-﻿@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+﻿@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Domain.Common.Enums
-@inherits MudComponentBase
+@inherits OwningComponentBase
 
 @inject IStringLocalizer<Identity.Users.Users> L
 @inject IValidationService Validator
 @inject IUploadService UploadService
-@inject RoleManager<ApplicationRole> RoleManager
-@inject ISnackbar Snackbar
+@inject ITenantService TenantsService
 
 <MudDialog>
     <DialogContent>
@@ -39,14 +39,14 @@
                     </div>
                 </MudItem>
 
-                <MudItem sm="6" xs="12">
-                    <MultiTenantAutocomplete For="@(() => Model.Tenant)"
-                                             T="TenantDto"
-                                             Label="@L[Model.GetMemberDescription(x => x.Tenant)]"
-                                             Required="true"
-                                             Value="@Model.Tenant"
-                                             ValueChanged="TenantChanged" />
-                </MudItem>
+				<MudItem sm="6" xs="12">
+					<MudSelect T="TenantDto" Label="@L[Model.GetMemberDescription(x => x.Tenants)]" @bind-SelectedValues="Model.Tenants" MultiSelection="true" Required="true" RequiredError="@L["tenants are required"]">
+						@foreach (var tenant in TenantsService.DataSource)
+						{
+							<MudSelectItem T="TenantDto" Value="tenant">@tenant.Name</MudSelectItem>
+						}
+					</MudSelect>
+				</MudItem>
                 <MudItem xs="12" sm="6">
                     <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDescription(x => x.Provider)]" ReadOnly="true" />
                 </MudItem>
@@ -117,7 +117,7 @@
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 	[Parameter] public UserProfile? UserProfile { get; set; }
     [Parameter] public ApplicationUserDto Model { get; set; } = default!;
-
+	private RoleManager<ApplicationRole> RoleManager = null!;
     private MudForm? _form;
     private List<CheckItem> Roles { get; set; } = new();
 
@@ -129,24 +129,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await GetRoles(Model.TenantId);
+		RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        await GetRoles();
     }
 
-    private async Task GetRoles(string? tenantId)
+    private async Task GetRoles()
     {
         var roles = await RoleManager.Roles
-            .Where(x => x.TenantId == tenantId)
             .Select(x => x.Name)
             .ToListAsync();
         Roles = roles.Select(r => new CheckItem { Key = r!, Value = Model.AssignedRoles?.Contains(r) ?? false }).ToList();
     }
 
-    private async Task TenantChanged(TenantDto? tenant)
-    {
-        Model.TenantId = tenant?.Id;
-        Model.Tenant = tenant;
-        await GetRoles(Model.TenantId);
-    }
+     
 
     private async Task UploadPhoto(IBrowserFile file)
     {

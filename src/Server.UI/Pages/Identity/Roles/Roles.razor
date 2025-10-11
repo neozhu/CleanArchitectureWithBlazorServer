@@ -15,7 +15,6 @@
 
 @attribute [Authorize(Policy = Permissions.Roles.View)]
 @inherits OwningComponentBase
-@inject ITenantService _tenantService
 @inject IRoleService _roleService
 @inject IFusionCache _fusionCache
 @inject IStringLocalizer<Roles> _localizer
@@ -42,16 +41,7 @@
             <!-- Left Toolbar: Icon, Title, and Tenant selection -->
             <MudStack Row AlignItems="AlignItems.Start">
                 <MudIcon Icon="@Icons.Material.Filled.Groups" Size="Size.Large" />
-                <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle2" Class="mb-2">@_title</MudText>
-                    <MudSelect T="string" Style="min-width:120px" Value="@_selectedTenantId" ValueChanged="OnTenantChanged" Dense="true" Label="@_localizer["List View"]">
-                        <MudSelectItem T="string" Value="@(" ")">@_localizer["ALL"]</MudSelectItem>
-                        @foreach (var tenant in _tenantService.DataSource)
-                        {
-                            <MudSelectItem T="string" Value="@tenant.Id">@tenant.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudStack>
+                <MudText Typo="Typo.subtitle2" Class="mb-2">@_title</MudText>
             </MudStack>
             <!-- Right Toolbar: Refresh, Create, More Actions, and Search -->
             <MudStack Spacing="0" AlignItems="AlignItems.End">
@@ -139,14 +129,6 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn Property="x => x.TenantId" Title="@_localizer[_currentDto.GetMemberDescription(x => x.Tenant)]">
-            <CellTemplate>
-                <MudText>@context.Item.Tenant?.Name</MudText>
-            </CellTemplate>
-            <FooterTemplate>
-                @_localizer["Selected"]: @_selectedRoles.Count
-            </FooterTemplate>
-        </PropertyColumn>
         <PropertyColumn Property="x => x.Name" Title="@_localizer[_currentDto.GetMemberDescription(x => x.Name)]" />
         <PropertyColumn Property="x => x.Description" Title="@_localizer[_currentDto.GetMemberDescription(x => x.Description)]">
             <CellTemplate>
@@ -170,55 +152,53 @@
 </PermissionsDrawer>
 
 @code {
-    #region Fields and Properties
+	#region Fields and Properties
 
-    [CascadingParameter] private Task<AuthenticationState> _authState { get; set; } = default!;
-    private RoleManager<ApplicationRole> _roleManager = null!;
-    private string? _title { get; set; }
-    private bool _isProcessing;
-    private string _currentRoleName = string.Empty;
-    private int _defaultPageSize = 15;
-    private HashSet<ApplicationRoleDto> _selectedRoles = new();
-    private readonly ApplicationRoleDto _currentDto = new();
-    private string _searchString = string.Empty;
-    private string _selectedTenantId = " ";
-    private TimeSpan _refreshInterval => TimeSpan.FromHours(2);
-    private IList<PermissionModel> _permissions = new List<PermissionModel>();
-    private MudDataGrid<ApplicationRoleDto> _dataGrid = null!;
-    private bool _showPermissionsDrawer;
-    private bool _isLoading;
-    private bool _isUploading;
-    private bool _isExporting;
-    private RolePermissionAssignmentService _permissionAssignmentService = null!;
-    private RolesAccessRights _accessRights = new();
+	[CascadingParameter] private Task<AuthenticationState> _authState { get; set; } = default!;
+	private RoleManager<ApplicationRole> _roleManager = null!;
+	private string? _title { get; set; }
+	private bool _isProcessing;
+	private string _currentRoleName = string.Empty;
+	private int _defaultPageSize = 15;
+	private HashSet<ApplicationRoleDto> _selectedRoles = new();
+	private readonly ApplicationRoleDto _currentDto = new();
+	private string _searchString = string.Empty;
+	private TimeSpan _refreshInterval => TimeSpan.FromHours(2);
+	private IList<PermissionModel> _permissions = new List<PermissionModel>();
+	private MudDataGrid<ApplicationRoleDto> _dataGrid = null!;
+	private bool _showPermissionsDrawer;
+	private bool _isLoading;
+	private bool _isUploading;
+	private bool _isExporting;
+	private RolePermissionAssignmentService _permissionAssignmentService = null!;
+	private RolesAccessRights _accessRights = new();
 
-    #endregion
+	#endregion
 
-    #region Lifecycle Methods    
-    protected override async Task OnInitializedAsync()
-    {
-        InitializeServices();
-        _title = _localizer[_currentDto.GetClassDescription()];
-        _accessRights = await PermissionService.GetAccessRightsAsync<RolesAccessRights>();
-        await _tenantService.InitializeAsync();
-    }
+	#region Lifecycle Methods    
+	protected override async Task OnInitializedAsync()
+	{
+		InitializeServices();
+		_title = _localizer[_currentDto.GetClassDescription()];
+		_accessRights = await PermissionService.GetAccessRightsAsync<RolesAccessRights>();
+	}
 
-    private void InitializeServices()
-    {
-        _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
-        _permissionAssignmentService = ScopedServices.GetRequiredService<RolePermissionAssignmentService>();
-    }
+	private void InitializeServices()
+	{
+		_roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+		_permissionAssignmentService = ScopedServices.GetRequiredService<RolePermissionAssignmentService>();
+	}
 
-    #endregion
+	#endregion
 
-    #region Grid and Search
+	#region Grid and Search
 
-    // Create the search predicate for filtering roles by name, description, and tenant.
-    private Expression<Func<ApplicationRole, bool>> CreateSearchPredicate()
-    {
-        return role =>
-            (role.Name!.ToLower().Contains(_searchString) || role.Description!.ToLower().Contains(_searchString)) &&
-            (_selectedTenantId == " " || role.TenantId == _selectedTenantId);
+	// Create the search predicate for filtering roles by name, description, and tenant.
+	private Expression<Func<ApplicationRole, bool>> CreateSearchPredicate()
+	{
+		return role =>
+			(role.Name!.ToLower().Contains(_searchString) || role.Description!.ToLower().Contains(_searchString));
+
     }
 
     // Retrieve grid data from the server.
@@ -245,12 +225,7 @@
         }
     }
 
-    // Handle tenant selection changes.
-    private async Task OnTenantChanged(string tenantId)
-    {
-        _selectedTenantId = tenantId;
-        await _dataGrid.ReloadServerData();
-    }
+     
 
     // Handle search text changes.
     private async Task OnSearch(string text)
@@ -293,9 +268,9 @@
             var existingRole = await _roleManager.FindByIdAsync(item.Id);
             if (existingRole is not null)
             {
-                existingRole.TenantId = item.Tenant?.Id;
                 existingRole.Description = item.Description;
                 existingRole.Name = item.Name;
+				existingRole.LastModifiedAt = DateTime.UtcNow;
                 return await _roleManager.UpdateAsync(existingRole);
             }
             return IdentityResult.Failed(new IdentityError { Description = "Role not found." });
@@ -317,9 +292,9 @@
         {
             var applicationRole = new ApplicationRole
             {
-                TenantId = model.Tenant?.Id,
                 Name = model.Name,
-                Description = model.Description
+                Description = model.Description,
+				CreatedAt = DateTime.UtcNow,
             };
 
             var result = await saveAction(applicationRole);
@@ -449,8 +424,7 @@
             // Retrieve the roles to export
             var roles = await _roleManager.Roles
                 .Where(predicate)
-                .OrderBy(r => r.TenantId)
-                .ThenBy(r => r.Name)
+				.OrderBy(r => r.Name)
                 .ProjectTo<ApplicationRoleDto>(Mapper.ConfigurationProvider)
                 .ToListAsync();
 
@@ -459,7 +433,6 @@
                 new Dictionary<string, Func<ApplicationRoleDto, object?>>
                 {
                     { _localizer["Id"], item => item.Id },
-                    { _localizer["Tenant Name"], item => item.Tenant?.Name },
                     { _localizer["Name"], item => item.Name },
                     { _localizer["Normalized Name"], item => item.NormalizedName },
                     { _localizer["Description"], item => item.Description }
@@ -527,17 +500,6 @@
             {
                 { _localizer["Name"], (row, item) => item.Name = row[_localizer["Name"]]?.ToString() },
                 { _localizer["Description"], (row, item) => item.Description = row[_localizer["Description"]]?.ToString() },
-                { _localizer["Tenant Name"], (row, item) => 
-                    {
-                        var tenantName = row[_localizer["Tenant Name"]]?.ToString();
-                        if (!string.IsNullOrEmpty(tenantName))
-                        {
-                            var tenant = _tenantService.DataSource.FirstOrDefault(t => t.Name == tenantName);
-                            item.TenantId = tenant?.Id;
-                        }
-                        return item.TenantId;
-                    }
-                }
             });
     }
     
@@ -554,8 +516,7 @@
             {
                 // Check if the role already exists for this tenant
                 var existingRole = await _roleManager.Roles.FirstOrDefaultAsync(
-                    r => r.NormalizedName == _roleManager.NormalizeKey(importedRole.Name) && 
-                         r.TenantId == importedRole.TenantId);
+                    r => r.NormalizedName == _roleManager.NormalizeKey(importedRole.Name));
                 
                 if (existingRole == null)
                 {
