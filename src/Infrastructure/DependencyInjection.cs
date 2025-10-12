@@ -215,8 +215,14 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
 
+        // Replace the default SignInManager with AuditSignInManager
+        var signInManagerDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(SignInManager<ApplicationUser>));
+        if (signInManagerDescriptor != null)
+        {
+            services.Remove(signInManagerDescriptor);
+        }
+        services.AddScoped<SignInManager<ApplicationUser>, AuditSignInManager<ApplicationUser>>();
 
-         
         services.Configure<IdentityOptions>(options =>
         {
             var identitySettings = configuration.GetRequiredSection(IDENTITY_SETTINGS_KEY).Get<IdentitySettings>();
