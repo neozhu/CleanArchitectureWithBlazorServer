@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
+﻿using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
@@ -18,31 +18,32 @@ public class DialogServiceHelper
         _dialogService = dialogService;
     }
     
+     
     /// <summary>
-    /// Shows a form dialog with the specified model and handles actions on completion.
+    /// Displays a dialog form of the specified component type and executes a callback if the dialog is completed
+    /// successfully.
     /// </summary>
-    /// <typeparam name="TDialog">The type of dialog component to show.</typeparam>
-    /// <typeparam name="TModel">The type of model to pass to the dialog.</typeparam>
-    /// <param name="title">The title of the dialog.</param>
-    /// <param name="model">The model to pass to the dialog.</param>
-    /// <param name="onDialogResult">Action to perform when dialog returns a non-cancelled result.</param>
-    /// <param name="parameterName">The name of the parameter in the dialog component (default is "_model").</param>
-    /// <param name="options">Dialog options (optional).</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <remarks>The dialog is shown modally. The onDialogResult callback is only executed if the user
+    /// completes the dialog without canceling. If options is null, default dialog options are applied.</remarks>
+    /// <typeparam name="TDialog">The type of the dialog component to display. Must inherit from ComponentBase.</typeparam>
+    /// <typeparam name="TModel">The type of the model associated with the dialog. This type parameter is not directly used by this method but
+    /// may be required for dialog parameterization.</typeparam>
+    /// <param name="title">The title to display in the dialog window.</param>
+    /// <param name="dialogParamters">The parameters to pass to the dialog component. Provides data or configuration for the dialog instance.</param>
+    /// <param name="onDialogResult">A callback to invoke if the dialog is closed without being canceled. The callback is not called if the dialog is
+    /// canceled.</param>
+    /// <param name="options">Optional dialog display options. If null, default options are used.</param>
+    /// <returns>A task that represents the asynchronous operation of displaying the dialog and handling the result.</returns>
     public async Task ShowFormDialogAsync<TDialog, TModel>(
         string title,
-        TModel model,
+        DialogParameters<TDialog> dialogParamters,
         Func<Task> onDialogResult,
-        string parameterName = "_model",
-        DialogOptions? options = null) where TDialog : ComponentBase
+        DialogOptions? options=null ) where TDialog : ComponentBase
     {
-        var parameters = new DialogParameters
-        {
-            { parameterName, model }
-        };
+        
 
         var dialogOptions = options ?? new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = await _dialogService.ShowAsync<TDialog>(title, parameters, dialogOptions);
+        var dialog = await _dialogService.ShowAsync<TDialog>(title, dialogParamters, dialogOptions);
         var result = await dialog.Result;
 
         if (result != null && !result.Canceled)
@@ -50,6 +51,7 @@ public class DialogServiceHelper
             await onDialogResult();
         }
     }
+
 
     /// <summary>
     /// Shows a delete confirmation dialog.
@@ -67,10 +69,10 @@ public class DialogServiceHelper
         Func<Task> onConfirm,
         Func<Task>? onCancel = null)
     {
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<DeleteConfirmation>
         {
-            { nameof(DeleteConfirmation.ContentText), contentText },
-            { nameof(DeleteConfirmation.Command), command }
+            { x=>x.ContentText, contentText },
+            { x=>x.Command, command }
         };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
@@ -100,9 +102,9 @@ public class DialogServiceHelper
         Func<Task> onConfirm,
         Func<Task>? onCancel = null)
     {
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<ConfirmationDialog>
         {
-            { nameof(ConfirmationDialog.ContentText), contentText }
+            { x=>x.ContentText, contentText }
         };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };

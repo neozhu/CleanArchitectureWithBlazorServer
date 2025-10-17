@@ -1,4 +1,4 @@
-@page "/system/tenants"
+﻿@page "/system/tenants"
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Caching
@@ -129,120 +129,124 @@
 @code {
 
 
-    // Public property for page title
-    public string? Title { get; private set; }
+	// Public property for page title
+	public string? Title { get; private set; }
 
-    // Private fields
-    private int _defaultPageSize = 15;
-    private HashSet<TenantDto> _selectedItems = new();
-    private MudDataGrid<TenantDto> _tenantGrid = default!;
-    private TenantDto _currentDto = new();
-    private TenantsAccessRights _accessRights = new();
-    private string _searchString = string.Empty;
-    private bool _loading;
+	// Private fields
+	private int _defaultPageSize = 15;
+	private HashSet<TenantDto> _selectedItems = new();
+	private MudDataGrid<TenantDto> _tenantGrid = default!;
+	private TenantDto _currentDto = new();
+	private TenantsAccessRights _accessRights = new();
+	private string _searchString = string.Empty;
+	private bool _loading;
 
-    // Private pagination query (using a uniform naming convention)
-    private TenantsWithPaginationQuery _tenantsQuery { get; } = new();
+	// Private pagination query (using a uniform naming convention)
+	private TenantsWithPaginationQuery _tenantsQuery { get; } = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        Title = L[_currentDto.GetClassDescription()];
-        _accessRights = await PermissionService.GetAccessRightsAsync<TenantsAccessRights>();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		Title = L[_currentDto.GetClassDescription()];
+		_accessRights = await PermissionService.GetAccessRightsAsync<TenantsAccessRights>();
+	}
 
-    // Server data loading callback
-    private async Task<GridData<TenantDto>> ServerReload(GridState<TenantDto> state)
-    {
-        try
-        {
-            _loading = true;
-            _tenantsQuery.Keyword = _searchString;
-            var sortDefinition = state.SortDefinitions.FirstOrDefault();
-            _tenantsQuery.OrderBy = sortDefinition?.SortBy ?? "Id";
-            _tenantsQuery.SortDirection = (sortDefinition != null && sortDefinition.Descending)
-                                      ? SortDirection.Descending.ToString()
-                                      : SortDirection.Ascending.ToString();
-            _tenantsQuery.PageNumber = state.Page + 1;
-            _tenantsQuery.PageSize = state.PageSize;
-            var result = await Mediator.Send(_tenantsQuery);
-            return new GridData<TenantDto> { TotalItems = result.TotalItems, Items = result.Items };
-        }
-        finally
-        {
-            _loading = false;
-        }
-    }
+	// Server data loading callback
+	private async Task<GridData<TenantDto>> ServerReload(GridState<TenantDto> state)
+	{
+		try
+		{
+			_loading = true;
+			_tenantsQuery.Keyword = _searchString;
+			var sortDefinition = state.SortDefinitions.FirstOrDefault();
+			_tenantsQuery.OrderBy = sortDefinition?.SortBy ?? "Id";
+			_tenantsQuery.SortDirection = (sortDefinition != null && sortDefinition.Descending)
+											? SortDirection.Descending.ToString()
+											: SortDirection.Ascending.ToString();
+			_tenantsQuery.PageNumber = state.Page + 1;
+			_tenantsQuery.PageSize = state.PageSize;
+			var result = await Mediator.Send(_tenantsQuery);
+			return new GridData<TenantDto> { TotalItems = result.TotalItems, Items = result.Items };
+		}
+		finally
+		{
+			_loading = false;
+		}
+	}
 
-    // Search event handler
-    private async Task OnSearchTenant(string text)
-    {
-        _selectedItems = new HashSet<TenantDto>();
-        _searchString = text;
-        await _tenantGrid.ReloadServerData();
-    }
+	// Search event handler
+	private async Task OnSearchTenant(string text)
+	{
+		_selectedItems = new HashSet<TenantDto>();
+		_searchString = text;
+		await _tenantGrid.ReloadServerData();
+	}
 
-    // Refresh event handler
-    private async Task OnRefreshTenants()
-    {
-        TenantCacheKey.Refresh();
-        _selectedItems = new HashSet<TenantDto>();
-        _searchString = string.Empty;
-        await _tenantGrid.ReloadServerData();
-    }
+	// Refresh event handler
+	private async Task OnRefreshTenants()
+	{
+		TenantCacheKey.Refresh();
+		_selectedItems = new HashSet<TenantDto>();
+		_searchString = string.Empty;
+		await _tenantGrid.ReloadServerData();
+	}
 
-    // Create tenant event handler
-    private  Task OnCreateTenant()
-    {
-        return ShowEditTenantDialog(new AddEditTenantCommand(), L["Create a new Tenant"]);
-    }
+	// Create tenant event handler
+	private  Task OnCreateTenant()
+	{
+		return ShowEditTenantDialog(new AddEditTenantCommand(), L["Create a new Tenant"]);
+	}
 
-    // Edit tenant event handler
-    private  Task OnEditTenant(TenantDto dto)
-    {
-        var command = Mapper.Map<AddEditTenantCommand>(dto);
-        return ShowEditTenantDialog(command, L["Edit the Tenant"]);
-    }
+	// Edit tenant event handler
+	private  Task OnEditTenant(TenantDto dto)
+	{
+		var command = Mapper.Map<AddEditTenantCommand>(dto);
+		return ShowEditTenantDialog(command, L["Edit the Tenant"]);
+	}
 
-    // Delete tenant event handler
-    private async Task OnDeleteTenant(TenantDto dto)
-    {
-        var command = new DeleteTenantCommand(new[] { dto.Id });
-        var contentText = string.Format(AppStrings.DeleteConfirmationWithId, dto.Id);
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, L["Delete the Tenant"], contentText, async () =>
-        {
-            await InvokeAsync(async () =>
-            {
-                await _tenantGrid.ReloadServerData();
-                _selectedItems.Clear();
-            });
-        });
-    }
+	// Delete tenant event handler
+	private async Task OnDeleteTenant(TenantDto dto)
+	{
+		var command = new DeleteTenantCommand(new[] { dto.Id });
+		var contentText = string.Format(AppStrings.DeleteConfirmationWithId, dto.Id);
+		await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, L["Delete the Tenant"], contentText, async () =>
+		{
+			await InvokeAsync(async () =>
+			{
+				await _tenantGrid.ReloadServerData();
+				_selectedItems.Clear();
+			});
+		});
+	}
 
-    // Delete selected tenants event handler
-    private async Task OnDeleteSelectedTenants()
-    {
-        var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var contentText = string.Format(AppStrings.DeleteConfirmation, _selectedItems.Count);
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, L["Delete Selected Tenants"], contentText, async () =>
-        {
-            await InvokeAsync(async () =>
-            {
-                await _tenantGrid.ReloadServerData();
-                _selectedItems.Clear();
-            });
-        });
-    }
+	// Delete selected tenants event handler
+	private async Task OnDeleteSelectedTenants()
+	{
+		var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
+		var contentText = string.Format(AppStrings.DeleteConfirmation, _selectedItems.Count);
+		await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, L["Delete Selected Tenants"], contentText, async () =>
+		{
+			await InvokeAsync(async () =>
+			{
+				await _tenantGrid.ReloadServerData();
+				_selectedItems.Clear();
+			});
+		});
+	}
 
-    // Helper method: Show edit dialog for tenant
-    private Task ShowEditTenantDialog(AddEditTenantCommand command, string title)
-    {
-        return DialogServiceHelper.ShowFormDialogAsync<TenantFormDialog, AddEditTenantCommand>(
-            title,
-            command,
+	// Helper method: Show edit dialog for tenant
+	private Task ShowEditTenantDialog(AddEditTenantCommand command, string title)
+	{
+		return DialogServiceHelper.ShowFormDialogAsync<TenantFormDialog, AddEditTenantCommand>(
+			title,
+			new DialogParameters<TenantFormDialog>()
+			{
+				{x=>x._model,command }
+			},
             async () =>
             {
                 await _tenantGrid.ReloadServerData();
                 _selectedItems.Clear();
-            }, "_model", new DialogOptions() { MaxWidth = MaxWidth.Small, CloseButton=true });
+            }, 
+			new DialogOptions() { MaxWidth = MaxWidth.Small, CloseButton=true });
     }
 }

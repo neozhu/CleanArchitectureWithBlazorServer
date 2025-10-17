@@ -160,72 +160,75 @@
 
 
 @code {
-    public string? Title { get; private set; }
-    private int _defaultPageSize = 15;
-    private HashSet<ContactDto> _selectedContacts = new HashSet<ContactDto>();
-    private MudDataGrid<ContactDto> _contactsGrid = default!;
-    private ContactDto _contactDto = new();
-    private bool _loading;
-    private bool _uploading;
-    private bool _exporting;
-    [CascadingParameter]
-    private UserProfile? UserProfile { get; set; }
+	public string? Title { get; private set; }
+	private int _defaultPageSize = 15;
+	private HashSet<ContactDto> _selectedContacts = new HashSet<ContactDto>();
+	private MudDataGrid<ContactDto> _contactsGrid = default!;
+	private ContactDto _contactDto = new();
+	private bool _loading;
+	private bool _uploading;
+	private bool _exporting;
+	[CascadingParameter]
+	private UserProfile? UserProfile { get; set; }
 
 
-    private ContactsWithPaginationQuery _contactsQuery { get; set; } = new();
-    private ContactsAccessRights _accessRights = new();
+	private ContactsWithPaginationQuery _contactsQuery { get; set; } = new();
+	private ContactsAccessRights _accessRights = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        Title = L[_contactDto.GetClassDescription()];
-        _accessRights = await PermissionService.GetAccessRightsAsync<ContactsAccessRights>(); 
-    }
-     
-    private async Task<GridData<ContactDto>> ServerReload(GridState<ContactDto> state)
-    {
-        try
-        {
-            _loading = true;
-            _contactsQuery.CurrentUser = UserProfile;
-            var sortDefinition = state.SortDefinitions.FirstOrDefault();
-            _contactsQuery.OrderBy = sortDefinition?.SortBy ?? "Id";
-            _contactsQuery.SortDirection = (sortDefinition != null && sortDefinition.Descending)
-                                      ? SortDirection.Descending.ToString()
-                                      : SortDirection.Ascending.ToString();
-            _contactsQuery.PageNumber = state.Page + 1;
-            _contactsQuery.PageSize = state.PageSize;
-            var result = await Mediator.Send(_contactsQuery).ConfigureAwait(false);
-            return new GridData<ContactDto>() { TotalItems = result.TotalItems, Items = result.Items };
-        }
-        finally
-        {
-            _loading = false;
-        }
+	protected override async Task OnInitializedAsync()
+	{
+		Title = L[_contactDto.GetClassDescription()];
+		_accessRights = await PermissionService.GetAccessRightsAsync<ContactsAccessRights>(); 
+	}
 
-    }
-    private async Task OnSearch(string text)
-    {
-        _selectedContacts.Clear();
-        _contactsQuery.Keyword = text;
-        await _contactsGrid.ReloadServerData();
-    }
-    private async Task OnListViewChanged(ContactListView listview)
-    {
-        _contactsQuery.ListView = listview;
-        await _contactsGrid.ReloadServerData();
-    }
-    private async Task OnRefresh()
-    {
-        ContactCacheKey.Refresh();
-        _selectedContacts.Clear();
-        _contactsQuery.Keyword  = string.Empty;
-        await _contactsGrid.ReloadServerData();
-    }
-    private  Task ShowEditFormDialog(string title, AddEditContactCommand command)
-    {
-        return DialogServiceHelper.ShowFormDialogAsync<ContactFormDialog, AddEditContactCommand>(
-            title,
-            command,
+	private async Task<GridData<ContactDto>> ServerReload(GridState<ContactDto> state)
+	{
+		try
+		{
+			_loading = true;
+			_contactsQuery.CurrentUser = UserProfile;
+			var sortDefinition = state.SortDefinitions.FirstOrDefault();
+			_contactsQuery.OrderBy = sortDefinition?.SortBy ?? "Id";
+			_contactsQuery.SortDirection = (sortDefinition != null && sortDefinition.Descending)
+											? SortDirection.Descending.ToString()
+											: SortDirection.Ascending.ToString();
+			_contactsQuery.PageNumber = state.Page + 1;
+			_contactsQuery.PageSize = state.PageSize;
+			var result = await Mediator.Send(_contactsQuery).ConfigureAwait(false);
+			return new GridData<ContactDto>() { TotalItems = result.TotalItems, Items = result.Items };
+		}
+		finally
+		{
+			_loading = false;
+		}
+
+	}
+	private async Task OnSearch(string text)
+	{
+		_selectedContacts.Clear();
+		_contactsQuery.Keyword = text;
+		await _contactsGrid.ReloadServerData();
+	}
+	private async Task OnListViewChanged(ContactListView listview)
+	{
+		_contactsQuery.ListView = listview;
+		await _contactsGrid.ReloadServerData();
+	}
+	private async Task OnRefresh()
+	{
+		ContactCacheKey.Refresh();
+		_selectedContacts.Clear();
+		_contactsQuery.Keyword  = string.Empty;
+		await _contactsGrid.ReloadServerData();
+	}
+	private  Task ShowEditFormDialog(string title, AddEditContactCommand command)
+	{
+		return DialogServiceHelper.ShowFormDialogAsync<ContactFormDialog, AddEditContactCommand>(
+			title,
+			new DialogParameters<ContactFormDialog>
+			{
+				{ x=>x._model,command}
+			},
             async () =>
             {
                 await _contactsGrid.ReloadServerData();

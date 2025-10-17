@@ -124,129 +124,132 @@
 </MudDataGrid>
 
 @code {
-    #region Fields & Properties
+	#region Fields & Properties
 
-    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-    [CascadingParameter] private UserProfile? UserProfile { get; set; }
-    private MudDataGrid<PicklistSetDto> _table = null!;
-    public string Title { get; set; } = "Picklist";
-    private IList<PicklistSetDto> _keyValueList = new List<PicklistSetDto>();
-    private HashSet<PicklistSetDto> _selectedItems = new();
-    private PicklistSetDto SelectedItem { get; set; } = new();
-    private PicklistSetDto ElementBeforeEdit { get; set; } = new();
+	[CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+	[CascadingParameter] private UserProfile? UserProfile { get; set; }
+	private MudDataGrid<PicklistSetDto> _table = null!;
+	public string Title { get; set; } = "Picklist";
+	private IList<PicklistSetDto> _keyValueList = new List<PicklistSetDto>();
+	private HashSet<PicklistSetDto> _selectedItems = new();
+	private PicklistSetDto SelectedItem { get; set; } = new();
+	private PicklistSetDto ElementBeforeEdit { get; set; } = new();
 
-    private string _searchString = string.Empty;
-    private Picklist? _searchPicklist;
-    private int _defaultPageSize = 15;
+	private string _searchString = string.Empty;
+	private Picklist? _searchPicklist;
+	private int _defaultPageSize = 15;
 
-    private PicklistSetsWithPaginationQuery _picklistQuery { get; set; } = new();
-    private PicklistSetsAccessRights _accessRights = new();
- 
-
-    private bool _loading;
-    private bool _uploading;
-    private bool _exporting;
-
-    #endregion
+	private PicklistSetsWithPaginationQuery _picklistQuery { get; set; } = new();
+	private PicklistSetsAccessRights _accessRights = new();
 
 
+	private bool _loading;
+	private bool _uploading;
+	private bool _exporting;
 
-    protected override async Task OnInitializedAsync()
-    {
-        Title = L[SelectedItem.GetClassDescription()];
-        _accessRights = await PermissionService.GetAccessRightsAsync<PicklistSetsAccessRights>();
-    }
-     
+	#endregion
 
 
-    #region Grid Data & Search
 
-    private async Task<GridData<PicklistSetDto>> ServerReload(GridState<PicklistSetDto> state)
-    {
-        try
-        {
-            _loading = true;
-            _picklistQuery.CurrentUser = UserProfile;
-            _picklistQuery.Keyword = _searchString;
-            _picklistQuery.Picklist = _searchPicklist;
-            _picklistQuery.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            _picklistQuery.SortDirection = (state.SortDefinitions.FirstOrDefault()?.Descending ?? true)
-                                  ? SortDirection.Descending.ToString()
-                                  : SortDirection.Ascending.ToString();
-            _picklistQuery.PageNumber = state.Page + 1;
-            _picklistQuery.PageSize = state.PageSize;
-            var result = await Mediator.Send(_picklistQuery);
-            return new GridData<PicklistSetDto> { TotalItems = result.TotalItems, Items = result.Items };
-        }
-        finally
-        {
-            _loading = false;
-        }
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		Title = L[SelectedItem.GetClassDescription()];
+		_accessRights = await PermissionService.GetAccessRightsAsync<PicklistSetsAccessRights>();
+	}
 
-    private async Task OnChangedListView(PickListView listview)
-    {
-        _picklistQuery.ListView = listview;
-        await _table.ReloadServerData();
-    }
 
-    private async Task OnKeywordSearch(string text)
-    {
-        _searchString = text;
-        await _table.ReloadServerData();
-    }
 
-    private async Task OnPicklistSearch(Picklist? val)
-    {
-        _searchPicklist = val;
-        await _table.ReloadServerData();
-    }
+	#region Grid Data & Search
 
-    private async Task OnRefresh()
-    {
-        PicklistSetCacheKey.Refresh();
-        _searchString = string.Empty;
-        await InvokeAsync(() => _table.ReloadServerData());
-    }
+	private async Task<GridData<PicklistSetDto>> ServerReload(GridState<PicklistSetDto> state)
+	{
+		try
+		{
+			_loading = true;
+			_picklistQuery.CurrentUser = UserProfile;
+			_picklistQuery.Keyword = _searchString;
+			_picklistQuery.Picklist = _searchPicklist;
+			_picklistQuery.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+			_picklistQuery.SortDirection = (state.SortDefinitions.FirstOrDefault()?.Descending ?? true)
+										? SortDirection.Descending.ToString()
+										: SortDirection.Ascending.ToString();
+			_picklistQuery.PageNumber = state.Page + 1;
+			_picklistQuery.PageSize = state.PageSize;
+			var result = await Mediator.Send(_picklistQuery);
+			return new GridData<PicklistSetDto> { TotalItems = result.TotalItems, Items = result.Items };
+		}
+		finally
+		{
+			_loading = false;
+		}
+	}
 
-    #endregion
+	private async Task OnChangedListView(PickListView listview)
+	{
+		_picklistQuery.ListView = listview;
+		await _table.ReloadServerData();
+	}
 
-    #region Edit & Commit Changes
+	private async Task OnKeywordSearch(string text)
+	{
+		_searchString = text;
+		await _table.ReloadServerData();
+	}
 
-    private void PicklistChanged(PicklistSetDto item)
-    {
-        // Trigger the commit of cell changes.
-        _table.CommittedItemChanges.InvokeAsync(item);
-    }
+	private async Task OnPicklistSearch(Picklist? val)
+	{
+		_searchPicklist = val;
+		await _table.ReloadServerData();
+	}
 
-    private void CommittedItemChanges(PicklistSetDto item)
-    {
-        InvokeAsync(async () =>
-        {
-            var command = Mapper.Map<AddEditPicklistSetCommand>(item);
-            var result = await Mediator.Send(command);
-            if (!result.Succeeded)
-            {
-                Snackbar.Add(result.ErrorMessage, Severity.Error);
-            }
-            StateHasChanged();
-        });
-    }
+	private async Task OnRefresh()
+	{
+		PicklistSetCacheKey.Refresh();
+		_searchString = string.Empty;
+		await InvokeAsync(() => _table.ReloadServerData());
+	}
 
-    #endregion
+	#endregion
 
-    #region Create & Delete
+	#region Edit & Commit Changes
 
-    private Task OnCreate()
-    {
-        var command = new AddEditPicklistSetCommand
+	private void PicklistChanged(PicklistSetDto item)
+	{
+		// Trigger the commit of cell changes.
+		_table.CommittedItemChanges.InvokeAsync(item);
+	}
+
+	private void CommittedItemChanges(PicklistSetDto item)
+	{
+		InvokeAsync(async () =>
+		{
+			var command = Mapper.Map<AddEditPicklistSetCommand>(item);
+			var result = await Mediator.Send(command);
+			if (!result.Succeeded)
+			{
+				Snackbar.Add(result.ErrorMessage, Severity.Error);
+			}
+			StateHasChanged();
+		});
+	}
+
+	#endregion
+
+	#region Create & Delete
+
+	private Task OnCreate()
+	{
+		var command = new AddEditPicklistSetCommand
         {
             Name = SelectedItem.Name,
             Description = SelectedItem?.Description
         };
-        return DialogServiceHelper.ShowFormDialogAsync<CreatePicklistDialog, AddEditPicklistSetCommand>(
-             L["Create a picklist"],
-            command,
+		return DialogServiceHelper.ShowFormDialogAsync<CreatePicklistDialog, AddEditPicklistSetCommand>(
+				L["Create a picklist"],
+			new DialogParameters<CreatePicklistDialog>()
+			{
+				{x=>x._model, command }
+			},
             async () =>
             {
                 await _table.ReloadServerData();
