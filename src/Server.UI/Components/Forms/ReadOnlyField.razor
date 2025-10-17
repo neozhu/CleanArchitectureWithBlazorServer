@@ -1,4 +1,4 @@
-@if (Dense)
+﻿@if (Dense)
 {
     <!-- Dense mode: Pure d-flex layout, Label fixed width for consistent alignment, Value adapts to remaining space -->
     <div class="d-flex align-center">
@@ -13,7 +13,7 @@
             @if (CheckBox)
             {
                 <div class="d-flex align-center">
-                    <input type="checkbox" disabled="@true" checked="@(Convert.ToBoolean(Value))" class="mud-checkbox-input" style="margin: 0; transform: scale(0.9);" />
+					<MudIcon Icon="@(Convert.ToBoolean(Value) ? Icons.Material.Filled.CheckCircle : Icons.Material.Outlined.Cancel)" Color="@(Convert.ToBoolean(Value) ? Color.Primary : Color.Default)" />
                 </div>
             }
             else
@@ -45,7 +45,7 @@ else
             @if (CheckBox)
             {
                 <div class="d-flex align-center mt-1">
-                    <input type="checkbox" disabled="@true" checked="@(Convert.ToBoolean(Value))" class="mud-checkbox-input" style="margin: 0; transform: scale(0.9);" />
+					<MudIcon Icon="@(Convert.ToBoolean(Value) ? Icons.Material.Filled.CheckCircle : Icons.Material.Outlined.Cancel)" Color="@(Convert.ToBoolean(Value) ? Color.Primary : Color.Default)" />
                 </div>
             }
             else
