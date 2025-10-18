@@ -1,11 +1,11 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
-public interface IIdentityService : IService
+public interface IIdentityService 
 {
     Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default);
     Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default);

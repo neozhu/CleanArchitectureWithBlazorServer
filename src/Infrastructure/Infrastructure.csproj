@@ -8,10 +8,10 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.9" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.9" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.10" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.10" />
         <PackageReference Include="Minio" Version="6.0.5" />
-        <PackageReference Include="QuestPDF" Version="2025.7.2" />
+        <PackageReference Include="QuestPDF" Version="2025.7.3" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.2" />
         <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.2.0" />

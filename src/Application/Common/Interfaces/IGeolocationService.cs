@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
@@ -6,7 +6,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 /// <summary>
 /// Service for retrieving geolocation information based on IP addresses.
 /// </summary>
-public interface IGeolocationService : IService
+public interface IGeolocationService 
 {
     /// <summary>
     /// Gets the country code for the specified IP address.
