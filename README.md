@@ -128,6 +128,18 @@ The project includes a comprehensive [Development Workflow](docs/) with:
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) or [Rider](https://www.jetbrains.com/rider/)
 - [Docker Desktop](https://www.docker.com/) (optional)
 
+### Current Project
+1. **git clone project**
+   ```bash
+   git clone https://github.com/neozhu/CleanArchitectureWithBlazorServer.git
+   ```
+   
+2. **Create EF migrations**
+   ```bash
+   dotnet ef migrations add InitialCreate --project src/Migrators/Migrators.SqLite --startup-project src/Server.UI
+   dotnet ef database update --project src/Migrators/Migrators.SqLite --startup-project src/Server.UI             
+   ```
+
 ### Installation
 
 1. **Install the Template**
