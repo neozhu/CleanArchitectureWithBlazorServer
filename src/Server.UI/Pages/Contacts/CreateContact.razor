@@ -8,41 +8,51 @@
 
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs OnSaveButtonClick="OnSubmit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
-<MudContainer Class="mt-3" MaxWidth="MaxWidth.Large">
-    <MudCard Class="pa-2">
-        <MudCardHeader>
-            <CardHeaderContent>
-                 <MudText Typo="Typo.h6">@Title</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
+
+<MudCard Class="pa-2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">@Title</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
         <MudForm Model="@_model" @ref="@_contactForm" Validation="@(Validator.ValidateValue(_model))">
             <MudGrid Spacing="2">
-                <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Name)]" @bind-Value="_model.Name" For="@(() => _model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Description)]"  For="@(() => _model.Description)" @bind-Value="_model.Description"></MudTextField>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Email)]" @bind-Value="_model.Email" For="@(() => _model.Email)" Required="false" RequiredError="@L["email is required!"]"></MudTextField>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="_model.PhoneNumber" For="@(() => _model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required!"]"></MudTextField>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Country)]" @bind-Value="_model.Country" For="@(() => _model.Country)" Required="false" RequiredError="@L["country is required!"]"></MudTextField>
-                </MudItem> 
+                <MudItem xs="12" md="6">
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.Name)]" @bind-Value="_model.Name"
+                        For="@(() => _model.Name)" Required="true" RequiredError="@L["name is required!"]">
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.Description)]"
+                        For="@(() => _model.Description)" @bind-Value="_model.Description"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.Email)]" @bind-Value="_model.Email"
+                        For="@(() => _model.Email)" Required="false" RequiredError="@L["email is required!"]">
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.PhoneNumber)]"
+                        @bind-Value="_model.PhoneNumber" For="@(() => _model.PhoneNumber)" Required="false"
+                        RequiredError="@L["phone number is required!"]"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.Country)]" @bind-Value="_model.Country"
+                        For="@(() => _model.Country)" Required="false" RequiredError="@L["country is required!"]">
+                    </MudTextField>
+                </MudItem>
 
             </MudGrid>
         </MudForm>
-        </MudCardContent>
-         <MudCardActions Class="d-flex justify-end gap-2">
-                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="OnSubmit">@AppStrings.Save</MudLoadingButton>
-         </MudCardActions>
-        </MudCard>
-</MudContainer>
- 
+    </MudCardContent>
+    <MudCardActions Class="d-flex justify-end gap-2">
+        <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="OnSubmit">
+            @AppStrings.Save</MudLoadingButton>
+    </MudCardActions>
+</MudCard>
+
+
 
 @code {
     public string? Title { get; private set; }
@@ -54,11 +64,11 @@
     {
         Title = L["New Contact"];
         _breadcrumbItems = new List<BreadcrumbItem>
-        {
-            new BreadcrumbItem(L["Home"], href: "/"),
-            new BreadcrumbItem(L["Contacts"], href: "/pages/contacts"),
-            new BreadcrumbItem(L["Create Contact"], href:null, disabled:true)
-        };
+{
+new BreadcrumbItem(L["Home"], href: "/"),
+new BreadcrumbItem(L["Contacts"], href: "/pages/contacts"),
+new BreadcrumbItem(L["Create Contact"], href:null, disabled:true)
+};
         return Task.CompletedTask;
     }
     async Task OnSubmit()
@@ -71,15 +81,15 @@
                 return;
             var result = await Mediator.Send(_model);
             result.Match(
-                data=>
-                {
-                    Snackbar.Add(AppStrings.SaveSuccess, MudBlazor.Severity.Info);
-                    Navigation.NavigateTo($"/pages/Contacts");
-                },
-                errors=>
-                {
-                    Snackbar.Add(errors, MudBlazor.Severity.Error);
-                });
+            data =>
+            {
+                Snackbar.Add(AppStrings.SaveSuccess, MudBlazor.Severity.Info);
+                Navigation.NavigateTo($"/pages/Contacts");
+            },
+            errors =>
+            {
+                Snackbar.Add(errors, MudBlazor.Severity.Error);
+            });
         }
         finally
         {
