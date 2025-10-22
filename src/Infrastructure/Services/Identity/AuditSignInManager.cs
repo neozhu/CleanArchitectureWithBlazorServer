@@ -4,27 +4,28 @@
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using System.Net; // added for IPAddress helpers
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class AuditSignInManager<TUser> : SignInManager<TUser>
-    where TUser : class
+ where TUser : class
 {
     private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger<AuditSignInManager<TUser>> _logger;
 
     public AuditSignInManager(
-        UserManager<TUser> userManager,
-        IHttpContextAccessor contextAccessor,
-        IUserClaimsPrincipalFactory<TUser> claimsFactory,
-        IOptions<IdentityOptions> optionsAccessor,
-        ILogger<SignInManager<TUser>> logger,
-        IAuthenticationSchemeProvider schemes,
-        IUserConfirmation<TUser> confirmation,
-        IApplicationDbContextFactory dbContextFactory,
-        ILogger<AuditSignInManager<TUser>> auditLogger)
-        : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
+    UserManager<TUser> userManager,
+    IHttpContextAccessor contextAccessor,
+    IUserClaimsPrincipalFactory<TUser> claimsFactory,
+    IOptions<IdentityOptions> optionsAccessor,
+    ILogger<SignInManager<TUser>> logger,
+    IAuthenticationSchemeProvider schemes,
+    IUserConfirmation<TUser> confirmation,
+    IApplicationDbContextFactory dbContextFactory,
+    ILogger<AuditSignInManager<TUser>> auditLogger)
+    : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
     {
         _dbContextFactory = dbContextFactory;
         _httpContextAccessor = contextAccessor;
@@ -104,8 +105,6 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
                 return;
             }
 
-
-
             // Extract client information
             var ipAddress = GetClientIpAddress(httpContext);
             var browserInfo = GetBrowserInfo(httpContext);
@@ -143,18 +142,32 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
             if (!string.IsNullOrEmpty(forwardedFor))
             {
                 // Take the first IP if there are multiple
-                var firstIp = forwardedFor.Split(',').FirstOrDefault()?.Trim();
-                if (!string.IsNullOrEmpty(firstIp))
-                    return firstIp;
+                var firstIpRaw = forwardedFor.Split(',').FirstOrDefault()?.Trim();
+                if (!string.IsNullOrEmpty(firstIpRaw))
+                {
+                    var cleanedForward = NormalizeForwardedIp(firstIpRaw);
+                    if (!string.IsNullOrEmpty(cleanedForward))
+                        return cleanedForward;
+                }
             }
 
             // Check for real IP header
             var realIp = httpContext.Request.Headers["X-Real-IP"].FirstOrDefault();
             if (!string.IsNullOrEmpty(realIp))
-                return realIp;
+            {
+                var cleanedReal = NormalizeForwardedIp(realIp);
+                if (!string.IsNullOrEmpty(cleanedReal))
+                    return cleanedReal;
+            }
 
             // Fall back to remote IP
-            var remoteIp = httpContext.Connection.RemoteIpAddress?.ToString();
+            var remoteIpAddress = httpContext.Connection.RemoteIpAddress;
+            if (remoteIpAddress != null && remoteIpAddress.IsIPv4MappedToIPv6)
+            {
+                // Convert ::ffff:x.x.x.x to x.x.x.x
+                remoteIpAddress = remoteIpAddress.MapToIPv4();
+            }
+            var remoteIp = remoteIpAddress?.ToString();
 
             // Handle localhost scenarios
             if (remoteIp == "::1" || remoteIp == "127.0.0.1")
@@ -169,6 +182,28 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
             _logger.LogWarning(ex, "Failed to get client IP address");
             return null;
         }
+    }
+
+    private string? NormalizeForwardedIp(string raw)
+    {
+        raw = raw.Trim();
+        // Remove port if present for IPv4 like10.0.0.1:54321
+        if (raw.Count(c => c == ':') == 1 && !raw.Contains("::"))
+        {
+            var parts = raw.Split(':');
+            if (IPAddress.TryParse(parts[0], out _))
+            {
+                raw = parts[0];
+            }
+        }
+        // If it's an IPv6 mapped IPv4 (rare in header), normalize
+        if (raw.StartsWith("::ffff:"))
+        {
+            var ipv4Part = raw.Substring("::ffff:".Length);
+            if (IPAddress.TryParse(ipv4Part, out _))
+                raw = ipv4Part;
+        }
+        return SanitizeInput(raw);
     }
 
     private string SanitizeInput(string? input)
