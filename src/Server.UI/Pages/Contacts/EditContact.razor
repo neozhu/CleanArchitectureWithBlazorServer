@@ -10,7 +10,7 @@
 
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs OnSaveButtonClick="OnSubmit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
-<MudContainer Class="mt-3" MaxWidth="MaxWidth.Large">
+
 @if (_model != null)
 {
     <MudCard Class="pa-2">
@@ -47,8 +47,7 @@
         </MudCardActions>
         </MudCard>
     }
-</MudContainer>
- 
+
 
 @code {
     public string? Title { get; private set; }
