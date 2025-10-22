@@ -1,4 +1,4 @@
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
@@ -12,9 +12,11 @@ using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
 using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
+using CleanArchitecture.Blazor.Server.UI; // For App component
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
@@ -40,6 +42,20 @@ public static class DependencyInjection
     {
         services.AddRazorComponents().AddInteractiveServerComponents().AddHubOptions(options=> options.MaximumReceiveMessageSize = 64 * 1024);
         services.AddCascadingAuthenticationState();
+
+        // Configure processing of reverse proxy headers so real client IP is captured
+        // This enables X-Forwarded-For / X-Forwarded-Proto when running behind nginx, traefik, Azure Front Door, etc.
+        services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            // Allow all proxies/networks (adjust in production to restrict)
+            options.KnownNetworks.Clear();
+            options.KnownProxies.Clear();
+            // Some providers do not send symmetrical headers
+            options.RequireHeaderSymmetry = false;
+            // Remove hop limit if multiple proxies in chain
+            options.ForwardLimit = null;
+        });
   
         services.AddMudServices(config =>
         {
@@ -158,6 +174,8 @@ public static class DependencyInjection
         // Single global exception handler registration (no path) to activate IExceptionHandler + ProblemDetails pipeline.
         app.UseExceptionHandler();
         app.UseStatusCodePagesWithRedirects("/404");
+        // Forwarded headers MUST run early so RemoteIpAddress is updated before auth / logging / auditing
+        app.UseForwardedHeaders();
         app.MapHealthChecks("/health");
         app.UseAuthentication();
         app.UseAuthorization();
@@ -205,7 +223,6 @@ public static class DependencyInjection
 
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();
-        app.UseForwardedHeaders();
         app.UseWebSockets(new WebSocketOptions()
         { // We obviously need this
             KeepAliveInterval = TimeSpan.FromSeconds(30), // Just in case

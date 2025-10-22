@@ -1,10 +1,10 @@
-namespace CleanArchitecture.Blazor.Application.Features.SystemLogs.Specifications;
+﻿namespace CleanArchitecture.Blazor.Application.Features.SystemLogs.Specifications;
 
 public enum SystemLogListView
 {
     [Description("All")] 
     All,
-    [Description("CreatedAt Today")] 
+    [Description("Created Today")] 
     TODAY,
     [Description("View of the last 30 days")]
     LAST_30_DAYS

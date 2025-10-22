@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications;
+﻿namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications;
 
 public enum PickListView
 {
@@ -6,7 +6,7 @@ public enum PickListView
     All,
     [Description("My")]
     My,
-    [Description("CreatedAt Today")]
+    [Description("Created Today")]
     TODAY,
     [Description("CreatedAt within the last 30 days")]
     LAST_30_DAYS

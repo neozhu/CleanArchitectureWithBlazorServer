@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Domain.Identity;
@@ -136,31 +136,49 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
     {
         try
         {
-            // Check for forwarded IP first (when behind proxy/load balancer)
-            var forwardedFor = httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-            if (!string.IsNullOrEmpty(forwardedFor))
+            // Priority order of common proxy headers
+            // 1. Cloudflare / CDN specific
+            var cfConnectingIp = httpContext.Request.Headers["CF-Connecting-IP"].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(cfConnectingIp)) return SanitizeAndNormalize(cfConnectingIp);
+
+            // 2. Standard X-Forwarded-For (may contain comma separated chain). Take first non-empty value.
+            var forwardedForRaw = httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(forwardedForRaw))
             {
-                // Take the first IP if there are multiple
-                var firstIp = forwardedFor.Split(',').FirstOrDefault()?.Trim();
-                if (!string.IsNullOrEmpty(firstIp))
-                    return firstIp;
+                var first = forwardedForRaw.Split(',').Select(s => s.Trim()).FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
+                if (!string.IsNullOrWhiteSpace(first)) return SanitizeAndNormalize(first);
             }
 
-            // Check for real IP header
+            // 3. True-Client-IP (Akamai, some CDNs)
+            var trueClientIp = httpContext.Request.Headers["True-Client-IP"].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(trueClientIp)) return SanitizeAndNormalize(trueClientIp);
+
+            // 4. X-Real-IP (nginx) single value
             var realIp = httpContext.Request.Headers["X-Real-IP"].FirstOrDefault();
-            if (!string.IsNullOrEmpty(realIp))
-                return realIp;
+            if (!string.IsNullOrWhiteSpace(realIp)) return SanitizeAndNormalize(realIp);
 
-            // Fall back to remote IP
-            var remoteIp = httpContext.Connection.RemoteIpAddress?.ToString();
-
-            // Handle localhost scenarios
-            if (remoteIp == "::1" || remoteIp == "127.0.0.1")
+            // 5. Forwarded header (RFC 7239) e.g. Forwarded: for=203.0.113.195;proto=https;by=203.0.113.43
+            var forwarded = httpContext.Request.Headers["Forwarded"].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(forwarded))
             {
-                return "127.0.0.1"; // Normalize localhost
+                // Extract for= value
+                var segments = forwarded.Split(';');
+                foreach (var seg in segments)
+                {
+                    var part = seg.Trim();
+                    if (part.StartsWith("for=", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var ipPart = part.Substring(4).Trim('"');
+                        // Remove IPv6 brackets if present
+                        ipPart = ipPart.Trim('[', ']');
+                        if (!string.IsNullOrWhiteSpace(ipPart)) return SanitizeAndNormalize(ipPart);
+                    }
+                }
             }
 
-            return SanitizeInput(remoteIp);
+            // 6. Fallback to connection remote IP
+            var remoteIp = httpContext.Connection.RemoteIpAddress?.ToString();
+            return SanitizeAndNormalize(remoteIp);
         }
         catch (Exception ex)
         {
@@ -175,6 +193,27 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
             return string.Empty;
         // Remove newline characters and trim whitespace
         return input.Replace("\r", "").Replace("\n", "").Trim();
+    }
+    private string? SanitizeAndNormalize(string? input)
+    {
+        var value = SanitizeInput(input);
+        if (string.IsNullOrEmpty(value)) return value;
+        if (value == "::1" || value == "127.0.0.1") return "127.0.0.1";
+        // Remove port if accidentally included (IPv4:port or [IPv6]:port)
+        if (value.Contains(':'))
+        {
+            // For IPv6 keep colons; only strip if it's an IPv4 with a single ':' and digits afterward or bracketed IPv6 with port
+            if (value.Count(c => c == ':') == 1 && value.Contains('.'))
+            {
+                // IPv4 with port
+                value = value.Split(':')[0];
+            }
+            else if (value.StartsWith("[") && value.Contains("]:"))
+            {
+                value = value.Substring(1, value.IndexOf(']') - 1); // Extract inside brackets
+            }
+        }
+        return value;
     }
     
 
