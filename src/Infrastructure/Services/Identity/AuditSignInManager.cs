@@ -4,28 +4,27 @@
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using System.Net; // added for IPAddress parsing
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class AuditSignInManager<TUser> : SignInManager<TUser>
- where TUser : class
+    where TUser : class
 {
     private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger<AuditSignInManager<TUser>> _logger;
 
     public AuditSignInManager(
-    UserManager<TUser> userManager,
-    IHttpContextAccessor contextAccessor,
-    IUserClaimsPrincipalFactory<TUser> claimsFactory,
-    IOptions<IdentityOptions> optionsAccessor,
-    ILogger<SignInManager<TUser>> logger,
-    IAuthenticationSchemeProvider schemes,
-    IUserConfirmation<TUser> confirmation,
-    IApplicationDbContextFactory dbContextFactory,
-    ILogger<AuditSignInManager<TUser>> auditLogger)
-    : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
+        UserManager<TUser> userManager,
+        IHttpContextAccessor contextAccessor,
+        IUserClaimsPrincipalFactory<TUser> claimsFactory,
+        IOptions<IdentityOptions> optionsAccessor,
+        ILogger<SignInManager<TUser>> logger,
+        IAuthenticationSchemeProvider schemes,
+        IUserConfirmation<TUser> confirmation,
+        IApplicationDbContextFactory dbContextFactory,
+        ILogger<AuditSignInManager<TUser>> auditLogger)
+        : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
     {
         _dbContextFactory = dbContextFactory;
         _httpContextAccessor = contextAccessor;
@@ -44,7 +43,7 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         var result = await base.PasswordSignInAsync(user, password, isPersistent, lockoutOnFailure);
         var userName = await UserManager.GetUserNameAsync(user) ?? "Unknown";
         var userId = await UserManager.GetUserIdAsync(user) ?? "Unknown";
-        await LogLoginAuditAsync(userId, userName, result.Succeeded, "Local");
+        await LogLoginAuditAsync(userId, userName, result.Succeeded, "Local", result);
         return result;
     }
 
@@ -56,7 +55,7 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         var info = await GetExternalLoginInfoAsync();
         var userName = info?.Principal?.Identity?.Name ?? "External User";
         var userId = info?.Principal?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Unknown";
-        await LogLoginAuditAsync(userId, userName, result.Succeeded, loginProvider);
+        await LogLoginAuditAsync(userId, userName, result.Succeeded, loginProvider, result);
         return result;
     }
 
@@ -65,7 +64,7 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         await base.SignInAsync(user, isPersistent, authenticationMethod);
         var userName = await UserManager.GetUserNameAsync(user) ?? "Unknown";
         var userId = await UserManager.GetUserIdAsync(user) ?? "Unknown";
-        await LogLoginAuditAsync(userId, userName, true, authenticationMethod ?? "Direct");
+        await LogLoginAuditAsync(userId, userName, true, authenticationMethod ?? "Direct", null);
     }
 
     public override async Task SignInAsync(TUser user, AuthenticationProperties authenticationProperties, string? authenticationMethod = null)
@@ -73,7 +72,7 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         await base.SignInAsync(user, authenticationProperties, authenticationMethod);
         var userName = await UserManager.GetUserNameAsync(user) ?? "Unknown";
         var userId = await UserManager.GetUserIdAsync(user) ?? "Unknown";
-        await LogLoginAuditAsync(userId, userName, true, authenticationMethod ?? "Direct");
+        await LogLoginAuditAsync(userId, userName, true, authenticationMethod ?? "Direct", null);
     }
 
     public override async Task<SignInResult> TwoFactorSignInAsync(string provider, string code, bool isPersistent, bool rememberClient)
@@ -90,11 +89,11 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
             userId = await UserManager.GetUserIdAsync(user) ?? "Unknown";
         }
 
-        await LogLoginAuditAsync(userId, userName, result.Succeeded, $"2FA-{provider}");
+        await LogLoginAuditAsync(userId, userName, result.Succeeded, $"2FA-{provider}", result);
         return result;
     }
 
-    private async Task LogLoginAuditAsync(string userId, string userName, bool success, string provider)
+    private async Task LogLoginAuditAsync(string userId, string userName, bool success, string provider, SignInResult? result)
     {
         try
         {
@@ -104,6 +103,8 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
                 _logger.LogWarning("HttpContext is null, cannot log login audit for user {UserName}", userName);
                 return;
             }
+
+
 
             // Extract client information
             var ipAddress = GetClientIpAddress(httpContext);
@@ -137,15 +138,31 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
     {
         try
         {
-            // Simple & safe: only examine a short list of common headers, validate each with IPAddress.TryParse.
-            // Order: CF-Connecting-IP -> X-Forwarded-For (first) -> True-Client-IP -> X-Real-IP -> fallback RemoteIpAddress
-            if (TryGetSingleHeaderIp(httpContext, "CF-Connecting-IP", out var ip)) return ip;
-            if (TryGetXForwardedFor(httpContext, out ip)) return ip;
-            if (TryGetSingleHeaderIp(httpContext, "True-Client-IP", out ip)) return ip;
-            if (TryGetSingleHeaderIp(httpContext, "X-Real-IP", out ip)) return ip;
+            // Check for forwarded IP first (when behind proxy/load balancer)
+            var forwardedFor = httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(forwardedFor))
+            {
+                // Take the first IP if there are multiple
+                var firstIp = forwardedFor.Split(',').FirstOrDefault()?.Trim();
+                if (!string.IsNullOrEmpty(firstIp))
+                    return firstIp;
+            }
 
-            var remote = httpContext.Connection.RemoteIpAddress;
-            return NormalizeLoopback(remote);
+            // Check for real IP header
+            var realIp = httpContext.Request.Headers["X-Real-IP"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(realIp))
+                return realIp;
+
+            // Fall back to remote IP
+            var remoteIp = httpContext.Connection.RemoteIpAddress?.ToString();
+
+            // Handle localhost scenarios
+            if (remoteIp == "::1" || remoteIp == "127.0.0.1")
+            {
+                return "127.0.0.1"; // Normalize localhost
+            }
+
+            return SanitizeInput(remoteIp);
         }
         catch (Exception ex)
         {
@@ -154,70 +171,14 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         }
     }
 
-    private bool TryGetSingleHeaderIp(HttpContext ctx, string headerName, out string? ip)
+    private string SanitizeInput(string? input)
     {
-        ip = null;
-        var raw = ctx.Request.Headers[headerName].FirstOrDefault();
-        if (string.IsNullOrWhiteSpace(raw)) return false;
-        raw = raw.Split(',')[0].Trim(); // if multiple, only first
-        raw = StripPortAndBrackets(raw);
-        if (IPAddress.TryParse(raw, out var parsed))
-        {
-            ip = NormalizeLoopback(parsed);
-            return true;
-        }
-        return false;
+        if (string.IsNullOrEmpty(input))
+            return string.Empty;
+        // Remove newline characters and trim whitespace
+        return input.Replace("\r", "").Replace("\n", "").Trim();
     }
 
-    private bool TryGetXForwardedFor(HttpContext ctx, out string? ip)
-    {
-        ip = null;
-        var raw = ctx.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-        if (string.IsNullOrWhiteSpace(raw)) return false;
-        // Split chain client, proxy1, proxy2 ... choose first non-empty candidate that parses
-        foreach (var candidate in raw.Split(',').Select(s => s.Trim()))
-        {
-            if (string.IsNullOrEmpty(candidate)) continue;
-            var cleaned = StripPortAndBrackets(candidate);
-            if (IPAddress.TryParse(cleaned, out var parsed))
-            {
-                ip = NormalizeLoopback(parsed);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private string StripPortAndBrackets(string value)
-    {
-        if (string.IsNullOrEmpty(value)) return value;
-        value = value.Trim('"');
-        // IPv6 in brackets: [2001:db8::1]:443
-        if (value.StartsWith("[") && value.Contains("]"))
-        {
-            var end = value.IndexOf(']');
-            if (end > 0)
-            {
-                var core = value.Substring(1, end - 1);
-                // ignore trailing :port
-                return core;
-            }
-        }
-        // IPv4:port
-        var colonIndex = value.LastIndexOf(':');
-        if (colonIndex > -1 && value.Count(c => c == ':') == 1 && value.Contains('.'))
-        {
-            return value.Substring(0, colonIndex);
-        }
-        return value;
-    }
-
-    private string? NormalizeLoopback(IPAddress? ip)
-    {
-        if (ip == null) return null;
-        if (IPAddress.IsLoopback(ip)) return "127.0.0.1"; // unify
-        return ip.ToString();
-    }
 
     private string? GetBrowserInfo(HttpContext httpContext)
     {
