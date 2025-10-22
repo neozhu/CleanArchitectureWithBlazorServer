@@ -42,21 +42,6 @@ public static class DependencyInjection
     {
         services.AddRazorComponents().AddInteractiveServerComponents().AddHubOptions(options=> options.MaximumReceiveMessageSize = 64 * 1024);
         services.AddCascadingAuthenticationState();
-
-        // Configure processing of reverse proxy headers so real client IP is captured
-        // This enables X-Forwarded-For / X-Forwarded-Proto when running behind nginx, traefik, Azure Front Door, etc.
-        services.Configure<ForwardedHeadersOptions>(options =>
-        {
-            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            // Allow all proxies/networks (adjust in production to restrict)
-            options.KnownNetworks.Clear();
-            options.KnownProxies.Clear();
-            // Some providers do not send symmetrical headers
-            options.RequireHeaderSymmetry = false;
-            // Remove hop limit if multiple proxies in chain
-            options.ForwardLimit = null;
-        });
-  
         services.AddMudServices(config =>
         {
             MudGlobal.InputDefaults.ShrinkLabel = true;
@@ -174,7 +159,6 @@ public static class DependencyInjection
         // Single global exception handler registration (no path) to activate IExceptionHandler + ProblemDetails pipeline.
         app.UseExceptionHandler();
         app.UseStatusCodePagesWithRedirects("/404");
-        // Forwarded headers MUST run early so RemoteIpAddress is updated before auth / logging / auditing
         app.UseForwardedHeaders();
         app.MapHealthChecks("/health");
         app.UseAuthentication();
