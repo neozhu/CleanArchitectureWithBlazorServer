@@ -1,80 +1,66 @@
 ﻿<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #212529;
-            line-height: 1.6;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 40px 30px;
-            max-width: 500px;
-            margin: 20px auto;
-            border: 1px solid #e9ecef;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        h2 {
-            color: #000000;
-            font-size: 24px;
-            font-weight: 600;
-            margin: 0 0 20px 0;
-            text-align: center;
-        }
-
-        p {
-            margin: 0 0 16px 0;
-            font-size: 14px;
-            color: #495057;
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #000000;
-            color: #ffffff;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 2px;
-            font-size: 14px;
-            font-weight: 500;
-            margin: 20px 0;
-            text-align: center;
-            transition: background-color 0.2s ease;
-        }
-
-        .button:hover {
-            background-color: #333333;
-        }
-
-        .footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e9ecef;
-            font-size: 13px;
-            color: #6c757d;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to {{ app_name }}</title>
 </head>
+<body style="margin:0; padding:0; background-color:#f9fafb; font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <table role="presentation" style="width:100%; border-collapse:collapse; background-color:#f9fafb;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table role="presentation" style="width:100%; max-width:560px; border-collapse:collapse; background-color:#ffffff; border:1px solid #e5e7eb; border-radius:12px;">
 
-<body>
-    <div class="container">
-        <h2>Welcome to {{ app_name }}</h2>
-        <p>Dear {{ user_name }},</p>
-        <p>Thank you for joining {{ app_name }}. We're here to ensure you have the best experience.</p>
-        <p>You can log in to your account here:</p>
-        <a href="{{ login_url }}" class="button">Log In</a>
-        <div class="footer">
-            <p>Best wishes,<br>The {{ company }} Team</p>
-        </div>
-    </div>
+          <!-- Header -->
+          <tr>
+            <td style="padding:32px 24px; text-align:center; border-bottom:1px solid #f1f5f9;">
+              <span style="font-size:20px; font-weight:600; color:#111827; letter-spacing:-0.01em;">
+                {{ app_name }}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 32px 40px;">
+              <h1 style="font-size:24px; font-weight:600; color:#111827; text-align:center; margin:0 0 24px;">
+                Welcome to {{ app_name }}
+              </h1>
+
+              <p style="font-size:16px; color:#111827; line-height:1.6; margin:0 0 12px;">
+                Hi {{ user_name }},
+              </p>
+
+              <p style="font-size:16px; color:#374151; line-height:1.6; margin:0 0 24px;">
+                Thank you for joining {{ app_name }} — we’re excited to have you on board!  
+                You can access your account anytime by logging in below.
+              </p>
+
+              <div style="text-align:center; margin:32px 0;">
+                <a href="{{ login_url }}" style="background-color:#111827; color:#ffffff; font-size:15px; font-weight:600; text-decoration:none; padding:14px 32px; border-radius:8px; display:inline-block;">
+                  Log In
+                </a>
+              </div>
+
+              <p style="font-size:14px; color:#6b7280; line-height:1.6; text-align:center; margin:0;">
+                We’re here to make sure you have the best experience.  
+                If you ever need help, our support team is just a message away.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#f9fafb; padding:24px 32px; border-top:1px solid #e5e7eb;">
+              <p style="font-size:14px; color:#374151; margin:0;">
+                Best wishes,<br>
+                <strong style="color:#111827;">The {{ company }} Team</strong>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
