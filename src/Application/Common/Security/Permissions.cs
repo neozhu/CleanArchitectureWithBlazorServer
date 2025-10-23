@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel;
@@ -54,4 +54,21 @@ public static partial class Permissions
         [Description("Allows viewing Hangfire dashboard")]
         public const string View = "Permissions.Hangfire.View";
     }
+    [DisplayName("Email Templates Permissions")]
+    [Description("Set permissions for Email Templates")]
+    public static class EmailTemplates
+    {
+        [Description("Allows viewing Email Templates")]
+        public const string View = "Permissions.EmailTemplates.View";
+        
+        [Description("Allows creating Email Templates")]
+        public const string Create = "Permissions.EmailTemplates.Create";
+        
+        [Description("Allows editing Email Templates")]
+        public const string Edit = "Permissions.EmailTemplates.Edit";
+        
+        [Description("Allows deleting Email Templates")]
+        public const string Delete = "Permissions.EmailTemplates.Delete";
+    }
+
 } 

@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Common.Constants;
+﻿using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Navigation;
@@ -129,6 +129,12 @@ public class MenuService : IMenuService
                         {
                             Title = "Audit Trails",
                             Href = "/system/audittrails",
+                            PageStatus = PageStatus.Completed
+                        },
+                        new()
+                        {
+                            Title = "Email Templates",
+                            Href = "/pages/system/email-templates",
                             PageStatus = PageStatus.Completed
                         },
                         new()
