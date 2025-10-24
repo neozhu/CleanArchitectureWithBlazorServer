@@ -1,4 +1,22 @@
-﻿@if (Dense)
+﻿@{
+	string displayValue = "";
+
+	if (Value == null || string.IsNullOrWhiteSpace(Value.ToString()))
+	{
+		displayValue = "<span class='mud-text-disabled' style='font-style: italic;'>—</span>";
+	}
+	else if (Value is IEnumerable<object> enumerable)
+	{
+		// 如果 Value 是一个集合或数组，使用 string.Join()
+		displayValue = string.Join(", ", enumerable);
+	}
+	else
+	{
+		displayValue = Value.ToString();
+	}
+}
+
+@if (Dense)
 {
     <!-- Dense mode: Pure d-flex layout, Label fixed width for consistent alignment, Value adapts to remaining space -->
     <div class="d-flex align-center">
@@ -13,7 +31,7 @@
             @if (CheckBox)
             {
                 <div class="d-flex align-center">
-					<MudIcon Icon="@(Convert.ToBoolean(Value) ? Icons.Material.Filled.CheckCircle : Icons.Material.Outlined.Cancel)" Color="@(Convert.ToBoolean(Value) ? Color.Primary : Color.Default)" />
+                    <MudIcon Icon="@(Convert.ToBoolean(Value) ? Icons.Material.Filled.CheckCircle : Icons.Material.Outlined.Cancel)" Color="@(Convert.ToBoolean(Value) ? Color.Primary : Color.Default)" />
                 </div>
             }
             else
@@ -23,6 +41,14 @@
                     {
                         <span class="mud-text-disabled" style="font-style: italic;">—</span>
                     }
+					else if (Value is IEnumerable<object> enumerable)
+					{
+						@foreach (var item in enumerable)
+						{
+							<MudChip T="string" Variant="Variant.Text">@item</MudChip>
+						}
+						
+					}
                     else
                     {
                         @Value
@@ -54,8 +80,16 @@ else
                     @if (Value == null || string.IsNullOrWhiteSpace(Value.ToString()))
                     {
                         <span class="mud-text-disabled" style="font-style: italic;">—</span>
-                    }
-                    else
+					}
+					else if (Value is IEnumerable<object> enumerable)
+					{
+						@foreach(var item in enumerable)
+						{
+							<MudChip T="string" Variant="Variant.Text">@item</MudChip>
+						}
+
+					}
+					else
                     {
                         @Value
                     }
