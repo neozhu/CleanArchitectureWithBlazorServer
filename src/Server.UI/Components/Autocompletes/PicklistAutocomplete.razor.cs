@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
@@ -21,7 +21,7 @@ public class PicklistAutocomplete<T> : MudAutocomplete<string>
 
     [Parameter] public Picklist Picklist { get; set; }
 
-    [Inject] private IPicklistService PicklistService { get; set; } = default!;
+    [Inject] private IDataSourceService<PicklistSetDto> PicklistService { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {

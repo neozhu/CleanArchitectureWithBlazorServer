@@ -1,5 +1,4 @@
-﻿@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+﻿@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Domain.Common.Enums
@@ -8,7 +7,7 @@
 @inject IStringLocalizer<Identity.Users.Users> L
 @inject IValidationService Validator
 @inject IUploadService UploadService
-@inject ITenantService TenantsService
+@inject IDataSourceService<TenantDto> TenantsService
 
 <MudDialog>
     <DialogContent>

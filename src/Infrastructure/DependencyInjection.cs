@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
@@ -19,6 +18,12 @@ using ZiggyCreatures.Caching.Fusion;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Http;
 using CleanArchitecture.Blazor.Application.Common.Constants;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Services;
+using CleanArchitecture.Blazor.Application.Common.Interfaces; // IDataSourceService
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 public static class DependencyInjection
@@ -158,9 +163,10 @@ public static class DependencyInjection
     #region Business Services
     private static IServiceCollection AddBusinessServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IPicklistService, PicklistService>();
-        services.AddScoped<ITenantService, TenantService>();
-        services.AddScoped<IUserService, UserService>();
+        // Register generic data source services instead of specific interfaces
+        services.AddScoped<IDataSourceService<PicklistSetDto>, PicklistDataSourceService>();
+        services.AddScoped<IDataSourceService<TenantDto>, TenantDataSourceService>();
+        services.AddScoped<IDataSourceService<ApplicationUserDto>, UserDataSourceService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ITenantSwitchService, TenantSwitchService>();
             

@@ -1,5 +1,5 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+using CleanArchitecture.Blazor.Application.Common.Interfaces; // IDataSourceService
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
@@ -18,7 +18,7 @@ public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 
     [Parameter] public string? TenantId { get; set; }
 
-    [Inject] private IUserService UserService { get; set; } = default!;
+    [Inject] private IDataSourceService<ApplicationUserDto> UserService { get; set; } = default!;
 
     protected override void OnInitialized()
     {

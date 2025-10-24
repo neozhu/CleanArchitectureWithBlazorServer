@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
@@ -14,11 +14,10 @@ public class MultiTenantAutocomplete<T> : MudAutocomplete<TenantDto>
         ShowProgressIndicator = true;
     }
 
-    [Inject] private ITenantService TenantsService { get; set; } = default!;
+    [Inject] private IDataSourceService<TenantDto> TenantsService { get; set; } = default!;
 
     protected override void OnInitialized()
     {
-       
         TenantsService.OnChange += TenantsService_OnChange;
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)

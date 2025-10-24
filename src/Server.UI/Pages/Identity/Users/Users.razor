@@ -1,7 +1,6 @@
 ﻿@page "/identity/users"
 
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Forgot
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Register
 @using CleanArchitecture.Blazor.Server.UI.Services.Identity
@@ -19,14 +18,17 @@
 @using System.Globalization
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
 @using ZiggyCreatures.Caching.Fusion
+@using CleanArchitecture.Blazor.Application.Common.Interfaces; // IDataSourceService
+@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 
 @attribute [Authorize(Policy = Permissions.Users.View)]
 @inherits OwningComponentBase
 @implements IDisposable
 
 @inject BlazorDownloadFileService DownloadFileService
-@inject IUserService UserService
-@inject ITenantService TenantService
+@inject IDataSourceService<ApplicationUserDto> UserService
+@inject IDataSourceService<TenantDto> TenantService
 @inject IFusionCache FusionCache
 @inject IExcelService ExcelService
 @inject IMailService MailService
