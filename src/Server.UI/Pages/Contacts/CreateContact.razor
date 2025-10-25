@@ -1,4 +1,4 @@
-@page "/pages/contacts/create"
+﻿@page "/pages/contacts/create"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Create
 
 @inherits MudComponentBase
@@ -47,7 +47,7 @@
         </MudForm>
     </MudCardContent>
     <MudCardActions Class="d-flex justify-end gap-2">
-        <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="OnSubmit">
+		<MudLoadingButton Color="Color.Primary" Variant="Variant.Outlined"  Loading="@_saving" OnClick="OnSubmit">
             @AppStrings.Save</MudLoadingButton>
     </MudCardActions>
 </MudCard>

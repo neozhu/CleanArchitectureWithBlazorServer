@@ -1,4 +1,4 @@
-@page "/system/logs"
+﻿@page "/system/logs"
 @using CleanArchitecture.Blazor.Application.Features.SystemLogs.Caching
 @using CleanArchitecture.Blazor.Application.Features.SystemLogs.DTOs
 @using CleanArchitecture.Blazor.Application.Features.SystemLogs.Queries.PaginationQuery
@@ -32,8 +32,8 @@
                     </MudEnumSelect>
                 </MudStack>
             </MudStack>
-            <MudStack Spacing="0" AlignItems="AlignItems.End">
-                <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
+            <MudStack Spacing="2" AlignItems="AlignItems.End">
+               <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
                     <MudButton 
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
@@ -48,7 +48,7 @@
                             @L["Clear Logs"]
                         </MudButton>
                     }
-                </MudToolBar>
+				</MudStack>
                 <MudStack Row Spacing="1">
                     <MudEnumSelect TEnum="LogLevel?" Placeholder="@L["Search by level"]" Value="@_systemLogsQuery.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
                     <MudTextField T="string" Style="min-width:120px" ValueChanged="@(OnSearch)" Value="@_systemLogsQuery.Keyword" Placeholder="Search" Adornment="Adornment.End"

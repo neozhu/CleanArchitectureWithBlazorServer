@@ -1,4 +1,4 @@
-@page "/system/audittrails"
+﻿@page "/system/audittrails"
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications
@@ -34,13 +34,13 @@
                 </MudStack>
             </MudStack>
             <!-- Right Toolbar: Actions and Search -->
-            <MudStack Spacing="0" AlignItems="AlignItems.End">
-                <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
+            <MudStack Spacing="2" AlignItems="AlignItems.End">
+               <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
                     <MudButton OnClick="OnRefreshAuditTrails"
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @AppStrings.Refresh
                     </MudButton>
-                </MudToolBar>
+				</MudStack>
                 <MudStack Row Spacing="1" AlignItems="AlignItems.End">
                     <!-- Search by audit type -->
                     <MudEnumSelect TEnum="AuditType ?"

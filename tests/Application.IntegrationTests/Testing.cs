@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Application.Common.Extensions;
@@ -19,6 +18,10 @@ using Moq;
 using NUnit.Framework;
 using Respawn;
 using Respawn.Graph;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
+using CleanArchitecture.Blazor.Infrastructure.Services;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 
 namespace CleanArchitecture.Blazor.Application.IntegrationTests;
 
@@ -173,16 +176,16 @@ public class Testing
         return await context.Set<TEntity>().CountAsync();
     }
 
-    public static IPicklistService CreatePicklistService()
+    public static IDataSourceService<PicklistSetDto> CreatePicklistService()
     {
         var scope = _scopeFactory.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<IPicklistService>();
+        return scope.ServiceProvider.GetRequiredService<PicklistDataSourceService>();
     }
 
-    public static ITenantService CreateTenantsService()
+    public static IDataSourceService<TenantDto> CreateTenantsService()
     {
         var scope = _scopeFactory.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<ITenantService>();
+        return scope.ServiceProvider.GetRequiredService<TenantDataSourceService>();
     }
 
     [OneTimeTearDown]

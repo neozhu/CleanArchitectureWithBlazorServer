@@ -38,8 +38,8 @@
                 <MudText Typo="Typo.subtitle2" Class="mb-2">@_title</MudText>
             </MudStack>
             <!-- Right Toolbar: Refresh, Create, More Actions, and Search -->
-            <MudStack Spacing="0" AlignItems="AlignItems.End">
-                <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
+            <MudStack Spacing="2" AlignItems="AlignItems.End">
+               <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
                     <MudButton Disabled="@_isLoading"
                                OnClick="OnRefresh"
                                StartIcon="@Icons.Material.Outlined.Refresh">
@@ -80,7 +80,7 @@
                             </MudMenuItem>
                         }
                     </MudMenu>
-                </MudToolBar>
+				</MudStack>
                 @if (_accessRights.Search)
                 {
                     <MudTextField T="string" Immediate="false" Value="@_searchString" FullWidth="false" ValueChanged="OnSearch"

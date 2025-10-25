@@ -1,4 +1,4 @@
-@page "/pages/identity/loginaudits"
+﻿@page "/pages/identity/loginaudits"
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Specifications
@@ -35,14 +35,14 @@
                     </MudEnumSelect>
                 </MudStack>
             </MudStack>
-            <MudStack Spacing="0" AlignItems="AlignItems.End">
-                <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
+            <MudStack Spacing="2" AlignItems="AlignItems.End">
+               <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
                     <MudButton 
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @AppStrings.Refresh
                     </MudButton>
-                </MudToolBar>
+				</MudStack>
                 <MudStack Row Spacing="1">
                     <MudSelect T="bool?" Placeholder="@L["Login Status"]" Value="@_loginAuditsQuery.Success" Clearable="true" ValueChanged="OnChangedSuccess" Style="min-width:120px" FullWidth="true">
                         <MudSelectItem T="bool?" Value="@((bool?)true)">@L["Successful"]</MudSelectItem>

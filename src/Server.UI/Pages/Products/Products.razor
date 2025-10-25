@@ -43,8 +43,8 @@
                     </MudEnumSelect>
                 </MudStack>
             </MudStack>
-            <MudStack Spacing="0" AlignItems="AlignItems.End">
-                <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
+            <MudStack Spacing="2" AlignItems="AlignItems.End">
+               <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
                     <MudButton Disabled="@_loading"
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
@@ -103,7 +103,7 @@
                             </MudMenuItem>
                         }
                     </MudMenu>
-                </MudToolBar>
+				</MudStack>
                 <MudStack Row Spacing="1">
                     @if (_accessRights.Search)
                     {

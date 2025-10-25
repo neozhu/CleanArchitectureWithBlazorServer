@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.AddEdit
+﻿@using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.AddEdit
 
 @inherits MudComponentBase
 @inject IValidationService Validator
@@ -29,8 +29,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@AppStrings.Cancel</MudButton>
-        <MudLoadingButton Loading="@_savingnew" OnClick="OnSaveAndNew">@AppStrings.SaveAndNew</MudLoadingButton>
-        <MudLoadingButton Loading="@_saving"  OnClick="OnSubmit">@AppStrings.Save</MudLoadingButton>
+		<MudLoadingButton Loading="@_saving" OnClick="OnSubmit" Color="Color.Primary" Variant="Variant.Outlined">@AppStrings.Save</MudLoadingButton>
     </DialogActions>
 </MudDialog>
 
