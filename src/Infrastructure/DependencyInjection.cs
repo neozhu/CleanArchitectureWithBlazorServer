@@ -26,6 +26,7 @@ using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
+
 public static class DependencyInjection
 {
     private const string IDENTITY_SETTINGS_KEY = "IdentitySettings";
@@ -56,7 +57,7 @@ public static class DependencyInjection
             .AddCachingServices()
             .AddNotificationServices(configuration)
             .AddSessionManagement();
-    
+
     }
 
     #region Configuration and Settings
@@ -169,7 +170,7 @@ public static class DependencyInjection
         services.AddScoped<IDataSourceService<ApplicationUserDto>, UserDataSourceService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ITenantSwitchService, TenantSwitchService>();
-            
+
 
         // Configure HttpClient for GeolocationService
         services.AddHttpClient<IGeolocationService, GeolocationService>(client =>
@@ -212,7 +213,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
 
-       
+
         services.AddIdentityCore<ApplicationUser>()
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -316,26 +317,28 @@ public static class DependencyInjection
     private static IServiceCollection AddCachingServices(this IServiceCollection services)
     {
         services.AddMemoryCache();
-        services.AddFusionCache().WithDefaultEntryOptions(new FusionCacheEntryOptions
-        {
-            // CACHE DURATION
-            Duration = TimeSpan.FromMinutes(60),
-            // —— Resilience: fail-safe & timeouts ——
-            // Keep fail-safe short: if dependencies are flaky, we can serve a recent value briefly,
-            // but avoid long windows for security-sensitive data.
-            IsFailSafeEnabled = true,
-            FailSafeMaxDuration = TimeSpan.FromMinutes(20),
-            FailSafeThrottleDuration = TimeSpan.FromSeconds(15),
+        services.AddFusionCache()
+                .WithDefaultEntryOptions(new FusionCacheEntryOptions
+                {
+                    // Absolute TTL for the item
+                    Duration = TimeSpan.FromMinutes(60),
 
-            // Factory timeouts mostly affect GetOrSet (not used here), but are kept for consistency.
-            FactorySoftTimeout = TimeSpan.FromMilliseconds(250),
-            FactoryHardTimeout = TimeSpan.FromMilliseconds(1000),
+                    // ---- Resilience: fail-safe & timeouts ----
+                    IsFailSafeEnabled = true,                        // Serve a recent value if the backend is flaky
+                    FailSafeMaxDuration = TimeSpan.FromHours(3),    // Allow using a stale value for up to 3h during incidents
+                    FailSafeThrottleDuration = TimeSpan.FromSeconds(30), // After a failure, keep serving stale for 30s to avoid hammering deps
 
-            // —— Anti-stampede ——
-            // Spread expirations to mitigate thundering herds; short lock to avoid long waits.
-            JitterMaxDuration = TimeSpan.FromSeconds(30),
-            LockTimeout = TimeSpan.FromSeconds(1)
-        });
+                    // Factory (loader) timeouts: keep requests snappy under slow dependencies
+                    FactorySoftTimeout = TimeSpan.FromMilliseconds(300), // ~your P95 latency to the data source
+                    FactoryHardTimeout = TimeSpan.FromSeconds(2),        // 1.5–2s hard cap; fail fast rather than dragging the request
+
+                    // ---- Anti-stampede ----
+                    JitterMaxDuration = TimeSpan.FromSeconds(30),  // Spread expirations (~10% of Duration; cap at 30s)
+                    LockTimeout = TimeSpan.FromMilliseconds(800),  // Wait briefly for a single refresher; others don’t dog-pile
+
+                    // ---- Proactive refresh ----
+                    EagerRefreshThreshold = 0.8f, // When 80% of TTL has elapsed, return current value and refresh in background
+                });
         return services;
     }
     #endregion
@@ -347,7 +350,7 @@ public static class DependencyInjection
         services.AddSingleton<IHubFilter, UserContextHubFilter>();
         services.AddSingleton<IUserContextAccessor, UserContextAccessor>();
         services.AddSingleton<IUserContextLoader, UserContextLoader>();
-        
+
         // Circuit and state management
         services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
@@ -357,5 +360,5 @@ public static class DependencyInjection
     }
     #endregion
 
- 
+
 }
