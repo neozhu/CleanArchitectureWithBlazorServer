@@ -15,7 +15,6 @@ This project is a production-ready Blazor Server application template that demon
 ### Key Features
 
 - **🏗️ Clean Architecture**: Strict layer separation with dependency inversion
-- **🤖 AI-Powered Development**: Integrated Cursor/Copilot support with comprehensive rules
 - **🎨 Modern UI**: Beautiful, responsive interface built with MudBlazor
 - **⚡ Real-time Communication**: SignalR integration for live updates
 - **🔐 Enterprise Security**: Multi-factor authentication, role-based access control
@@ -75,42 +74,7 @@ Experience the application in action:
 - **Infrastructure**: External concerns (database, email, file system)
 - **Server.UI**: Blazor components and user interface
 
-## 🤖 AI-Powered Development
-
-This project is optimized for AI-assisted development with comprehensive support for modern AI coding tools.
-
-### 🎯 Cursor AI Integration
-
-The project includes extensive [Cursor Rules](.cursor/rules/) that provide:
-
-- **Architecture Guidelines**: Enforce Clean Architecture principles
-- **Coding Standards**: Consistent patterns and best practices
-- **Component Templates**: Pre-configured Blazor component structures
-- **Security Patterns**: Built-in security implementation guides
-
-### 🚀 Development Workflow
-
-Enhanced productivity through AI-powered development:
-
-- **Intelligent Code Generation**: Context-aware suggestions following project patterns
-- **Automatic Layer Compliance**: AI ensures proper dependency flow
-- **Pattern Recognition**: Consistent implementation across features
-- **Smart Refactoring**: Architecture-aware code improvements
-
-### 💡 Getting Started with AI Development
-
-1. **Install Cursor**: Download from [cursor.sh](https://cursor.sh/)
-2. **Load the Project**: Open the repository in Cursor
-3. **Enable Rules**: The AI will automatically use the configured rules
-4. **Start Coding**: Use natural language to describe features
-
-**Example AI Prompts**:
-```
-"Create a new Product entity with CRUD operations following Clean Architecture"
-"Add user authentication to the Orders page"
-"Implement caching for the CustomerService"
-```
-
+ 
 ### 📋 Development Workflow
 
 The project includes a comprehensive [Development Workflow](docs/) with:
@@ -177,6 +141,99 @@ See [Docker Setup Documentation](#docker-setup-for-blazor-server-application) fo
 - **[API Documentation](docs/)**: Complete API reference
 - **[Deployment Guide](docs/)**: Production deployment instructions
 - **[Contributing Guidelines](CONTRIBUTING.md)**: How to contribute to the project
+
+## 📐 Using OpenSpec for Feature Development
+
+OpenSpec enables spec-driven, reviewable changes with clear proposals, deltas, and tasks. This repo includes guidance in `openspec/AGENTS.md` and a project context in `openspec/project.md`.
+
+- Read the quickstart: `openspec/AGENTS.md`
+- Project conventions and patterns: `openspec/project.md` (see “New Entity/Feature Guide (Contacts Pattern)”) 
+
+### Workflow
+
+1) Plan a change
+- Review specs and pending changes
+  - `openspec list --specs`
+  - `openspec list`
+- Pick a unique, verb-led change id (e.g., `add-customer-management`).
+
+2) Create the change folder and docs
+- Create: `openspec/changes/<change-id>/`
+- Add files:
+  - `proposal.md` – Why, What Changes, Impact
+  - `tasks.md` – Implementation checklist
+  - Optional `design.md` – Architecture decisions when needed
+  - Spec deltas: `openspec/changes/<change-id>/specs/<capability>/spec.md`
+- Spec delta format must include sections like:
+  - `## ADDED|MODIFIED|REMOVED Requirements`
+  - At least one `#### Scenario:` per requirement (use the exact header text)
+
+3) Validate and iterate
+- `openspec validate <change-id> --strict`
+- Fix any issues before requesting review/approval.
+
+4) Implement after approval
+- Follow the tasks in `tasks.md` sequentially and mark them complete.
+- Use the patterns in `openspec/project.md`:
+  - For data access in handlers use `IApplicationDbContextFactory` and per-operation context lifetime:
+    - `await using var db = await _dbContextFactory.CreateAsync(cancellationToken);`
+  - Follow MediatR pipeline behaviors, caching tags, and specification patterns.
+  - Mirror the Contacts module for a new entity’s DTOs, commands, queries, specs, security, and UI pages/components.
+
+5) Archive after deployment
+- Move `openspec/changes/<id>/` to `openspec/changes/archive/YYYY-MM-DD-<id>/` (or use the CLI archive helper if available).
+- Re-run `openspec validate --strict`.
+
+### Example change scaffold
+
+- Change id: `add-customer-management`
+- Files:
+  - `openspec/changes/add-customer-management/proposal.md`
+  - `openspec/changes/add-customer-management/tasks.md`
+  - `openspec/changes/add-customer-management/specs/customers/spec.md`
+
+`proposal.md` skeleton:
+
+```
+## Why
+Introduce Customer management to track client records.
+
+## What Changes
+- Add Customer entity, CRUD flows, and pages
+- Add permissions and navigation
+
+## Impact
+- Affected specs: customers
+- Affected code: Domain, Application (Contacts-like), Infrastructure, Server.UI
+```
+
+`tasks.md` sample:
+
+```
+## 1. Implementation
+- [ ] 1.1 Domain entity + events
+- [ ] 1.2 EF configuration + seeding
+- [ ] 1.3 Application commands/queries/specs/security/caching
+- [ ] 1.4 UI pages + dialog
+- [ ] 1.5 Tests (unit/integration)
+```
+
+Spec delta snippet:
+
+```
+## ADDED Requirements
+### Requirement: Manage Customers
+The system SHALL allow users to create, edit, view, list, and delete customers with proper authorization.
+
+#### Scenario: Create customer
+- **WHEN** a user submits a valid form
+- **THEN** the system saves the customer and returns an id
+```
+
+Tips
+- Use Contacts as the reference implementation for structure and conventions.
+- Add menu entries in `src/Server.UI/Services/Navigation/MenuService.cs`.
+- Define permissions under `Permissions.<Module>` and they’ll be picked up during seeding.
 
 ## 🔧 Code Generation
 
