@@ -9,7 +9,7 @@
 @inject IStringLocalizer<ConfirmEmail> L
 
 @inject ILogger<ConfirmEmail> Logger
-<PageTitle>@L["Confirm email"]</PageTitle>
+<PageTitle>@ApplicationSettings.AppName - @L["Confirm email"]</PageTitle>
 <MudStack Spacing="2">
 	<MudText Typo="Typo.h4" GutterBottom="true">@L["Confirm email"]</MudText>
 	<StatusMessage Message="@statusMessage" Error="@error" />

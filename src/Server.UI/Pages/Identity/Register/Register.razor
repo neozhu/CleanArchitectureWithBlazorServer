@@ -119,7 +119,7 @@
 
 	protected override Task OnInitializedAsync()
 	{
-		Title = L["Sign Up"];
+		Title =$"{ApplicationSettings.AppName} - { L["Sign Up"]}";
 
 		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
 		_roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();

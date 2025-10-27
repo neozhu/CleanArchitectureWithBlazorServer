@@ -5,7 +5,7 @@
 @inject IStringLocalizer<Profile> Localizer
 @inject IUserProfileState UserProfileState
 
-<PageTitle>@_title</PageTitle>
+<PageTitle>@ApplicationSettings.AppName - @Localizer["Profile"]</PageTitle>
 
 
 <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" 
@@ -33,5 +33,5 @@
 
 
 @code {
-    private string _title => "Profile";
+   
 }

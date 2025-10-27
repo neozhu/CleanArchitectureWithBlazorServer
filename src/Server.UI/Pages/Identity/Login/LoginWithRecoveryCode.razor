@@ -6,7 +6,7 @@
 @inject IStringLocalizer<LoginWithRecoveryCode> L
 @inject ILogger<LoginWithRecoveryCode> Logger
 
-<PageTitle>@L["Two-Factor Authentication - Recovery Code Verification"]</PageTitle>
+<PageTitle>@ApplicationSettings.AppName - @L["Two-Factor Authentication - Recovery Code Verification"]</PageTitle>
 <MudStack Spacing="2">
 	<MudText Typo="Typo.h4" GutterBottom="true">@L["Two-Factor Authentication Recovery"]</MudText>
 	<MudText Typo="Typo.body1" Class="mb-4">

@@ -12,7 +12,7 @@
 <MudCard Class="pa-2">
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h6">@Title</MudText>
+            <MudText Typo="Typo.h6">@L["New Contact"]</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
@@ -62,7 +62,7 @@
     private CreateContactCommand _model = new();
     protected override Task OnInitializedAsync()
     {
-        Title = L["New Contact"];
+        Title =$"{ApplicationSettings.AppName} - {L["New Contact"]}";
         _breadcrumbItems = new List<BreadcrumbItem>
 {
 new BreadcrumbItem(L["Home"], href: "/"),

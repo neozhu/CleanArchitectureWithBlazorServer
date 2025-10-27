@@ -103,7 +103,7 @@
 
 	protected override Task OnInitializedAsync()
 	{
-		_title = L["Sign In"];
+		_title =$"{ApplicationSettings.AppName} - { L["Sign In"]}";
 		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
 		_signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
 		return Task.CompletedTask;

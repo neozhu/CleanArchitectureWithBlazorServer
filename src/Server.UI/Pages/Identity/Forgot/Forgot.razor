@@ -47,7 +47,7 @@
 
 	protected override Task OnInitializedAsync()
 	{
-		Title = L["Forgot Password"];
+		Title =$"{ApplicationSettings.AppName} - { L["Forgot Password"]}";
 
 		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
 		return Task.CompletedTask;

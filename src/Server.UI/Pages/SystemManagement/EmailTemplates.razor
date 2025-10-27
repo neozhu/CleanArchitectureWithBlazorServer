@@ -7,7 +7,7 @@
 @using Scriban
 @attribute [Authorize(Policy = Permissions.EmailTemplates.View)]
 
-<PageTitle>@L["Email Templates"]</PageTitle>
+<PageTitle>@ApplicationSettings.AppName - @L["Email Templates"]</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
 	<MudText Typo="Typo.h4" Class="mb-4">@L["Email Templates Demo"]</MudText>

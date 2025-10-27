@@ -36,7 +36,7 @@
 @inject IUserProfileState UserProfileState
 @inject ILogger<Users> Logger
 
-<PageTitle>@_title</PageTitle>
+<PageTitle>@Title</PageTitle>
 
 <MudDataGrid T="ApplicationUserDto" @ref="_dataGrid"
              FixedHeader="true"
@@ -53,7 +53,7 @@
             <MudStack Row AlignItems="AlignItems.Start">
                 <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large" />
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle2" Class="mb-2">@_title</MudText>
+                    <MudText Typo="Typo.subtitle2" Class="mb-2">@Localizer["Users"]</MudText>
                     <MudSelect T="string" Style="min-width:120px" ValueChanged="TenantListViewChanged" Value="@_selectedTenantId" Dense="true" Label="@Localizer["List View"]">
                         <MudSelectItem T="string" Value="@string.Empty">@Localizer["ALL"]</MudSelectItem>
                         @foreach (var tenant in TenantService.DataSource)
@@ -249,7 +249,7 @@
 	private readonly ApplicationUserDto _currentUserDto = new();
 	private string _searchString = string.Empty;
 	private string _selectedTenantId = string.Empty;
-	private string _title { get; set; } = "Users";
+	public string Title { get; set; } = "Users";
 	private IList<PermissionModel> _permissions = new List<PermissionModel>();
 
 	public bool _canViewOnlineStatus;
@@ -275,7 +275,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		_title = Localizer[_currentUserDto.GetClassDescription()];
+		Title =$"{ApplicationSettings.AppName} - { Localizer[_currentUserDto.GetClassDescription()]}";
 		InitializeServices();
 		_accessRights = await PermissionService.GetAccessRightsAsync<UsersAccessRights>();
 		await RoleService.InitializeAsync();

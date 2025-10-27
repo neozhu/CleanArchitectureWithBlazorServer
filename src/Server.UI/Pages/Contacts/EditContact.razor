@@ -16,7 +16,7 @@
     <MudCard Class="pa-2">
         <MudCardHeader>
             <CardHeaderContent>
-                 <MudText Typo="Typo.h6">@Title</MudText>
+                 <MudText Typo="Typo.h6">@L["Edit Contact"]</MudText>
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
@@ -59,7 +59,7 @@
     private UpdateContactCommand? _model;
     protected override async Task OnInitializedAsync()
     {
-        Title = L["Edit Contact"];
+        Title =$"{ApplicationSettings.AppName} - { L["Edit Contact"]}";
         _breadcrumbItems = new List<BreadcrumbItem>
         {
             new BreadcrumbItem(L["Home"], href: "/"),

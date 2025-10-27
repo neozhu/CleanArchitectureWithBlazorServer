@@ -219,7 +219,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Title = L[_currentDto.GetClassDescription()];
+        Title =$"{ApplicationSettings.AppName} - { L[_currentDto.GetClassDescription()]}";
         _accessRights = await PermissionService.GetAccessRightsAsync<ProductsAccessRights>();
         
     }

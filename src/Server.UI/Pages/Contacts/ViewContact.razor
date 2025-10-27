@@ -13,7 +13,7 @@
     <MudCard Class="pa-2">
         <MudCardHeader>
             <CardHeaderContent>
-                 <MudText Typo="Typo.h6">@Title</MudText>
+                 <MudText Typo="Typo.h6">@L["Contact"]</MudText>
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
@@ -50,7 +50,7 @@
     private ContactDto? _model;
     protected override async Task OnInitializedAsync()
     {
-        Title = L["Contact"];
+        Title =$"{ApplicationSettings.AppName} - { L["Contact"]}";
         _breadcrumbItems = new List<BreadcrumbItem>
         {
             new BreadcrumbItem(L["Home"], href: "/"),

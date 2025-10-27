@@ -235,7 +235,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		_title = _localizer[_currentDto.GetClassDescription()];
+		_title =$"{ApplicationSettings.AppName} - { _localizer[_currentDto.GetClassDescription()]}";
 		_accessRights = await PermissionService.GetAccessRightsAsync<DocumentsAccessRights>();
 
 		// Subscribe to hub events

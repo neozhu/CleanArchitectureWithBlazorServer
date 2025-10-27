@@ -19,7 +19,7 @@
 @inject BlazorDownloadFileService BlazorDownloadFileService
 
 
-<PageTitle>@_title</PageTitle>
+<PageTitle>@Title</PageTitle>
 
 <MudDataGrid T="ApplicationRoleDto" @ref="_dataGrid"
              FixedHeader="true"
@@ -35,7 +35,8 @@
             <!-- Left Toolbar: Icon, Title, and Tenant selection -->
             <MudStack Row AlignItems="AlignItems.Start">
                 <MudIcon Icon="@Icons.Material.Filled.Groups" Size="Size.Large" />
-                <MudText Typo="Typo.subtitle2" Class="mb-2">@_title</MudText>
+                <MudText Typo="Typo.subtitle2" Class="mb-2">@_localizer[_currentDto.GetClassDescription()]
+                </MudText>
             </MudStack>
             <!-- Right Toolbar: Refresh, Create, More Actions, and Search -->
             <MudStack Spacing="2" AlignItems="AlignItems.End">
@@ -150,7 +151,7 @@
 
 	[CascadingParameter] private Task<AuthenticationState> _authState { get; set; } = default!;
 	private RoleManager<ApplicationRole> _roleManager = null!;
-	private string? _title { get; set; }
+	public string? Title { get; set; }
 	private bool _isProcessing;
 	private string _currentRoleName = string.Empty;
 	private int _defaultPageSize = 15;
@@ -173,7 +174,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		InitializeServices();
-		_title = _localizer[_currentDto.GetClassDescription()];
+		Title =$"{ApplicationSettings.AppName} - { _localizer[_currentDto.GetClassDescription()]}";
 		_accessRights = await PermissionService.GetAccessRightsAsync<RolesAccessRights>();
 	}
 
