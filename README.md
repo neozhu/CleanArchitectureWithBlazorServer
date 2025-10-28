@@ -10,7 +10,8 @@
 
 ## 🎯 Overview
 
-This project is a production-ready Blazor Server application template that demonstrates Clean Architecture implementation with .NET 9. It provides a solid foundation for building scalable, maintainable enterprise applications with modern development practices and AI-enhanced productivity features.
+This project is a production-ready Blazor Server application template that demonstrates Clean Architecture implementation with .NET 9 and follows **Blazor Clean Architecture best practices**.
+It provides a solid foundation for building scalable, maintainable enterprise applications with modern **spec-driven development practices**.
 
 ### Key Features
 
