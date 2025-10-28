@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>CleanArchitecture.Blazor.Solution.Template</id>
-        <version>1.1.0</version>
+        <version>1.30.0</version>
         <title>Clean Architecture Blazor Solution Template</title>
         <authors>hl.z</authors>
         <description>Clean Architecture Blazor Solution Template for .NET 9.</description>
