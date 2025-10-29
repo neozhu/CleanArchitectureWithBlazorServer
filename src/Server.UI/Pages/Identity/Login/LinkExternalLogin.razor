@@ -25,15 +25,12 @@
 		<DataAnnotationsValidator />
 		<StatusMessage Message="@message" Error="true" />
 		<MudStack Spacing="2">
-			<MultiTenantAutocomplete @bind-Value="Input.Tenant"
-									 T="TenantDto"
+			<TenantSelect @bind-Value="Input.Tenant"
 									 Label="@L["Tenant"]"
 									 Variant="Variant.Outlined"
 									 HelperText="Select your organization or tenant"
 									 Required="true"
 									 For="@(() => Input.Tenant)" />
-
-
 
 			<MudTextField T="string"
 						  @bind-Value="Input.Email"

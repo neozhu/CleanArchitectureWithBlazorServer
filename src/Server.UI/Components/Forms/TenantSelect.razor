@@ -1,0 +1,54 @@
+@namespace CleanArchitecture.Blazor.Server.UI.Components.Forms
+@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using CleanArchitecture.Blazor.Application.Common.Interfaces
+@using Microsoft.AspNetCore.Components
+@using MudBlazor
+@inherits MudSelect<TenantDto>
+
+<MudSelect T="TenantDto" @bind-Value="Value" Label="@Label" Placeholder="@Placeholder" Dense="true" Required="@Required" RequiredError="@RequiredError" Disabled="@Disabled" Variant="@Variant" Class="@Class" HelperText="@HelperText" Clearable="true">
+    @if (Loading)
+    {
+        <MudSelectItem Disabled="true" Value="default(TenantDto)">@LoadingText</MudSelectItem>
+    }
+    else
+    {
+        @foreach (var tenant in TenantsService.DataSource)
+        {
+            <MudSelectItem T="TenantDto" Value="tenant">@tenant.Name</MudSelectItem>
+        }
+    }
+</MudSelect>
+
+@code {
+    [Inject] public IDataSourceService<TenantDto> TenantsService { get; set; } = default!;
+
+    protected bool Loading { get; set; } = true;
+    protected string LoadingText { get; set; } = "Loading...";
+
+    protected override void OnInitialized()
+    {
+        TenantsService.OnChange += TenantsService_OnChange;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await TenantsService.InitializeAsync();
+            Loading = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task TenantsService_OnChange()
+    {
+        Loading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async ValueTask DisposeAsyncCore()
+    {
+        TenantsService.OnChange -= TenantsService_OnChange;
+        await base.DisposeAsyncCore();
+    }
+}

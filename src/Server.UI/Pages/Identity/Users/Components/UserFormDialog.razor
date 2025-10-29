@@ -7,7 +7,6 @@
 @inject IStringLocalizer<Identity.Users.Users> L
 @inject IValidationService Validator
 @inject IUploadService UploadService
-@inject IDataSourceService<TenantDto> TenantsService
 
 <MudDialog>
     <DialogContent>
@@ -39,12 +38,10 @@
                 </MudItem>
 
 				<MudItem sm="6" xs="12">
-					<MudSelect T="TenantDto" Label="@L[Model.GetMemberDescription(x => x.Tenants)]" @bind-SelectedValues="Model.Tenants" MultiSelection="true" Required="true" RequiredError="@L["tenants are required"]">
-						@foreach (var tenant in TenantsService.DataSource)
-						{
-							<MudSelectItem T="TenantDto" Value="tenant">@tenant.Name</MudSelectItem>
-						}
-					</MudSelect>
+                    <MultiTenantsSelect Label="@L[Model.GetMemberDescription(x => x.Tenants)]"
+                                   @bind-SelectedValues="Model.Tenants"
+                                   Required="true"
+                                   RequiredError="@L["tenants are required"]" />
 				</MudItem>
                 <MudItem xs="12" sm="6">
                     <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDescription(x => x.Provider)]" ReadOnly="true" />

@@ -25,10 +25,10 @@
 			@L["Have an account?"] <MudLink Href="@Login.PageUrl">@L["Sign In"]</MudLink>
 		</MudText>
 
-		<MultiTenantAutocomplete @bind-Value="Input.Tenant"
-								 T="TenantDto"
+		<TenantSelect @bind-Value="Input.Tenant"
 								 Label="@L["Tenant"]"
 								 Variant="Variant.Outlined"
+								 Placeholder="@L["Please select a tenant"]"
 								 Required="true"
 								 For="@(() => Input.Tenant)" />
 		<MudTextField @bind-Value="Input.UserName"
