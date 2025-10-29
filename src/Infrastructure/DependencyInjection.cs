@@ -33,8 +33,7 @@ public static class DependencyInjection
     private const string APP_CONFIGURATION_SETTINGS_KEY = "AppConfigurationSettings";
     private const string DATABASE_SETTINGS_KEY = "DatabaseSettings";
     private const string SMTP_CLIENT_OPTIONS_KEY = "SmtpClientOptions";
-    private const string USE_IN_MEMORY_DATABASE_KEY = "UseInMemoryDatabase";
-    private const string IN_MEMORY_DATABASE_NAME = "BlazorDashboardDb";
+    // Removed UseInMemoryDatabase and in-memory database name constants (feature deprecated)
     private const string NPGSQL_ENABLE_LEGACY_TIMESTAMP_BEHAVIOR = "Npgsql.EnableLegacyTimestampBehavior";
     private const string POSTGRESQL_MIGRATIONS_ASSEMBLY = "CleanArchitecture.Blazor.Migrators.PostgreSQL";
     private const string MSSQL_MIGRATIONS_ASSEMBLY = "CleanArchitecture.Blazor.Migrators.MSSQL";
@@ -92,24 +91,26 @@ public static class DependencyInjection
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>()
             .AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
-        if (configuration.GetValue<bool>(USE_IN_MEMORY_DATABASE_KEY))
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseInMemoryDatabase(IN_MEMORY_DATABASE_NAME);
-                options.EnableSensitiveDataLogging();
-            });
-        else
-            services.AddDbContextFactory<ApplicationDbContext>((p, m) =>
-            {
-                var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
-                m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
-                m.UseExceptionProcessor(databaseSettings.DBProvider);
-                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
-            }, ServiceLifetime.Scoped);
+        // Always configure the real database provider (in-memory option removed).
+        services.AddDbContext<ApplicationDbContext>((p, m) =>
+        {
+            var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+            m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
+            m.UseExceptionProcessor(databaseSettings.DBProvider);
+            m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
+        });
+
+        // Keep factory registration for components that require explicit context creation.
+        services.AddDbContextFactory<ApplicationDbContext>((p, m) =>
+        {
+            var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+            m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
+            m.UseExceptionProcessor(databaseSettings.DBProvider);
+            m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
+        }, ServiceLifetime.Scoped);
+
         services.AddScoped<IApplicationDbContextFactory, ApplicationDbContextFactory>();
-
         services.AddScoped<ApplicationDbContextInitializer>();
-
         return services;
     }
 

@@ -7,7 +7,6 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - UseInMemoryDatabase=${USE_IN_MEMORY_DATABASE}
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=${ASPNETCORE_URLS}
       - ASPNETCORE_HTTP_PORTS=${ASPNETCORE_HTTP_PORTS}

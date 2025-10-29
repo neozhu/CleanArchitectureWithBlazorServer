@@ -61,7 +61,7 @@ public static class SerilogExtensions
 
     private static void WriteToDatabase(LoggerConfiguration serilogConfig, IConfiguration configuration)
     {
-        if (configuration.GetValue<bool>("UseInMemoryDatabase")) return;
+    // Removed legacy in-memory database skip; logging to database now always attempts based on configured provider.
 
         var dbProvider =
             configuration.GetValue<string>($"{nameof(DatabaseSettings)}:{nameof(DatabaseSettings.DBProvider)}");

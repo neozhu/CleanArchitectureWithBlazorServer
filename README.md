@@ -122,13 +122,15 @@ The project includes a comprehensive [Development Workflow](docs/) with:
 
 ### 🐳 Docker Deployment
 
-**Quick Start with In-Memory Database**:
+**Run with configured database provider (In-Memory removed)**:
 ```bash
-docker run -p 8443:443 -e UseInMemoryDatabase=true \
+docker run -p 8443:443 \
+  -e DatabaseSettings__DBProvider=mssql \
+  -e DatabaseSettings__ConnectionString="Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=<YourPassword>;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false" \
   blazordevlab/cleanarchitectureblazorserver:latest
 ```
 
-**Production Setup**:
+**Production Setup (docker compose)**:
 ```bash
 docker-compose up -d
 ```
@@ -284,15 +286,17 @@ docker pull blazordevlab/cleanarchitectureblazorserver:latest
 
 ### Run the Docker Container
 
-For Development (In-Memory Database):
+For Development:
 ```bash
-docker run -p 8443:443 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_HTTPS_PORTS=443 blazordevlab/cleanarchitectureblazorserver:latest
+docker run -p 8443:443 -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_HTTPS_PORTS=443 \
+  -e DatabaseSettings__DBProvider=mssql \
+  -e DatabaseSettings__ConnectionString="Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=<YourPassword>;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false" \
+  blazordevlab/cleanarchitectureblazorserver:latest
 ```
 
 For Production (Persistent Database and SMTP Configuration):
 ```bash
 docker run -d -p 8443:443 \
--e UseInMemoryDatabase=false \
 -e ASPNETCORE_ENVIRONMENT=Development \
 -e ASPNETCORE_HTTP_PORTS=80 \
 -e ASPNETCORE_HTTPS_PORTS=443 \
@@ -321,7 +325,6 @@ services:
   blazorserverapp:
     image: blazordevlab/cleanarchitectureblazorserver:latest
     environment:
-      - UseInMemoryDatabase=false
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80;https://+:443
       - ASPNETCORE_HTTP_PORTS=80
