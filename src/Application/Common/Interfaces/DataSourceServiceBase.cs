@@ -12,13 +12,17 @@ public abstract class DataSourceServiceBase<T> : IDataSourceService<T>
     private readonly IFusionCache _fusionCache;
     private readonly string _cacheKey;
     private readonly FusionCacheEntryOptions? _cacheOptions;
+    protected int DefaultLimit { get; init; } = 20;
+    private readonly Func<T, string> _textSelector;
+    private readonly StringComparison _comparison=StringComparison.InvariantCultureIgnoreCase;
     protected List<T> Items { get; private set; } = new();
 
-    protected DataSourceServiceBase(IFusionCache fusionCache, string cacheKey, FusionCacheEntryOptions? cacheOptions = null)
+    protected DataSourceServiceBase(IFusionCache fusionCache, string cacheKey, FusionCacheEntryOptions? cacheOptions = null,Func<T, string>? textSelector = null)
     {
         _fusionCache = fusionCache;
         _cacheKey = cacheKey;
         _cacheOptions = cacheOptions;
+        _textSelector = textSelector ?? (static _ => string.Empty);
     }
 
     public IReadOnlyList<T> DataSource => Items;
@@ -39,7 +43,19 @@ public abstract class DataSourceServiceBase<T> : IDataSourceService<T>
         await LoadAndCacheAsync();
         if (OnChange != null) await OnChange.Invoke();
     }
+    public virtual Task<IEnumerable<T>> SearchAsync(
+        Expression<Func<T, bool>>? predicate,
+        int? limit = null,
+        CancellationToken cancellationToken = default)
+    {
+        var query = Items.AsQueryable();
 
+        if (predicate != null)
+            query = query.Where(predicate);
+
+        var result = query.Take(limit??DefaultLimit).ToList();
+        return Task.FromResult<IEnumerable<T>>(result);
+    }
     private async Task LoadAndCacheAsync(CancellationToken cancellationToken = default)
     {
         var list = await GetOrSetAsync(_cacheKey, async () => await LoadAsync(cancellationToken));
