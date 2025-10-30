@@ -6,6 +6,6 @@ public enum ProductListView
     [Description("My Products")] My,
     [Description("Created Today")] TODAY,
 
-    [Description("CreatedAt within the last 30 days")]
+    [Description("Created the last 30 days")]
     LAST_30_DAYS
 }

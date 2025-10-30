@@ -8,7 +8,7 @@ public enum PickListView
     My,
     [Description("Created Today")]
     TODAY,
-    [Description("CreatedAt within the last 30 days")]
+    [Description("Created the last 30 days")]
     LAST_30_DAYS
 }
 public class PicklistSetAdvancedFilter : PaginationFilter

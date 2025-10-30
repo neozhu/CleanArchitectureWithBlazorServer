@@ -1,7 +1,4 @@
 using System.ComponentModel;
-using System.Reflection;
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Forms;
 
@@ -21,12 +18,18 @@ public partial class MudEnumSelect<TEnum> : MudSelect<TEnum>
 
     protected override void OnInitialized()
     {
+        // Configure base select behavior.
         Dense = true;
         TransformOrigin = Origin.TopLeft;
         AnchorOrigin = Origin.BottomLeft;
         MultiSelection = IsFlags;
+        // Ensure selected value uses description text.
+        ToStringFunc = v => v is null ? string.Empty : BuildDisplayText(v);
         base.OnInitialized();
+        if (!_optionsInitialized)
+            BuildOptions();
     }
+
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
@@ -36,8 +39,7 @@ public partial class MudEnumSelect<TEnum> : MudSelect<TEnum>
 
     protected override void OnParametersSet()
     {
-        if (!_optionsInitialized)
-            BuildOptions();
+      
         SyncSelectedFromValue();
         base.OnParametersSet();
     }
@@ -62,7 +64,8 @@ public partial class MudEnumSelect<TEnum> : MudSelect<TEnum>
                 builder.AddAttribute(seq++, "Value", item);
                 var key = (object)item!;
                 var text = DisplayCache.TryGetValue(key, out var d) ? d : item?.ToString() ?? string.Empty;
-                builder.AddContent(seq++, text);
+                // Render via ChildContent to guarantee proper item text.
+                builder.AddAttribute(seq++, "ChildContent", (RenderFragment)(b2 => b2.AddContent(0, text)));
                 builder.CloseComponent();
             }
 #pragma warning restore ASP0006
@@ -95,23 +98,27 @@ public partial class MudEnumSelect<TEnum> : MudSelect<TEnum>
         }
     }
 
-    // Build display text using DisplayAttribute > DescriptionAttribute > Name
+    // Build display text using DescriptionAttribute (if present) else enum name.
     private static string BuildDisplayText(TEnum value)
     {
-        var name = value!.ToString()!;
-        var fi = UnderlyingEnumType.GetField(name);
-        if (fi is null) return name; // Fallback safety.
-
-        var displayAttr = fi.GetCustomAttributes(false)
-                            .OfType<System.ComponentModel.DataAnnotations.DisplayAttribute>()
-                            .FirstOrDefault();
-        var display = displayAttr?.Name;
-        if (!string.IsNullOrWhiteSpace(display)) return display!;
-
-        var desc = fi.GetCustomAttributes(typeof(DescriptionAttribute), false)
-                     .Cast<DescriptionAttribute>()
-                     .FirstOrDefault()?.Description;
-        return desc ?? name;
+        if (value is null) return string.Empty;
+        if (value is Enum e)
+        {
+            var name = e.ToString();
+            var members = e.GetType().GetMember(name);
+            if (members.Length > 0)
+            {
+                var member = members[0];
+                var descriptionAttributes = member.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                if (descriptionAttributes.Length > 0)
+                {
+                    var description = ((DescriptionAttribute)descriptionAttributes[0]).Description;
+                    if (!string.IsNullOrWhiteSpace(description)) return description;
+                }
+            }
+            return name;
+        }
+        return value.ToString() ?? string.Empty;
     }
 
     // (Optional future use) Aggregate flags from selected values.

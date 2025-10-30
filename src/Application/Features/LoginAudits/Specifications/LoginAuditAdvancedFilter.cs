@@ -11,7 +11,7 @@ public enum LoginAuditListView
     My,
     [Description("Created Today")]
     TODAY,
-    [Description("View of the last 30 days")]
+    [Description("Created the last 30 days")]
     LAST_30_DAYS,
 }
 

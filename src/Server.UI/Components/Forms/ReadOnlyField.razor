@@ -7,12 +7,12 @@
 	}
 	else if (Value is IEnumerable<object> enumerable)
 	{
-		// 如果 Value 是一个集合或数组，使用 string.Join()
+		// If Value is a collection or array, use string.Join()
 		displayValue = string.Join(", ", enumerable);
 	}
 	else
 	{
-		displayValue = Value.ToString();
+        displayValue = Value?.ToString() ?? string.Empty;
 	}
 }
 
