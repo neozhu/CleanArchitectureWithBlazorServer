@@ -165,10 +165,8 @@ public static class DependencyInjection
     #region Business Services
     private static IServiceCollection AddBusinessServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Register generic data source services instead of specific interfaces
-        services.AddScoped<IDataSourceService<PicklistSetDto>, PicklistDataSourceService>();
-        services.AddScoped<IDataSourceService<TenantDto>, TenantDataSourceService>();
-        services.AddScoped<IDataSourceService<ApplicationUserDto>, UserDataSourceService>();
+        // Auto-discover and register all IDataSourceService<T> implementations
+        services.AddDataSourceServices();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ITenantSwitchService, TenantSwitchService>();
 
@@ -193,6 +191,33 @@ public static class DependencyInjection
             .AddTransient<IDocumentOcrJob, DocumentOcrJob>();
     }
     #endregion
+
+    /// <summary>
+    /// Scans the Infrastructure assembly for concrete implementations of IDataSourceService<T>
+    /// and registers them with scoped lifetime. Avoids duplicate registrations.
+    /// </summary>
+    /// <remarks>
+    /// Pattern: any non-abstract class implementing IDataSourceService&lt;T&gt; will be registered.
+    /// If an implementation was already registered manually, it will be skipped.
+    /// </remarks>
+    private static IServiceCollection AddDataSourceServices(this IServiceCollection services)
+    {
+        var openGeneric = typeof(IDataSourceService<>);
+        var assembly = typeof(DependencyInjection).Assembly;
+        foreach (var type in assembly.GetTypes())
+        {
+            if (!type.IsClass || type.IsAbstract) continue;
+            var implementedDataSourceInterfaces = type.GetInterfaces()
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == openGeneric);
+            foreach (var iface in implementedDataSourceInterfaces)
+            {
+                // Skip if already registered
+                if (services.Any(s => s.ServiceType == iface)) continue;
+                services.AddScoped(iface, type);
+            }
+        }
+        return services;
+    }
 
     #region Notification Services
     private static IServiceCollection AddNotificationServices(this IServiceCollection services,
@@ -280,21 +305,17 @@ public static class DependencyInjection
             })
             .AddMicrosoftAccount(microsoftOptions =>
             {
-                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId") ?? string.Empty;
-                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret") ?? string.Empty;
+                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId") ?? "disabled";
+                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret") ?? "disabled";
                 //microsoftOptions.CallbackPath = new PathString("/pages/authentication/ExternalLogin"); # dotn't set this parameter!!
             })
             .AddGoogle(googleOptions =>
             {
-                googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId") ?? string.Empty;
-                googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret") ?? string.Empty; ;
+                googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId") ?? "disabled";
+                googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret") ?? "disabled";
             }
             )
-            //.AddFacebook(facebookOptions =>
-            //{
-            //    facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId") ?? string.Empty;
-            //    facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret") ?? string.Empty;
-            //})
+
             .AddIdentityCookies(options => { });
 
         services.ConfigureApplicationCookie(options =>
