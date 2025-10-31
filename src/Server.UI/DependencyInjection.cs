@@ -106,7 +106,7 @@ public static class DependencyInjection
         services.AddHttpClient("ocr", (serviceProvider, c) =>
         {
             var aiSettings = serviceProvider.GetRequiredService<IAISettings>();
-            c.BaseAddress = new Uri("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent");
+            c.BaseAddress = new Uri("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent");
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             c.DefaultRequestHeaders.Add("x-goog-api-key", aiSettings.GeminiApiKey);
            

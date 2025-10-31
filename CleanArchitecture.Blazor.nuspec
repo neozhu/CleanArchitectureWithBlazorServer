@@ -2,19 +2,35 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>CleanArchitecture.Blazor.Solution.Template</id>
-        <version>1.30.1</version>
+        <version>1.30.2</version>
         <title>Clean Architecture Blazor Solution Template</title>
         <authors>hl.z</authors>
-        <description>Clean Architecture Blazor Solution Template for .NET 9.</description>
+        <description>Clean Architecture Blazor Solution Template for .NET9.</description>
         <summary>
-            A Clean Architecture Blazor Server dashboard application template for .NET 9.
+            A Clean Architecture Blazor Server dashboard application template for .NET9.
         </summary>
-        <releaseNotes>
-            1.1.0
-            - 🌈 Integrate Stl.Fusion for real-time updates 
-            - 🐛 fixed ocr process issue 
-            - 🌈 Implement Google and Microsoft External Provider Authentication 
-        </releaseNotes>
+        <releaseNotes><![CDATA[
+1.30.2
+ - Added full Specification pattern support (spec) for advanced querying and filtering
+ - Integrated Stl.Fusion for real-time UI/state updates across sessions
+ - Implemented Google and Microsoft external provider authentication enhancements
+ - Improved multi-tenant context handling and tenant switch service
+ - Enhanced Document OCR pipeline (Gemini integration and job reliability fixes)
+ - Fixed prior OCR process stability issues
+ - Added Security Risk Dashboard and user login risk summary indicators
+ - Picklist and PicklistSet import/export and advanced specification filtering
+ - Added comprehensive validation and exception handling pipeline behaviours
+ - Added welcome and MFA factor code notification commands
+ - Theme customization (dynamic primary color and themes menu improvements)
+ - Localization and culture enhancements (multi-language resource sets)
+ - Added global search dialog and improved navigation menu structure
+ - Improved caching keys and parallel/channel domain event publish strategies
+ - Extended integration/unit test coverage (specifications, exception handlers, services)
+ - Strengthened security analysis and audit logging (LoginAudits, AuditTrails, SystemLogs)
+ - Added user profile reactive state management and session tracking
+ - Added AI settings configuration interface
+ - Updated EF Core configurations and initial migrations for .NET9
+]]></releaseNotes>
 
         <projectUrl>https://github.com/neozhu/CleanArchitectureWithBlazorServer</projectUrl>
         <repository type="git" url="https://github.com/neozhu/CleanArchitectureWithBlazorServer.git" branch="main"/>

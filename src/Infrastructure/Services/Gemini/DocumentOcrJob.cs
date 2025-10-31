@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
@@ -78,7 +78,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                         {
                             parts = new object[]
                             {
-                                new { text = "Perform OCR, only return the recognized text, output in markdown, keep original structure and layout, no extra explanation, use English." },
+                                new { text = "Describe the image, summarize the key information, output in markdown, no explanations, use English." },
                                 new
                                 {
                                     inline_data = new

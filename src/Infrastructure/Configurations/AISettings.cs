@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
@@ -13,7 +13,7 @@ public class AISettings : IAISettings
     /// <summary>
     /// AI configuration key constraint
     /// </summary>
-    public const string Key = "AI";
+    public const string Key = nameof(AISettings);
 
     /// <summary>
     /// Gets or sets the Gemini API key
