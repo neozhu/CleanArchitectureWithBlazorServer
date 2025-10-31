@@ -13,7 +13,7 @@
         <PackageReference Include="Minio" Version="6.0.5" />
         <PackageReference Include="QuestPDF" Version="2025.7.3" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.2" />
+        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="9.0.1" />
         <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.2.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
