@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Server.UI.Services
+﻿@using CleanArchitecture.Blazor.Server.UI.Services
 @using CleanArchitecture.Blazor.Application.Common.Models
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using CleanArchitecture.Blazor.Application.Common.Constants
@@ -66,16 +66,16 @@
                 <MudTextField For="@(() => ProfileModel.Email)" @bind-Value="ProfileModel.Email" Label="@Localizer["Email"]" ReadOnly="true" />
             </MudItem>
             <MudItem sm="6" xs="12">
-                <MudTextField For="@(() => ProfileModel.DisplayName)" @bind-Value="ProfileModel.DisplayName" Label="@Localizer["Full Name"]" />
+                <MudTextField For="@(() => ProfileModel.DisplayName)" @bind-Value="ProfileModel.DisplayName" Label="@Localizer["Full Name"]" Placeholder="@Localizer["Enter your full name"]" />
             </MudItem>
             <MudItem sm="6" xs="12">
-                <MudTextField For="@(() => ProfileModel.PhoneNumber)" @bind-Value="ProfileModel.PhoneNumber" Label="@Localizer["Phone Number"]" />
+                <MudTextField For="@(() => ProfileModel.PhoneNumber)" @bind-Value="ProfileModel.PhoneNumber" Label="@Localizer["Phone Number"]" Placeholder="@Localizer["Enter your phone number"]"  />
             </MudItem>
             <MudItem sm="6" xs="12">
-                <TimeZoneAutocomplete T="string" For="@(() => ProfileModel.TimeZoneId)" @bind-Value="ProfileModel.TimeZoneId" Label="@Localizer["Time Zone"]" />
+                <TimeZoneAutocomplete T="string" For="@(() => ProfileModel.TimeZoneId)" @bind-Value="ProfileModel.TimeZoneId" Label="@Localizer["Time Zone"]" Placeholder="@Localizer["Select a time zone"]" />
             </MudItem>
             <MudItem sm="6" xs="12">
-                <LanguageAutocomplete T="string" For="@(() => ProfileModel.LanguageCode)" @bind-Value="ProfileModel.LanguageCode" Label="@Localizer["Language"]" />
+                <LanguageAutocomplete T="string" For="@(() => ProfileModel.LanguageCode)" @bind-Value="ProfileModel.LanguageCode" Label="@Localizer["Language"]" Placeholder="@Localizer["Select a language"]" />
             </MudItem>
             <MudItem sm="12" xs="12" Class="d-flex justify-end">
                 <MudButton ButtonType="ButtonType.Button" Disabled="@_submitting" Color="Color.Primary" Class="ml-auto"

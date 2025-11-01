@@ -154,4 +154,16 @@
   <data name="No available tenants" xml:space="preserve">
     <value>没有可用的租户</value>
   </data>
+  <data name="Auto-generated tenant id" xml:space="preserve">
+    <value>租户标识自动生成</value>
+  </data>
+  <data name="This identifier cannot be changed" xml:space="preserve">
+    <value>此标识符不可更改</value>
+  </data>
+  <data name="Enter tenant name" xml:space="preserve">
+    <value>请输入租户名称</value>
+  </data>
+  <data name="Enter tenant description" xml:space="preserve">
+    <value>请输入租户描述</value>
+  </data>
 </root>

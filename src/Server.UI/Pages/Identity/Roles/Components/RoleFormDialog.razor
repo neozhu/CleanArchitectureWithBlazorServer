@@ -11,6 +11,7 @@
                 <MudItem xs="12">
                     <MudTextField Label="@L[Model.GetMemberDescription(x => x.Name)]" 
                                  @bind-Value="Model.Name"
+                                 Placeholder="@L["Enter role name"]"
                                  Required="true"
                                  For="@(() => Model.Name)"
                                  Validation="@(new Func<string, IEnumerable<string>>(ValidateName))"

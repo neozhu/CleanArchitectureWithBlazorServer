@@ -70,6 +70,12 @@
   <data name="Recovery Code" xml:space="preserve">
     <value>Wiederherstellungscode</value>
   </data>
+  <data name="Enter your recovery code" xml:space="preserve">
+    <value>Bitte geben Sie Ihren Wiederherstellungscode ein</value>
+  </data>
+  <data name="Recovery code is required." xml:space="preserve">
+    <value>Wiederherstellungscode ist erforderlich.</value>
+  </data>
   <data name="Enter the 8-character recovery code from your backup codes" xml:space="preserve">
     <value>Geben Sie den 8-stelligen Wiederherstellungscode aus Ihren Backup-Codes ein</value>
   </data>

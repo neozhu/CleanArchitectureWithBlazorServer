@@ -126,6 +126,9 @@
   <data name="Authenticator code" xml:space="preserve">
     <value>Authenticator code</value>
   </data>
+  <data name="Enter your authenticator code" xml:space="preserve">
+    <value>Enter your authenticator code</value>
+  </data>
   <data name="Authenticator code is required." xml:space="preserve">
     <value>Authenticator code is required.</value>
   </data>

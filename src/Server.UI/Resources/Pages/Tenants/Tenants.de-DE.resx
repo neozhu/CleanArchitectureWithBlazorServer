@@ -154,4 +154,16 @@
   <data name="No available tenants" xml:space="preserve">
     <value>Keine verfügbaren Mandanten</value>
   </data>
+  <data name="Auto-generated tenant id" xml:space="preserve">
+    <value>Automatisch generierte Mandanten-ID</value>
+  </data>
+  <data name="This identifier cannot be changed" xml:space="preserve">
+    <value>Dieser Bezeichner kann nicht geändert werden</value>
+  </data>
+  <data name="Enter tenant name" xml:space="preserve">
+    <value>Bitte geben Sie den Mandantennamen ein</value>
+  </data>
+  <data name="Enter tenant description" xml:space="preserve">
+    <value>Bitte geben Sie eine Mandantenbeschreibung ein</value>
+  </data>
 </root>

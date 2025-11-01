@@ -123,6 +123,24 @@
   <data name="Password changed successfully" xml:space="preserve">
     <value>das Passwort wurde erfolgreich geändert</value>
   </data>
+  <data name="Enter your current password" xml:space="preserve">
+    <value>Bitte geben Sie Ihr aktuelles Passwort ein</value>
+  </data>
+  <data name="Current password is required" xml:space="preserve">
+    <value>Aktuelles Passwort ist erforderlich</value>
+  </data>
+  <data name="Enter a new password" xml:space="preserve">
+    <value>Bitte geben Sie ein neues Passwort ein</value>
+  </data>
+  <data name="New password is required" xml:space="preserve">
+    <value>Neues Passwort ist erforderlich</value>
+  </data>
+  <data name="Confirm your new password" xml:space="preserve">
+    <value>Bitte bestätigen Sie Ihr neues Passwort</value>
+  </data>
+  <data name="Confirmation password is required" xml:space="preserve">
+    <value>Bestätigungspasswort ist erforderlich</value>
+  </data>
   <data name="Click upload a photo" xml:space="preserve">
     <value>Klicken Sie auf „Foto hochladen“</value>
   </data>
@@ -272,5 +290,17 @@
   </data>
   <data name="Provider" xml:space="preserve">
     <value>Anbieter</value>
+  </data>
+  <data name="Enter your full name" xml:space="preserve">
+    <value>Bitte geben Sie Ihren vollständigen Namen ein</value>
+  </data>
+  <data name="Enter your phone number" xml:space="preserve">
+    <value>Bitte geben Sie Ihre Telefonnummer ein</value>
+  </data>
+  <data name="Select a time zone" xml:space="preserve">
+    <value>Wählen Sie eine Zeitzone</value>
+  </data>
+  <data name="Select a language" xml:space="preserve">
+    <value>Wählen Sie eine Sprache</value>
   </data>
 </root>

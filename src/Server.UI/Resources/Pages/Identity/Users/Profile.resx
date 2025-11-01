@@ -123,6 +123,24 @@
   <data name="Password changed successfully" xml:space="preserve">
     <value>Password changed successfully</value>
   </data>
+  <data name="Enter your current password" xml:space="preserve">
+    <value>Enter your current password</value>
+  </data>
+  <data name="Current password is required" xml:space="preserve">
+    <value>Current password is required</value>
+  </data>
+  <data name="Enter a new password" xml:space="preserve">
+    <value>Enter a new password</value>
+  </data>
+  <data name="New password is required" xml:space="preserve">
+    <value>New password is required</value>
+  </data>
+  <data name="Confirm your new password" xml:space="preserve">
+    <value>Confirm your new password</value>
+  </data>
+  <data name="Confirmation password is required" xml:space="preserve">
+    <value>Confirmation password is required</value>
+  </data>
   <data name="Click upload a photo" xml:space="preserve">
     <value>Click upload a photo</value>
   </data>
@@ -272,5 +290,17 @@
   </data>
   <data name="Provider" xml:space="preserve">
     <value>Provider</value>
+  </data>
+  <data name="Enter your full name" xml:space="preserve">
+    <value>Enter your full name</value>
+  </data>
+  <data name="Enter your phone number" xml:space="preserve">
+    <value>Enter your phone number</value>
+  </data>
+  <data name="Select a time zone" xml:space="preserve">
+    <value>Select a time zone</value>
+  </data>
+  <data name="Select a language" xml:space="preserve">
+    <value>Select a language</value>
   </data>
 </root>

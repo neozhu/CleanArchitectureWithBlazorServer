@@ -2,6 +2,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Domain.Common.Enums
+@using System.ComponentModel.DataAnnotations
 @inherits OwningComponentBase
 
 @inject IStringLocalizer<Identity.Users.Users> L
@@ -40,6 +41,8 @@
 				<MudItem sm="6" xs="12">
                     <MultiTenantsSelect Label="@L[Model.GetMemberDescription(x => x.Tenants)]"
                                    @bind-SelectedValues="Model.Tenants"
+								   Placeholder="@L["Select tenants"]"
+								   HelperText="@L["Choose one or more tenants"]"
                                    Required="true"
                                    RequiredError="@L["tenants are required"]" />
 				</MudItem>
@@ -47,32 +50,33 @@
                     <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDescription(x => x.Provider)]" ReadOnly="true" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
-                    <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L[Model.GetMemberDescription(x => x.UserName)]" Required="true" />
+                    <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L[Model.GetMemberDescription(x => x.UserName)]" Required="true" RequiredError="@L["User name is required"]" Placeholder="@L["Enter a user name"]" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
 					<MudCheckBox Color="Color.Primary" For="@(() => Model.IsActive)" @bind-Value="Model.IsActive" Label="@L[Model.GetMemberDescription(x => x.IsActive)]" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
-                    <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L[Model.GetMemberDescription(x => x.DisplayName)]" />
+                    <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L[Model.GetMemberDescription(x => x.DisplayName)]" Placeholder="@L["Enter a display name"]" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <PickSuperiorAutocomplete For="@(() => Model.Superior)" T="ApplicationUserDto"
                                               OwnerName="@Model.UserName"
                                               Clearable="true"
                                               Label="@L[Model.GetMemberDescription(x => x.Superior)]"
+                                              Placeholder="@L["Search by user name or email"]"
                                               @bind-Value="Model.Superior" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
-                    <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L[Model.GetMemberDescription(x => x.Email)]" Required="true" />
+                    <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L[Model.GetMemberDescription(x => x.Email)]" Required="true" RequiredError="@L["Email address is required"]" Placeholder="@L["Enter the user's email address"]" InputType="InputType.Email" Validation="@(new EmailAddressAttribute() { ErrorMessage = L["Please enter a valid email address"] })" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
-                    <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L[Model.GetMemberDescription(x => x.PhoneNumber)]" />
+                    <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L[Model.GetMemberDescription(x => x.PhoneNumber)]" Placeholder="@L["Enter a phone number"]"  />
                 </MudItem>
                 <MudItem sm="6" xs="12">
-                    <TimeZoneAutocomplete T="string" For="@(() => Model.TimeZoneId)" @bind-Value="Model.TimeZoneId" Label="@L[Model.GetMemberDescription(x => x.TimeZoneId)]" />
+                    <TimeZoneAutocomplete T="string" For="@(() => Model.TimeZoneId)" @bind-Value="Model.TimeZoneId" Label="@L[Model.GetMemberDescription(x => x.TimeZoneId)]" Placeholder="@L["Select a time zone"]" />
                 </MudItem>
                 <MudItem sm="6" xs="12">
-                    <LanguageAutocomplete T="string" For="@(() => Model.LanguageCode)" @bind-Value="Model.LanguageCode" Label="@L[Model.GetMemberDescription(x => x.LanguageCode)]" />
+                    <LanguageAutocomplete T="string" For="@(() => Model.LanguageCode)" @bind-Value="Model.LanguageCode" Label="@L[Model.GetMemberDescription(x => x.LanguageCode)]" Placeholder="@L["Select a language"]" />
                 </MudItem>
 
                 <MudItem xs="12" sm="12">

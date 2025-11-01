@@ -170,7 +170,22 @@
     <data name="Are you sure you want to erase this image?" xml:space="preserve">
     <value>您确定要删除该图像吗？</value>
   </data>
-    <data name="Erase image" xml:space="preserve">
+  <data name="Erase image" xml:space="preserve">
     <value>删除图像</value>
+  </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>输入描述</value>
+  </data>
+  <data name="Enter price" xml:space="preserve">
+    <value>输入价格</value>
+  </data>
+  <data name="Enter product name" xml:space="preserve">
+    <value>输入产品名称</value>
+  </data>
+  <data name="Select brand name" xml:space="preserve">
+    <value>选择品牌</value>
+  </data>
+  <data name="Select unit" xml:space="preserve">
+    <value>选择单位</value>
   </data>
 </root>

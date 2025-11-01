@@ -9,18 +9,21 @@
                 <MudItem xs="12" md="6">
                     <MudEnumSelect Label="@L[_model.GetMemberDescription(x => x.Name)]" @bind-Value="_model.Name"
                                    For="@(() => _model.Name)"
+                                   Placeholder="@L["Select picklist name"]"
                                    Required="true"
                                    RequiredError="@L["Name is required!"]">
                     </MudEnumSelect>
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudTextField Label="@L[_model.GetMemberDescription(x => x.Description)]" @bind-Value="_model.Description"
-                                  For="@(() => _model.Description)">
+                                  For="@(() => _model.Description)"
+                                  Placeholder="@L["Enter description"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudTextField Label="@L[_model.GetMemberDescription(x => x.Value)]" @bind-Value="_model.Value"
                                   For="@(() => _model.Value)"
+                                  Placeholder="@L["Enter value"]"
                                   Required="true"
                                   RequiredError="@L["Value is required!"]">
                     </MudTextField>
@@ -28,6 +31,7 @@
                 <MudItem xs="12" md="6">
                     <MudTextField Label="@L[_model.GetMemberDescription(x => x.Text)]" @bind-Value="_model.Text"
                                   For="@(() => _model.Text)"
+                                  Placeholder="@L["Enter text"]"
                                   Required="true"
                                   RequiredError="@L["Text is required!"]">
                     </MudTextField>

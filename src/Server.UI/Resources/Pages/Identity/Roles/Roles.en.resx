@@ -262,4 +262,10 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>Tenant Name</value>
   </data>
+  <data name="Enter role name" xml:space="preserve">
+    <value>Enter role name</value>
+  </data>
+  <data name="Enter description for this role" xml:space="preserve">
+    <value>Enter description for this role</value>
+  </data>
 </root>

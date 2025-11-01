@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Server.UI.Components.Sessions
+﻿@using CleanArchitecture.Blazor.Server.UI.Components.Sessions
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Size = SixLabors.ImageSharp.Size
 @using Image = SixLabors.ImageSharp.Image
@@ -21,6 +21,7 @@
                 <MudItem xs="12">
                     <MudTextField Label="@L["Product Name"]" @bind-Value="_model.Name"
                                   For="@(() => _model.Name)"
+                                  Placeholder="@L["Enter product name"]"
                                   Required="true"
                                   RequiredError="@L["product name is required!"]">
                     </MudTextField>
@@ -29,7 +30,8 @@
                     <MudTextField Label="@L["Description"]"
                                   Lines="3"
                                   For="@(() => _model.Description)"
-                                  @bind-Value="_model.Description">
+                                  @bind-Value="_model.Description"
+                                  Placeholder="@L["Enter description"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
@@ -38,6 +40,7 @@
                                           For="@(() => _model.Brand)"
                                           ResetValueOnEmptyText="true"
                                           ShowProgressIndicator="true"
+                                          Placeholder="@L["Select brand name"]"
                                           @bind-Value="_model.Brand">
                         <ProgressIndicatorTemplate>
                             <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
@@ -50,6 +53,7 @@
                                      Format="N2"
                                      For="@(() => _model.Price)"
                                      Min="0.00m"
+                                     Placeholder="@L["Enter price"]"
                                      @bind-Value="_model.Price">
                     </MudNumericField>
                 </MudItem>
@@ -59,6 +63,7 @@
                                           For="@(() => _model.Unit)"
                                           ResetValueOnEmptyText="true"
                                           ShowProgressIndicator="true"
+                                          Placeholder="@L["Select unit"]"
                                           @bind-Value="_model.Unit">
                         <ProgressIndicatorTemplate>
                             <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />

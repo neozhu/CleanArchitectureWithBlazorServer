@@ -126,6 +126,9 @@
   <data name="Authenticator code" xml:space="preserve">
     <value>身份验证码</value>
   </data>
+  <data name="Enter your authenticator code" xml:space="preserve">
+    <value>请输入身份验证码</value>
+  </data>
   <data name="Authenticator code is required." xml:space="preserve">
     <value>身份验证码是必填项。</value>
   </data>

@@ -70,11 +70,17 @@
   <data name="User name" xml:space="preserve">
     <value>用户名</value>
   </data>
+  <data name="Enter your user name" xml:space="preserve">
+    <value>请输入用户名</value>
+  </data>
   <data name="User name is required" xml:space="preserve">
     <value>用户名是必填项</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>密码</value>
+  </data>
+  <data name="Enter your password" xml:space="preserve">
+    <value>请输入密码</value>
   </data>
   <data name="Password is required" xml:space="preserve">
     <value>密码是必填项</value>

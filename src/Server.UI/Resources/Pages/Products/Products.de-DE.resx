@@ -170,7 +170,22 @@
     <data name="Erase image" xml:space="preserve">
     <value>Bild löschen</value>
   </data>
-    <data name="Are you sure you want to erase this image?" xml:space="preserve">
+  <data name="Are you sure you want to erase this image?" xml:space="preserve">
     <value>Möchten Sie dieses Bild wirklich löschen?</value>
+  </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>Beschreibung eingeben</value>
+  </data>
+  <data name="Enter price" xml:space="preserve">
+    <value>Preis eingeben</value>
+  </data>
+  <data name="Enter product name" xml:space="preserve">
+    <value>Produktname eingeben</value>
+  </data>
+  <data name="Select brand name" xml:space="preserve">
+    <value>Markennamen auswählen</value>
+  </data>
+  <data name="Select unit" xml:space="preserve">
+    <value>Einheit auswählen</value>
   </data>
 </root>

@@ -70,11 +70,17 @@
   <data name="User name" xml:space="preserve">
     <value>User name</value>
   </data>
+  <data name="Enter your user name" xml:space="preserve">
+    <value>Enter your user name</value>
+  </data>
   <data name="User name is required" xml:space="preserve">
     <value>User name is required</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
+  </data>
+  <data name="Enter your password" xml:space="preserve">
+    <value>Enter your password</value>
   </data>
   <data name="Password is required" xml:space="preserve">
     <value>Password is required</value>

@@ -126,8 +126,23 @@
     <data name="Are you sure you want to erase this image?" xml:space="preserve">
     <value>Are you sure you want to erase this image?</value>
   </data>
-    <data name="Brand Name" xml:space="preserve">
+  <data name="Brand Name" xml:space="preserve">
     <value>Brand Name</value>
+  </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>Enter description</value>
+  </data>
+  <data name="Enter price" xml:space="preserve">
+    <value>Enter price</value>
+  </data>
+  <data name="Enter product name" xml:space="preserve">
+    <value>Enter product name</value>
+  </data>
+  <data name="Select brand name" xml:space="preserve">
+    <value>Select brand name</value>
+  </data>
+  <data name="Select unit" xml:space="preserve">
+    <value>Select unit</value>
   </data>
     <data name="Description" xml:space="preserve">
     <value>Description</value>

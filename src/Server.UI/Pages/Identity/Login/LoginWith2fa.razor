@@ -22,6 +22,7 @@
 			<MudTextField @bind-Value="Input.TwoFactorCode"
 						  Label="@L["Authenticator code"]"
 						  Variant="Variant.Outlined"
+						  Placeholder="@L["Enter your authenticator code"]"
 						  Required="true"
 						  RequiredError="@L["Authenticator code is required."]"
 						  For="@(() => Input.TwoFactorCode)"

@@ -372,4 +372,7 @@
   <data name="Are you sure you want to delete the item with ID: {0}?" xml:space="preserve">
     <value>Are you sure you want to delete the item with ID: {0}?</value>
   </data>
+  <data name="List View" xml:space="preserve">
+    <value>List View</value>
+  </data>
 </root>

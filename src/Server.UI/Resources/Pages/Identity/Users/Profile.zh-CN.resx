@@ -123,6 +123,24 @@
   <data name="Password changed successfully" xml:space="preserve">
     <value>密码修改成功</value>
   </data>
+  <data name="Enter your current password" xml:space="preserve">
+    <value>请输入当前密码</value>
+  </data>
+  <data name="Current password is required" xml:space="preserve">
+    <value>当前密码为必填项</value>
+  </data>
+  <data name="Enter a new password" xml:space="preserve">
+    <value>请输入新密码</value>
+  </data>
+  <data name="New password is required" xml:space="preserve">
+    <value>新密码为必填项</value>
+  </data>
+  <data name="Confirm your new password" xml:space="preserve">
+    <value>请确认您的新密码</value>
+  </data>
+  <data name="Confirmation password is required" xml:space="preserve">
+    <value>确认密码为必填项</value>
+  </data>
   <data name="Click upload a photo" xml:space="preserve">
     <value>单击上传照片</value>
   </data>
@@ -272,5 +290,17 @@
   </data>
   <data name="Provider" xml:space="preserve">
     <value>提供商</value>
+  </data>
+  <data name="Enter your full name" xml:space="preserve">
+    <value>请输入全名</value>
+  </data>
+  <data name="Enter your phone number" xml:space="preserve">
+    <value>请输入电话号码</value>
+  </data>
+  <data name="Select a time zone" xml:space="preserve">
+    <value>请选择时区</value>
+  </data>
+  <data name="Select a language" xml:space="preserve">
+    <value>请选择语言</value>
   </data>
 </root>

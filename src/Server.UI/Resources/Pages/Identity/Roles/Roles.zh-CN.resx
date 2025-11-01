@@ -262,4 +262,10 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>租户名称</value>
   </data>
+  <data name="Enter role name" xml:space="preserve">
+    <value>请输入角色名称</value>
+  </data>
+  <data name="Enter description for this role" xml:space="preserve">
+    <value>请输入该角色的描述</value>
+  </data>
 </root>

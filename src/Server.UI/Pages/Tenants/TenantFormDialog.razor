@@ -11,19 +11,23 @@
                                   For="@(() => _model.Id)"
                                   ReadOnly="true"
                                   Required="true"
+                                  Placeholder="@L["Auto-generated tenant id"]"
+                                  HelperText="@L["This identifier cannot be changed"]"
                                   RequiredError="@L["Tenant id is required!"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
                     <MudTextField Label="@L[_model.GetMemberDescription(x => x.Name)]" @bind-Value="_model.Name"
                                   For="@(() => _model.Name)"
+                                  Placeholder="@L["Enter tenant name"]"
                                   Required="true"
                                   RequiredError="@L["Tenant name is required!"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
                     <MudTextField Label="@L[_model.GetMemberDescription(x => x.Description)]" @bind-Value="_model.Description"
-                                  For="@(() => _model.Description)">
+                                  For="@(() => _model.Description)"
+                                  Placeholder="@L["Enter tenant description"]">
                     </MudTextField>
                 </MudItem>
 

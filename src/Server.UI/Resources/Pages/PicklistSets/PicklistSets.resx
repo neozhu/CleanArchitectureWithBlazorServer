@@ -123,6 +123,9 @@
   <data name="Picklist Set" xml:space="preserve">
     <value>Picklist Set</value>
   </data>
+  <data name="Select picklist name" xml:space="preserve">
+    <value>Select picklist name</value>
+  </data>
   <data name="Create a picklist" xml:space="preserve">
     <value>Create a picklist</value>
   </data>
@@ -143,6 +146,15 @@
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>Enter description</value>
+  </data>
+  <data name="Enter text" xml:space="preserve">
+    <value>Enter text</value>
+  </data>
+  <data name="Enter value" xml:space="preserve">
+    <value>Enter value</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>

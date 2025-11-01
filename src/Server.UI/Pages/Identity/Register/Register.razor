@@ -35,7 +35,7 @@
 					  Label="@L["User Name"]"
 					  Variant="Variant.Outlined"
 					  Required="true"
-					  Placeholder="user name"
+					  Placeholder="@L["Enter a user name"]"
 					  For="@(() => Input.UserName)" />
 
 
@@ -43,7 +43,7 @@
 					  Label="@L["E-mail"]"
 					  Variant="Variant.Outlined"
 					  Required="true"
-					  Placeholder="email"
+					  Placeholder="@L["Enter your email address"]"
 					  For="@(() => Input.Email)" />
 
 		<MudTextField @bind-Value="Input.Password"
@@ -51,7 +51,7 @@
 					  Variant="Variant.Outlined"
 					  Required="true"
 					  InputType="@(isPasswordVisible? InputType.Text: InputType.Password)"
-					  Placeholder="password"
+					  Placeholder="@L["Create a password"]"
 					  For="@(() => Input.Password)"
 					  Adornment="Adornment.End"
 					  AdornmentIcon="@(isPasswordVisible? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
@@ -61,7 +61,7 @@
 					  Variant="Variant.Outlined"
 					  Required="true"
 					  InputType="@(isConfirmPasswordVisible? InputType.Text: InputType.Password)"
-					  Placeholder="Confirm password"
+					  Placeholder="@L["Re-enter your password"]"
 					  For="@(() => Input.ConfirmPassword)"
 					  Adornment="Adornment.End"
 					  AdornmentIcon="@(isConfirmPasswordVisible? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"

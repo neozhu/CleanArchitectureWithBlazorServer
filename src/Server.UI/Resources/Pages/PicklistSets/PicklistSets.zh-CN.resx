@@ -123,6 +123,15 @@
   <data name="Description" xml:space="preserve">
     <value>描述</value>
   </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>输入描述</value>
+  </data>
+  <data name="Enter text" xml:space="preserve">
+    <value>输入文本</value>
+  </data>
+  <data name="Enter value" xml:space="preserve">
+    <value>输入值</value>
+  </data>
   <data name="Id" xml:space="preserve">
     <value>ID</value>
   </data>
@@ -137,6 +146,9 @@
   </data>
   <data name="Picklist Set" xml:space="preserve">
     <value>选项列表集</value>
+  </data>
+  <data name="Select picklist name" xml:space="preserve">
+    <value>选择选项列表名称</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>搜索</value>

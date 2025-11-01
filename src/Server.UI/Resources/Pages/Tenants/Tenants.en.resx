@@ -154,4 +154,16 @@
   <data name="No available tenants" xml:space="preserve">
     <value>No available tenants</value>
   </data>
+  <data name="Auto-generated tenant id" xml:space="preserve">
+    <value>Auto-generated tenant id</value>
+  </data>
+  <data name="This identifier cannot be changed" xml:space="preserve">
+    <value>This identifier cannot be changed</value>
+  </data>
+  <data name="Enter tenant name" xml:space="preserve">
+    <value>Enter tenant name</value>
+  </data>
+  <data name="Enter tenant description" xml:space="preserve">
+    <value>Enter tenant description</value>
+  </data>
 </root>

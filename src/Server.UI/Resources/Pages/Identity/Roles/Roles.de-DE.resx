@@ -262,4 +262,10 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>Name des Mieters</value>
   </data>
+  <data name="Enter role name" xml:space="preserve">
+    <value>Bitte geben Sie einen Rollennamen ein</value>
+  </data>
+  <data name="Enter description for this role" xml:space="preserve">
+    <value>Bitte geben Sie eine Rollenbeschreibung ein</value>
+  </data>
 </root>

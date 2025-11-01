@@ -312,4 +312,43 @@
   <data name="Language" xml:space="preserve">
     <value>Sprache</value>
   </data>
+  <data name="Select tenants" xml:space="preserve">
+    <value>Wählen Sie Mandanten aus</value>
+  </data>
+  <data name="Choose one or more tenants" xml:space="preserve">
+    <value>Wählen Sie einen oder mehrere Mandanten</value>
+  </data>
+  <data name="tenants are required" xml:space="preserve">
+    <value>Mandanten sind erforderlich</value>
+  </data>
+  <data name="Enter a user name" xml:space="preserve">
+    <value>Bitte geben Sie einen Benutzernamen ein</value>
+  </data>
+  <data name="User name is required" xml:space="preserve">
+    <value>Benutzername ist erforderlich</value>
+  </data>
+  <data name="Enter a display name" xml:space="preserve">
+    <value>Bitte geben Sie einen Anzeigenamen ein</value>
+  </data>
+  <data name="Search by user name or email" xml:space="preserve">
+    <value>Nach Benutzername oder E-Mail suchen</value>
+  </data>
+  <data name="Enter the user's email address" xml:space="preserve">
+    <value>Bitte geben Sie die E-Mail-Adresse des Benutzers ein</value>
+  </data>
+  <data name="Email address is required" xml:space="preserve">
+    <value>E-Mail-Adresse ist erforderlich</value>
+  </data>
+  <data name="Please enter a valid email address" xml:space="preserve">
+    <value>Bitte geben Sie eine gültige E-Mail-Adresse ein</value>
+  </data>
+  <data name="Enter a phone number" xml:space="preserve">
+    <value>Bitte geben Sie eine Telefonnummer ein</value>
+  </data>
+  <data name="Select a time zone" xml:space="preserve">
+    <value>Wählen Sie eine Zeitzone</value>
+  </data>
+  <data name="Select a language" xml:space="preserve">
+    <value>Wählen Sie eine Sprache</value>
+  </data>
 </root>

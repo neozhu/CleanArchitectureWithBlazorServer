@@ -28,7 +28,8 @@
 			<TenantSelect @bind-Value="Input.Tenant"
 									 Label="@L["Tenant"]"
 									 Variant="Variant.Outlined"
-									 HelperText="Select your organization or tenant"
+									 HelperText="@L["Select your organization or tenant"]"
+									 Placeholder="@L["Please select a tenant"]"
 									 Required="true"
 									 For="@(() => Input.Tenant)" />
 
@@ -38,22 +39,24 @@
 						  Variant="Variant.Outlined"
 						  Margin="Margin.Normal"
 						  InputType="InputType.Email"
-						  HelperText="Enter your professional email address"
+						  HelperText="@L["Enter your professional email address"]"
 						  Required="true"
-						  RequiredError="Email address is required"
-						  Validation="@(new EmailAddressAttribute() { ErrorMessage = "Please enter a valid email address" })"
-						  Placeholder="your.email@company.com" />
+						  RequiredError="@L["Email address is required"]"
+						  Validation="@(new EmailAddressAttribute() { ErrorMessage = L["Please enter a valid email address"] })"
+						  Placeholder="@L["Enter your email address"]" />
 
 			<TimeZoneAutocomplete @bind-Value="Input.TimeZoneId"
 								  T="string"
 								  Label="@L["Time Zone"]"
 								  Variant="Variant.Outlined"
+								  Placeholder="@L["Select a time zone"]"
 								  Required="true"
 								  For="@(() => Input.TimeZoneId)" />
 			<LanguageAutocomplete @bind-Value="Input.LanguageCode"
 								  T="string"
 								  Label="@L["Language"]"
 								  Variant="Variant.Outlined"
+								  Placeholder="@L["Select a language"]"
 								  Required="true"
 								  For="@(() => Input.LanguageCode)" />
 			<MudButton Variant="Variant.Filled"

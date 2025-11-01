@@ -22,8 +22,11 @@
 					  Label="@L["E-mail"]"
 					  Variant="Variant.Outlined"
 					  InputType="InputType.Email"
-					  Placeholder="name@example.com"
+					  Placeholder="@L["Enter your email address"]"
 					  Immediate="true"
+					  Required="true"
+					  RequiredError="@L["Email address is required"]"
+					  Validation="@(new EmailAddressAttribute() { ErrorMessage = L["Please enter a valid email address"] })"
 					  FullWidth="true"
 					  For="@(() => Input.Email)" />
 		<MudButton Variant="Variant.Filled"

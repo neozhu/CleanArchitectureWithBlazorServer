@@ -70,14 +70,38 @@
   <data name="Tenant" xml:space="preserve">
     <value>Mandant</value>
   </data>
+  <data name="Please select a tenant" xml:space="preserve">
+    <value>Bitte wählen Sie einen Mandanten</value>
+  </data>
+  <data name="Select your organization or tenant" xml:space="preserve">
+    <value>Wählen Sie Ihre Organisation oder Ihren Mandanten</value>
+  </data>
   <data name="Email" xml:space="preserve">
     <value>E-Mail</value>
+  </data>
+  <data name="Enter your professional email address" xml:space="preserve">
+    <value>Bitte geben Sie Ihre geschäftliche E-Mail-Adresse ein</value>
+  </data>
+  <data name="Email address is required" xml:space="preserve">
+    <value>E-Mail-Adresse ist erforderlich</value>
+  </data>
+  <data name="Please enter a valid email address" xml:space="preserve">
+    <value>Bitte geben Sie eine gültige E-Mail-Adresse ein</value>
+  </data>
+  <data name="Enter your email address" xml:space="preserve">
+    <value>Bitte geben Sie Ihre E-Mail-Adresse ein</value>
   </data>
   <data name="Time Zone" xml:space="preserve">
     <value>Zeitzone</value>
   </data>
+  <data name="Select a time zone" xml:space="preserve">
+    <value>Wählen Sie eine Zeitzone aus</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>Sprache</value>
+  </data>
+  <data name="Select a language" xml:space="preserve">
+    <value>Wählen Sie eine Sprache aus</value>
   </data>
   <data name="Complete Registration" xml:space="preserve">
     <value>Registrierung abschließen</value>
