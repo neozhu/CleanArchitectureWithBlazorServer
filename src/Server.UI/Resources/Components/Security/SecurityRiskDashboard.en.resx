@@ -132,6 +132,9 @@
   <data name="Security Risk Analysis Dashboard" xml:space="preserve">
     <value>Security Risk Analysis Dashboard</value>
   </data>
+  <data name="Refresh Dashboard" xml:space="preserve">
+    <value>Refresh Dashboard</value>
+  </data>
   <data name="Total Users" xml:space="preserve">
     <value>Total Users</value>
   </data>

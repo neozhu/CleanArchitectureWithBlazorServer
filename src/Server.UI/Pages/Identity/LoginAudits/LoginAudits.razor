@@ -70,7 +70,7 @@
         </PropertyColumn>
         <PropertyColumn Style="width:100px" Property="x => x.Provider" Title="@L[_currentDto.GetMemberDescription(x => x.Provider)]">
             <CellTemplate>
-                <MudChip T="string" Color="Color.Info" Size="Size.Small">@(context.Item.Provider ?? "Local")</MudChip>
+                <MudChip T="string" Color="Color.Info" Size="Size.Small">@(context.Item.Provider ?? L["Local"])</MudChip>
             </CellTemplate>
         </PropertyColumn>
         <PropertyColumn Style="width:120px" Property="x => x.BrowserInfo" Title="@L[_currentDto.GetMemberDescription(x => x.BrowserInfo)]">
@@ -183,6 +183,6 @@
         if (browserInfo.Contains("Edge"))
             return "Edge";
         
-        return "Other";
+        return L["Other"];
     }
 }

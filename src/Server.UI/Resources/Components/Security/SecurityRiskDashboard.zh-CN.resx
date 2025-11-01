@@ -80,6 +80,9 @@
   <data name="Security Risk Analysis Dashboard" xml:space="preserve">
     <value>安全风险分析仪表板</value>
   </data>
+  <data name="Refresh Dashboard" xml:space="preserve">
+    <value>刷新仪表板</value>
+  </data>
   <data name="Total Users" xml:space="preserve">
     <value>用户总数</value>
   </data>

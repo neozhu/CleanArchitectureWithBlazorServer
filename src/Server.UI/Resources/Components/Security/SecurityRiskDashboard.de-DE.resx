@@ -80,6 +80,9 @@
   <data name="Security Risk Analysis Dashboard" xml:space="preserve">
     <value>Dashboard für Sicherheitsrisikoanalyse</value>
   </data>
+  <data name="Refresh Dashboard" xml:space="preserve">
+    <value>Dashboard aktualisieren</value>
+  </data>
   <data name="Total Users" xml:space="preserve">
     <value>Gesamtanzahl der Benutzer</value>
   </data>

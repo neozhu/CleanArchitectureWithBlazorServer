@@ -98,9 +98,18 @@
     <value>登录状态</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>查询</value>
+    <value>搜索</value>
   </data>
   <data name="Successful" xml:space="preserve">
-    <value>成功的</value>
+    <value>成功</value>
+  </data>
+  <data name="List View" xml:space="preserve">
+    <value>列表视图</value>
+  </data>
+  <data name="Local" xml:space="preserve">
+    <value>本地</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>其他</value>
   </data>
 </root>

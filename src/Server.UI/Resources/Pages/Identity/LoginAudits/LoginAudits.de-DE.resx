@@ -162,4 +162,13 @@
   <data name="Login Audits" xml:space="preserve">
     <value>Anmelde-Audits</value>
   </data>
+  <data name="List View" xml:space="preserve">
+    <value>Listenansicht</value>
+  </data>
+  <data name="Local" xml:space="preserve">
+    <value>Lokal</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Andere</value>
+  </data>
 </root>
