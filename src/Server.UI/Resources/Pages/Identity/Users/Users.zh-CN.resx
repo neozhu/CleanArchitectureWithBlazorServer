@@ -126,7 +126,7 @@
   <data name="Confirm New Password" xml:space="preserve">
     <value>确认新密码</value>
   </data>
-  <data name="confirm password is required!" xml:space="preserve">
+  <data name="confirm password is required." xml:space="preserve">
     <value>需要确认密码！</value>
   </data>
   <data name="Create a new user" xml:space="preserve">
@@ -147,7 +147,7 @@
   <data name="New Password" xml:space="preserve">
     <value>新密码</value>
   </data>
-  <data name="password is required!" xml:space="preserve">
+  <data name="password is required." xml:space="preserve">
     <value>密码是必需的！</value>
   </data>
   <data name="Phone Number" xml:space="preserve">

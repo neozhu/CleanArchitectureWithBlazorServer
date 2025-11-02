@@ -138,7 +138,7 @@
   <data name="Name" xml:space="preserve">
     <value>名称</value>
   </data>
-  <data name="Name is required!" xml:space="preserve">
+  <data name="Name is required." xml:space="preserve">
     <value>名称为必填项！</value>
   </data>
   <data name="Picklist" xml:space="preserve">
@@ -159,13 +159,13 @@
   <data name="Text" xml:space="preserve">
     <value>文本</value>
   </data>
-  <data name="Text is required!" xml:space="preserve">
+  <data name="Text is required." xml:space="preserve">
     <value>文本为必填项！</value>
   </data>
   <data name="Value" xml:space="preserve">
     <value>值</value>
   </data>
-  <data name="Value is required!" xml:space="preserve">
+  <data name="Value is required." xml:space="preserve">
     <value>值为必填项！</value>
   </data>
 </root>

@@ -126,7 +126,7 @@
   <data name="Confirm New Password" xml:space="preserve">
     <value>Confirm New Password</value>
   </data>
-  <data name="confirm password is required!" xml:space="preserve">
+  <data name="confirm password is required." xml:space="preserve">
     <value>confirm password is required!</value>
   </data>
   <data name="Create a new user" xml:space="preserve">
@@ -147,7 +147,7 @@
   <data name="New Password" xml:space="preserve">
     <value>New Password</value>
   </data>
-  <data name="password is required!" xml:space="preserve">
+  <data name="password is required." xml:space="preserve">
     <value>password is required!</value>
   </data>
   <data name="Phone Number" xml:space="preserve">

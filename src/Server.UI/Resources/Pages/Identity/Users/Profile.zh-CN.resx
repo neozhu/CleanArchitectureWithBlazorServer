@@ -150,7 +150,7 @@
   <data name="Current Password" xml:space="preserve">
     <value>当前密码</value>
   </data>
-  <data name="current password is required!" xml:space="preserve">
+  <data name="current password is required." xml:space="preserve">
     <value>需要当前密码！</value>
   </data>
   <data name="Display Name" xml:space="preserve">
@@ -162,7 +162,7 @@
   <data name="New Password" xml:space="preserve">
     <value>新密码</value>
   </data>
-  <data name="password is required!" xml:space="preserve">
+  <data name="password is required." xml:space="preserve">
     <value>密码是必需的！</value>
   </data>
   <data name="Phone Number" xml:space="preserve">

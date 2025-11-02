@@ -150,7 +150,7 @@
   <data name="Current Password" xml:space="preserve">
     <value>Current Password</value>
   </data>
-  <data name="current password is required!" xml:space="preserve">
+  <data name="current password is required." xml:space="preserve">
     <value>current password is required!</value>
   </data>
   <data name="Display Name" xml:space="preserve">
@@ -162,7 +162,7 @@
   <data name="New Password" xml:space="preserve">
     <value>New Password</value>
   </data>
-  <data name="password is required!" xml:space="preserve">
+  <data name="password is required." xml:space="preserve">
     <value>password is required!</value>
   </data>
   <data name="Phone Number" xml:space="preserve">

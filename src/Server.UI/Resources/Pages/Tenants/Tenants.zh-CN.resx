@@ -136,13 +136,13 @@
   <data name="Tenant Id" xml:space="preserve">
     <value>租户 ID</value>
   </data>
-  <data name="Tenant id is required!" xml:space="preserve">
+  <data name="Tenant id is required." xml:space="preserve">
     <value>需要租客身份证！</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>租户名称</value>
   </data>
-  <data name="Tenant name is required!" xml:space="preserve">
+  <data name="Tenant name is required." xml:space="preserve">
     <value>租客姓名为必填项！</value>
   </data>
   <data name="Tenants" xml:space="preserve">

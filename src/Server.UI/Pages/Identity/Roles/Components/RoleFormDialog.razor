@@ -15,7 +15,7 @@
                                  Required="true"
                                  For="@(() => Model.Name)"
                                  Validation="@(new Func<string, IEnumerable<string>>(ValidateName))"
-                                 RequiredError="@L["Role name is required!"]"
+                                 RequiredError="@L["Role name is required."]"
                                  MaxLength="50"
                                  Immediate="true">
                     </MudTextField>

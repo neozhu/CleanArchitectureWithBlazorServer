@@ -36,17 +36,17 @@
   <data name="Create Contact" xml:space="preserve">
     <value>Kontakt erstellen</value>
   </data>
-  <data name="name is required!" xml:space="preserve">
-    <value>Name ist erforderlich!</value>
+  <data name="name is required." xml:space="preserve">
+    <value>Name ist erforderlich.</value>
   </data>
-  <data name="email is required!" xml:space="preserve">
-    <value>E-Mail ist erforderlich!</value>
+  <data name="email is required." xml:space="preserve">
+    <value>E-Mail ist erforderlich.</value>
   </data>
-  <data name="phone number is required!" xml:space="preserve">
-    <value>Telefonnummer ist erforderlich!</value>
+  <data name="phone number is required." xml:space="preserve">
+    <value>Telefonnummer ist erforderlich.</value>
   </data>
-  <data name="country is required!" xml:space="preserve">
-    <value>Land ist erforderlich!</value>
+  <data name="country is required." xml:space="preserve">
+    <value>Land ist erforderlich.</value>
   </data>
   <data name="Id" xml:space="preserve">
     <value>ID</value>
@@ -65,5 +65,20 @@
   </data>
   <data name="Country" xml:space="preserve">
     <value>Land</value>
+  </data>
+  <data name="Enter contact name" xml:space="preserve">
+    <value>Kontaktnamen eingeben</value>
+  </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>Beschreibung eingeben</value>
+  </data>
+  <data name="Enter email address" xml:space="preserve">
+    <value>E-Mail-Adresse eingeben</value>
+  </data>
+  <data name="Enter phone number" xml:space="preserve">
+    <value>Telefonnummer eingeben</value>
+  </data>
+  <data name="Enter country" xml:space="preserve">
+    <value>Land eingeben</value>
   </data>
 </root>

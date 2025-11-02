@@ -159,13 +159,13 @@
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
-  <data name="Name is required!" xml:space="preserve">
+  <data name="Name is required." xml:space="preserve">
     <value>Name is required!</value>
   </data>
-  <data name="Value is required!" xml:space="preserve">
+  <data name="Value is required." xml:space="preserve">
     <value>Value is required!</value>
   </data>
-  <data name="Text is required!" xml:space="preserve">
+  <data name="Text is required." xml:space="preserve">
     <value>Text is required!</value>
   </data>
 </root>

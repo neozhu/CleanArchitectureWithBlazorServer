@@ -24,19 +24,19 @@
         <MudForm Model="@_model" @ref="@_contactForm" Validation="@(Validator.ValidateValue(_model))">
             <MudGrid Spacing="2">
                 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Name)]" @bind-Value="_model.Name" For="@(() => _model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
+                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Name)]" @bind-Value="_model.Name" For="@(() => _model.Name)" Required="true" RequiredError="@L["name is required."]" Placeholder="@L["Enter contact name"]"></MudTextField>
                 </MudItem> 
 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Description)]"  For="@(() => _model.Description)" @bind-Value="_model.Description"></MudTextField>
+                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Description)]"  For="@(() => _model.Description)" @bind-Value="_model.Description" Placeholder="@L["Enter description"]"></MudTextField>
                 </MudItem> 
 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Email)]" @bind-Value="_model.Email" For="@(() => _model.Email)" Required="false" RequiredError="@L["email is required!"]"></MudTextField>
+                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Email)]" @bind-Value="_model.Email" For="@(() => _model.Email)" Required="false" RequiredError="@L["email is required."]" Placeholder="@L["Enter email address"]"></MudTextField>
                 </MudItem> 
 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="_model.PhoneNumber" For="@(() => _model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required!"]"></MudTextField>
+                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="_model.PhoneNumber" For="@(() => _model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required."]" Placeholder="@L["Enter phone number"]"></MudTextField>
                 </MudItem> 
 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Country)]" @bind-Value="_model.Country" For="@(() => _model.Country)" Required="false" RequiredError="@L["country is required!"]"></MudTextField>
+                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Country)]" @bind-Value="_model.Country" For="@(() => _model.Country)" Required="false" RequiredError="@L["country is required."]" Placeholder="@L["Enter country"]"></MudTextField>
                 </MudItem> 
 
             </MudGrid>

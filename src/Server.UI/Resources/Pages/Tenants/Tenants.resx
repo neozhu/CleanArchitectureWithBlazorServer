@@ -136,13 +136,13 @@
   <data name="Tenant Id" xml:space="preserve">
     <value>Tenant Id</value>
   </data>
-  <data name="Tenant id is required!" xml:space="preserve">
+  <data name="Tenant id is required." xml:space="preserve">
     <value>Tenant id is required!</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>Tenant Name</value>
   </data>
-  <data name="Tenant name is required!" xml:space="preserve">
+  <data name="Tenant name is required." xml:space="preserve">
     <value>Tenant name is required!</value>
   </data>
   <data name="Tenants" xml:space="preserve">

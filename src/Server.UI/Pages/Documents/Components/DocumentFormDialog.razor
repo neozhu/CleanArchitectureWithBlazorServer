@@ -13,14 +13,14 @@
                     <MudTextField Label="@L["Title"]" @bind-Value="Model.Title"
                                   For="@(() => Model.Title)"
                                   Required="true"
-                                  RequiredError="@L["Title is required!"]">
+                                  RequiredError="@L["Title is required."]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <MudSelect Label="@L["Select Document Type"]"
                                For="@(() => Model.DocumentType)"
                                Required="true"
-                               RequiredError="@L["Document type is required!"]"
+                               RequiredError="@L["Document type is required."]"
                                @bind-Value="Model.DocumentType">
                         @foreach (var doctype in Enum.GetValues<DocumentType>())
                         {

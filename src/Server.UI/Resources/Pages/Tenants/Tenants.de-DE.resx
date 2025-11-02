@@ -136,13 +136,13 @@
   <data name="Tenant Id" xml:space="preserve">
     <value>Mieter-ID</value>
   </data>
-  <data name="Tenant id is required!" xml:space="preserve">
+  <data name="Tenant id is required." xml:space="preserve">
     <value>Mieterausweis erforderlich!</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>Name des Mieters</value>
   </data>
-  <data name="Tenant name is required!" xml:space="preserve">
+  <data name="Tenant name is required." xml:space="preserve">
     <value>Name des Mieters ist erforderlich!</value>
   </data>
   <data name="Tenants" xml:space="preserve">

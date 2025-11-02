@@ -36,17 +36,17 @@
   <data name="Create Contact" xml:space="preserve">
     <value>创建联系人</value>
   </data>
-  <data name="name is required!" xml:space="preserve">
-    <value>姓名为必填项！</value>
+  <data name="name is required." xml:space="preserve">
+    <value>姓名为必填项。</value>
   </data>
-  <data name="email is required!" xml:space="preserve">
-    <value>电子邮件为必填项！</value>
+  <data name="email is required." xml:space="preserve">
+    <value>电子邮件为必填项。</value>
   </data>
-  <data name="phone number is required!" xml:space="preserve">
-    <value>电话号码为必填项！</value>
+  <data name="phone number is required." xml:space="preserve">
+    <value>电话号码为必填项。</value>
   </data>
-  <data name="country is required!" xml:space="preserve">
-    <value>国家为必填项！</value>
+  <data name="country is required." xml:space="preserve">
+    <value>国家为必填项。</value>
   </data>
   <data name="Id" xml:space="preserve">
     <value>编号</value>
@@ -65,5 +65,20 @@
   </data>
   <data name="Country" xml:space="preserve">
     <value>国家</value>
+  </data>
+  <data name="Enter contact name" xml:space="preserve">
+    <value>请输入联系人姓名</value>
+  </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>请输入描述</value>
+  </data>
+  <data name="Enter email address" xml:space="preserve">
+    <value>请输入电子邮件地址</value>
+  </data>
+  <data name="Enter phone number" xml:space="preserve">
+    <value>请输入电话号码</value>
+  </data>
+  <data name="Enter country" xml:space="preserve">
+    <value>请输入国家</value>
   </data>
 </root>
