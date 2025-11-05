@@ -2,28 +2,29 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
+using CleanArchitecture.Blazor.Application.Common.Constants;
+using CleanArchitecture.Blazor.Application.Common.Interfaces; // IDataSourceService
 using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Application.Common.Security;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
-using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
+using CleanArchitecture.Blazor.Infrastructure.Services;
 using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.Gemini;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
+using MaxMind.GeoIP2;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.Http;
-using CleanArchitecture.Blazor.Application.Common.Constants;
-using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
-using CleanArchitecture.Blazor.Infrastructure.Services;
-using CleanArchitecture.Blazor.Application.Common.Interfaces; // IDataSourceService
-using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
-using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -80,6 +81,8 @@ public static class DependencyInjection
         services.Configure<AISettings>(configuration.GetSection(AISettings.Key))
             .AddSingleton(s => s.GetRequiredService<IOptions<AISettings>>().Value)
             .AddSingleton<IAISettings>(s => s.GetRequiredService<IOptions<AISettings>>().Value);
+
+       
         return services;
     }
     #endregion
@@ -171,17 +174,15 @@ public static class DependencyInjection
         services.AddScoped<ITenantSwitchService, TenantSwitchService>();
 
 
-        // Configure HttpClient for GeolocationService
-        services.AddHttpClient<IGeolocationService, GeolocationService>(client =>
-        {
-            client.Timeout = TimeSpan.FromSeconds(10);
-            client.DefaultRequestHeaders.Add("User-Agent", "CleanArchitectureBlazorServer/1.0");
-        });
+
 
         // Configure SecurityAnalysisService with options
+        services.Configure<WebServiceClientOptions>(configuration.GetSection("MaxMind"));
+        services.AddHttpClient<WebServiceClient>();
+
         services.Configure<SecurityAnalysisOptions>(configuration.GetSection(SecurityAnalysisOptions.SectionName));
         services.AddScoped<ISecurityAnalysisService, SecurityAnalysisService>();
-
+       
         return services
             .AddScoped<IValidationService, ValidationService>()
             .AddScoped<IDateTime, DateTimeService>()
@@ -329,7 +330,7 @@ public static class DependencyInjection
         });
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
-
+        
 
         return services;
     }
