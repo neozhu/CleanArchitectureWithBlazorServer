@@ -29,6 +29,8 @@ services:
       - Minio__AccessKey=${MINIO_ACCESS_KEY}
       - Minio__SecretKey=${MINIO_SECRET_KEY}
       - Minio__BucketName=${MINIO_BUCKET}
+      - MaxMind__AccountId=${MAXMIND_ACCOUNT_ID}
+      - MaxMind__LicenseKey=${MAXMIND_LICENSE_KEY}
  
     ports:
       - "5005:80"
