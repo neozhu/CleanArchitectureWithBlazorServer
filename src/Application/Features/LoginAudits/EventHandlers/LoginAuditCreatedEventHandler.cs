@@ -38,7 +38,6 @@ public class LoginAuditCreatedEventHandler : INotificationHandler<LoginAuditCrea
 
     public async Task Handle(LoginAuditCreatedEvent notification, CancellationToken cancellationToken)
     {
-        notification.Item.IpAddress = "186.150.138.239";
         if (!string.IsNullOrEmpty(notification.Item.IpAddress) && !notification.Item.IpAddress.StartsWith("127") && string.IsNullOrEmpty(notification.Item.Region))
         {
             try
