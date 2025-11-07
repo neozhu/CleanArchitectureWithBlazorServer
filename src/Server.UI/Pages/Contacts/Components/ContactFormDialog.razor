@@ -5,88 +5,63 @@
 @inject IStringLocalizer<Contacts> L
 
 <MudDialog>
-    <DialogContent>
-        <MudForm Model="@_model" @ref="@_contactForm" Validation="@(Validator.ValidateValue(_model))">
-            <MudGrid>
-                <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Name)]" @bind-Value="_model.Name" For="@(() => _model.Name)" Required="true" RequiredError="@L["name is required."]" Placeholder="@L["Enter contact name"]"></MudTextField>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Description)]"  For="@(() => _model.Description)" @bind-Value="_model.Description" Placeholder="@L["Enter description"]"></MudTextField>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Email)]" @bind-Value="_model.Email" For="@(() => _model.Email)" Required="false" RequiredError="@L["email is required."]" Placeholder="@L["Enter email address"]"></MudTextField>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="_model.PhoneNumber" For="@(() => _model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required."]" Placeholder="@L["Enter phone number"]"></MudTextField>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Country)]" @bind-Value="_model.Country" For="@(() => _model.Country)" Required="false" RequiredError="@L["country is required."]" Placeholder="@L["Enter country"]"></MudTextField>
-                </MudItem> 
+	<DialogContent>
+		<MudForm Model="@_model" @ref="@_contactForm" Validation="@(Validator.ValidateValue(_model))">
+			<MudGrid>
+				<MudItem xs="12" md="6">
+					<MudTextField Label="@L[_model.GetMemberDescription(x => x.Name)]" @bind-Value="_model.Name" For="@(() => _model.Name)" Required="true" RequiredError="@L["name is required."]" Placeholder="@L["Enter contact name"]"></MudTextField>
+				</MudItem>
+				<MudItem xs="12" md="6">
+					<MudTextField Label="@L[_model.GetMemberDescription(x => x.Description)]" For="@(() => _model.Description)" @bind-Value="_model.Description" Placeholder="@L["Enter description"]"></MudTextField>
+				</MudItem>
+				<MudItem xs="12" md="6">
+					<MudTextField Label="@L[_model.GetMemberDescription(x => x.Email)]" @bind-Value="_model.Email" For="@(() => _model.Email)" Required="false" RequiredError="@L["email is required."]" Placeholder="@L["Enter email address"]"></MudTextField>
+				</MudItem>
+				<MudItem xs="12" md="6">
+					<MudTextField Label="@L[_model.GetMemberDescription(x => x.PhoneNumber)]" @bind-Value="_model.PhoneNumber" For="@(() => _model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required."]" Placeholder="@L["Enter phone number"]"></MudTextField>
+				</MudItem>
+				<MudItem xs="12" md="6">
+					<MudTextField Label="@L[_model.GetMemberDescription(x => x.Country)]" @bind-Value="_model.Country" For="@(() => _model.Country)" Required="false" RequiredError="@L["country is required."]" Placeholder="@L["Enter country"]"></MudTextField>
+				</MudItem>
 
-            </MudGrid>
-        </MudForm>
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">@AppStrings.Cancel</MudButton>
+			</MudGrid>
+		</MudForm>
+	</DialogContent>
+	<DialogActions>
+		<MudButton OnClick="Cancel">@AppStrings.Cancel</MudButton>
 		<MudLoadingButton Loading="@_saving" OnClick="OnSubmit" Color="Color.Primary" Variant="Variant.Outlined">@AppStrings.Save</MudLoadingButton>
-    </DialogActions>
+	</DialogActions>
 </MudDialog>
 
 @code {
-    MudForm _contactForm = new();
-    private bool _saving = false;
-    private bool _savingnew = false;
-    [CascadingParameter]
-    IMudDialogInstance MudDialog { get; set; } = default!;
-    [EditorRequired] [Parameter] public AddEditContactCommand _model { get; set; } = null!;
-    async Task OnSubmit()
-    {
-        try
-        {
-            _saving = true;
-            await _contactForm.Validate().ConfigureAwait(false);
-            if (!_contactForm.IsValid)
-                return;
-            var result = await Mediator.Send(_model);
-            result.Match(data =>
-            {
-                MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add(AppStrings.SaveSuccess, MudBlazor.Severity.Info);
-            }, errors =>
-            {
-                Snackbar.Add(errors, MudBlazor.Severity.Error);
-            });
-        }
-        finally
-        {
-            _saving = false;
-        }
-    }
-    async Task OnSaveAndNew()
-    {
-        try
-        {
-            _savingnew = true;
-            await _contactForm.Validate().ConfigureAwait(false);
-            if (!_contactForm.IsValid)
-               return;
-            var result = await Mediator.Send(_model);
-            await result.MatchAsync(async data =>
-            {
-                Snackbar.Add(AppStrings.SaveSuccess, MudBlazor.Severity.Info);
-                await Task.Delay(300);
-                _model = new AddEditContactCommand() { };
-            }, errors =>
-            {
-                Snackbar.Add(errors, MudBlazor.Severity.Error);
-                return Task.CompletedTask;
-            });
-        }
-        finally
-        {
-            _savingnew = false;
-        }
-    }
-    void Cancel() => MudDialog.Cancel();
+	MudForm _contactForm = new();
+	private bool _saving = false;
+	[CascadingParameter]
+	IMudDialogInstance MudDialog { get; set; } = default!;
+	[EditorRequired][Parameter] public AddEditContactCommand _model { get; set; } = null!;
+	async Task OnSubmit()
+	{
+		try
+		{
+			_saving = true;
+			await _contactForm.Validate().ConfigureAwait(false);
+			if (!_contactForm.IsValid)
+				return;
+			var result = await Mediator.Send(_model);
+			result.Match(data =>
+			{
+				MudDialog.Close(DialogResult.Ok(true));
+				Snackbar.Add(AppStrings.SaveSuccess, MudBlazor.Severity.Info);
+			}, errors =>
+			{
+				Snackbar.Add(errors, MudBlazor.Severity.Error);
+			});
+		}
+		finally
+		{
+			_saving = false;
+		}
+	}
+
+	void Cancel() => MudDialog.Cancel();
 }
