@@ -11,10 +11,12 @@ public class PicklistAutocomplete<T> : MudAutocomplete<string>
         Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
-        
+
     }
 
-    [Parameter] public Picklist Picklist { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public Picklist Picklist { get; set; }
 
     [Inject] private IDataSourceService<PicklistSetDto> PicklistService { get; set; } = default!;
 
@@ -30,7 +32,7 @@ public class PicklistAutocomplete<T> : MudAutocomplete<string>
             await PicklistService.InitializeAsync();
         }
     }
-         
+
 
     private async Task PicklistService_OnChange()
     {
@@ -43,31 +45,22 @@ public class PicklistAutocomplete<T> : MudAutocomplete<string>
         await base.DisposeAsyncCore();
     }
 
-    private async Task<IEnumerable<string>> SearchFunc_(string? value,  CancellationToken cancellation = default)
+    private async Task<IEnumerable<string>> SearchFunc_(string? value, CancellationToken cancellation = default)
     {
         // if text is null or empty, show complete list
-        var term = value?.Trim();
-
+        var term = value?.Trim()??string.Empty;
         Expression<Func<PicklistSetDto, bool>> predicate;
-
-        if (string.IsNullOrEmpty(term))
-        {
-            predicate = x => x.Name == Picklist;
-        }
-        else
-        {
-            predicate = x =>
-                x.Name == Picklist &&
-                (
-                    (x.Value != null && x.Value.Contains(term)) ||
-                    (x.Text  != null && x.Text.Contains(term))
-                );
-        }
+        predicate = x =>
+            x.Name == Picklist &&
+            (
+                (x.Value != null && x.Value.Contains(term)) ||
+                (x.Text != null && x.Text.Contains(term))
+            );
 
         var limit = MaxItems > 0 ? MaxItems : null;
         var results = await PicklistService.SearchAsync(predicate, limit, cancellation);
         return results.Select(x => x.Value ?? string.Empty);
     }
 
-    
+
 }
