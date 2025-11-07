@@ -2,25 +2,35 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>CleanArchitecture.Blazor.Solution.Template</id>
-        <version>1.30.2</version>
+        <version>1.30.3</version>
         <title>Clean Architecture Blazor Solution Template</title>
         <authors>hl.z</authors>
-        <description>Clean Architecture Blazor Solution Template for .NET9.</description>
+        <description>Clean Architecture Blazor Solution Template for .NET 10.</description>
         <summary>
-            A Clean Architecture Blazor Server dashboard application template for .NET9.
+            A Clean Architecture Blazor Server dashboard application template for .NET 10.
         </summary>
         <releaseNotes><![CDATA[
 1.30.2
+ - Upgraded to .NET 10 (including all project files, Docker images, and dependencies)
+ - Updated all Microsoft packages to .NET 10 RC2 (10.0.0-rc.2.25502.107)
+ - Updated Entity Framework Core to version 10.0.0-rc.2
+ - Updated ASP.NET Core packages to version 10.0.0-rc.2
+ - Upgraded third-party packages for .NET 10 compatibility:
+   - Npgsql.EntityFrameworkCore.PostgreSQL → 10.0.0-rc.2
+   - EFCore.NamingConventions → 10.0.0-rc.2
+   - Hangfire packages → 1.8.22
+   - Minio → 7.0.0
+   - QuestPDF → 2025.12.0-alpha3
+   - NUnit3TestAdapter → 6.0.0-beta.1
+ - Updated Docker base images to .NET 10 runtime and SDK
  - Added full Specification pattern support (spec) for advanced querying and filtering
  - Integrated Stl.Fusion for real-time UI/state updates across sessions
  - Implemented Google and Microsoft external provider authentication enhancements
  - Improved multi-tenant context handling and tenant switch service
  - Enhanced Document OCR pipeline (Gemini integration and job reliability fixes)
- - Fixed prior OCR process stability issues
  - Added Security Risk Dashboard and user login risk summary indicators
  - Picklist and PicklistSet import/export and advanced specification filtering
  - Added comprehensive validation and exception handling pipeline behaviours
- - Added welcome and MFA factor code notification commands
  - Theme customization (dynamic primary color and themes menu improvements)
  - Localization and culture enhancements (multi-language resource sets)
  - Added global search dialog and improved navigation menu structure
@@ -29,7 +39,7 @@
  - Strengthened security analysis and audit logging (LoginAudits, AuditTrails, SystemLogs)
  - Added user profile reactive state management and session tracking
  - Added AI settings configuration interface
- - Updated EF Core configurations and initial migrations for .NET9
+ - Updated EF Core configurations and migrations for .NET 10
 ]]></releaseNotes>
 
         <projectUrl>https://github.com/neozhu/CleanArchitectureWithBlazorServer</projectUrl>
