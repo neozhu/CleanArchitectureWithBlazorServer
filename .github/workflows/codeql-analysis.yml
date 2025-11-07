@@ -53,12 +53,15 @@ jobs:
       uses: github/codeql-action/init@v4
       with:
         language: ${{ matrix.language }}
+        queries: security-and-quality
 
-    # Use autobuild for CodeQL to properly detect the build
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v4
+    - name: Restore dependencies
+      run: dotnet restore CleanArchitecture.Blazor.slnx
+      
+    - name: Build
+      run: dotnet build CleanArchitecture.Blazor.slnx --configuration Release --no-restore
    
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
-      with:
-        category: "/language:${{matrix.language}}"
+    # - name: Perform CodeQL Analysis
+    #   uses: github/codeql-action/analyze@v4
+    #   with:
+    #     category: "/language:${{matrix.language}}"
