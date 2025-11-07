@@ -14,7 +14,7 @@ name: "CodeQL"
 on:
   push:
     branches: [ "main" ]
-    aths-ignore:
+    paths-ignore:
       - "deploy/**"
   pull_request:
     # The branches below must be a subset of the branches above
@@ -33,6 +33,10 @@ jobs:
        security-events: write
        pull-requests: read
 
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
         
     steps:  
     - name: Checkout repository
@@ -40,9 +44,9 @@ jobs:
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       with:
-        languages: csharp
+        language: ${{ matrix.language }}
 
     # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
     # If this step fails, then you should remove it and run the build manually (see below)
@@ -62,6 +66,7 @@ jobs:
       uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
+        include-prerelease: true
 
 
     - name: Restore dependencies
@@ -72,4 +77,4 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
-        languages: csharp
+        category: "/language:${{matrix.language}}"
