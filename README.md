@@ -1,4 +1,4 @@
-﻿# Clean Architecture Blazor Server
+# Clean Architecture Blazor Server
 
 [![Build](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/codeql-analysis.yml)
@@ -10,7 +10,7 @@
 
 ## 🎯 Overview
 
-This project is a production-ready Blazor Server application template that demonstrates Clean Architecture implementation with .NET 9 and follows **Blazor Clean Architecture best practices**.
+This project is a production-ready Blazor Server application template that demonstrates Clean Architecture implementation with **.NET 10** and follows **Blazor Clean Architecture best practices**.
 It provides a solid foundation for building scalable, maintainable enterprise applications with modern **spec-driven development practices**.
 
 ### Key Features
@@ -46,7 +46,7 @@ Experience the application in action:
 | Layer | Technologies |
 |-------|-------------|
 | **Frontend** | Blazor Server, MudBlazor, SignalR |
-| **Backend** | .NET 9, ASP.NET Core, MediatR, FluentValidation |
+| **Backend** | .NET 10, ASP.NET Core, MediatR, FluentValidation |
 | **Database** | Entity Framework Core, MSSQL/PostgreSQL/SQLite |
 | **Authentication** | ASP.NET Core Identity, OAuth 2.0, JWT |
 | **Caching** | FusionCache, Redis |
@@ -89,7 +89,7 @@ The project includes a comprehensive [Development Workflow](docs/) with:
 
 ### Prerequisites
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/) or [Rider](https://www.jetbrains.com/rider/)
 - [Docker Desktop](https://www.docker.com/) (optional)
 
@@ -150,7 +150,7 @@ See [Docker Setup Documentation](#docker-setup-for-blazor-server-application) fo
 OpenSpec enables spec-driven, reviewable changes with clear proposals, deltas, and tasks. This repo includes guidance in `openspec/AGENTS.md` and a project context in `openspec/project.md`.
 
 - Read the quickstart: `openspec/AGENTS.md`
-- Project conventions and patterns: `openspec/project.md` (see “New Entity/Feature Guide (Contacts Pattern)”) 
+- Project conventions and patterns: `openspec/project.md` (see "New Entity/Feature Guide (Contacts Pattern)") 
 
 ### Workflow
 
@@ -181,7 +181,7 @@ OpenSpec enables spec-driven, reviewable changes with clear proposals, deltas, a
   - For data access in handlers use `IApplicationDbContextFactory` and per-operation context lifetime:
     - `await using var db = await _dbContextFactory.CreateAsync(cancellationToken);`
   - Follow MediatR pipeline behaviors, caching tags, and specification patterns.
-  - Mirror the Contacts module for a new entity’s DTOs, commands, queries, specs, security, and UI pages/components.
+  - Mirror the Contacts module for a new entity's DTOs, commands, queries, specs, security, and UI pages/components.
 
 5) Archive after deployment
 - Move `openspec/changes/<id>/` to `openspec/changes/archive/YYYY-MM-DD-<id>/` (or use the CLI archive helper if available).
@@ -236,7 +236,7 @@ The system SHALL allow users to create, edit, view, list, and delete customers w
 Tips
 - Use Contacts as the reference implementation for structure and conventions.
 - Add menu entries in `src/Server.UI/Services/Navigation/MenuService.cs`.
-- Define permissions under `Permissions.<Module>` and they’ll be picked up during seeding.
+- Define permissions under `Permissions.<Module>` and they'll be picked up during seeding.
 
 ## 🔧 Code Generation
 
