@@ -41,6 +41,14 @@ public class MenuService : IMenuService
                         }
                     }
                 },
+                 new()
+                {
+                    Title = "Chatbot",
+                    Roles = new[] { Roles.Admin, Roles.Users },
+                    Icon = Icons.Material.Filled.ChatBubble,
+                    Href ="/ai/chatbot",
+                    PageStatus = PageStatus.Completed
+                },
                 new()
                 {
                     Title = "Analytics",
@@ -56,15 +64,8 @@ public class MenuService : IMenuService
                     Icon = Icons.Material.Filled.Money,
                     Href = "/banking",
                     PageStatus = PageStatus.ComingSoon
-                },
-                new()
-                {
-                    Title = "Booking",
-                    Roles = new[] { Roles.Admin, Roles.Users },
-                    Icon = Icons.Material.Filled.CalendarToday,
-                    Href = "/booking",
-                    PageStatus = PageStatus.ComingSoon
                 }
+               
             }
         },
         new MenuSectionModel

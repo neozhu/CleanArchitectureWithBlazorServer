@@ -22,6 +22,7 @@ using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using QuestPDF;
 using QuestPDF.Infrastructure;
+using Betalgo.Ranul.OpenAI.Extensions;
 
 
 
@@ -102,6 +103,9 @@ public static class DependencyInjection
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             c.DefaultRequestHeaders.Add("x-goog-api-key", aiSettings.GeminiApiKey);
            
+        });
+        services.AddOpenAIService(s => {
+            s.ApiKey = config.GetValue<string>("AISettings:OpenAIApiKey")??string.Empty;
         });
         services.AddScoped<LocalTimeOffset>();
         services.AddScoped<HubClient>();
