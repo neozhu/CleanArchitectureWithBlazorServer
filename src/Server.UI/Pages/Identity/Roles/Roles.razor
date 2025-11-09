@@ -12,7 +12,7 @@
 
 @attribute [Authorize(Policy = Permissions.Roles.View)]
 @inherits OwningComponentBase
-@inject IRoleService _roleService
+@inject IDataSourceService<ApplicationRoleDto> _roleService
 @inject IFusionCache _fusionCache
 @inject IStringLocalizer<Roles> _localizer
 @inject IExcelService ExcelService

@@ -163,7 +163,6 @@ public static class DependencyInjection
     {
         // Auto-discover and register all IDataSourceService<T> implementations
         services.AddDataSourceServices();
-        services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ITenantSwitchService, TenantSwitchService>();
 
 

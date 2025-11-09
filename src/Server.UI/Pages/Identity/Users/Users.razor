@@ -18,7 +18,7 @@
 @using System.Globalization
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
 @using ZiggyCreatures.Caching.Fusion
-@using CleanArchitecture.Blazor.Application.Common.Interfaces; 
+@using CleanArchitecture.Blazor.Application.Common.Interfaces;
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 
 @attribute [Authorize(Policy = Permissions.Users.View)]
@@ -31,7 +31,7 @@
 @inject IFusionCache FusionCache
 @inject IExcelService ExcelService
 @inject IMailService MailService
-@inject IRoleService RoleService
+@inject IDataSourceService<ApplicationRoleDto> RoleService
 @inject IStringLocalizer<Users> Localizer
 @inject IUserProfileState UserProfileState
 @inject ILogger<Users> Logger
@@ -39,194 +39,197 @@
 <PageTitle>@Title</PageTitle>
 
 <MudDataGrid T="ApplicationUserDto" @ref="_dataGrid"
-             FixedHeader="true"
-             FixedFooter="false"
-             @bind-RowsPerPage="_defaultPageSize"
-             Hover="true"
-             SelectOnRowClick="false"
-             MultiSelection="true"
-             @bind-SelectedItems="_selectedUsers"
-             Loading="@_isLoading"
-             ServerData="@(LoadServerData)">
-    <ToolBarContent>
-        <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
-            <MudStack Row AlignItems="AlignItems.Start">
-                <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large" />
-                <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle2" Class="mb-2">@Localizer["Users"]</MudText>
-                    <MudSelect T="string" Style="min-width:120px" ValueChanged="TenantListViewChanged" Value="@_selectedTenantId" Dense="true" Label="@Localizer["List View"]">
-                        <MudSelectItem T="string" Value="@string.Empty">@Localizer["ALL"]</MudSelectItem>
-                        @foreach (var tenant in TenantService.DataSource)
-                        {
-                            <MudSelectItem T="string" Value="@tenant.Id">@tenant.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudStack>
-            </MudStack>
-            <MudStack Spacing="2" AlignItems="AlignItems.End">
-               <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
-                    <MudButton Disabled="@_isLoading"
-                               OnClick="RefreshDataGrid"
-                               StartIcon="@Icons.Material.Outlined.Refresh">
-                        @AppStrings.Refresh
-                    </MudButton>
-                    @if (_accessRights.Create)
-                    {
-                        <MudButton StartIcon="@Icons.Material.Outlined.Add"
-                                   OnClick="CreateUser">
-                            @AppStrings.New
-                        </MudButton>
-                    }
+			 FixedHeader="true"
+			 FixedFooter="false"
+			 @bind-RowsPerPage="_defaultPageSize"
+			 Hover="true"
+			 SelectOnRowClick="false"
+			 MultiSelection="true"
+			 @bind-SelectedItems="_selectedUsers"
+			 Loading="@_isLoading"
+			 ServerData="@(LoadServerData)">
+	<ToolBarContent>
+		<MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
+			<MudStack Row AlignItems="AlignItems.Start">
+				<MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large" />
+				<MudStack Spacing="0">
+					<MudText Typo="Typo.subtitle2" Class="mb-2">@Localizer["Users"]</MudText>
+					<MudSelect T="string" Style="min-width:120px" ValueChanged="TenantListViewChanged" Value="@_selectedTenantId" Dense="true" Label="@Localizer["List View"]">
+						<MudSelectItem T="string" Value="@string.Empty">@Localizer["ALL"]</MudSelectItem>
+						@foreach (var tenant in TenantService.DataSource)
+						{
+							<MudSelectItem T="string" Value="@tenant.Id">@tenant.Name</MudSelectItem>
+						}
+					</MudSelect>
+				</MudStack>
+			</MudStack>
+			<MudStack Spacing="2" AlignItems="AlignItems.End">
+				<MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+					<MudButton Disabled="@_isLoading"
+							   OnClick="RefreshDataGrid"
+							   StartIcon="@Icons.Material.Outlined.Refresh">
+						@AppStrings.Refresh
+					</MudButton>
+					@if (_accessRights.Create)
+					{
+						<MudButton StartIcon="@Icons.Material.Outlined.Add"
+								   OnClick="CreateUser">
+							@AppStrings.New
+						</MudButton>
+					}
 					@if (_accessRights.Delete)
 					{
 						<MudButton Disabled="@(!_selectedUsers.Any())"
 								   StartIcon="@Icons.Material.Outlined.DeleteOutline"
-									 OnClick="DeleteCheckedUsersAsync">
+								   OnClick="DeleteCheckedUsersAsync">
 							@AppStrings.Delete
 						</MudButton>
 					}
-                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@AppStrings.More">
-                        
-                        @if (_accessRights.Export)
-                        {
-                            <MudMenuItem Disabled="@_isExporting"
-                                         OnClick="ExportUsersAsync">
-                                @AppStrings.Export
-                            </MudMenuItem>
-                        }
-                        @if (_accessRights.Import)
-                        {
-                            <MudMenuItem>
-                                <MudFileUpload T="IBrowserFile" FilesChanged="ImportDataAsync" Accept=".xlsx">
-                                    <ActivatorContent>
-                                        <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
-                                                   Variant="Variant.Text"
-                                                   Disabled="@_isUploading">
-                                            @AppStrings.Import
-                                        </MudButton>
-                                    </ActivatorContent>
-                                </MudFileUpload>
-                            </MudMenuItem>
-                        }
-                    </MudMenu>
-				</MudStack>
-                <MudStack Row Spacing="1">
-                    @if (_accessRights.Search)
-                    {
-                        <MudSelect T="string" Placeholder="@Localizer["Search by role name"]" Value="@_searchRole" Clearable="true" ValueChanged="SearchByRole" Style="width:150px">
-                            @foreach (var role in _roles.Select(r => r.Name).Distinct())
-                            {
-                                <MudSelectItem Value="@role">@role</MudSelectItem>
-                            }
-                        </MudSelect>
-                        <MudTextField T="string" Immediate="false" ValueChanged="SearchUsers" Value="@_searchString" Placeholder="@AppStrings.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
-                        </MudTextField>
-                    }
-                </MudStack>
-            </MudStack>
-        </MudStack>
-    </ToolBarContent>
-    <Columns>
-        <SelectColumn ShowInFooter="false" />
-        <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Actions" Sortable="false">
-            <CellTemplate>
-                @if (_accessRights.Edit || _accessRights.Delete || _accessRights.ManageRoles ||
-                                _accessRights.RestPassword || _accessRights.SendRestPasswordMail || _accessRights.ManagePermissions)
-                {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                        @if (_accessRights.Edit)
-                        {
-                            <MudMenuItem OnClick="@(() => EditUser(context.Item))">@AppStrings.Edit</MudMenuItem>
-                        }
-                        @if (_accessRights.Delete)
-                        {
-                            <MudMenuItem OnClick="@(() => DeleteUserAsync(context.Item))">@AppStrings.Delete</MudMenuItem>
-                        }
-                        @if (_accessRights.ManagePermissions)
-                        {
-                            <MudMenuItem OnClick="@(() => OpenPermissionsDrawerAsync(context.Item))">@Localizer["Set Permissions"]</MudMenuItem>
-                        }
-                        @if (_accessRights.SendRestPasswordMail)
-                        {
-                            <MudMenuItem OnClick="@(() => SendResetPasswordEmail(context.Item))">@Localizer["Send Reset Password Email"]</MudMenuItem>
-                        }
-                        @if (_accessRights.RestPassword)
-                        {
-                            <MudMenuItem Disabled="@(!context.Item.IsActive)" OnClick="@(() => ResetPasswordDialog(context.Item))">@Localizer["Reset Password"]</MudMenuItem>
-                        }
-                    </MudMenu>
-                }
-                else
-                {
-                    <MudButton Variant="Variant.Outlined"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
-                        @AppStrings.NoAllowed
-                    </MudButton>
-                }
-            </CellTemplate>
-        </TemplateColumn>
-        <PropertyColumn Property="x => x.Tenant" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.Tenant)]">
-            <CellTemplate>
-                <MudText>@context.Item.Tenant?.Name</MudText>
-            </CellTemplate>
-            <FooterTemplate>
-                @Localizer["Selected"]: @_selectedUsers.Count
-            </FooterTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.UserName" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.UserName)]">
-            <CellTemplate>
-                <UserCard Item="@context.Item" OnSendVerify="SendVerificationEmail" DisplayOnlineStatus="@_canViewOnlineStatus"></UserCard>
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.Superior" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.Superior)]">
-            <CellTemplate>
-                @context.Item.Superior?.UserName
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.Provider" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.Provider)]" />
-        <PropertyColumn Sortable="false" Property="x => x.AssignedRoles" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.AssignedRoles)]">
-            <CellTemplate>
-                @if (context.Item.AssignedRoles is not null)
-                {
-                    foreach (var role in context.Item.AssignedRoles)
-                    {
-                        <MudChip Size="Size.Small" Variant="Variant.Outlined">@role</MudChip>
-                    }
-                }
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.IsActive" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.IsActive)]">
-            <CellTemplate>
-                <div>
-                    @if (!context.Item.IsActive || (context.Item.LockoutEnd is not null && context.Item.LockoutEnd > DateTime.UtcNow))
-                    {
-                        <MudTooltip Text="@Localizer["Click to change status to active"]" Delay="300">
-                            <MudCheckBox T="bool" Color="Color.Error" Value="context.Item.IsActive" ValueChanged="@(() => ToggleUserActiveStatusAsync(context.Item))" />
-                        </MudTooltip>
-                    }
-                    else
-                    {
-                        <MudTooltip Text="@Localizer["Click to change status to inactive"]" Delay="300">
-                            <MudCheckBox T="bool" Color="Color.Success" Value="context.Item.IsActive" ValueChanged="@(() => ToggleUserActiveStatusAsync(context.Item))" />
-                        </MudTooltip>
-                    }
-                </div>
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.LastModifiedAt" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.LastModifiedAt)]">
-            <CellTemplate>
-                <UtcToLocal UTCDateTime="@(context.Item.LastModifiedAt ?? context.Item.CreatedAt)" Format="yyyy-MM-dd HH:mm:ss" />
-            </CellTemplate>
-        </PropertyColumn>
-    </Columns>
+					<MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@AppStrings.More">
 
-    <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
-    </PagerContent>
+						@if (_accessRights.Export)
+						{
+							<MudMenuItem Disabled="@_isExporting"
+										 OnClick="ExportUsersAsync">
+								@AppStrings.Export
+							</MudMenuItem>
+						}
+						@if (_accessRights.Import)
+						{
+							<MudMenuItem>
+								<MudFileUpload T="IBrowserFile" FilesChanged="ImportDataAsync" Accept=".xlsx">
+									<ActivatorContent>
+										<MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
+												   Variant="Variant.Text"
+												   Disabled="@_isUploading">
+											@AppStrings.Import
+										</MudButton>
+									</ActivatorContent>
+								</MudFileUpload>
+							</MudMenuItem>
+						}
+					</MudMenu>
+				</MudStack>
+				<MudStack Row Spacing="1">
+					@if (_accessRights.Search)
+					{
+						<MudSelect T="string" Placeholder="@Localizer["Search by role name"]" Value="@_searchRole" Clearable="true" ValueChanged="SearchByRole" Style="width:150px">
+							@if (RoleService.DataSource.Any())
+							{
+								@foreach (var role in RoleService.DataSource.Select(r => r.Name).Distinct())
+								{
+									<MudSelectItem Value="@role">@role</MudSelectItem>
+								}
+							}
+						</MudSelect>
+						<MudTextField T="string" Immediate="false" ValueChanged="SearchUsers" Value="@_searchString" Placeholder="@AppStrings.Search" Adornment="Adornment.End"
+									  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+						</MudTextField>
+					}
+				</MudStack>
+			</MudStack>
+		</MudStack>
+	</ToolBarContent>
+	<Columns>
+		<SelectColumn ShowInFooter="false" />
+		<TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Actions" Sortable="false">
+			<CellTemplate>
+				@if (_accessRights.Edit || _accessRights.Delete || _accessRights.ManageRoles ||
+								_accessRights.RestPassword || _accessRights.SendRestPasswordMail || _accessRights.ManagePermissions)
+				{
+					<MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small"
+							 Dense="true"
+							 EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+						@if (_accessRights.Edit)
+						{
+							<MudMenuItem OnClick="@(() => EditUser(context.Item))">@AppStrings.Edit</MudMenuItem>
+						}
+						@if (_accessRights.Delete)
+						{
+							<MudMenuItem OnClick="@(() => DeleteUserAsync(context.Item))">@AppStrings.Delete</MudMenuItem>
+						}
+						@if (_accessRights.ManagePermissions)
+						{
+							<MudMenuItem OnClick="@(() => OpenPermissionsDrawerAsync(context.Item))">@Localizer["Set Permissions"]</MudMenuItem>
+						}
+						@if (_accessRights.SendRestPasswordMail)
+						{
+							<MudMenuItem OnClick="@(() => SendResetPasswordEmail(context.Item))">@Localizer["Send Reset Password Email"]</MudMenuItem>
+						}
+						@if (_accessRights.RestPassword)
+						{
+							<MudMenuItem Disabled="@(!context.Item.IsActive)" OnClick="@(() => ResetPasswordDialog(context.Item))">@Localizer["Reset Password"]</MudMenuItem>
+						}
+					</MudMenu>
+				}
+				else
+				{
+					<MudButton Variant="Variant.Outlined"
+							   StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+							   Color="Color.Surface">
+						@AppStrings.NoAllowed
+					</MudButton>
+				}
+			</CellTemplate>
+		</TemplateColumn>
+		<PropertyColumn Property="x => x.Tenant" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.Tenant)]">
+			<CellTemplate>
+				<MudText>@context.Item.Tenant?.Name</MudText>
+			</CellTemplate>
+			<FooterTemplate>
+				@Localizer["Selected"]: @_selectedUsers.Count
+			</FooterTemplate>
+		</PropertyColumn>
+		<PropertyColumn Property="x => x.UserName" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.UserName)]">
+			<CellTemplate>
+				<UserCard Item="@context.Item" OnSendVerify="SendVerificationEmail" DisplayOnlineStatus="@_canViewOnlineStatus"></UserCard>
+			</CellTemplate>
+		</PropertyColumn>
+		<PropertyColumn Property="x => x.Superior" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.Superior)]">
+			<CellTemplate>
+				@context.Item.Superior?.UserName
+			</CellTemplate>
+		</PropertyColumn>
+		<PropertyColumn Property="x => x.Provider" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.Provider)]" />
+		<PropertyColumn Sortable="false" Property="x => x.AssignedRoles" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.AssignedRoles)]">
+			<CellTemplate>
+				@if (context.Item.AssignedRoles is not null)
+				{
+					foreach (var role in context.Item.AssignedRoles)
+					{
+						<MudChip Size="Size.Small" Variant="Variant.Outlined">@role</MudChip>
+					}
+				}
+			</CellTemplate>
+		</PropertyColumn>
+		<PropertyColumn Property="x => x.IsActive" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.IsActive)]">
+			<CellTemplate>
+				<div>
+					@if (!context.Item.IsActive || (context.Item.LockoutEnd is not null && context.Item.LockoutEnd > DateTime.UtcNow))
+					{
+						<MudTooltip Text="@Localizer["Click to change status to active"]" Delay="300">
+							<MudCheckBox T="bool" Color="Color.Error" Value="context.Item.IsActive" ValueChanged="@(() => ToggleUserActiveStatusAsync(context.Item))" />
+						</MudTooltip>
+					}
+					else
+					{
+						<MudTooltip Text="@Localizer["Click to change status to inactive"]" Delay="300">
+							<MudCheckBox T="bool" Color="Color.Success" Value="context.Item.IsActive" ValueChanged="@(() => ToggleUserActiveStatusAsync(context.Item))" />
+						</MudTooltip>
+					}
+				</div>
+			</CellTemplate>
+		</PropertyColumn>
+		<PropertyColumn Property="x => x.LastModifiedAt" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.LastModifiedAt)]">
+			<CellTemplate>
+				<UtcToLocal UTCDateTime="@(context.Item.LastModifiedAt ?? context.Item.CreatedAt)" Format="yyyy-MM-dd HH:mm:ss" />
+			</CellTemplate>
+		</PropertyColumn>
+	</Columns>
+
+	<PagerContent>
+		<MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
+	</PagerContent>
 </MudDataGrid>
 
 <PermissionsDrawer OnAssignAllChanged="AssignAllPermissionsAsync" Waiting="@_isProcessing" OnOpenChanged="HandlePermissionsDrawerOpenChanged" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="HandlePermissionChangedAsync"></PermissionsDrawer>
@@ -258,7 +261,7 @@
 	private bool _isLoading;
 	private bool _isExporting;
 	private bool _isUploading;
-	private List<ApplicationRoleDto> _roles = new();
+
 	private string? _searchRole;
 
 	// Permissions control
@@ -275,12 +278,11 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Title =$"{ApplicationSettings.AppName} - { Localizer[_currentUserDto.GetClassDescription()]}";
+		Title = $"{ApplicationSettings.AppName} - {Localizer[_currentUserDto.GetClassDescription()]}";
 		InitializeServices();
 		_accessRights = await PermissionService.GetAccessRightsAsync<UsersAccessRights>();
 		await RoleService.InitializeAsync();
-		_roles = RoleService.DataSource;
-		await  TenantService.InitializeAsync();
+		await TenantService.InitializeAsync();
 	}
 
 	private void InitializeServices()
@@ -368,44 +370,44 @@
 	private async Task ShowUserDialog(ApplicationUserDto model, string dialogTitle, Func<ApplicationUserDto, Task> processAction)
 	{
 		var parameters = new DialogParameters<UserFormDialog>
-        {
-            { x => x.Model, model },
+		{
+			{ x => x.Model, model },
 			{ x=>x.UserProfile,UserProfile}
-        };
-        var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<UserFormDialog>(dialogTitle, parameters, options);
-        var result = await dialog.Result;
-        if (result is not null && !result.Canceled)
-        {
-            await processAction(model);
-        }
-    }
+		};
+		var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+		var dialog = await DialogService.ShowAsync<UserFormDialog>(dialogTitle, parameters, options);
+		var result = await dialog.Result;
+		if (result is not null && !result.Canceled)
+		{
+			await processAction(model);
+		}
+	}
 
-    private async Task CreateUserAsync(ApplicationUserDto model)
-    {
-        var newUser = new ApplicationUser
-        {
-            Provider = model.Provider,
-            DisplayName = model.DisplayName,
-            UserName = model.UserName,
-            TenantId = model.Tenants.FirstOrDefault()?.Id,
-            Email = model.Email,
-            PhoneNumber = model.PhoneNumber,
-            SuperiorId = model.Superior?.Id,
-            ProfilePictureDataUrl = model.ProfilePictureDataUrl,
-            EmailConfirmed = false,
-            IsActive = model.IsActive,
-            LanguageCode = model.LanguageCode,
-            TimeZoneId = model.TimeZoneId,
-            CreatedAt = DateTime.UtcNow
-        };
+	private async Task CreateUserAsync(ApplicationUserDto model)
+	{
+		var newUser = new ApplicationUser
+		{
+			Provider = model.Provider,
+			DisplayName = model.DisplayName,
+			UserName = model.UserName,
+			TenantId = model.Tenants.FirstOrDefault()?.Id,
+			Email = model.Email,
+			PhoneNumber = model.PhoneNumber,
+			SuperiorId = model.Superior?.Id,
+			ProfilePictureDataUrl = model.ProfilePictureDataUrl,
+			EmailConfirmed = false,
+			IsActive = model.IsActive,
+			LanguageCode = model.LanguageCode,
+			TimeZoneId = model.TimeZoneId,
+			CreatedAt = DateTime.UtcNow
+		};
 
-        var result = await _userManager.CreateAsync(newUser);
-        if (!result.Succeeded)
-        {
-            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
-            return;
-        }
+		var result = await _userManager.CreateAsync(newUser);
+		if (!result.Succeeded)
+		{
+			Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+			return;
+		}
 		if (model.Tenants.Any())
 		{
 			var db = await _dbContextFactory.CreateAsync();
@@ -415,22 +417,22 @@
 			}
 			await db.SaveChangesAsync(default);
 		}
-        Snackbar.Add(Localizer["New user created successfully"], Severity.Info);
-        await AssignRolesToUserAsync(newUser, model.AssignedRoles);
-        Logger.LogInformation("User created: {UserName} (ID: {UserId})", newUser.UserName, newUser.Id);
-        await UserService.RefreshAsync();
-        await RefreshDataGrid();
-    }
+		Snackbar.Add(Localizer["New user created successfully"], Severity.Info);
+		await AssignRolesToUserAsync(newUser, model.AssignedRoles);
+		Logger.LogInformation("User created: {UserName} (ID: {UserId})", newUser.UserName, newUser.Id);
+		await UserService.RefreshAsync();
+		await RefreshDataGrid();
+	}
 
-    private async Task UpdateUserAsync(ApplicationUserDto model)
-    {
-        var user = await _userManager.FindByIdAsync(model.Id!)
-                   ?? throw new NotFoundException($"User not found: {model.Id}");
-        var roles = await _userManager.GetRolesAsync(user);
-        if (roles.Any())
-        {
-            await _userManager.RemoveFromRolesAsync(user, roles);
-        }
+	private async Task UpdateUserAsync(ApplicationUserDto model)
+	{
+		var user = await _userManager.FindByIdAsync(model.Id!)
+				   ?? throw new NotFoundException($"User not found: {model.Id}");
+		var roles = await _userManager.GetRolesAsync(user);
+		if (roles.Any())
+		{
+			await _userManager.RemoveFromRolesAsync(user, roles);
+		}
 		var db = await _dbContextFactory.CreateAsync();
 		var tenantUsers = await db.TenantUsers.Where(x => x.UserId == model.Id).ToListAsync();
 		if (tenantUsers.Any())
@@ -445,421 +447,421 @@
 			}
 			await db.SaveChangesAsync(default);
 		}
-        user.Email = model.Email;
-        user.PhoneNumber = model.PhoneNumber;
-        user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
-        user.DisplayName = model.DisplayName;
-        user.Provider = model.Provider;
-        user.UserName = model.UserName;
-        user.IsActive = model.IsActive;
+		user.Email = model.Email;
+		user.PhoneNumber = model.PhoneNumber;
+		user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+		user.DisplayName = model.DisplayName;
+		user.Provider = model.Provider;
+		user.UserName = model.UserName;
+		user.IsActive = model.IsActive;
 		if (string.IsNullOrEmpty(user.TenantId) && model.Tenants.Any())
 		{
 			user.TenantId = model.Tenants.First().Id;
 		}
-        user.SuperiorId = model.Superior?.Id;
-        user.LanguageCode = model.LanguageCode;
-        user.TimeZoneId = model.TimeZoneId;
-        user.LastModifiedAt = DateTime.UtcNow;
-        var updateResult = await _userManager.UpdateAsync(user);
-        if (updateResult.Succeeded)
-        {
-            if (model.AssignedRoles is { Length: > 0 })
-            {
-                await _userManager.AddToRolesAsync(user, model.AssignedRoles);
-            }
-            Snackbar.Add(Localizer["User updated successfully"], Severity.Info);
-            await RefreshDataGrid();
-            await UserService.RefreshAsync();
-            // Only refresh UserProfileState if the updated user is the currently logged-in user
-            var authState = await AuthState;
-            if (model.Id == authState.User.GetUserId())
-            {
-                await UserProfileState.RefreshAsync();
-            }
-       
-        }
-        else
-        {
-            Snackbar.Add(string.Join(",", updateResult.Errors.Select(e => e.Description)), Severity.Error);
-        }
-    }
+		user.SuperiorId = model.Superior?.Id;
+		user.LanguageCode = model.LanguageCode;
+		user.TimeZoneId = model.TimeZoneId;
+		user.LastModifiedAt = DateTime.UtcNow;
+		var updateResult = await _userManager.UpdateAsync(user);
+		if (updateResult.Succeeded)
+		{
+			if (model.AssignedRoles is { Length: > 0 })
+			{
+				await _userManager.AddToRolesAsync(user, model.AssignedRoles);
+			}
+			Snackbar.Add(Localizer["User updated successfully"], Severity.Info);
+			await RefreshDataGrid();
+			await UserService.RefreshAsync();
+			// Only refresh UserProfileState if the updated user is the currently logged-in user
+			var authState = await AuthState;
+			if (model.Id == authState.User.GetUserId())
+			{
+				await UserProfileState.RefreshAsync();
+			}
 
-    private async Task AssignRolesToUserAsync(ApplicationUser user, string[]? roles)
-    {
-        if (roles is not null && roles.Length > 0)
-        {
-            await _userManager.AddToRolesAsync(user, roles);
-        }
-    }
+		}
+		else
+		{
+			Snackbar.Add(string.Join(",", updateResult.Errors.Select(e => e.Description)), Severity.Error);
+		}
+	}
 
-    private async Task CreateUser()
-    {
-        var model = new ApplicationUserDto
-        {
-            Provider = "Local",
-            Email = "",
-            UserName = "",
-            AssignedRoles = Array.Empty<string>(),
+	private async Task AssignRolesToUserAsync(ApplicationUser user, string[]? roles)
+	{
+		if (roles is not null && roles.Length > 0)
+		{
+			await _userManager.AddToRolesAsync(user, roles);
+		}
+	}
+
+	private async Task CreateUser()
+	{
+		var model = new ApplicationUserDto
+		{
+			Provider = "Local",
+			Email = "",
+			UserName = "",
+			AssignedRoles = Array.Empty<string>(),
 			TenantId = UserProfile?.TenantId,
 			Tenant = UserProfile?.Tenant,
-            TimeZoneId = TimeZoneInfo.Local.Id,
-            LanguageCode = CultureInfo.CurrentCulture.Name
-        };
-        await ShowUserDialog(model, Localizer["Create a new user"], CreateUserAsync);
-    }
+			TimeZoneId = TimeZoneInfo.Local.Id,
+			LanguageCode = CultureInfo.CurrentCulture.Name
+		};
+		await ShowUserDialog(model, Localizer["Create a new user"], CreateUserAsync);
+	}
 
-    private async Task EditUser(ApplicationUserDto model) =>
-        await ShowUserDialog(model, Localizer["Edit the user"], UpdateUserAsync);
+	private async Task EditUser(ApplicationUserDto model) =>
+		await ShowUserDialog(model, Localizer["Edit the user"], UpdateUserAsync);
 
-    private async Task ShowDeleteConfirmationAsync(ApplicationUserDto model, Func<Task> onConfirmed)
-    {
-        var message = string.Format(AppStrings.DeleteConfirmation, model.UserName);
-        await DialogServiceHelper.ShowConfirmationDialogAsync(AppStrings.DeleteConfirmationTitle, message, onConfirmed);
-    }
+	private async Task ShowDeleteConfirmationAsync(ApplicationUserDto model, Func<Task> onConfirmed)
+	{
+		var message = string.Format(AppStrings.DeleteConfirmation, model.UserName);
+		await DialogServiceHelper.ShowConfirmationDialogAsync(AppStrings.DeleteConfirmationTitle, message, onConfirmed);
+	}
 
-    private async Task DeleteUserAsync(ApplicationUserDto model)
-    {
-        var authState = await AuthState;
-        if (model.Id == authState.User.GetUserId())
-        {
-            Snackbar.Add(Localizer["You cannot delete your own account!"], Severity.Error);
-            return;
-        }
-        await ShowDeleteConfirmationAsync(model, async () =>
-        {
-            await ProcessUserDeletionAsync(model);
-            _selectedUsers.Clear();
-            await RefreshDataGrid();
-        });
-    }
+	private async Task DeleteUserAsync(ApplicationUserDto model)
+	{
+		var authState = await AuthState;
+		if (model.Id == authState.User.GetUserId())
+		{
+			Snackbar.Add(Localizer["You cannot delete your own account!"], Severity.Error);
+			return;
+		}
+		await ShowDeleteConfirmationAsync(model, async () =>
+		{
+			await ProcessUserDeletionAsync(model);
+			_selectedUsers.Clear();
+			await RefreshDataGrid();
+		});
+	}
 
-    private async Task ProcessUserDeletionAsync(ApplicationUserDto model)
-    {
-        var user = await _userManager.FindByIdAsync(model.Id)
-                   ?? throw new NotFoundException($"User not found: {model.Id}");
-        var result = await _userManager.DeleteAsync(user);
-        if (result.Succeeded)
-        {
-            Logger.LogInformation("User deleted: {UserName} (ID: {UserId})", user.UserName, user.Id);
-            Snackbar.Add(AppStrings.DeleteSuccess, Severity.Info);
-            await RefreshDataGrid();
-            await UserService.RefreshAsync();
-        }
-        else
-        {
-            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
-        }
-    }
+	private async Task ProcessUserDeletionAsync(ApplicationUserDto model)
+	{
+		var user = await _userManager.FindByIdAsync(model.Id)
+				   ?? throw new NotFoundException($"User not found: {model.Id}");
+		var result = await _userManager.DeleteAsync(user);
+		if (result.Succeeded)
+		{
+			Logger.LogInformation("User deleted: {UserName} (ID: {UserId})", user.UserName, user.Id);
+			Snackbar.Add(AppStrings.DeleteSuccess, Severity.Info);
+			await RefreshDataGrid();
+			await UserService.RefreshAsync();
+		}
+		else
+		{
+			Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+		}
+	}
 
-    private async Task DeleteCheckedUsersAsync()
-    {
-        var authState = await AuthState;
-        if (_selectedUsers.Any(u => u.Id == authState.User.GetUserId()))
-        {
-            Snackbar.Add(Localizer["You cannot delete your own account!"], Severity.Error);
-            return;
-        }
-        var message = string.Format(AppStrings.DeleteConfirmation, _selectedUsers.Count);
-        await DialogServiceHelper.ShowConfirmationDialogAsync(AppStrings.DeleteConfirmationTitle, message, DeleteSelectedUsersAsync);
-    }
+	private async Task DeleteCheckedUsersAsync()
+	{
+		var authState = await AuthState;
+		if (_selectedUsers.Any(u => u.Id == authState.User.GetUserId()))
+		{
+			Snackbar.Add(Localizer["You cannot delete your own account!"], Severity.Error);
+			return;
+		}
+		var message = string.Format(AppStrings.DeleteConfirmation, _selectedUsers.Count);
+		await DialogServiceHelper.ShowConfirmationDialogAsync(AppStrings.DeleteConfirmationTitle, message, DeleteSelectedUsersAsync);
+	}
 
-    private async Task DeleteSelectedUsersAsync()
-    {
-        var deleteIds = _selectedUsers.Select(u => u.Id).ToArray();
-        var usersToDelete = await _userManager.Users.Where(x => deleteIds.Contains(x.Id)).ToListAsync();
+	private async Task DeleteSelectedUsersAsync()
+	{
+		var deleteIds = _selectedUsers.Select(u => u.Id).ToArray();
+		var usersToDelete = await _userManager.Users.Where(x => deleteIds.Contains(x.Id)).ToListAsync();
 
-        foreach (var user in usersToDelete)
-        {
-            var result = await _userManager.DeleteAsync(user);
-            if (!result.Succeeded)
-            {
-                Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
-                return;
-            }
-            Logger.LogInformation("User deleted: {UserName} (ID: {UserId})", user.UserName, user.Id);
-        }
-        Snackbar.Add(AppStrings.DeleteSuccess, Severity.Info);
-        await RefreshDataGrid();
-        await UserService.RefreshAsync();
-    }
+		foreach (var user in usersToDelete)
+		{
+			var result = await _userManager.DeleteAsync(user);
+			if (!result.Succeeded)
+			{
+				Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+				return;
+			}
+			Logger.LogInformation("User deleted: {UserName} (ID: {UserId})", user.UserName, user.Id);
+		}
+		Snackbar.Add(AppStrings.DeleteSuccess, Severity.Info);
+		await RefreshDataGrid();
+		await UserService.RefreshAsync();
+	}
 
-    #endregion
+	#endregion
 
-    #region Email Verification and Password Reset
+	#region Email Verification and Password Reset
 
-    private async Task SendVerificationEmail(ApplicationUserDto model)
-    {
-        var user = await _userManager.FindByIdAsync(model.Id)
-                   ?? throw new NotFoundException($"User not found: {model.Id}");
-        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = Navigation.GetUriWithQueryParameters(
-            Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
-            new Dictionary<string, object?> { ["userId"] = model.Id, ["code"] = code, ["returnUrl"] = "/" });
-        await Mediator.Publish(new UserActivationNotification(callbackUrl, model.Email, model.Id, model.UserName));
-        Snackbar.Add(string.Format(Localizer["Verification email sent to {0}"], model.Email), Severity.Info);
-        Logger.LogInformation("Verification email sent to {UserName} (ID: {UserId})", model.UserName, model.Id);
-    }
+	private async Task SendVerificationEmail(ApplicationUserDto model)
+	{
+		var user = await _userManager.FindByIdAsync(model.Id)
+				   ?? throw new NotFoundException($"User not found: {model.Id}");
+		var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+		code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+		var callbackUrl = Navigation.GetUriWithQueryParameters(
+			Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
+			new Dictionary<string, object?> { ["userId"] = model.Id, ["code"] = code, ["returnUrl"] = "/" });
+		await Mediator.Publish(new UserActivationNotification(callbackUrl, model.Email, model.Id, model.UserName));
+		Snackbar.Add(string.Format(Localizer["Verification email sent to {0}"], model.Email), Severity.Info);
+		Logger.LogInformation("Verification email sent to {UserName} (ID: {UserId})", model.UserName, model.Id);
+	}
 
-    private async Task SendResetPasswordEmail(ApplicationUserDto model)
-    {
-        var user = await _userManager.FindByIdAsync(model.Id)
-                   ?? throw new NotFoundException($"User not found: {model.Id}");
-        var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = Navigation.GetUriWithQueryParameters(
-            Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
-            new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
-        await Mediator.Publish(new ResetPasswordNotification(callbackUrl, model.Email, model.UserName));
-        Snackbar.Add(string.Format(Localizer["A new password for {0} has been sent via email. The user will be required to change it upon first login"], model.UserName), Severity.Info);
-    }
+	private async Task SendResetPasswordEmail(ApplicationUserDto model)
+	{
+		var user = await _userManager.FindByIdAsync(model.Id)
+				   ?? throw new NotFoundException($"User not found: {model.Id}");
+		var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+		code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+		var callbackUrl = Navigation.GetUriWithQueryParameters(
+			Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
+			new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
+		await Mediator.Publish(new ResetPasswordNotification(callbackUrl, model.Email, model.UserName));
+		Snackbar.Add(string.Format(Localizer["A new password for {0} has been sent via email. The user will be required to change it upon first login"], model.UserName), Severity.Info);
+	}
 
-    private async Task ResetPasswordDialog(ApplicationUserDto model)
-    {
-        var resetModel = new ResetPasswordFormModel { Id = model.Id, DisplayName = model.DisplayName, UserName = model.UserName, ProfilePictureDataUrl = model.ProfilePictureDataUrl };
-        var parameters = new DialogParameters<ResetPasswordDialog> { { x => x.Model, resetModel } };
-        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = await DialogService.ShowAsync<ResetPasswordDialog>(Localizer["Set Password"], parameters, options);
-        var result = await dialog.Result;
-        if (result is not null && !result.Canceled)
-        {
-            await ProcessPasswordResetAsync(model, resetModel);
-        }
-    }
+	private async Task ResetPasswordDialog(ApplicationUserDto model)
+	{
+		var resetModel = new ResetPasswordFormModel { Id = model.Id, DisplayName = model.DisplayName, UserName = model.UserName, ProfilePictureDataUrl = model.ProfilePictureDataUrl };
+		var parameters = new DialogParameters<ResetPasswordDialog> { { x => x.Model, resetModel } };
+		var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+		var dialog = await DialogService.ShowAsync<ResetPasswordDialog>(Localizer["Set Password"], parameters, options);
+		var result = await dialog.Result;
+		if (result is not null && !result.Canceled)
+		{
+			await ProcessPasswordResetAsync(model, resetModel);
+		}
+	}
 
-    private async Task ProcessPasswordResetAsync(ApplicationUserDto model, ResetPasswordFormModel resetModel)
-    {
-        var user = await _userManager.FindByIdAsync(model.Id!)
-                   ?? throw new NotFoundException($"User not found: {model.Id}");
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var result = await _userManager.ResetPasswordAsync(user, token, resetModel.Password!);
-        if (result.Succeeded)
-        {
-            if (!user.EmailConfirmed)
-            {
-                user.EmailConfirmed = true;
-                await _userManager.UpdateAsync(user);
-            }
-            Snackbar.Add(Localizer["Reset password successfully"], Severity.Info);
-        }
-        else
-        {
-            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
-        }
-    }
+	private async Task ProcessPasswordResetAsync(ApplicationUserDto model, ResetPasswordFormModel resetModel)
+	{
+		var user = await _userManager.FindByIdAsync(model.Id!)
+				   ?? throw new NotFoundException($"User not found: {model.Id}");
+		var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+		var result = await _userManager.ResetPasswordAsync(user, token, resetModel.Password!);
+		if (result.Succeeded)
+		{
+			if (!user.EmailConfirmed)
+			{
+				user.EmailConfirmed = true;
+				await _userManager.UpdateAsync(user);
+			}
+			Snackbar.Add(Localizer["Reset password successfully"], Severity.Info);
+		}
+		else
+		{
+			Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+		}
+	}
 
-    #endregion
+	#endregion
 
-    #region User Activation and Permission Management
+	#region User Activation and Permission Management
 
-    private async Task ToggleUserActiveStatusAsync(ApplicationUserDto model)
-    {
-        var user = await _userManager.FindByIdAsync(model.Id!)
-                   ?? throw new NotFoundException($"User not found: {model.Id}");
-        if (user.IsActive)
-            await DeactivateUserAsync(user, model);
-        else
-            await ActivateUserAsync(user, model);
-    }
+	private async Task ToggleUserActiveStatusAsync(ApplicationUserDto model)
+	{
+		var user = await _userManager.FindByIdAsync(model.Id!)
+				   ?? throw new NotFoundException($"User not found: {model.Id}");
+		if (user.IsActive)
+			await DeactivateUserAsync(user, model);
+		else
+			await ActivateUserAsync(user, model);
+	}
 
-    private async Task ActivateUserAsync(ApplicationUser user, ApplicationUserDto model)
-    {
-        user.IsActive = true;
-        user.LockoutEnd = null;
-        user.LastModifiedAt = DateTime.UtcNow;
-        var result = await _userManager.UpdateAsync(user);
-        if (result.Succeeded)
-        {
-            model.IsActive = true;
-            model.LockoutEnd = null;
-            Snackbar.Add(Localizer["The user has been activated"], Severity.Info);
-        }
-        else
-        {
-            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
-        }
-    }
+	private async Task ActivateUserAsync(ApplicationUser user, ApplicationUserDto model)
+	{
+		user.IsActive = true;
+		user.LockoutEnd = null;
+		user.LastModifiedAt = DateTime.UtcNow;
+		var result = await _userManager.UpdateAsync(user);
+		if (result.Succeeded)
+		{
+			model.IsActive = true;
+			model.LockoutEnd = null;
+			Snackbar.Add(Localizer["The user has been activated"], Severity.Info);
+		}
+		else
+		{
+			Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+		}
+	}
 
-    private async Task DeactivateUserAsync(ApplicationUser user, ApplicationUserDto model)
-    {
-        user.IsActive = false;
-        user.LockoutEnd = DateTimeOffset.MaxValue;
-        user.LastModifiedAt = DateTime.UtcNow;
-        var result = await _userManager.UpdateAsync(user);
-        if (result.Succeeded)
-        {
-            model.IsActive = false;
-            model.LockoutEnd = DateTimeOffset.MaxValue;
-            Snackbar.Add(Localizer["The user has been inactivated"], Severity.Info);
-        }
-        else
-        {
-            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
-        }
-    }
+	private async Task DeactivateUserAsync(ApplicationUser user, ApplicationUserDto model)
+	{
+		user.IsActive = false;
+		user.LockoutEnd = DateTimeOffset.MaxValue;
+		user.LastModifiedAt = DateTime.UtcNow;
+		var result = await _userManager.UpdateAsync(user);
+		if (result.Succeeded)
+		{
+			model.IsActive = false;
+			model.LockoutEnd = DateTimeOffset.MaxValue;
+			Snackbar.Add(Localizer["The user has been inactivated"], Severity.Info);
+		}
+		else
+		{
+			Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+		}
+	}
 
-    private async Task OpenPermissionsDrawerAsync(ApplicationUserDto model)
-    {
-        _showPermissionsDrawer = true;
-        _permissions = await _permissionAssignmentService.LoadAsync(model.Id);
-    }
+	private async Task OpenPermissionsDrawerAsync(ApplicationUserDto model)
+	{
+		_showPermissionsDrawer = true;
+		_permissions = await _permissionAssignmentService.LoadAsync(model.Id);
+	}
 
-    private Task HandlePermissionsDrawerOpenChanged(bool state)
-    {
-        _showPermissionsDrawer = state;
-        return Task.CompletedTask;
-    }
+	private Task HandlePermissionsDrawerOpenChanged(bool state)
+	{
+		_showPermissionsDrawer = state;
+		return Task.CompletedTask;
+	}
 
-    private async Task AssignAllPermissionsAsync(List<PermissionModel> models)
-    {
-        _isProcessing = true;
-        try
-        {
-            await _permissionAssignmentService.AssignBulkAsync(models);
-            Snackbar.Add(Localizer["Authorization has been changed"], Severity.Info);
-        }
-        finally
-        {
-            _isProcessing = false;
-        }
-    }
+	private async Task AssignAllPermissionsAsync(List<PermissionModel> models)
+	{
+		_isProcessing = true;
+		try
+		{
+			await _permissionAssignmentService.AssignBulkAsync(models);
+			Snackbar.Add(Localizer["Authorization has been changed"], Severity.Info);
+		}
+		finally
+		{
+			_isProcessing = false;
+		}
+	}
 
-    private async Task HandlePermissionChangedAsync(PermissionModel model)
-    {
-        _isProcessing = true;
-        try
-        {
-            model.Assigned = !model.Assigned;
-            await _permissionAssignmentService.AssignAsync(model);
-            Snackbar.Add(model.Assigned ? Localizer["Permission assigned successfully"] : Localizer["Permission removed successfully"], Severity.Info);
-        }
-        finally
-        {
-            _isProcessing = false;
-        }
-    }
+	private async Task HandlePermissionChangedAsync(PermissionModel model)
+	{
+		_isProcessing = true;
+		try
+		{
+			model.Assigned = !model.Assigned;
+			await _permissionAssignmentService.AssignAsync(model);
+			Snackbar.Add(model.Assigned ? Localizer["Permission assigned successfully"] : Localizer["Permission removed successfully"], Severity.Info);
+		}
+		finally
+		{
+			_isProcessing = false;
+		}
+	}
 
-    #endregion
+	#endregion
 
-    #region Import and Export
+	#region Import and Export
 
-    private async Task ExportUsersAsync()
-    {
-        _isExporting = true;
-        try
-        {
-            var predicate = CreateSearchPredicate();
-            var users = await _userManager.Users.Where(predicate)
-                .Select(x => new ApplicationUserDto
-                {
-                    Id = x.Id,
-                    UserName = x.UserName!,
-                    DisplayName = x.DisplayName,
-                    Email = x.Email!,
-                    PhoneNumber = x.PhoneNumber,
-                    LanguageCode = x.LanguageCode,
-                    TimeZoneId = x.TimeZoneId,
-                    SuperiorId = x.SuperiorId,
-                    TenantId = x.TenantId
-                }).ToListAsync();
+	private async Task ExportUsersAsync()
+	{
+		_isExporting = true;
+		try
+		{
+			var predicate = CreateSearchPredicate();
+			var users = await _userManager.Users.Where(predicate)
+				.Select(x => new ApplicationUserDto
+				{
+					Id = x.Id,
+					UserName = x.UserName!,
+					DisplayName = x.DisplayName,
+					Email = x.Email!,
+					PhoneNumber = x.PhoneNumber,
+					LanguageCode = x.LanguageCode,
+					TimeZoneId = x.TimeZoneId,
+					SuperiorId = x.SuperiorId,
+					TenantId = x.TenantId
+				}).ToListAsync();
 
-            var fileData = await ExportUsersToExcelAsync(users);
-            await DownloadFileService.DownloadFileAsync($"{Localizer["Users"]}.xlsx", fileData, "application/octet-stream");
-            Snackbar.Add(AppStrings.ExportSuccess, Severity.Info);
-        }
-        finally
-        {
-            _isExporting = false;
-        }
-    }
+			var fileData = await ExportUsersToExcelAsync(users);
+			await DownloadFileService.DownloadFileAsync($"{Localizer["Users"]}.xlsx", fileData, "application/octet-stream");
+			Snackbar.Add(AppStrings.ExportSuccess, Severity.Info);
+		}
+		finally
+		{
+			_isExporting = false;
+		}
+	}
 
-    private async Task<byte[]> ExportUsersToExcelAsync(List<ApplicationUserDto> users) =>
-        await ExcelService.ExportAsync(users, new Dictionary<string, Func<ApplicationUserDto, object?>>
-        {
-            { Localizer["Id"], item => item.Id },
-            { Localizer["User Name"], item => item.UserName },
-            { Localizer["Full Name"], item => item.DisplayName },
-            { Localizer["Email"], item => item.Email },
-            { Localizer["Phone Number"], item => item.PhoneNumber },
-            { Localizer["Time Zone"], item => item.TimeZoneId },
-            { Localizer["Language"], item => item.LanguageCode },
-            { Localizer["Tenant Id"], item => item.TenantId },
-            { Localizer["Superior Id"], item => item.SuperiorId }
-        }, Localizer["Users"]);
+	private async Task<byte[]> ExportUsersToExcelAsync(List<ApplicationUserDto> users) =>
+		await ExcelService.ExportAsync(users, new Dictionary<string, Func<ApplicationUserDto, object?>>
+		{
+			{ Localizer["Id"], item => item.Id },
+			{ Localizer["User Name"], item => item.UserName },
+			{ Localizer["Full Name"], item => item.DisplayName },
+			{ Localizer["Email"], item => item.Email },
+			{ Localizer["Phone Number"], item => item.PhoneNumber },
+			{ Localizer["Time Zone"], item => item.TimeZoneId },
+			{ Localizer["Language"], item => item.LanguageCode },
+			{ Localizer["Tenant Id"], item => item.TenantId },
+			{ Localizer["Superior Id"], item => item.SuperiorId }
+		}, Localizer["Users"]);
 
-    private async Task ImportDataAsync(IBrowserFile file)
-    {
-        _isUploading = true;
-        try
-        {
-            using var stream = new MemoryStream();
-            await file.OpenReadStream(GlobalVariables.MaxAllowedSize).CopyToAsync(stream);
-            var importResult = await ImportUsersFromExcelAsync(stream);
-            if (importResult?.Succeeded == true)
-            {
-                if (importResult.Data != null)
-                {
-                    await ProcessImportedUsersAsync(importResult.Data);
-                    await _dataGrid.ReloadServerData();
-                }
-                Snackbar.Add(AppStrings.ImportSuccess, Severity.Info);
-            }
-            else if (importResult?.Errors != null)
-            {
-                foreach (var error in importResult.Errors)
-                {
-                    Snackbar.Add(error, Severity.Error);
-                }
-            }
-        }
-        finally { _isUploading = false; }
-    }
+	private async Task ImportDataAsync(IBrowserFile file)
+	{
+		_isUploading = true;
+		try
+		{
+			using var stream = new MemoryStream();
+			await file.OpenReadStream(GlobalVariables.MaxAllowedSize).CopyToAsync(stream);
+			var importResult = await ImportUsersFromExcelAsync(stream);
+			if (importResult?.Succeeded == true)
+			{
+				if (importResult.Data != null)
+				{
+					await ProcessImportedUsersAsync(importResult.Data);
+					await _dataGrid.ReloadServerData();
+				}
+				Snackbar.Add(AppStrings.ImportSuccess, Severity.Info);
+			}
+			else if (importResult?.Errors != null)
+			{
+				foreach (var error in importResult.Errors)
+				{
+					Snackbar.Add(error, Severity.Error);
+				}
+			}
+		}
+		finally { _isUploading = false; }
+	}
 
-    private async Task<IResult<IEnumerable<ApplicationUser>>> ImportUsersFromExcelAsync(MemoryStream stream) =>
-        await ExcelService.ImportAsync(stream.ToArray(), new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
-        {
-            { Localizer["User Name"], (row, item) => item.UserName = row[Localizer["User Name"]]?.ToString() },
-            { Localizer["Full Name"], (row, item) => item.DisplayName = row[Localizer["Full Name"]]?.ToString() },
-            { Localizer["Email"], (row, item) => item.Email = row[Localizer["Email"]]?.ToString() },
-            { Localizer["Phone Number"], (row, item) => item.PhoneNumber = row[Localizer["Phone Number"]]?.ToString() },
-            { Localizer["Time Zone"], (row, item) => item.TimeZoneId = row[Localizer["Time Zone"]]?.ToString() },
-            { Localizer["Language"], (row, item) => item.LanguageCode = row[Localizer["Language"]]?.ToString() },
-            { Localizer["Tenant Id"], (row, item) => item.TenantId = row[Localizer["Tenant Id"]]?.ToString() },
-            { Localizer["Superior Id"], (row, item) => item.SuperiorId = row[Localizer["Superior Id"]]?.ToString() }
-        }, Localizer["Users"]);
+	private async Task<IResult<IEnumerable<ApplicationUser>>> ImportUsersFromExcelAsync(MemoryStream stream) =>
+		await ExcelService.ImportAsync(stream.ToArray(), new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
+		{
+			{ Localizer["User Name"], (row, item) => item.UserName = row[Localizer["User Name"]]?.ToString() },
+			{ Localizer["Full Name"], (row, item) => item.DisplayName = row[Localizer["Full Name"]]?.ToString() },
+			{ Localizer["Email"], (row, item) => item.Email = row[Localizer["Email"]]?.ToString() },
+			{ Localizer["Phone Number"], (row, item) => item.PhoneNumber = row[Localizer["Phone Number"]]?.ToString() },
+			{ Localizer["Time Zone"], (row, item) => item.TimeZoneId = row[Localizer["Time Zone"]]?.ToString() },
+			{ Localizer["Language"], (row, item) => item.LanguageCode = row[Localizer["Language"]]?.ToString() },
+			{ Localizer["Tenant Id"], (row, item) => item.TenantId = row[Localizer["Tenant Id"]]?.ToString() },
+			{ Localizer["Superior Id"], (row, item) => item.SuperiorId = row[Localizer["Superior Id"]]?.ToString() }
+		}, Localizer["Users"]);
 
-    private async Task ProcessImportedUsersAsync(IEnumerable<ApplicationUser> users)
-    {
-        foreach (var user in users)
-        {
-            if (!_userManager.Users.Any(x => x.UserName == user.UserName))
-            {
-                var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    await _userManager.AddToRolesAsync(user, new[] { Roles.Basic });
-                }
-                else
-                {
-                    Snackbar.Add(string.Join(',', result.Errors.Select(e => e.Description)), Severity.Error);
-                }
-            }
-        }
-    }
+	private async Task ProcessImportedUsersAsync(IEnumerable<ApplicationUser> users)
+	{
+		foreach (var user in users)
+		{
+			if (!_userManager.Users.Any(x => x.UserName == user.UserName))
+			{
+				var result = await _userManager.CreateAsync(user);
+				if (result.Succeeded)
+				{
+					await _userManager.AddToRolesAsync(user, new[] { Roles.Basic });
+				}
+				else
+				{
+					Snackbar.Add(string.Join(',', result.Errors.Select(e => e.Description)), Severity.Error);
+				}
+			}
+		}
+	}
 
-    #endregion
+	#endregion
 
-    #region Welcome Email
+	#region Welcome Email
 
-    private async Task SendWelcomeEmailNotificationAsync(string email, string userName)
-    {
-        var callbackUrl = Navigation.GetUriWithQueryParameters(
-            Navigation.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
-            new Dictionary<string, object?> { ["returnUrl"] = "/" });
+	private async Task SendWelcomeEmailNotificationAsync(string email, string userName)
+	{
+		var callbackUrl = Navigation.GetUriWithQueryParameters(
+			Navigation.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
+			new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
-        await Mediator.Publish(new SendWelcomeNotification(callbackUrl, email, userName));
-        Logger.LogInformation("User {UserName} activated successfully!", userName);
-    }
+		await Mediator.Publish(new SendWelcomeNotification(callbackUrl, email, userName));
+		Logger.LogInformation("User {UserName} activated successfully!", userName);
+	}
 
-    #endregion
+	#endregion
 }
