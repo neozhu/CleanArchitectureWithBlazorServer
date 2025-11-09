@@ -1,75 +1,284 @@
-﻿# Clean Architecture With Blazor Server
+# Clean Architecture Blazor Server
 
 [![Build](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/codeql-analysis.yml)
 [![Nuget](https://img.shields.io/nuget/v/CleanArchitecture.Blazor.Solution.Template?label=NuGet)](https://www.nuget.org/packages/CleanArchitecture.Blazor.Solution.Template)
 [![Docker Image CI](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/docker-image.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/docker-image.yml)
-[![Nuget](https://img.shields.io/nuget/dt/CleanArchitecture.Blazor.Solution.Template?label=Downloads)](https://www.nuget.org/packages/CleanArchitecture.Blazor.Solution.Template)
+[![Downloads](https://img.shields.io/nuget/dt/CleanArchitecture.Blazor.Solution.Template?label=Downloads)](https://www.nuget.org/packages/CleanArchitecture.Blazor.Solution.Template)
 
-This repository hosts a Blazor Server application designed using Clean Architecture principles, featuring a sophisticated user interface and an efficient code generator. The application is built on .NET 9, which brings enhanced performance, improved developer productivity, and new features that make the development process smoother. Blazor Server, now supported on .NET 9, combines the power of C# with a modern web development experience, eliminating the need to switch between languages like JavaScript and C#. This setup simplifies development and enables fast, responsive, and highly interactive web applications. Leveraging Blazor’s real-time communication capabilities and .NET’s robust ecosystem, developers can rapidly create feature-rich, scalable applications with a seamless user experience.
+> A comprehensive Blazor Server application template built with Clean Architecture principles, featuring advanced code generation, AI-powered development support, and enterprise-grade functionality.
 
-## Explore the Live Demo
+## 🎯 Overview
 
-Experience the application in action in Blazor Server mode by visiting:
+This project is a production-ready Blazor Server application template that demonstrates Clean Architecture implementation with **.NET 10** and follows **Blazor Clean Architecture best practices**.
+It provides a solid foundation for building scalable, maintainable enterprise applications with modern **spec-driven development practices**.
 
-- MS SQL Database: [architecture.blazorserver.com](https://architecture.blazorserver.com/)
+### Key Features
 
-- PostgreSQL Database: [architecture.blazors.app](https://architecture.blazors.app/)
+- **🏗️ Clean Architecture**: Strict layer separation with dependency inversion
+- **🎨 Modern UI**: Beautiful, responsive interface built with MudBlazor
+- **⚡ Real-time Communication**: SignalR integration for live updates
+- **🔐 Enterprise Security**: Multi-factor authentication, role-based access control
+- **🌐 Multi-tenancy**: Built-in tenant isolation and management
+- **📊 Advanced Data Grid**: Sorting, filtering, pagination, and export capabilities
+- **🎨 Code Generation**: Visual Studio extension for rapid development
+- **🐳 Docker Ready**: Complete containerization support
+- **📱 Progressive Web App**: PWA capabilities for mobile experience
 
-### Additional Note:
-If you're also interested in exploring a version built with Blazor WebAssembly, it's now available! Please visit [CleanAspire Repository](https://github.com/neozhu/cleanaspire) for more details.
-[![](https://private-user-images.githubusercontent.com/1549611/386846455-013b167b-59fa-42d7-a2f7-ffec301c4e11.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzMyMDgzNzUsIm5iZiI6MTczMzIwODA3NSwicGF0aCI6Ii8xNTQ5NjExLzM4Njg0NjQ1NS0wMTNiMTY3Yi01OWZhLTQyZDctYTJmNy1mZmVjMzAxYzRlMTEuanBnP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI0MTIwMyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNDEyMDNUMDY0MTE1WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9N2U0MjZjYTYxZTEyYjljZjhlOWRlNWNhY2VjNmE3NTRkYjE3NmQzMDljZGYxZjdkMWY1MDhkNTUyYjg4ODA2MyZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.XGF7ccu4iG-spz7w2lUk8QcD_y0WVFR92xp-nCkbY34)](https://github.com/neozhu/cleanaspire)
+## 🌟 Live Showcase
 
-## Projects Based on This Template
+Experience the application in action:
 
+[![Application Demo](doc/blazorstudio.png)](https://www.youtube.com/watch?v=hCsHSNAs-70)
 
-Here are some projects that have been developed based on this Clean Architecture Blazor Server template:
+**Live Demo**: [architecture.blazorserver.com](https://architecture.blazorserver.com/)
 
-[![HSE Management System Screenshot](/doc/094346.png)](https://hse.blazorserver.com/)
-1. **HSE Management System (Workflow Application)**
-   - [GitHub Repository](https://github.com/neozhu/workflow)
+### Featured Projects Built with This Template
 
-[![The DPP Application Screenshot](/doc/094553.png)](https://materialpassport.blazorserver.com/)
-2. **The DPP Application (EU Digital Product Passport)**
-   - [Live Demo](https://materialpassport.blazorserver.com/)
+[![HSE Management System](doc/094346.png)](https://hse.blazorserver.com/)
+**HSE Management System** - [GitHub](https://github.com/neozhu/workflow) | [Live Demo](https://hse.blazorserver.com/)
 
+[![Digital Product Passport](doc/094553.png)](https://materialpassport.blazorserver.com/)
+**EU Digital Product Passport** - [Live Demo](https://materialpassport.blazorserver.com/)
 
+## 🛠️ Technology Stack
 
+| Layer | Technologies |
+|-------|-------------|
+| **Frontend** | Blazor Server, MudBlazor, SignalR |
+| **Backend** | .NET 10, ASP.NET Core, MediatR, FluentValidation |
+| **Database** | Entity Framework Core, MSSQL/PostgreSQL/SQLite |
+| **Authentication** | ASP.NET Core Identity, OAuth 2.0, JWT |
+| **Caching** | FusionCache, Redis |
+| **Background Jobs** | Hangfire |
+| **Testing** | xUnit, FluentAssertions, Moq |
+| **DevOps** | Docker, GitHub Actions |
 
-## Visual Insights
+## 🏗️ Architecture Overview
 
-Explore the application's features and design through screenshots and a video walkthrough.
-[![Everything Is AWESOME](doc/logo.png)](https://www.youtube.com/watch?v=hCsHSNAs-70 "Everything Is AWESOME")
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Server.UI     │    │  Application    │    │     Domain      │
+│   (Blazor)      │───▶│   (Business)    │───▶│   (Entities)    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                        │                        
+         │              ┌─────────────────┐               
+         └─────────────▶│ Infrastructure  │               
+                        │   (Data/IO)     │               
+                        └─────────────────┘               
+```
 
-## Development Setup
+### Layer Responsibilities
 
-To get started with development, ensure you have the following tools and environments set up:
+- **Domain**: Core business entities and rules (no dependencies)
+- **Application**: Business logic, interfaces, and DTOs
+- **Infrastructure**: External concerns (database, email, file system)
+- **Server.UI**: Blazor components and user interface
 
+ 
+### 📋 Development Workflow
 
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
-- [Microsoft Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) or [Rider](https://www.jetbrains.com/rider/)
-- [Docker](https://www.docker.com/)
+The project includes a comprehensive [Development Workflow](docs/) with:
 
+- **Task Management**: Structured approach to feature development
+- **Code Review Guidelines**: Quality assurance processes
+- **Testing Strategies**: Unit and integration testing patterns
+- **Deployment Procedures**: CI/CD pipeline configurations
 
+## 🚀 Quick Start
 
+### Prerequisites
 
-## Authentication Setup
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) or [Rider](https://www.jetbrains.com/rider/)
+- [Docker Desktop](https://www.docker.com/) (optional)
 
-Use the following topics to configure your application to use the respective providers:
+### Installation
 
-- [Facebook instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-8.0)
-- [Twitter instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/twitter-logins?view=aspnetcore-8.0)
-- [Google instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-8.0)
-- [Microsoft instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/microsoft-logins?view=aspnetcore-8.0)
-- [Other provider instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/other-logins?view=aspnetcore-8.0)
+1. **Install the Template**
+   ```bash
+   dotnet new install CleanArchitecture.Blazor.Solution.Template
+   ```
 
-https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/?view=aspnetcore-8.0&tabs=visual-studio
+2. **Create New Project**
+   ```bash
+   dotnet new ca-blazorserver-sln -n YourProjectName
+   cd YourProjectName
+   ```
 
-## Docker Setup for Blazor Server Application
+3. **Setup Database**
+   ```bash
+   dotnet ef database update --project src/Migrators/Migrators.MSSQL
+   ```
+
+4. **Run the Application**
+   ```bash
+   dotnet run --project src/Server.UI
+   ```
+
+5. **Access the Application**
+   - Navigate to `https://localhost:7152`
+   - Login with default credentials (see documentation)
+
+### 🐳 Docker Deployment
+
+**Run with configured database provider (In-Memory removed)**:
+```bash
+docker run -p 8443:443 \
+  -e DatabaseSettings__DBProvider=mssql \
+  -e DatabaseSettings__ConnectionString="Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=<YourPassword>;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false" \
+  blazordevlab/cleanarchitectureblazorserver:latest
+```
+
+**Production Setup (docker compose)**:
+```bash
+docker-compose up -d
+```
+
+See [Docker Setup Documentation](#docker-setup-for-blazor-server-application) for detailed configuration.
+
+## 📚 Documentation
+
+- **[Architecture Guide](docs/)**: Detailed architecture explanation
+- **[Development Workflow](docs/)**: Step-by-step development process
+- **[API Documentation](docs/)**: Complete API reference
+- **[Deployment Guide](docs/)**: Production deployment instructions
+- **[Contributing Guidelines](CONTRIBUTING.md)**: How to contribute to the project
+
+## 📐 Using OpenSpec for Feature Development
+
+OpenSpec enables spec-driven, reviewable changes with clear proposals, deltas, and tasks. This repo includes guidance in `openspec/AGENTS.md` and a project context in `openspec/project.md`.
+
+- Read the quickstart: `openspec/AGENTS.md`
+- Project conventions and patterns: `openspec/project.md` (see "New Entity/Feature Guide (Contacts Pattern)") 
+
+### Workflow
+
+1) Plan a change
+- Review specs and pending changes
+  - `openspec list --specs`
+  - `openspec list`
+- Pick a unique, verb-led change id (e.g., `add-customer-management`).
+
+2) Create the change folder and docs
+- Create: `openspec/changes/<change-id>/`
+- Add files:
+  - `proposal.md` – Why, What Changes, Impact
+  - `tasks.md` – Implementation checklist
+  - Optional `design.md` – Architecture decisions when needed
+  - Spec deltas: `openspec/changes/<change-id>/specs/<capability>/spec.md`
+- Spec delta format must include sections like:
+  - `## ADDED|MODIFIED|REMOVED Requirements`
+  - At least one `#### Scenario:` per requirement (use the exact header text)
+
+3) Validate and iterate
+- `openspec validate <change-id> --strict`
+- Fix any issues before requesting review/approval.
+
+4) Implement after approval
+- Follow the tasks in `tasks.md` sequentially and mark them complete.
+- Use the patterns in `openspec/project.md`:
+  - For data access in handlers use `IApplicationDbContextFactory` and per-operation context lifetime:
+    - `await using var db = await _dbContextFactory.CreateAsync(cancellationToken);`
+  - Follow MediatR pipeline behaviors, caching tags, and specification patterns.
+  - Mirror the Contacts module for a new entity's DTOs, commands, queries, specs, security, and UI pages/components.
+
+5) Archive after deployment
+- Move `openspec/changes/<id>/` to `openspec/changes/archive/YYYY-MM-DD-<id>/` (or use the CLI archive helper if available).
+- Re-run `openspec validate --strict`.
+
+### Example change scaffold
+
+- Change id: `add-customer-management`
+- Files:
+  - `openspec/changes/add-customer-management/proposal.md`
+  - `openspec/changes/add-customer-management/tasks.md`
+  - `openspec/changes/add-customer-management/specs/customers/spec.md`
+
+`proposal.md` skeleton:
+
+```
+## Why
+Introduce Customer management to track client records.
+
+## What Changes
+- Add Customer entity, CRUD flows, and pages
+- Add permissions and navigation
+
+## Impact
+- Affected specs: customers
+- Affected code: Domain, Application (Contacts-like), Infrastructure, Server.UI
+```
+
+`tasks.md` sample:
+
+```
+## 1. Implementation
+- [ ] 1.1 Domain entity + events
+- [ ] 1.2 EF configuration + seeding
+- [ ] 1.3 Application commands/queries/specs/security/caching
+- [ ] 1.4 UI pages + dialog
+- [ ] 1.5 Tests (unit/integration)
+```
+
+Spec delta snippet:
+
+```
+## ADDED Requirements
+### Requirement: Manage Customers
+The system SHALL allow users to create, edit, view, list, and delete customers with proper authorization.
+
+#### Scenario: Create customer
+- **WHEN** a user submits a valid form
+- **THEN** the system saves the customer and returns an id
+```
+
+Tips
+- Use Contacts as the reference implementation for structure and conventions.
+- Add menu entries in `src/Server.UI/Services/Navigation/MenuService.cs`.
+- Define permissions under `Permissions.<Module>` and they'll be picked up during seeding.
+
+## 🔧 Code Generation
+
+Accelerate development with the Visual Studio extension:
+
+- **[CleanArchitecture CodeGenerator](https://github.com/neozhu/CleanArchitectureCodeGenerator)**
+- Automatically generates layers for new entities
+- Maintains architectural consistency
+- Reduces boilerplate code by 80%
+
+<div><video controls src="https://user-images.githubusercontent.com/1549611/197116874-f28414ca-7fc1-463a-b887-0754a5bb3e01.mp4" muted="false"></video></div>
+
+## 🗄️ Database Support
+
+| Database | Provider Name | Status |
+|----------|---------------|---------|
+| SQL Server | `mssql` | ✅ Fully Supported |
+| PostgreSQL | `postgresql` | ✅ Fully Supported |
+| SQLite | `sqlite` | ✅ Fully Supported |
+
+Configure in `appsettings.json`:
+```json
+{
+  "DatabaseSettings": {
+    "DBProvider": "mssql",
+    "ConnectionString": "Server=localhost;Database=YourDb;Trusted_Connection=true;"
+  }
+}
+```
+
+## 🔐 Authentication Providers
+
+Configure OAuth providers in `appsettings.json`:
+
+- **Microsoft**: [Setup Guide](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/microsoft-logins)
+- **Google**: [Setup Guide](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins)
+- **Facebook**: [Setup Guide](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins)
+- **Twitter**: [Setup Guide](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/twitter-logins)
+
+## 🚀 Docker Setup for Blazor Server Application
 
 ### Pull the Docker Image
-
-First, pull the latest version of the Blazor Server Docker image:
 
 ```bash
 docker pull blazordevlab/cleanarchitectureblazorserver:latest
@@ -77,21 +286,17 @@ docker pull blazordevlab/cleanarchitectureblazorserver:latest
 
 ### Run the Docker Container
 
-You can start the container in two modes: using an in-memory database for development purposes or connecting to an MSSQL
-database for persistent storage and configuring SMTP for email functionalities.
-
-For Development (In-Memory Database):
-
+For Development:
 ```bash
-docker run -p 8443:443 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_HTTPS_PORTS=443 blazordevlab/cleanarchitectureblazorserver:latest
+docker run -p 8443:443 -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_HTTPS_PORTS=443 \
+  -e DatabaseSettings__DBProvider=mssql \
+  -e DatabaseSettings__ConnectionString="Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=<YourPassword>;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false" \
+  blazordevlab/cleanarchitectureblazorserver:latest
 ```
 
 For Production (Persistent Database and SMTP Configuration):
-
 ```bash
-
 docker run -d -p 8443:443 \
--e UseInMemoryDatabase=false \
 -e ASPNETCORE_ENVIRONMENT=Development \
 -e ASPNETCORE_HTTP_PORTS=80 \
 -e ASPNETCORE_HTTPS_PORTS=443 \
@@ -110,20 +315,16 @@ docker run -d -p 8443:443 \
 blazordevlab/cleanarchitectureblazorserver:latest
 ```
 
-Replace placeholder values (<Your...>) with your actual configuration details.
-
 ### Docker Compose Setup
 
 For easier management, use a docker-compose.yml file:
 
-```yml
 ```yaml
 version: '3.8'
 services:
   blazorserverapp:
     image: blazordevlab/cleanarchitectureblazorserver:latest
     environment:
-      - UseInMemoryDatabase=false
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80;https://+:443
       - ASPNETCORE_HTTP_PORTS=80
@@ -160,116 +361,58 @@ volumes:
   mssql_data:
 ```
 
+## 🤝 Contributing
 
-### Notes:
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
-Replace <Your...> placeholders with actual values from your environment.
-The files_volume volume is used for persistent storage of application files. Adjust or extend volumes based on your
-specific needs.
-This optimized guide should help in setting up your Blazor Server application with either an in-memory or MSSQL
-database, configured SMTP server for email functionalities, and OAuth authentication for Microsoft, Google, and
-Facebook.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
 
-## Supported Databases
+## 📖 Learning Resources
 
-* PostgreSQL (Provider Name: `postgresql`)
-* Microsoft SQL Server (Provider Name: `mssql`)
-* SQLite (Provider Name: `sqlite`)
+### Video Tutorials
 
-### How to select a specific Database?
+[![Adding Contact Entity](doc/create.png)](https://www.youtube.com/watch?v=X1b4hFLs4vo)
+**Tutorial: Adding a Contact Entity**
 
-1. Open the `appsettings.json` file located in the src directory of the `Server.UI` project.
-2. Change the setting `DBProvider` to the desired provider name (See Supported Databases).
-3. Change the `ConnectionString` to a connection string, which works for your selected database provider.
+[![Removing Customer Object](doc/remove.png)](https://www.youtube.com/watch?v=i3p-3I95YqM)
+**Tutorial: Removing a Customer Object**
 
-## Docker Compose HTTPS Deployment
+### Related Projects
 
-- Create self-signed development certificates for the project
-  -
-  cmd: `dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\CleanArchitecture.Blazor.Server.UI.pfx -p Password@123`
-    - cmd: `dotnet dev-certs https --trust`
-- Manage User secrets to save the password
-    - cmd: `dotnet user-secrets init`
-    - cmd: `dotnet user-secrets -p Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"`
+- **[CleanAspire](https://github.com/neozhu/cleanaspire)**: Blazor WebAssembly version with .NET Aspire
+- **[CleanArchitecture CodeGenerator](https://github.com/neozhu/CleanArchitectureCodeGenerator)**: Visual Studio extension
 
-## Code Generator Extension for Visual Studio 2022
+## 🌐 About the Creator
 
-The [CleanArchitecture CodeGenerator for Blazor App](https://github.com/neozhu/CleanArchitectureCodeGenerator) is a powerful Visual Studio extension that helps developers streamline the creation of Blazor applications based on Clean Architecture principles.
+Visit my website for more Blazor resources and professional services:
 
+**[BlazorServer.com](https://blazorserver.com)** - Blazor Development Services & Resources
 
-<div><video controls src="https://user-images.githubusercontent.com/1549611/197116874-f28414ca-7fc1-463a-b887-0754a5bb3e01.mp4" muted="false"></video></div>
+## ❤️ Support This Project
 
-### Features of CodeGenerator
+If this project helps you, please consider supporting its development:
 
-- Automatically generates standard code for:
-  - Application Layer
-  - Domain Events
-  - Blazor UI Layer
-- Simplifies the process of adding new entities and business logic.
-- Enhances productivity by minimizing repetitive coding tasks.
+- **⭐ Star this repository**
+- **🐛 Report issues**
+- **💡 Suggest features**
+- **💰 Sponsor**: [GitHub Sponsors](https://github.com/sponsors/neozhu) | [PayPal](https://paypal.me/hualinz)
 
+Your support helps maintain and improve this project. Thank you! 🙏
 
+## 📄 License
 
-### Install CleanArchitecture CodeGenerator For Blazor App
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-- Open Manage Extensions Search with `CleanArchitecture CodeGenerator For Blazor App`
-  ![image](https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/555d274c-8f62-438b-ac7a-6d327e4c23c8)
-- Download to Install
+---
 
- 
+<div align="center">
 
-## How to install solution templates
+**Built with ❤️ using Clean Architecture principles**
 
-- Install the project template
-    - run CLI: `dotnet new install ./`
-    - run CLI: `dotnet new list`
+[⭐ Star this repo](https://github.com/neozhu/CleanArchitectureWithBlazorServer) | [🐛 Report Bug](https://github.com/neozhu/CleanArchitectureWithBlazorServer/issues) | [💡 Request Feature](https://github.com/neozhu/CleanArchitectureWithBlazorServer/issues)
 
-<img width="828" alt="image" src="https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/f23022e0-3fd6-475a-96ab-84b0d3328e4c">
-
-- create a solution with the template
-    - run CLI: `dotnet new ca-blazorserver-sln` or `dotnet new ca-blazorserver-sln -n NewProjectName(root namespaces)`
-
-
-- build a project template with nuget.exe
-    - run CLI: `.\nuget.exe add -Source .\ CleanArchitecture.Blazor.Solution.Template.1.0.0-preview.1.nupkg`
-      <img width="1329" alt="image" src="https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/7c56dec5-5935-4fc5-ad81-8bcb65e9d0dc">
-    - create a new project from Clean Architecture for Blazor Server Solution
-      <img width="769" alt="image" src="https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/ed7eb20f-aec2-4f69-95b7-d47c2eb20428">
-
-
-## Tutorial: Removing a cutomer Object from a Project
-[![Everything Is AWESOME](doc/remove.png)](https://www.youtube.com/watch?v=i3p-3I95YqM "Everything Is AWESOME")
-
-
-## Tutorial: Adding a contact Entity in the project
-[![Everything Is AWESOME](doc/create.png)](https://www.youtube.com/watch?v=X1b4hFLs4vo "Everything Is AWESOME")
-
-
-## Why I chose Blazor Server
-
-I prefer Blazor Server because I dislike switching between C# and JavaScript during development. Blazor Server allows me to focus on C#.
-
-## Characteristics
-- Real-Time Updates
-- Avoid repeating work
-- Focus on story implementation
-- Integration with the Hangfire dashboard
-- Implementation of OCR image recognition
-- org chart
-
-
-
-https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/2b33254c-1022-472b-90c2-b0c0e068494f
-
-
-![image](https://user-images.githubusercontent.com/1549611/185576711-31ab3081-ba22-43f3-b837-c8f1de981442.png)
-
-  ![image](doc/orgchart.png)
-
-## About
-
-Coming up.
-
-## License
-
-MIT License
+</div>
