@@ -1,8 +1,5 @@
-using CleanArchitecture.Blazor.Application.Common.Constants;
-using CleanArchitecture.Blazor.Application.Common.Extensions;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+﻿using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Domain.Identity;
-using Microsoft.AspNetCore.Identity;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
@@ -60,7 +57,7 @@ public class UserContextLoader : IUserContextLoader
                     {
                         return null;
                     }
-
+                    var allowedTenantIds = await userManager.Users.Where(x => x.Id == user.Id).Include(x => x.TenantUsers).ThenInclude(tu => tu.Tenant).SelectMany(x => x.TenantUsers.Select(x => x.Tenant.Id)).ToListAsync();
                     var roles = await userManager.GetRolesAsync(user);
 
                     return new UserContext(
@@ -68,6 +65,7 @@ public class UserContextLoader : IUserContextLoader
                         UserName: user.UserName ?? string.Empty,
                         DisplayName: user.DisplayName,
                         TenantId: user.TenantId,
+                        AllowedTenantIds: allowedTenantIds.AsReadOnly(),
                         Email: user.Email,
                         Roles: roles.ToList().AsReadOnly(),
                         ProfilePictureDataUrl: user.ProfilePictureDataUrl,
@@ -79,7 +77,7 @@ public class UserContextLoader : IUserContextLoader
                     return null;
                 }
             },
-            options:new FusionCacheEntryOptions(TimeSpan.FromHours(1)),
+            options: new FusionCacheEntryOptions(TimeSpan.FromHours(1)),
             cancellationToken
         );
     }
@@ -97,5 +95,5 @@ public class UserContextLoader : IUserContextLoader
         }
     }
 
-    
-} 
+
+}

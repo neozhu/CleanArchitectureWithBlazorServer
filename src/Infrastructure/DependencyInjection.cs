@@ -3,19 +3,12 @@
 
 using System.Reflection;
 using CleanArchitecture.Blazor.Application.Common.Constants;
-using CleanArchitecture.Blazor.Application.Common.Interfaces; // IDataSourceService
-using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Common.Security;
-using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
-using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
-using CleanArchitecture.Blazor.Infrastructure.Services;
 using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.Gemini;
-using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using MaxMind.GeoIP2;
 using Microsoft.AspNetCore.Components.Server.Circuits;

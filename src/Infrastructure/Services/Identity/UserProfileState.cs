@@ -1,31 +1,18 @@
-using CleanArchitecture.Blazor.Application.Common.Constants;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+﻿using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
-/// <summary>
-/// Implementation of IUserProfileState following Blazor state management best practices.
-/// Uses immutable UserProfile snapshots with precise event notifications.
-/// </summary>
 public class UserProfileState : IUserProfileState, IDisposable
 {
-    // Cache refresh interval of 60 seconds
-    private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
-
-    // Current user profile state (immutable snapshot)
+    private const int CacheRefreshSeconds = 60;
+    
     private UserProfile _currentValue = UserProfile.Empty;
     private string? _currentUserId;
-
-    // Concurrency control
     private readonly SemaphoreSlim _semaphore = new(1, 1);
-
-    // Dependencies
     private readonly IMapper _mapper;
     private readonly IFusionCache _fusionCache;
     private readonly IServiceScopeFactory _scopeFactory;
@@ -43,50 +30,25 @@ public class UserProfileState : IUserProfileState, IDisposable
         _logger = logger;
     }
 
-    /// <summary>
-    /// Gets the current user profile snapshot (immutable).
-    /// </summary>
     public UserProfile Value => _currentValue;
-
-    /// <summary>
-    /// Event triggered when the user profile changes.
-    /// Subscribers receive the new UserProfile snapshot.
-    /// </summary>
     public event EventHandler<UserProfile>? Changed;
 
-    /// <summary>
-    /// Ensures the user profile is initialized for the given user ID.
-    /// Only loads from database on first call or when user changes.
-    /// </summary>
     public async Task EnsureInitializedAsync(string userId, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(userId))
-            return;
-
-        // Check if already initialized for this user
-        if (_currentUserId == userId && _currentValue != UserProfile.Empty)
+        if (string.IsNullOrWhiteSpace(userId) || (_currentUserId == userId && _currentValue != UserProfile.Empty))
             return;
 
         await _semaphore.WaitAsync(cancellationToken);
         try
         {
-            // Double-check after acquiring lock
             if (_currentUserId == userId && _currentValue != UserProfile.Empty)
                 return;
 
             var result = await LoadUserProfileFromDatabaseAsync(userId, cancellationToken);
-
-            if (result is not null)
-            {
-                var newProfile = result.ToUserProfile();
-                _currentUserId = userId;
-                SetInternal(newProfile);
-            }
-            else
-            {
-                _currentUserId = userId;
-                SetInternal(UserProfile.Empty with { UserId = userId });
-            }
+            var newProfile = result?.ToUserProfile() ?? UserProfile.Empty with { UserId = userId };
+            
+            _currentUserId = userId;
+            SetInternal(newProfile);
         }
         catch (Exception ex)
         {
@@ -99,9 +61,6 @@ public class UserProfileState : IUserProfileState, IDisposable
         }
     }
 
-    /// <summary>
-    /// Refreshes the user profile by clearing cache and reloading from database.
-    /// </summary>
     public async Task RefreshAsync(CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(_currentUserId))
@@ -110,16 +69,11 @@ public class UserProfileState : IUserProfileState, IDisposable
         await _semaphore.WaitAsync(cancellationToken);
         try
         {
-            var cacheKey = UserCacheKeys.GetCacheKey(_currentUserId, UserCacheType.Application);
-            await _fusionCache.RemoveAsync(cacheKey);
-            
+            await ClearCacheAsync(_currentUserId);
             var result = await LoadUserProfileFromDatabaseAsync(_currentUserId, cancellationToken);
-
+            
             if (result is not null)
-            {
-                var newProfile = result.ToUserProfile();
-                SetInternal(newProfile);
-            }
+                SetInternal(result.ToUserProfile());
         }
         catch (Exception ex)
         {
@@ -132,25 +86,14 @@ public class UserProfileState : IUserProfileState, IDisposable
         }
     }
 
-    /// <summary>
-    /// Sets a new user profile directly (for local updates after database changes).
-    /// </summary>
     public void Set(UserProfile userProfile)
     {
         ArgumentNullException.ThrowIfNull(userProfile);
         _currentUserId = userProfile.UserId;
         SetInternal(userProfile);
-        // Clear cache in background - don't block the UI
-        _ = Task.Run(async () => 
-        {
-            var cacheKey = UserCacheKeys.GetCacheKey(userProfile.UserId, UserCacheType.Application);
-            await _fusionCache.RemoveAsync(cacheKey);
-        });
+        ClearCacheInBackground(userProfile.UserId);
     }
 
-    /// <summary>
-    /// Updates specific fields locally without database access.
-    /// </summary>
     public void UpdateLocal(
         string? profilePictureDataUrl = null,
         string? displayName = null,
@@ -159,9 +102,7 @@ public class UserProfileState : IUserProfileState, IDisposable
         string? languageCode = null)
     {
         if (_currentValue == UserProfile.Empty)
-        {
             return;
-        }
 
         var updatedProfile = _currentValue with
         {
@@ -173,28 +114,13 @@ public class UserProfileState : IUserProfileState, IDisposable
         };
 
         SetInternal(updatedProfile);
-        // Clear cache in background - don't block the UI
-        _ = Task.Run(async () => 
-        {
-            var cacheKey = UserCacheKeys.GetCacheKey(_currentValue.UserId, UserCacheType.Application);
-            await _fusionCache.RemoveAsync(cacheKey);
-        });
+        ClearCacheInBackground(_currentValue.UserId);
     }
 
-    /// <summary>
-    /// Clears the cache for the current user.
-    /// </summary>
     public void ClearCache()
     {
         if (!string.IsNullOrWhiteSpace(_currentUserId))
-        {
-            // Clear cache in background - don't block the UI
-            _ = Task.Run(async () => 
-            {
-                var cacheKey = UserCacheKeys.GetCacheKey(_currentUserId, UserCacheType.Application);
-                await _fusionCache.RemoveAsync(cacheKey);
-            });
-        }
+            ClearCacheInBackground(_currentUserId);
     }
 
     private void SetInternal(UserProfile newProfile)
@@ -202,27 +128,30 @@ public class UserProfileState : IUserProfileState, IDisposable
         var oldProfile = _currentValue;
         _currentValue = newProfile;
 
-        // Trigger event if profile actually changed
         if (!ReferenceEquals(oldProfile, newProfile))
-        {
             Changed?.Invoke(this, newProfile);
-        }
     }
 
-    private string GetApplicationUserCacheKey(string userId)
+    private void ClearCacheInBackground(string userId)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(userId);
-        return UserCacheKeys.GetCacheKey(userId, UserCacheType.Application);
+        _ = Task.Run(async () =>
+        {
+            var cacheKey = UserCacheKeys.GetCacheKey(userId, UserCacheType.Application);
+            await _fusionCache.RemoveAsync(cacheKey);
+        });
     }
 
-    /// <summary>
-    /// Loads user profile data from database with caching.
-    /// </summary>
+    private async Task ClearCacheAsync(string userId)
+    {
+        var cacheKey = UserCacheKeys.GetCacheKey(userId, UserCacheType.Application);
+        await _fusionCache.RemoveAsync(cacheKey);
+    }
+
     private async Task<ApplicationUserDto?> LoadUserProfileFromDatabaseAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var key = GetApplicationUserCacheKey(userId);
+        var cacheKey = UserCacheKeys.GetCacheKey(userId, UserCacheType.Application);
         return await _fusionCache.GetOrSetAsync(
-            key,
+            cacheKey,
             async _ =>
             {
                 using var scope = _scopeFactory.CreateScope();
@@ -234,12 +163,9 @@ public class UserProfileState : IUserProfileState, IDisposable
                             .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
                             .FirstOrDefaultAsync(cancellationToken);
             },
-            RefreshInterval);
+            TimeSpan.FromSeconds(CacheRefreshSeconds));
     }
 
-    /// <summary>
-    /// Updates the user's language code in the database and refreshes local state.
-    /// </summary>
     public async Task SetLanguageAsync(string languageCode, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(languageCode) || string.IsNullOrWhiteSpace(_currentUserId))
@@ -257,15 +183,12 @@ public class UserProfileState : IUserProfileState, IDisposable
 
             user.LanguageCode = languageCode;
             var result = await userManager.UpdateAsync(user);
+            
             if (!result.Succeeded)
-            {
                 throw new InvalidOperationException($"Failed to update language. Errors: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-            }
 
-            // Update local state and cache
             UpdateLocal(languageCode: languageCode);
-            var cacheKey = UserCacheKeys.GetCacheKey(_currentUserId, UserCacheType.Application);
-            await _fusionCache.RemoveAsync(cacheKey);
+            await ClearCacheAsync(_currentUserId);
         }
         catch (Exception ex)
         {

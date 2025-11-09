@@ -1,12 +1,8 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Application.Features.LoginAudits.Caching;
 using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Domain.Identity;
-using System.Collections.Concurrent;
-using System.Net;
-using System.Text.RegularExpressions;
 using ZiggyCreatures.Caching.Fusion;
 using Microsoft.Extensions.Localization;
 

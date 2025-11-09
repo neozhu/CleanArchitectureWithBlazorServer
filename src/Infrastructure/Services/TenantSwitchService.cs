@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Blazor.Domain.Identity;
-using ZiggyCreatures.Caching.Fusion;
 using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Application.Common.Security;
 
