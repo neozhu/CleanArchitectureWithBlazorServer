@@ -7,27 +7,7 @@
 [![Downloads](https://img.shields.io/nuget/dt/CleanArchitecture.Blazor.Solution.Template?label=Downloads)](https://www.nuget.org/packages/CleanArchitecture.Blazor.Solution.Template)
 
 
-## 📢 Project Update & Future Direction
-
-Thank you for your continued interest and support for **CleanArchitectureWithBlazorServer**!
-
-This project has been actively maintained and improved for over **three years**, during which it has evolved through multiple real-world implementations. It now serves as a **solid, enterprise-grade template** for building Blazor Server applications — capable of saving significant development time, especially during the **prototype and proof-of-concept (POC)** phases where rapid delivery and discussion are essential.
-
-I’ve invested a great deal of time and effort into making this project as robust and practical as possible. Moving forward, I will **no longer actively update or maintain the open-source version** of this repository.
-
-Instead, future iterations and enhancements will continue under a **private project** called **CleanBlazorServerPro**, which will include the latest improvements, patterns, and advanced features.
-
-Access to **CleanBlazorServerPro** will be available **by membership invitation**.
-The tentative pricing model will be:
-
-* 💵 **$100 per month**, or
-* 💰 **$300 per year**
-
-(Details are still under consideration — suggestions and feedback are welcome!)
-
-Thank you once again for being part of this journey. I hope the open-source version continues to help developers learn, build, and prototype efficiently, and I look forward to sharing even more refined solutions in the **Pro** version.
-
-— *Hualin Zhu*
+ 
 
 > A comprehensive Blazor Server application template built with Clean Architecture principles, featuring advanced code generation, AI-powered development support, and enterprise-grade functionality.
 
