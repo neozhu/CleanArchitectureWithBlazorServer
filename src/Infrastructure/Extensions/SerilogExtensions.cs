@@ -23,9 +23,14 @@ public static class SerilogExtensions
     {
         Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
         builder.Host.UseSerilog((context, configuration) =>
-            configuration.ReadFrom.Configuration(context.Configuration)
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+            configuration
+                // Configure minimum log levels
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
+                .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
+                .MinimumLevel.Override("System", LogEventLevel.Warning)
+                .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
                 .MinimumLevel.Override("MudBlazor", LogEventLevel.Information)
                 .MinimumLevel.Override("Serilog", LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore.AddOrUpdate", LogEventLevel.Error)
@@ -42,9 +47,14 @@ public static class SerilogExtensions
                 .MinimumLevel.Override("ActualLab.Fusion.Internal.ComputedGraphPruner", LogEventLevel.Error)
                 .MinimumLevel.Override("CleanArchitecture.Blazor.Server.UI.Services.Fusion.UserSessionTracker", LogEventLevel.Error)
                 .MinimumLevel.Override("CleanArchitecture.Blazor.Server.UI.Services.Fusion.OnlineUserTracker", LogEventLevel.Error)
+                // Add enrichment properties
                 .Enrich.FromLogContext()
                 .Enrich.WithUtcTime()
                 .Enrich.WithUserInfo()
+                .Enrich.WithProperty("Application", "BlazorApp")
+                .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName)
+                .Enrich.WithProperty("TargetFramework", "net9")
+                // Configure output sinks
                 .WriteTo.Async(wt => wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
                 .WriteTo.Async(wt =>
                     wt.Console(
@@ -56,7 +66,28 @@ public static class SerilogExtensions
 
     private static void ApplyConfigPreferences(this LoggerConfiguration serilogConfig, IConfiguration configuration)
     {
+        WriteToSeq(serilogConfig, configuration);
         WriteToDatabase(serilogConfig, configuration);
+    }
+
+    private static void WriteToSeq(LoggerConfiguration serilogConfig, IConfiguration configuration)
+    {
+        var serverUrl = "https://seq.blazorserver.com";
+        var apiKey = "none";
+        var restrictedToMinimumLevel = "Verbose";
+
+        if (!string.IsNullOrEmpty(serverUrl))
+        {
+            var minimumLevel = Enum.TryParse<LogEventLevel>(restrictedToMinimumLevel, true, out var level) 
+                ? level 
+                : LogEventLevel.Verbose;
+
+            serilogConfig.WriteTo.Seq(
+                serverUrl,
+                apiKey: string.IsNullOrEmpty(apiKey) || apiKey == "none" ? null : apiKey,
+                restrictedToMinimumLevel: minimumLevel
+            );
+        }
     }
 
     private static void WriteToDatabase(LoggerConfiguration serilogConfig, IConfiguration configuration)
@@ -144,8 +175,8 @@ public static class SerilogExtensions
         if (string.IsNullOrEmpty(connectionString)) return;
 
         const string tableName = "loggers";
-        //Used columns (Key is a column name) 
-        //Column type is writer's constructor parameter
+        // Used columns (Key is a column name) 
+        // Column type is writer's constructor parameter
         IDictionary<string, ColumnWriterBase> columnOptions = new Dictionary<string, ColumnWriterBase>
         {
             { "message", new RenderedMessageColumnWriter(NpgsqlDbType.Text) },
@@ -210,8 +241,8 @@ internal class UserInfoEnricher : ILogEventEnricher
     public UserInfoEnricher() : this(new HttpContextAccessor())
     {
     }
-    //Dependency injection can be used to retrieve any service required to get a user or any data.
-    //Here, I easily get data from HTTPContext
+    // Dependency injection can be used to retrieve any service required to get a user or any data.
+    // Here, I easily get data from HTTPContext
     public UserInfoEnricher(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;

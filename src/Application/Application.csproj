@@ -9,24 +9,24 @@
     </PropertyGroup>
     <ItemGroup>
    
-        <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
-        <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
-        <PackageReference Include="ClosedXML" Version="0.104.2" />
-        <PackageReference Include="jcamp.FluentEmail.Core" Version="3.8.0" />
-        <PackageReference Include="jcamp.FluentEmail.MailKit" Version="3.8.0" />
-        <PackageReference Include="jcamp.FluentEmail.Razor" Version="3.8.0" />
-        <PackageReference Include="FluentValidation" Version="11.11.0" />
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="Riok.Mapperly" Version="4.1.1" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.5.1" />
-        <PackageReference Include="Hangfire.Core" Version="1.8.17" />
-        <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.0.0-preview-3" />
-           <PackageReference Include="ActualLab.Fusion" Version="9.8.3" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="9.8.3" />
-        <PackageReference Include="ActualLab.Generators" Version="9.8.3">
+        <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
+        <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
+        <PackageReference Include="ClosedXML" Version="0.105.0" />
+        <PackageReference Include="jcamp.FluentEmail.Core" Version="4.0.0" />
+        <PackageReference Include="jcamp.FluentEmail.MailKit" Version="4.0.0" />
+        <PackageReference Include="jcamp.FluentEmail.Razor" Version="4.0.0" />
+        <PackageReference Include="FluentValidation" Version="12.1.0" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.10" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.10" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="Riok.Mapperly" Version="4.3.0" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.10" />
+        <PackageReference Include="Hangfire.Core" Version="1.8.22" />
+        <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.4.0" />
+           <PackageReference Include="ActualLab.Fusion" Version="11.1.4" />
+        <PackageReference Include="ActualLab.Fusion.Blazor" Version="11.1.4" />
+        <PackageReference Include="ActualLab.Generators" Version="11.1.4">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
