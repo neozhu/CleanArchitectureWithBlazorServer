@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <RootNamespace>CleanArchitecture.Blazor.Application.IntegrationTests</RootNamespace>
         <AssemblyName>CleanArchitecture.Blazor.Application.IntegrationTests</AssemblyName>
 
@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
         <PackageReference Include="nunit" Version="4.4.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="5.2.0">
             <PrivateAssets>all</PrivateAssets>

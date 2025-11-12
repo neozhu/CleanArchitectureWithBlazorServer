@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <RootNamespace>CleanArchitecture.Blazor.Application</RootNamespace>
         <AssemblyName>CleanArchitecture.Blazor.Application</AssemblyName>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -17,8 +17,8 @@
         <PackageReference Include="jcamp.FluentEmail.Razor" Version="4.0.0" />
         <PackageReference Include="FluentValidation" Version="12.1.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.10" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.10" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="Riok.Mapperly" Version="4.3.0" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.10" />
