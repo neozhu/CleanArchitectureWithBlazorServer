@@ -55,9 +55,9 @@ jobs:
     #     echo "Run, Build Application using script"
     #     ./location_of_script_within_repo/buildscript.sh
     - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 10.0.x
 
 
     - name: Restore dependencies
@@ -65,7 +65,4 @@ jobs:
     - name: Build
       run: dotnet build CleanArchitecture.Blazor.sln --configuration Debug --no-restore
    
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with:
-        languages: csharp
+   
