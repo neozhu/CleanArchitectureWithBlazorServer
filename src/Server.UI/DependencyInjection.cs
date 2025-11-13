@@ -137,7 +137,7 @@ public static class DependencyInjection
             app.UseHsts();
         }
         app.InitializeCacheFactory();
-        app.UseStatusCodePagesWithRedirects("/404");
+        app.UseStatusCodePagesWithReExecute("/not-found",createScopeForStatusCodePages: true);
         app.MapHealthChecks("/health");
         app.UseAuthentication();
         app.UseAuthorization();

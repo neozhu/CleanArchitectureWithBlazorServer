@@ -1,0 +1,34 @@
+@page "/not-found"
+
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using CleanArchitecture.Blazor.Server.UI.Components.Shared
+
+<PageTitle>@ApplicationSettings.AppName - Page Not Found - 404</PageTitle>
+
+<ErrorPageComponent Type="@_errorType" 
+                   MinHeight="80vh" 
+                   ShowBackButton="true" />
+
+@code {
+    private ErrorPageComponent.ErrorType _errorType = ErrorPageComponent.ErrorType.NotFound;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var currentPath = Navigation.ToBaseRelativePath(Navigation.Uri);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var isAuthenticated = authState.User?.Identity?.IsAuthenticated ?? false;
+        
+        // Simple check: if user is authenticated and path contains admin-like keywords
+        if (isAuthenticated && IsLikelyProtectedPath(currentPath))
+        {
+            _errorType = ErrorPageComponent.ErrorType.AccessDenied;
+        }
+    }
+
+    private bool IsLikelyProtectedPath(string path)
+    {
+        var protectedPaths = new[] { "admin", "management", "system", "users", "tenants", "roles", "audit" };
+        return protectedPaths.Any(p => path.Contains(p, StringComparison.OrdinalIgnoreCase));
+    }
+}
