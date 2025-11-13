@@ -96,7 +96,8 @@ public static class DependencyInjection
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
         services.AddScoped<LocalTimeOffset>();
-        services.AddScoped<HubClient>();
+        services.AddScoped<IHubConnectionFactory, HubConnectionFactory>()
+            .AddScoped<HubClient>();
         services
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()

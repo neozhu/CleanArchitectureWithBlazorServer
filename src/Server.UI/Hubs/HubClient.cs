@@ -9,29 +9,10 @@ public sealed class HubClient : IAsyncDisposable
 {
     private readonly HubConnection _hubConnection;
     private bool _started;
-    public HubClient(NavigationManager navigationManager, IHttpContextAccessor httpContextAccessor)
+    public HubClient(IHubConnectionFactory hubConnectionFactory)
     {
-        var uri = new UriBuilder(navigationManager.Uri);
-        var container = new CookieContainer();
-        if (httpContextAccessor.HttpContext != null)
-        {
-            foreach (var c in httpContextAccessor.HttpContext.Request.Cookies)
-            {
-                container.Add(new Cookie(c.Key, c.Value)
-                {
-                    Domain = uri.Host,
-                    Path = "/"
-                });
-            }
-        }
 
-        var hubUrl = navigationManager.BaseUri.TrimEnd('/') + ISignalRHub.Url;
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl(hubUrl, options =>
-            {
-                options.Transports = HttpTransportType.WebSockets;
-                options.Cookies = container;
-            }).WithAutomaticReconnect().Build();
+        _hubConnection = hubConnectionFactory.CreateForCurrentUser(ISignalRHub.Url);
 
         _hubConnection.ServerTimeout = TimeSpan.FromSeconds(20);
         _hubConnection.KeepAliveInterval = TimeSpan.FromSeconds(10);
