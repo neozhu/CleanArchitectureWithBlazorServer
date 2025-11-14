@@ -380,6 +380,9 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 ### Video Tutorials
 
+[![Passkey Authentication Implementation for .NET 10 Blazor Server](https://img.youtube.com/vi/hcsV2VDagzA/maxresdefault.jpg)](https://youtu.be/hcsV2VDagzA?si=MRZ13N62DTVwjyqk)
+**Passkey Authentication Implementation for .NET 10 Blazor Server**
+
 [![Adding Contact Entity](doc/create.png)](https://www.youtube.com/watch?v=X1b4hFLs4vo)
 **Tutorial: Adding a Contact Entity**
 
