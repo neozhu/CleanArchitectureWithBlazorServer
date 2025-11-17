@@ -1,0 +1,287 @@
+﻿<script type="module" src="@Assets["Components/ReconnectModal.razor.js"]"></script>
+<dialog id="components-reconnect-modal" data-nosnippet>
+	<div class="components-reconnect-container">
+		<div class="components-rejoining-animation" aria-hidden="true">
+			<div></div>
+			<div></div>
+		</div>
+		<p class="components-reconnect-first-attempt-visible">
+			Rejoining the server...
+		</p>
+		<p class="components-reconnect-repeated-attempt-visible">
+			Rejoin failed... trying again in <span id="components-seconds-to-next-attempt"></span> seconds.
+		</p>
+		<p class="components-reconnect-failed-visible">
+			Failed to rejoin.<br />Please retry or reload the page.
+		</p>
+		<button id="components-reconnect-button" class="components-reconnect-failed-visible mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium mud-ripple">
+			<span class="mud-button-label">Retry</span>
+		</button>
+		<p class="components-pause-visible">
+			The session has been paused by the server.
+		</p>
+		<button id="components-resume-button" class="components-pause-visible mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium mud-ripple">
+			<span class="mud-button-label">Resume</span>
+		</button>
+		<p class="components-resume-failed-visible">
+			Failed to resume the session.<br />Please reload the page.
+		</p>
+	</div>
+</dialog>
+<style>
+	.components-reconnect-first-attempt-visible,
+	.components-reconnect-repeated-attempt-visible,
+	.components-reconnect-failed-visible,
+	.components-pause-visible,
+	.components-resume-failed-visible,
+	.components-rejoining-animation {
+		display: none;
+	}
+
+	#components-reconnect-modal.components-reconnect-show .components-reconnect-first-attempt-visible,
+	#components-reconnect-modal.components-reconnect-show .components-rejoining-animation,
+	#components-reconnect-modal.components-reconnect-paused .components-pause-visible,
+	#components-reconnect-modal.components-reconnect-resume-failed .components-resume-failed-visible,
+	#components-reconnect-modal.components-reconnect-retrying,
+	#components-reconnect-modal.components-reconnect-retrying .components-reconnect-repeated-attempt-visible,
+	#components-reconnect-modal.components-reconnect-retrying .components-rejoining-animation,
+	#components-reconnect-modal.components-reconnect-failed,
+	#components-reconnect-modal.components-reconnect-failed .components-reconnect-failed-visible {
+		display: block;
+	}
+
+	#components-reconnect-modal {
+		background-color: var(--mud-palette-surface);
+		color: var(--mud-palette-text-primary);
+		width: 20rem;
+		margin: 10vh auto;
+		padding: 2rem;
+		border: 0;
+		border-radius: var(--mud-default-borderradius, 4px);
+		box-shadow: var(--mud-elevation-8);
+		opacity: 0;
+		transition: display 0.5s allow-discrete, overlay 0.5s allow-discrete;
+		animation: components-reconnect-modal-fadeOutOpacity 0.5s both;
+	}
+
+	#components-reconnect-modal[open] {
+		animation: components-reconnect-modal-slideUp 1.5s cubic-bezier(.05, .89, .25, 1.02) 0.3s, components-reconnect-modal-fadeInOpacity 0.5s ease-in-out 0.3s;
+		animation-fill-mode: both;
+	}
+
+	#components-reconnect-modal::backdrop {
+		background-color: var(--mud-palette-backdrop-background);
+		animation: components-reconnect-modal-fadeInOpacity 0.5s ease-in-out;
+		opacity: 1;
+	}
+
+	@@keyframes components-reconnect-modal-slideUp {
+		0% {
+			transform: translateY(30px) scale(0.95);
+		}
+
+		100% {
+			transform: translateY(0);
+		}
+	}
+
+	@@keyframes components-reconnect-modal-fadeInOpacity {
+		0% {
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 1;
+		}
+	}
+
+	@@keyframes components-reconnect-modal-fadeOutOpacity {
+		0% {
+			opacity: 1;
+		}
+
+		100% {
+			opacity: 0;
+		}
+	}
+
+	.components-reconnect-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start; 
+		gap: 0.8rem; 
+		padding-top: 0.5rem;
+	}
+	#components-reconnect-modal::backdrop{
+		backdrop-filter: blur(2px);
+	}
+	#components-reconnect-button,
+	#components-resume-button {
+		margin-top: 0.3rem; /* 自定义按钮间距 */
+	}
+	#components-reconnect-modal p {
+		margin: 0;
+		text-align: center;
+		color: var(--mud-palette-text-primary);
+		font-size: var(--mud-typography-default-size);
+		line-height: 1.5;
+	}
+
+	/* MudButton-like styling for reconnect buttons */
+	#components-reconnect-modal button.mud-button-root {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		font-family: inherit;
+		font-weight: 500;
+		font-size: var(--mud-typography-default-size);
+		line-height: 1.75;
+		letter-spacing: 0.02857em;
+		text-transform: uppercase;
+		min-width: 64px;
+		padding: 6px 16px;
+		border-radius: var(--mud-default-borderradius, 4px);
+		transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+					box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+					border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+					color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+		border: 0;
+		cursor: pointer;
+		outline: 0;
+		text-decoration: none;
+		vertical-align: middle;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		user-select: none;
+		-webkit-appearance: none;
+		-webkit-tap-highlight-color: transparent;
+	}
+	#components-reconnect-modal button{
+		margin: 0px auto !important;
+	}
+	#components-reconnect-modal button.mud-button-filled-primary {
+		color: var(--mud-palette-primary-text);
+		background-color: var(--mud-palette-primary);
+		box-shadow: var(--mud-elevation-1);
+	}
+
+	#components-reconnect-modal button.mud-button-filled-primary:hover {
+		background-color: var(--mud-palette-primary-darken);
+		box-shadow: var(--mud-elevation-4);
+	}
+
+	#components-reconnect-modal button.mud-button-filled-primary:active {
+		box-shadow: var(--mud-elevation-8);
+	}
+
+	#components-reconnect-modal button.mud-button-root:disabled {
+		color: var(--mud-palette-action-disabled);
+		background-color: var(--mud-palette-action-disabled-background);
+		box-shadow: none;
+		cursor: default;
+		pointer-events: none;
+	}
+
+	#components-reconnect-modal button .mud-button-label {
+		display: inherit;
+		align-items: inherit;
+		justify-content: inherit;
+	}
+
+	/* Ripple effect container */
+	#components-reconnect-modal button.mud-ripple {
+		overflow: hidden;
+		position: relative;
+	}
+
+	#components-reconnect-modal button.mud-button-root:focus-visible {
+		outline: 2px solid var(--mud-palette-primary);
+		outline-offset: 2px;
+	}
+
+	.components-rejoining-animation {
+		position: relative;
+		width: 80px;
+		height: 80px;
+	}
+
+	.components-rejoining-animation div {
+		position: absolute;
+		border: 3px solid var(--mud-palette-primary);
+		opacity: 1;
+		border-radius: 50%;
+		animation: components-rejoining-animation 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+	}
+
+	.components-rejoining-animation div:nth-child(2) {
+		animation-delay: -0.5s;
+	}
+
+	@@keyframes components-rejoining-animation {
+		0% {
+			top: 40px;
+			left: 40px;
+			width: 0;
+			height: 0;
+			opacity: 0;
+		}
+
+		4.9% {
+			top: 40px;
+			left: 40px;
+			width: 0;
+			height: 0;
+			opacity: 0;
+		}
+
+		5% {
+			top: 40px;
+			left: 40px;
+			width: 0;
+			height: 0;
+			opacity: 1;
+		}
+
+		100% {
+			top: 0px;
+			left: 0px;
+			width: 80px;
+			height: 80px;
+			opacity: 0;
+		}
+	}
+
+	/* Responsive design */
+	@@media (max-width: 600px) {
+		#components-reconnect-modal {
+			width: 90%;
+			max-width: 20rem;
+			margin: 10vh auto;
+			padding: 1.5rem;
+		}
+	}
+
+	/* Dark theme support */
+	@@media (prefers-color-scheme: dark) {
+		#components-reconnect-modal {
+			background-color: var(--mud-palette-surface);
+			color: var(--mud-palette-text-primary);
+		}
+	}
+
+	/* Accessibility improvements */
+	@@media (prefers-reduced-motion: reduce) {
+		#components-reconnect-modal,
+		#components-reconnect-modal button,
+		.components-rejoining-animation div {
+			animation: none;
+			transition: none;
+		}
+	}
+</style>
+@code {
+
+}
