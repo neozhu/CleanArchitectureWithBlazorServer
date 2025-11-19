@@ -37,6 +37,11 @@ Experience the application in action:
 **Live Demo**: [architecture.blazorserver.com](https://architecture.blazorserver.com/)
 
 ### Featured Projects Built with This Template
+
+[![HR Cloud](doc/hrcloud.png)](https://hrcloud.blazorserver.com/)
+**HR Cloud** - [GitHub](https://github.com/neozhu/hrhub) | [Live Demo](https://hrcloud.blazorserver.com/)
+> Enabling collaboration between employers, suppliers, and HR management with integrated attendance, work hours, and billing in a seamless online closed loop.
+
 [![BLAZOR PARKING SYSTEM](doc/aceparking.png)](https://blazorparking.blazorserver.com/)
 **BLAZOR PARKING SYSTEM** - [GitHub](https://github.com/neozhu/aceparking) | [Live Demo](https://blazorparking.blazorserver.com/)
 
