@@ -1,11 +1,509 @@
-﻿@page "/public/index/{title?}"
-<PageTitle>@Title</PageTitle>
-<h2>Clean Architecture With Blazor Server</h2>
+﻿@page "/public/index"
+@inject LayoutService LayoutService
 
-<p>
-    This repository guides you through building robust and maintainable Blazor Server applications by embracing the principles of Clean Architecture. Experience a seamless development journey with the included, efficient code generator, empowering you to rapidly craft stunning web applications using the latest .NET Blazor technology.
-</p>
+<style>
+	/* ==============================================
+		   CSS Variables - Core Color System
+      ============================================== */
+	:root {
+		/* Brand Colors (Consistent across modes) */
+		--tech-primary: #3b82f6;
+		--tech-secondary: #8b5cf6;
+		--tech-accent: #06b6d4;
+		/* Default: Dark Mode Variables */
+		--bg-base: #0f172a;
+		--bg-grid-line: rgba(255, 255, 255, 0.03);
+		--bg-radial-1: rgba(59, 130, 246, 0.15);
+		--bg-radial-2: rgba(139, 92, 246, 0.15);
+		--text-primary: #f8fafc;
+		--text-secondary: #94a3b8;
+		--text-heading-gradient-from: #ffffff;
+		--text-heading-gradient-to: #94a3b8;
+		--card-bg: rgba(30, 41, 59, 0.6);
+		--card-border: rgba(255, 255, 255, 0.08);
+		--card-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+		--card-hover-border: rgba(59, 130, 246, 0.3);
+		--pill-bg: rgba(15, 23, 42, 0.6);
+		--pill-text: #cbd5e1;
+		--pill-border: rgba(148, 163, 184, 0.1);
+		--code-bg: #1e293b;
+		--code-text: #e2e8f0;
+		--btn-outline-border: #475569;
+		--btn-outline-text: #cbd5e1;
+		--btn-outline-hover-bg: rgba(255,255,255,0.05);
+	}
+
+	/* Light Mode Overrides */
+	.light-theme {
+		--bg-base: #f8fafc; /* Ultra light gray */
+		--bg-grid-line: rgba(0, 0, 0, 0.04);
+		--bg-radial-1: rgba(59, 130, 246, 0.08);
+		--bg-radial-2: rgba(139, 92, 246, 0.08);
+		--text-primary: #0f172a; /* Slate 900 */
+		--text-secondary: #475569; /* Slate 600 */
+		--text-heading-gradient-from: #0f172a;
+		--text-heading-gradient-to: #334155;
+		--card-bg: rgba(255, 255, 255, 0.75); /* Frosted glass white */
+		--card-border: rgba(226, 232, 240, 0.8);
+		--card-shadow: 0 10px 30px -5px rgba(148, 163, 184, 0.15);
+		--card-hover-border: rgba(59, 130, 246, 0.5);
+		--pill-bg: #ffffff;
+		--pill-text: #334155;
+		--pill-border: #e2e8f0;
+		--code-bg: #f1f5f9;
+		--code-text: #334155;
+		--btn-outline-border: #cbd5e1;
+		--btn-outline-text: #475569;
+		--btn-outline-hover-bg: rgba(0,0,0,0.05);
+	}
+
+	/* ==============================================
+		   Layout & Typography
+		   ============================================== */
+
+	.tech-bg-wrapper {
+		background-color: var(--bg-base);
+		/* Dynamic Grid Background */
+		background-image: radial-gradient(at 0% 0%, var(--bg-radial-1) 0px, transparent 50%), radial-gradient(at 100% 0%, var(--bg-radial-2) 0px, transparent 50%), linear-gradient(var(--bg-grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--bg-grid-line) 1px, transparent 1px);
+		background-size: 100% 100%, 100% 100%, 50px 50px, 50px 50px;
+		color: var(--text-primary);
+		min-height: 100vh;
+		overflow-x: hidden;
+		transition: background-color 0.3s ease, color 0.3s ease;
+	}
+
+	.hero-section {
+		padding: 120px 0 80px;
+		text-align: center;
+	}
+
+	.version-badge {
+		display: inline-block;
+		padding: 6px 16px;
+		background: rgba(6, 182, 212, 0.1);
+		border: 1px solid rgba(6, 182, 212, 0.3);
+		border-radius: 50px;
+		color: var(--tech-accent);
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.85rem;
+		font-weight: 600;
+		margin-bottom: 1.5rem;
+		backdrop-filter: blur(5px);
+		animation: pulse 3s infinite;
+	}
+
+	.hero-title {
+		font-size: 4.5rem;
+		font-weight: 800;
+		margin-bottom: 1.5rem;
+		line-height: 1.1;
+		background: linear-gradient(135deg, var(--text-heading-gradient-from) 0%, var(--text-heading-gradient-to) 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		letter-spacing: -0.02em;
+	}
+
+	.hero-title-highlight {
+		background: linear-gradient(135deg, var(--tech-primary) 0%, var(--tech-accent) 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.hero-description {
+		font-size: 1.25rem;
+		max-width: 700px;
+		margin: 0 auto 3rem;
+		color: var(--text-secondary);
+		line-height: 1.7;
+	}
+
+	/* ==============================================
+		   Components: Glass Cards & Tech Elements
+		   ============================================== */
+
+	.glass-card {
+		background: var(--card-bg);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid var(--card-border);
+		border-radius: 16px;
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		height: 100%;
+		position: relative;
+		overflow: hidden;
+		box-shadow: var(--card-shadow);
+	}
+
+		/* Top gradient border effect on hover */
+		.glass-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 2px;
+			background: linear-gradient(90deg, transparent, var(--tech-primary), transparent);
+			opacity: 0;
+			transition: opacity 0.4s ease;
+		}
+
+		.glass-card:hover {
+			transform: translateY(-5px);
+			border-color: var(--card-hover-border);
+		}
+
+			.glass-card:hover::before {
+				opacity: 1;
+			}
+
+	.feature-icon-box {
+		width: 56px;
+		height: 56px;
+		background: rgba(59, 130, 246, 0.1);
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto 1.5rem;
+		color: var(--tech-primary);
+		transition: transform 0.3s ease;
+	}
+
+	.glass-card:hover .feature-icon-box {
+		transform: scale(1.1) rotate(5deg);
+		background: var(--tech-primary);
+		color: white;
+	}
+
+	/* Tech Stack Pills/Badges */
+	.tech-grid {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 12px;
+		margin-top: 2rem;
+	}
+
+	.tech-pill {
+		background: var(--pill-bg);
+		border: 1px solid var(--pill-border);
+		color: var(--pill-text);
+		padding: 8px 20px;
+		border-radius: 6px;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.9rem;
+		transition: all 0.3s ease;
+		cursor: default;
+		backdrop-filter: blur(4px);
+	}
+
+		.tech-pill:hover {
+			border-color: var(--tech-accent);
+			color: var(--tech-accent);
+			transform: translateY(-2px);
+		}
+
+	/* Code Snippet Block */
+	.code-block {
+		background: var(--code-bg);
+		color: var(--code-text);
+		padding: 24px;
+		border-radius: 8px;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.85rem;
+		border: 1px solid var(--card-border);
+		box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+		line-height: 1.6;
+	}
+
+	/* Button Styles */
+	.btn-glow {
+		box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+		transition: all 0.3s ease;
+	}
+
+		.btn-glow:hover {
+			box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+			transform: scale(1.05);
+		}
+
+	.btn-outline-tech {
+		color: var(--btn-outline-text) !important;
+		border-color: var(--btn-outline-border) !important;
+		transition: all 0.3s ease;
+	}
+
+		.btn-outline-tech:hover {
+			background-color: var(--btn-outline-hover-bg) !important;
+			color: var(--tech-primary) !important;
+			border-color: var(--tech-primary) !important;
+		}
+
+	.section-title {
+		font-size: 2.5rem;
+		font-weight: 700;
+		margin-bottom: 1rem;
+		text-align: center;
+		color: var(--text-primary);
+	}
+
+	.section-subtitle {
+		color: var(--text-secondary);
+		text-align: center;
+		margin-bottom: 4rem;
+		max-width: 600px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	@@keyframes pulse {
+		0% {
+			box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4);
+		}
+
+		70% {
+			box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
+		}
+
+		100% {
+			box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
+		}
+	}
+
+	@@media (max-width: 768px) {
+		.hero-title {
+			font-size: 3rem;
+		}
+
+		.hero-section {
+			padding: 80px 0;
+		}
+	}
+</style>
+
+<!-- Main Wrapper with Dynamic Theme Class -->
+<div class="tech-bg-wrapper @(IsDarkMode ? "" : "light-theme")">
+
+	<!-- Hero Section -->
+	<div class="hero-section">
+		<MudContainer MaxWidth="MaxWidth.Large">
+			<div class="version-badge">
+				<MudIcon Icon="@Icons.Material.Filled.Bolt" Size="Size.Small" Style="vertical-align: middle; margin-top: -3px; margin-right: 4px;" />
+				POWERED BY .NET 10
+			</div>
+
+			<h1 class="hero-title">
+				Clean Architecture<br />
+				<span class="hero-title-highlight">Reimagined</span>
+			</h1>
+
+			<p class="hero-description">
+				Experience the next evolution of enterprise web development.
+				Built on the bleeding edge of .NET 10, combining extreme performance with
+				robust Clean Architecture principles.
+			</p>
+
+			<div class="d-flex justify-center gap-4 flex-wrap mt-8">
+				<MudButton Href="https://architecture.blazorserver.com"
+						   Variant="Variant.Filled"
+						   Color="Color.Primary"
+						   Size="Size.Large"
+						   Class="btn-glow py-3 px-8 rounded-pill"
+						   StartIcon="@Icons.Material.Filled.RocketLaunch">
+					Launch Demo
+				</MudButton>
+				<MudButton Href="https://github.com/neozhu/CleanArchitectureWithBlazorServer"
+						   Target="_blank"
+						   Variant="Variant.Outlined"
+						   Size="Size.Large"
+						   Class="btn-outline-tech py-3 px-8 rounded-pill"
+						   StartIcon="@Icons.Material.Filled.Code">
+					View Source
+				</MudButton>
+			</div>
+		</MudContainer>
+	</div>
+
+	<!-- Core Features Grid -->
+	<MudContainer MaxWidth="MaxWidth.Large" Class="py-16">
+		<MudGrid Spacing="4">
+			<!-- Feature 1 -->
+			<MudItem xs="12" sm="6" md="4">
+				<MudCard Class="glass-card pa-8 text-center">
+					<div class="feature-icon-box">
+						<MudIcon Icon="@Icons.Material.Filled.Architecture" Size="Size.Large" />
+					</div>
+					<MudText Typo="Typo.h5" Class="mb-3 font-bold" Color="Color.Inherit">Solid Foundation</MudText>
+					<MudText Style="color: var(--text-secondary);">
+						Strict adherence to Clean Architecture and SOLID principles ensuring long-term maintainability and scalability for large teams.
+					</MudText>
+				</MudCard>
+			</MudItem>
+
+			<!-- Feature 2 -->
+			<MudItem xs="12" sm="6" md="4">
+				<MudCard Class="glass-card pa-8 text-center">
+					<div class="feature-icon-box">
+						<MudIcon Icon="@Icons.Material.Filled.Shield" Size="Size.Large" />
+					</div>
+					<MudText Typo="Typo.h5" Class="mb-3 font-bold" Color="Color.Inherit">Ironclad Security</MudText>
+					<MudText Style="color: var(--text-secondary);">
+						Identity v10 integration with granular RBAC, JWT tokens, MFA support, and comprehensive audit trails for compliance.
+					</MudText>
+				</MudCard>
+			</MudItem>
+
+			<!-- Feature 3 -->
+			<MudItem xs="12" sm="6" md="4">
+				<MudCard Class="glass-card pa-8 text-center">
+					<div class="feature-icon-box">
+						<MudIcon Icon="@Icons.Material.Filled.Speed" Size="Size.Large" />
+					</div>
+					<MudText Typo="Typo.h5" Class="mb-3 font-bold" Color="Color.Inherit">Extreme Performance</MudText>
+					<MudText Style="color: var(--text-secondary);">
+						Engineered for speed with .NET 10 optimizations, compiled queries, lazy loading, and distributed Redis caching.
+					</MudText>
+				</MudCard>
+			</MudItem>
+
+			<!-- Feature 4 -->
+			<MudItem xs="12" sm="6" md="4">
+				<MudCard Class="glass-card pa-8 text-center">
+					<div class="feature-icon-box">
+						<MudIcon Icon="@Icons.Material.Filled.Layers" Size="Size.Large" />
+					</div>
+					<MudText Typo="Typo.h5" Class="mb-3 font-bold" Color="Color.Inherit">Modern UI/UX</MudText>
+					<MudText Style="color: var(--text-secondary);">
+						Beautiful, responsive interface built with MudBlazor 8 components, featuring dynamic theming and smooth transitions.
+					</MudText>
+				</MudCard>
+			</MudItem>
+
+			<!-- Feature 5 -->
+			<MudItem xs="12" sm="6" md="4">
+				<MudCard Class="glass-card pa-8 text-center">
+					<div class="feature-icon-box">
+						<MudIcon Icon="@Icons.Material.Filled.Language" Size="Size.Large" />
+					</div>
+					<MudText Typo="Typo.h5" Class="mb-3 font-bold" Color="Color.Inherit">Global Scale</MudText>
+					<MudText Style="color: var(--text-secondary);">
+						Enterprise-grade localization infrastructure supporting dynamic language switching and RTL layouts out of the box.
+					</MudText>
+				</MudCard>
+			</MudItem>
+
+			<!-- Feature 6 -->
+			<MudItem xs="12" sm="6" md="4">
+				<MudCard Class="glass-card pa-8 text-center">
+					<div class="feature-icon-box">
+						<MudIcon Icon="@Icons.Material.Filled.Hub" Size="Size.Large" />
+					</div>
+					<MudText Typo="Typo.h5" Class="mb-3 font-bold" Color="Color.Inherit">Real-time Core</MudText>
+					<MudText Style="color: var(--text-secondary);">
+						Native SignalR integration enabling live notifications, chat systems, and real-time collaborative features.
+					</MudText>
+				</MudCard>
+			</MudItem>
+		</MudGrid>
+	</MudContainer>
+
+	<!-- Technology Stack Section -->
+	<div style="background: rgba(var(--mud-palette-surface-rgb), 0.05); padding: 100px 0;">
+		<MudContainer MaxWidth="MaxWidth.Large">
+			<h2 class="section-title">Technological Singularity</h2>
+			<p class="section-subtitle">Orchestrating the most advanced stack available in 2025</p>
+
+			<div class="tech-grid">
+				<div class="tech-pill">.NET 10</div>
+				<div class="tech-pill">C# 14</div>
+				<div class="tech-pill">Blazor Server</div>
+				<div class="tech-pill">EF Core 10</div>
+				<div class="tech-pill">MudBlazor 8</div>
+				<div class="tech-pill">MediatR</div>
+				<div class="tech-pill">FluentValidation</div>
+				<div class="tech-pill">PostgreSQL 17</div>
+				<div class="tech-pill">Redis</div>
+				<div class="tech-pill">Docker Compose</div>
+				<div class="tech-pill">OpenTelemetry</div>
+				<div class="tech-pill">Serilog</div>
+			</div>
+		</MudContainer>
+	</div>
+
+	<!-- Modules & Architecture Showcase -->
+	<MudContainer MaxWidth="MaxWidth.Large" Class="py-16">
+		<MudGrid Class="align-center">
+			<MudItem xs="12" md="6">
+				<h2 class="section-title" style="text-align: left;">Enterprise Modules</h2>
+				<p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.6;">
+					Don't start from scratch. Our template comes packed with production-ready modules
+					to jumpstart your development cycle.
+				</p>
+
+				<MudList T="string" Class="d-flex flex-column gap-3">
+					@foreach (var item in new[] { "Advanced User Management", "Role-Based Access Control (RBAC)", "Audit Logging & Tracking", "File Management System", "Background Job Processing", "Multi-tenant Architecture" })
+					{
+						<div class="d-flex align-center">
+							<MudIcon Icon="@Icons.Material.Filled.CheckCircle" style="color: var(--tech-accent); margin-right: 12px;" />
+							<MudText Color="Color.Inherit" Style="color: var(--text-primary); font-weight: 500;">@item</MudText>
+						</div>
+					}
+				</MudList>
+			</MudItem>
+			<MudItem xs="12" md="6" Class="d-flex justify-center">
+				<!-- Abstract Code Representation -->
+				<div class="glass-card pa-4" style="width: 100%; max-width: 550px; transform: rotate(1deg);">
+					<div class="code-block">
+						<div style="color: var(--text-secondary); margin-bottom: 8px;">// CQRS Command Handler Example</div>
+						<div style="color: #c084fc;">[Authorize]</div>
+						<div style="color: #38bdf8;">public async</div> <div style="color: var(--text-primary); display:inline;">Task&lt;Result&lt;int&gt;&gt;</div> <div style="color: #facc15; display:inline;">Handle</div>(CreateOrderCommand command, CancellationToken ct)
+						<br />{
+						<br />&nbsp;&nbsp;<div style="color: var(--text-secondary);">// Validate domain logic</div>
+						<br />&nbsp;&nbsp;<div style="color: #38bdf8; display:inline;">var</div> order = Order.Create(command.CustomerId, command.Items);
+						<br />
+						<br />&nbsp;&nbsp;<div style="color: var(--text-secondary);">// Persist to database</div>
+						<br />&nbsp;&nbsp;_context.Orders.Add(order);
+						<br />&nbsp;&nbsp;<div style="color: #c084fc; display:inline;">await</div> _context.SaveChangesAsync(ct);
+						<br />
+						<br />&nbsp;&nbsp;<div style="color: var(--text-secondary);">// Dispatch domain events</div>
+						<br />&nbsp;&nbsp;<div style="color: #c084fc; display:inline;">await</div> _mediator.Publish(<div style="color: #f472b6; display:inline;">new</div> OrderCreatedEvent(order.Id), ct);
+						<br />
+						<br />&nbsp;&nbsp;<div style="color: #c084fc; display:inline;">return</div> Result&lt;int&gt;.Success(order.Id);
+						<br />}
+					</div>
+				</div>
+			</MudItem>
+		</MudGrid>
+	</MudContainer>
+
+	<!-- Call to Action Section -->
+	<div style="background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(6, 182, 212, 0.08) 100%); padding: 100px 0;">
+		<MudContainer MaxWidth="MaxWidth.Small" Class="text-center">
+			<h2 class="hero-title" style="font-size: 3rem;">Ready to Deploy?</h2>
+			<p class="hero-description" style="margin-bottom: 2.5rem;">
+				Join the future of enterprise development today.
+			</p>
+
+			<div class="d-flex justify-center flex-column align-center gap-4">
+				<MudButton Href="https://architecture.blazorserver.com"
+						   Variant="Variant.Filled"
+						   Color="Color.Secondary"
+						   Size="Size.Large"
+						   Class="btn-glow px-12 py-4 rounded-pill"
+						   Style="font-weight: 700; font-size: 1.1rem;"
+						   StartIcon="@Icons.Material.Filled.Login">
+					Get Started Now
+				</MudButton>
+
+				<MudText Typo="Typo.caption" Style="color: var(--text-secondary); margin-top: 1.5rem; font-family: 'JetBrains Mono', monospace;">
+					Demo Credentials: <span style="color: var(--tech-accent);">administrator</span> / <span style="color: var(--tech-accent);">Password123!</span>
+				</MudText>
+			</div>
+		</MudContainer>
+	</div>
+</div>
 
 @code {
-    [Parameter] public string? Title { get; set; }
+	// Expose the Dark Mode state to the view to toggle CSS variables
+	public bool IsDarkMode => LayoutService.IsDarkMode;
 }
