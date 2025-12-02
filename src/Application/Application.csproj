@@ -21,12 +21,12 @@
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="Riok.Mapperly" Version="4.3.0" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.0" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
         <PackageReference Include="Hangfire.Core" Version="1.8.22" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.4.0" />
-           <PackageReference Include="ActualLab.Fusion" Version="11.2.62" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="11.2.62" />
-        <PackageReference Include="ActualLab.Generators" Version="11.2.62">
+           <PackageReference Include="ActualLab.Fusion" Version="11.3.73" />
+        <PackageReference Include="ActualLab.Fusion.Blazor" Version="11.3.73" />
+        <PackageReference Include="ActualLab.Generators" Version="11.3.73">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

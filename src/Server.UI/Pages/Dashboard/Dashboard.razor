@@ -1,338 +1,264 @@
 ﻿@page "/"
-@using CleanArchitecture.Blazor.Server.UI.Pages.Dashboard.Components
 @using MudBlazor.Utilities
 @inject IStringLocalizer<Dashboard> L
+
 <PageTitle>@Title</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Large">
-    <div class="@ContentClassNames">
-        <MudPaper Class="pa-4 mb-3">
-            <style>
-               
-                .circle {
-                    width: 0.5rem;
-                    height: 0.5rem;
-                    display: inline-block;
-                }
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4 mb-8">
 
-                .rounded-circle{
-                    border-radius: 50%;
-                }
-                .bg-success {
-                    background-color: #28a745 !important;
-                }
-                .bg-warning {
-                    background-color: #ffc107 !important;
-                }
+	<!-- HEADER SECTION -->
+	<div class="d-flex justify-space-between align-center mb-6">
+		<div>
+			<MudText Typo="Typo.h5" Class="fw-bold">@Title</MudText>
+			<MudText Typo="Typo.body2" Class="mud-text-secondary">System Status & Financial Overview</MudText>
+		</div>
+		<!-- Action Buttons -->
+		<MudStack Row="true" Spacing="2">
+			<MudButton Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.DateRange">Last 30 Days</MudButton>
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download">Export Report</MudButton>
+		</MudStack>
+	</div>
 
-                .bg-primary {
-                    background-color: #0d6efd !important;
-                }
+	<MudGrid Spacing="3">
 
-                .bg-danger {
-                    background-color: #dc3545 !important;
-                }
+		<!-- SECTION 1: FINANCIAL OVERVIEW (Donut Chart) -->
+		<MudItem xs="12">
+			<MudPaper Outlined="true" Class="pa-6">
+				<MudGrid>
+					<!-- Left: Main Stats -->
+					<MudItem xs="12" md="4" Class="d-flex flex-column justify-center border-end-md">
+						<MudText Typo="Typo.overline" Class="mud-text-secondary">Total Invoiced Amount</MudText>
+						<MudText Typo="Typo.h3" Color="Color.Primary" Class="my-2">1,167,986 €</MudText>
+						<div class="d-flex align-center gap-1">
+							<MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="Color.Success" Size="Size.Small" />
+							<MudText Typo="Typo.body2" Color="Color.Success" Class="fw-bold">+12.4%</MudText>
+							<MudText Typo="Typo.caption" Class="mud-text-secondary ml-1">vs last month</MudText>
+						</div>
+					</MudItem>
 
-                .bg-secondary {
-                    background-color: #6c757d !important;
-                }
+					<!-- Center: Donut Chart -->
+					<MudItem xs="12" md="4" Class="d-flex justify-center align-center">
+						<MudChart ChartType="ChartType.Donut" Width="140px" Height="140px"
+								  InputData="@ChartData" InputLabels="@ChartLabels" LegendPosition="Position.Right" />
+					</MudItem>
 
-                .bg-dark {
-                    background-color: #343a40 !important;
-                }
+					<!-- Right: Detailed Breakdown -->
+					<MudItem xs="12" md="4" Class="d-flex flex-column justify-center px-4">
+						<MudText Typo="Typo.subtitle2" Class="mb-3">Payment Status Breakdown</MudText>
+						<MudStack Spacing="2">
+							<div class="d-flex justify-space-between">
+								<MudText Typo="Typo.caption"><MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Success" Class="mr-1" /> Paid in full</MudText>
+								<MudText Typo="Typo.caption" Class="fw-bold">789,238 €</MudText>
+							</div>
+							<div class="d-flex justify-space-between">
+								<MudText Typo="Typo.caption"><MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Info" Class="mr-1" /> Awaiting</MudText>
+								<MudText Typo="Typo.caption" Class="fw-bold">244,900 €</MudText>
+							</div>
+							<div class="d-flex justify-space-between">
+								<MudText Typo="Typo.caption"><MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Warning" Class="mr-1" /> Overdue</MudText>
+								<MudText Typo="Typo.caption" Class="fw-bold">133,848 €</MudText>
+							</div>
+							<MudProgressLinear Color="Color.Primary" Value="75" Class="mt-2" Rounded="true" Size="Size.Small" />
+						</MudStack>
+					</MudItem>
+				</MudGrid>
+			</MudPaper>
+		</MudItem>
 
-                .bar-label {
-                    font-size: .625rem;
-                    color: #6c757d;
-                }
+		<!-- SECTION 2: KPI CARDS (Simulated Sparklines) -->
+		<!-- Card 1: Network Traffic (Blue / Smooth Line) -->
+		<MudItem xs="12" sm="6" md="4">
+			<MudPaper Outlined="true" Class="pa-4 d-flex flex-column" Style="height: 100%;">
+				<div class="d-flex justify-space-between align-start mb-2">
+					<div>
+						<MudText Typo="Typo.subtitle2" Class="mud-text-secondary">@L["Total Requests"]</MudText>
+						<MudText Typo="Typo.h4" Class="mt-1">2.4M</MudText>
+					</div>
+					<MudAvatar Color="Color.Primary" Variant="Variant.Filled" Rounded="true">
+						<MudIcon Icon="@Icons.Material.Filled.CloudQueue" />
+					</MudAvatar>
+				</div>
 
-                .text-nowrap {
-                    white-space: nowrap;
-                }
 
-                .fw-semibold {
-                    font-weight: 600;
-                }
 
-                .small, small {
-                    font-size: .875em;
-                }
+				<div class="d-flex align-center gap-2 mt-2">
+					<MudChip T="string" Color="Color.Success" Size="Size.Small" Variant="Variant.Text" Icon="@Icons.Material.Filled.ArrowUpward">+14.2%</MudChip>
+					<MudText Typo="Typo.caption" Class="mud-text-secondary">Traffic peak reached</MudText>
+				</div>
+			</MudPaper>
+		</MudItem>
 
-                .progress {
-                    background-color: #e9ecef;
-                    border-radius: 0.25rem;
-                    overflow: hidden;
-                    height: 8px;
-                    display: flex;
-                }
+		<!-- Card 2: CPU Load (Orange / Sharp Line) -->
+		<MudItem xs="12" sm="6" md="4">
+			<MudPaper Outlined="true" Class="pa-4 d-flex flex-column" Style="height: 100%;">
+				<div class="d-flex justify-space-between align-start mb-2">
+					<div>
+						<MudText Typo="Typo.subtitle2" Class="mud-text-secondary">@L["Avg. CPU Load"]</MudText>
+						<MudText Typo="Typo.h4" Class="mt-1">84%</MudText>
+					</div>
+					<MudAvatar Color="Color.Warning" Variant="Variant.Filled" Rounded="true">
+						<MudIcon Icon="@Icons.Material.Filled.Memory" />
+					</MudAvatar>
+				</div>
 
-                .progress-bar {
-                    height: 100%;
-                    transition: width 0.6s ease;
-                }
-                @@media (max-width: 850px) {
-                    .flex-row
 
-                {
-                    flex-wrap: wrap;
-                }
 
-                }
+				<div class="d-flex align-center gap-2 mt-2">
+					<MudChip T="string" Color="Color.Warning" Size="Size.Small" Variant="Variant.Text" Icon="@Icons.Material.Filled.TrendingUp">+5.4%</MudChip>
+					<MudText Typo="Typo.caption" Class="mud-text-secondary">High load warning</MudText>
+				</div>
+			</MudPaper>
+		</MudItem>
 
-                .fw-bold {
-                    font-weight: 700 !important;
-                }
+		<!-- Card 3: Storage (Secondary / Bar Chart) -->
+		<MudItem xs="12" sm="6" md="4">
+			<MudPaper Outlined="true" Class="pa-4 d-flex flex-column" Style="height: 100%;">
+				<div class="d-flex justify-space-between align-start mb-2">
+					<div>
+						<MudText Typo="Typo.subtitle2" Class="mud-text-secondary">@L["Storage Usage"]</MudText>
+						<MudText Typo="Typo.h4" Class="mt-1">64%</MudText>
+					</div>
+					<MudAvatar Color="Color.Secondary" Variant="Variant.Filled" Rounded="true">
+						<MudIcon Icon="@Icons.Material.Filled.Storage" />
+					</MudAvatar>
+				</div>
 
-                .fs-5 {
-                    font-size: 1.25rem !important;
-                }
-            </style>
-            <div class="d-flex flex-row gap-3">
-                <div class="d-flex flex-column">
-                    <div class="text-muted text-nowrap small">Invoiced amount</div>
-                    <div class="fs-5 fw-bold text-nowrap">1,167,986 EUR</div>
-                </div>
-                <div class="d-flex flex-column flex-grow-1 gap-3">
-                    <div class="d-flex flex-row flex-grow-1">
-                        <div class="d-flex flex-column justify-content-between align-center mt-2 flex-grow-1">
-                            <div class="d-flex align-center gap-2">
-                                <div class="circle bg-success rounded-circle" ></div>
-                                <span class="bar-label text-nowrap">Paid in full</span>
-                            </div>
-                            <div class="text-nowrap fw-semibold small">789,238 EUR</div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-between align-center mt-2 flex-grow-1">
-                            <div class="d-flex align-center gap-2">
-                                <div class="circle bg-primary rounded-circle" ></div>
-                                <span class="bar-label text-nowrap">Awaiting payment</span>
-                            </div>
-                            <div class="text-nowrap fw-semibold small">244,900 EUR</div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-between align-center mt-2 flex-grow-1">
-                            <div class="d-flex align-center gap-2">
-                                <div class="circle bg-warning rounded-circle" ></div>
-                                <span class="bar-label text-nowrap">Overdue 1-6 days</span>
-                            </div>
-                            <div class="text-nowrap fw-semibold small">74,808 EUR</div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-between align-center mt-2 flex-grow-1">
-                            <div class="d-flex align-center gap-2">
-                                <div class="circle bg-danger rounded-circle" ></div>
-                                <span class="bar-label text-nowrap">Overdue 7-13 days</span>
-                            </div>
-                            <div class="text-nowrap fw-semibold small">32,221 EUR</div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-between align-center mt-2 flex-grow-1">
-                            <div class="d-flex align-center gap-2">
-                                <div class="circle bg-secondary rounded-circle" ></div>
-                                <span class="bar-label text-nowrap">Overdue 14-29 days</span>
-                            </div>
-                            <div class="text-nowrap fw-semibold small">17,338 EUR</div>
-                        </div>
-                        <div class="d-flex flex-column justify-content-between align-center mt-2 flex-grow-1">
-                            <div class="d-flex align-center gap-2">
-                                <div class="circle bg-dark rounded-circle" ></div>
-                                <span class="bar-label text-nowrap">Overdue 30 days or more</span>
-                            </div>
-                            <div class="text-nowrap fw-semibold small">9,481 EUR</div>
-                        </div>
-                    </div>
-                    <div class="progress bg-body mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 68%;" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-primary" role="progressbar" style="width: 21%;" aria-valuenow="21" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 6%;" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 3%;" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 1%;" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-dark" role="progressbar" style="width: 1%;" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-               
-            </div>
-   
-     
-   
-</MudPaper>
-        <div class="lp-app-grid">
-            
 
-            <MudPaper Class="py-4 px-6 rounded-lg d-flex align-center">
-                <div class="flex-grow-1">
-                    <MudText Typo="Typo.h6">@L["Graphite on roof"]</MudText>
-                    <div class="d-flex align-center my-1">
-                        <MudAvatar Class="me-2 pa-4" Style="background-color: var(--mud-palette-primary-hover);" Size="Size.Small">
-                            <MudIcon Color="Color.Error" Icon="@Icons.Material.Filled.TrendingDown" Size="Size.Small"/>
-                        </MudAvatar>
-                        <MudText Typo="Typo.subtitle2">+2.6%</MudText>
-                    </div>
-                    <MudText Typo="Typo.h4">149,567</MudText>
-                </div>
-                <div class="d-flex align-end justify-end mud-height-full py-8">
-                    <MudPaper Height="80%" Width="6px" Square="true" Class="mud-primary mr-1 rounded-t"/>
-                    <MudPaper Height="95%" Width="6px" Square="true" Class="mud-primary mr-1 rounded-t"/>
-                    <MudPaper Height="90%" Width="6px" Square="true" Class="mud-primary mr-1 rounded-t"/>
-                    <MudPaper Height="85%" Width="6px" Square="true" Class="mud-primary mr-1 rounded-t"/>
-                    <MudPaper Height="65%" Width="6px" Square="true" Class="mud-primary mr-1 rounded-t"/>
-                    <MudPaper Height="52%" Width="6px" Square="true" Class="mud-primary mr-1 rounded-t"/>
-                    <MudPaper Height="40%" Width="6px" Square="true" Class="mud-primary mr-1 rounded-t"/>
-                    <MudPaper Height="38%" Width="6px" Square="true" Class="mud-primary mr-1 rounded-t"/>
-                    <MudPaper Height="36%" Width="6px" Square="true" Class="mud-primary mr-1 rounded-t"/>
-                    <MudPaper Height="20%" Width="6px" Square="true" Class="mud-primary mr-1 rounded-t"/>
-                </div>
-            </MudPaper>
-            <MudPaper Class="py-4 px-6 rounded-lg d-flex align-center">
-                <div class="flex-grow-1">
-                    <MudText Typo="Typo.h6">@L["Global Spread"]</MudText>
-                    <div class="d-flex align-center my-1">
-                        <MudAvatar Class="me-2 pa-4" Style="background-color: var(--mud-palette-secondary-hover);" Size="Size.Small">
-                            <MudIcon Color="Color.Primary" Icon="@Icons.Material.Filled.TrendingUp" Size="Size.Small"/>
-                        </MudAvatar>
-                        <MudText Typo="Typo.subtitle2">+9.6%</MudText>
-                    </div>
-                    <MudText Typo="Typo.h4">12%</MudText>
-                </div>
-                <div class="d-flex align-end justify-end mud-height-full py-8">
-                    <MudPaper Height="15%" Width="6px" Square="true" Class="mud-secondary mr-1 rounded-t"/>
-                    <MudPaper Height="20%" Width="6px" Square="true" Class="mud-secondary mr-1 rounded-t"/>
-                    <MudPaper Height="53%" Width="6px" Square="true" Class="mud-secondary mr-1 rounded-t"/>
-                    <MudPaper Height="35%" Width="6px" Square="true" Class="mud-secondary mr-1 rounded-t"/>
-                    <MudPaper Height="45%" Width="6px" Square="true" Class="mud-secondary mr-1 rounded-t"/>
-                    <MudPaper Height="70%" Width="6px" Square="true" Class="mud-secondary mr-1 rounded-t"/>
-                    <MudPaper Height="58%" Width="6px" Square="true" Class="mud-secondary mr-1 rounded-t"/>
-                    <MudPaper Height="76%" Width="6px" Square="true" Class="mud-secondary mr-1 rounded-t"/>
-                    <MudPaper Height="85%" Width="6px" Square="true" Class="mud-secondary mr-1 rounded-t"/>
-                    <MudPaper Height="61%" Width="6px" Square="true" Class="mud-secondary mr-1 rounded-t"/>
-                </div>
-            </MudPaper>
-            <MudPaper Class="py-4 px-6 rounded-lg d-flex align-center">
-                <div class="flex-grow-1">
-                    <MudText Typo="Typo.h6">@L["Roentgen"]</MudText>
-                    <div class="d-flex align-center my-1">
-                        <MudAvatar Class="me-2 pa-4" Style="background-color: var(--mud-palette-tertiary-hover);" Size="Size.Small">
-                            <MudIcon Color="Color.Tertiary" Icon="@Icons.Material.Filled.TrendingFlat" Size="Size.Small"/>
-                        </MudAvatar>
-                        <MudText Typo="Typo.subtitle2">~0.0%</MudText>
-                    </div>
-                    <MudText Typo="Typo.h4">3,6</MudText>
-                </div>
-                <div class="d-flex align-end justify-end mud-height-full py-8">
-                    <MudPaper Height="10%" Width="6px" Square="true" Class="mud-tertiary mr-1 rounded-t"/>
-                    <MudPaper Height="16%" Width="6px" Square="true" Class="mud-tertiary mr-1 rounded-t"/>
-                    <MudPaper Height="26%" Width="6px" Square="true" Class="mud-tertiary mr-1 rounded-t"/>
-                    <MudPaper Height="36%" Width="6px" Square="true" Class="mud-tertiary mr-1 rounded-t"/>
-                    <MudPaper Height="36%" Width="6px" Square="true" Class="mud-tertiary mr-1 rounded-t"/>
-                    <MudPaper Height="28%" Width="6px" Square="true" Class="mud-tertiary mr-1 rounded-t"/>
-                    <MudPaper Height="36%" Width="6px" Square="true" Class="mud-tertiary mr-1 rounded-t"/>
-                    <MudPaper Height="36%" Width="6px" Square="true" Class="mud-tertiary mr-1 rounded-t"/>
-                    <MudPaper Height="28%" Width="6px" Square="true" Class="mud-tertiary mr-1 rounded-t"/>
-                    <MudPaper Height="36%" Width="6px" Square="true" Class="mud-tertiary mr-1 rounded-t"/>
-                </div>
-            </MudPaper>
-        </div>
-        <div class="my-6 d-flex gap-6 flex-wrap">
-            <MudPaper Class="py-4 px-6 rounded-lg d-flex flex-column">
-                <MudText Typo="Typo.h6">@L["Uranium-235"]</MudText>
-                <div class="d-flex align-center gap-4">
-                    <MudRating ReadOnly="true" SelectedValue="4"/>
-                    <MudText Typo="Typo.subtitle2" Color="Color.Primary">@L["See all 137 reviews"]</MudText>
-                </div>
-                <MudText>@L["This is the type of uranium used in the RBMK reactors."]</MudText>
-                <MudDivider Class="my-3"/>
-                <MudText Typo="Typo.subtitle2" GutterBottom="true">@L["Reactor Type"]</MudText>
-                <div class="mx-n2 mb-2">
-                    <MudChip T="string" Color="Color.Primary">RBMK-1000</MudChip>
-                    <MudChip Color="Color.Secondary" T="string">RBMK-1500</MudChip>
-                    <MudChip  Color="Color.Tertiary" T="string">RBMKP-2400</MudChip>
-                </div>
-                <div>
-                    <MudButton Variant="Variant.Text" Color="Color.Primary" Class="ml-n2 mb-n2">@L["Read More"]</MudButton>
-                </div>
-            </MudPaper>
-            @if (IsMobile == false)
-            {
-                <MudSimpleTable Dense="true" Hover="true" Class="flex-grow-1">
-                    <thead>
-                        <tr>
-                            <th>@L["Nr"]</th>
-                            <th>@L["Sign"]</th>
-                            <th>@L["Name"]</th>
-                            <th>@L["Position"]</th>
-                            <th>@L["Molar mass"]</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Elements)
-                        {
-                            <tr>
-                                <td>@item.Number</td>
-                                <td>@item.Sign</td>
-                                <td>@item.Name</td>
-                                <td>@item.Position</td>
-                                <td>@item.Molar</td>
-                            </tr>
-                        }
-                    </tbody>
-                </MudSimpleTable>
-            }
-        </div>
-    </div>
 
-    <LandingSection StraightEnd="true" SectionClass="dark-section-text" BackgroundClass="mud-dark">
-        <MudText Typo="Typo.h3" Align="Align.Center" Class="mt-16 mb-8">“Never had such a good time making a site“</MudText>
-         <Carousel />
-    </LandingSection>
+				<div class="d-flex align-center gap-2 mt-2">
+					<MudChip T="string" Color="Color.Default" Size="Size.Small" Variant="Variant.Text">Stable</MudChip>
+					<MudText Typo="Typo.caption" Class="mud-text-secondary">12TB Available</MudText>
+				</div>
+			</MudPaper>
+		</MudItem>
+
+		<!-- SECTION 3: BOTTOM DETAILS -->
+		<!-- Left: Core Telemetry (Progress Bars) -->
+		<MudItem xs="12" md="4">
+			<MudPaper Outlined="true" Class="pa-4 h-100 d-flex flex-column">
+				<div class="d-flex justify-space-between align-center mb-6">
+					<div>
+						<MudText Typo="Typo.h6">@L["Core Telemetry"]</MudText>
+						<MudText Typo="Typo.caption" Class="mud-text-secondary">Real-time sensor data</MudText>
+					</div>
+					<MudIcon Icon="@Icons.Material.Filled.Sensors" Color="Color.Primary" />
+				</div>
+
+				<MudStack Spacing="4" Class="flex-grow-1">
+					<!-- Metric 1 -->
+					<div>
+						<div class="d-flex justify-space-between mb-1">
+							<MudText Typo="Typo.body2" Class="mud-text-secondary">Core Temperature</MudText>
+							<MudText Typo="Typo.body2" Color="Color.Warning" Class="fw-bold">892°C</MudText>
+						</div>
+						<MudProgressLinear Color="Color.Warning" Value="78" Rounded="true" Size="Size.Small" Striped="true" />
+					</div>
+
+					<!-- Metric 2 -->
+					<div>
+						<div class="d-flex justify-space-between mb-1">
+							<MudText Typo="Typo.body2" Class="mud-text-secondary">Water Pressure</MudText>
+							<MudText Typo="Typo.body2" Color="Color.Success" Class="fw-bold">120 bar</MudText>
+						</div>
+						<MudProgressLinear Color="Color.Success" Value="92" Rounded="true" Size="Size.Small" />
+					</div>
+
+					<!-- Metric 3 -->
+					<div>
+						<div class="d-flex justify-space-between mb-1">
+							<MudText Typo="Typo.body2" Class="mud-text-secondary">Turbine Load</MudText>
+							<MudText Typo="Typo.body2" Color="Color.Primary" Class="fw-bold">880 MW</MudText>
+						</div>
+						<MudProgressLinear Color="Color.Primary" Value="88" Rounded="true" Size="Size.Small" />
+					</div>
+				</MudStack>
+
+				<div class="mt-auto pt-4">
+					<MudAlert Severity="Severity.Info" NoIcon="true" Dense="true" Class="py-1">System operating within nominal parameters.</MudAlert>
+				</div>
+			</MudPaper>
+		</MudItem>
+
+		<!-- Right: Periodic Table (MudTable) -->
+		<MudItem xs="12" md="8">
+			<MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" Dense="true" Outlined="true" Elevation="0">
+				<ToolBarContent>
+					<MudText Typo="Typo.h6">Chemical Elements</MudText>
+					<MudSpacer />
+					<MudIconButton Icon="@Icons.Material.Filled.FilterList" Size="Size.Small" />
+				</ToolBarContent>
+				<HeaderContent>
+					<MudTh>@L["Nr"]</MudTh>
+					<MudTh>@L["Sign"]</MudTh>
+					<MudTh>@L["Name"]</MudTh>
+					<MudTh>@L["Position"]</MudTh>
+					<MudTh Style="text-align:right">@L["Molar mass"]</MudTh>
+				</HeaderContent>
+				<RowTemplate>
+					<MudTd DataLabel="Nr">@context.Number</MudTd>
+					<MudTd DataLabel="Sign">
+						<!-- Avatar creates a tech-badge look for the sign -->
+						<MudAvatar Size="Size.Small" Color="@GetElementColor(context.Sign)" Variant="Variant.Outlined" Class="fw-bold">
+							@context.Sign
+						</MudAvatar>
+					</MudTd>
+					<MudTd DataLabel="Name" Class="fw-semibold">@context.Name</MudTd>
+					<MudTd DataLabel="Position">@context.Position</MudTd>
+					<MudTd DataLabel="Molar" Style="text-align:right; font-family: monospace;">@context.Molar</MudTd>
+				</RowTemplate>
+
+			</MudTable>
+		</MudItem>
+
+	</MudGrid>
 </MudContainer>
-
-<style>
-    .lp-app-grid {
-        display: grid;
-        gap: 24px;
-        grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
-    }
-</style>
 
 
 @code
 {
-    private readonly bool IsMobile = false;
+	public string Title { get; set; } = "Dashboard";
 
-    public string Title { get; set; } = "Dashboard";
-
-
-    protected string ContentClassNames => new CssBuilder("flex-grow-1 flex-shrink-1")
-        .AddClass("pa-5", !IsMobile)
-        .AddClass("px-8", IsMobile)
-        .Build();
+	// --- FINANCIAL CHART DATA ---
+	public double[] ChartData = { 68, 21, 11 };
+	public string[] ChartLabels = { "Paid", "Awaiting", "Overdue" };
 
 
 
-    private readonly IEnumerable<Element> Elements = new List<Element>
-    {
-        new() { Number = 1, Sign = "H", Name = "Hydrogen", Position = 0, Molar = 1.00794 },
-        new() { Number = 2, Sign = "He", Name = "Helium", Position = 17, Molar = 4.002602 },
-        new() { Number = 3, Sign = "Li", Name = "Lithium", Position = 0, Molar = 6.941 },
-        new() { Number = 4, Sign = "Be", Name = "Beryllium", Position = 1, Molar = 9.012182 },
-        new() { Number = 5, Sign = "C", Name = "Carbon", Position = 13, Molar = 12.0107 },
-        new() { Number = 6, Sign = "O", Name = "Oxygen", Position = 15, Molar = 15.9994 }
-    };
 
-    public class Element
-    {
-        public string? Group { get; set; }
-        public int Position { get; set; }
-        public string? Name { get; set; }
-        public int Number { get; set; }
 
-        public string? Sign { get; set; }
-        public double Molar { get; set; }
 
-        public override string ToString()
-        {
-            return $"{Sign} - {Name}";
-        }
-    }
+	// --- TABLE DATA ---
 
-    protected override void OnInitialized()
-    {
-        Title = L["Dashboard"];
-    }
+	private IEnumerable<Element> Elements = new List<Element>
+	{
+		new() { Number = 1, Sign = "H", Name = "Hydrogen", Position = 0, Molar = 1.00794 },
+		new() { Number = 2, Sign = "He", Name = "Helium", Position = 17, Molar = 4.002602 },
+		new() { Number = 3, Sign = "Li", Name = "Lithium", Position = 0, Molar = 6.941 },
+		new() { Number = 4, Sign = "Be", Name = "Beryllium", Position = 1, Molar = 9.012182 },
+		new() { Number = 5, Sign = "C", Name = "Carbon", Position = 13, Molar = 12.0107 },
+	};
+
+	public class Element
+	{
+		public int Position { get; set; }
+		public string? Name { get; set; }
+		public int Number { get; set; }
+		public string? Sign { get; set; }
+		public double Molar { get; set; }
+	}
+
+	// Helper to determine avatar color based on element
+	private Color GetElementColor(string sign)
+	{
+		if (sign == "H" || sign == "O") return Color.Info;
+		if (sign == "C") return Color.Success;
+		if (sign == "U") return Color.Warning;
+		return Color.Default;
+	}
+
+	protected override void OnInitialized()
+	{
+		// Simulate localized title
+		Title = $"{ApplicationSettings.AppName} - {L["Dashboard"]}";
+	}
 }
