@@ -9,11 +9,11 @@
 
  
 
-> A comprehensive Blazor Server application template built with Clean Architecture principles, featuring advanced code generation, AI-powered development support, and enterprise-grade functionality.
+> A comprehensive Blazor Server Boilerplate built with Clean Architecture principles, featuring advanced code generation, AI-powered development support, and enterprise-grade functionality.
 
 ## 🎯 Overview
 
-This project is a production-ready Blazor Server application template that demonstrates Clean Architecture implementation with **.NET 10** and follows **Blazor Clean Architecture best practices**.
+This project is a production-ready Blazor Server **boilerplate** that demonstrates Clean Architecture implementation with **.NET 10** and follows **Blazor Clean Architecture best practices**.
 It provides a solid foundation for building scalable, maintainable enterprise applications with modern **spec-driven development practices**.
 
 ### Key Features
