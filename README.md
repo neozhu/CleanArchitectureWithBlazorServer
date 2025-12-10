@@ -1,4 +1,4 @@
-# Clean Architecture Blazor Server Boilerplate
+# Clean Architecture Blazor Server application template
 
 [![Build](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/codeql-analysis.yml)
@@ -7,15 +7,17 @@
 [![Downloads](https://img.shields.io/nuget/dt/CleanArchitecture.Blazor.Solution.Template?label=Downloads)](https://www.nuget.org/packages/CleanArchitecture.Blazor.Solution.Template)
 
 
- 
 > A production-ready Blazor Server application template built on Clean Architecture principles, offering advanced code generation, AI-assisted development workflows, and enterprise-grade capabilities for building scalable and maintainable systems.
 
-> A comprehensive Blazor Server application template built with Clean Architecture principles, featuring advanced code generation, AI-powered development support, and enterprise-grade functionality.
 
 ## 🎯 Overview
 
-This project is a production-ready Blazor Server application template that demonstrates Clean Architecture implementation with **.NET 10** and follows **Blazor Clean Architecture best practices**.
-It provides a solid foundation for building scalable, maintainable enterprise applications with modern **spec-driven development practices**.
+This repository provides a **production-grade Blazor Server solution template** designed in strict accordance with **Clean Architecture principles** and modern **enterprise application standards**.
+
+Built on **.NET 10**, the template demonstrates a **well-structured, scalable, and maintainable architecture** for developing complex business systems. It integrates **advanced code generation capabilities**, **AI-assisted development workflows**, and **specification-driven design patterns**, enabling teams to accelerate development while preserving architectural consistency and code quality.
+
+The solution is intended to serve both as a **reference implementation** for Blazor Clean Architecture best practices and as a **ready-to-use foundation** for enterprise-level applications that require long-term maintainability, extensibility, and high development efficiency.
+
 
 ### Key Features
 
