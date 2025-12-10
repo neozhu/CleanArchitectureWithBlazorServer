@@ -1,0 +1,45 @@
+@using MudBlazor
+
+<MudStack AlignItems="AlignItems.Center" 
+          Justify="Justify.Center" 
+          Class="w-100 h-100 py-16" 
+          Style="min-height: 400px;"> 
+
+    @if (IsLoading)
+    {
+        <MudProgressCircular Indeterminate="true" 
+                             Color="Color.Primary" 
+                             Size="Size.Large" 
+                             StrokeWidth="4" />
+    }
+    else
+    {
+        <MudIcon Icon="@Icon" 
+                 Size="Size.Large" 
+                 Color="Color.Secondary" 
+                 Style="font-size: 5rem; opacity: 0.5;" />
+    }
+
+    <MudText Typo="Typo.h6" 
+             Color="Color.Secondary" 
+             Class="mt-4"
+             Style="font-weight: 500; opacity: 0.8;">
+        @Text
+    </MudText>
+    
+    @if (!string.IsNullOrEmpty(SubText))
+    {
+        <MudText Typo="Typo.body2" 
+                 Color="Color.Secondary" 
+                 Style="opacity: 0.6;">
+            @SubText
+        </MudText>
+    }
+</MudStack>
+
+@code {
+    [Parameter] public bool IsLoading { get; set; } = false;
+    [Parameter] public string Text { get; set; }=string.Empty; 
+    [Parameter] public string? SubText { get; set; } = null;
+    [Parameter] public string Icon { get; set; } = Icons.Material.Outlined.Inbox;
+}

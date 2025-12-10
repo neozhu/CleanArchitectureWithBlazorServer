@@ -159,10 +159,10 @@
         <PropertyColumn Property="x => x.Unit" Title="@L[_currentDto.GetMemberDescription(x => x.Unit)]" />
     </Columns>
     <NoRecordsContent>
-        <MudText>@ConstantString.NoRecords</MudText>
+        <MudDataGirdStatus Icon="@Icons.Material.Outlined.Inbox" Text="@ConstantString.NoRecords" />
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>@ConstantString.Loading</MudText>
+        <MudDataGirdStatus IsLoading="true" Text="@ConstantString.Loading" />
     </LoadingContent>
     <PagerContent>
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
