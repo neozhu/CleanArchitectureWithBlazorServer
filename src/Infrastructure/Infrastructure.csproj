@@ -11,13 +11,13 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="10.0.1" />
-        <PackageReference Include="QuestPDF" Version="2025.7.4" />
+        <PackageReference Include="QuestPDF" Version="2025.12.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="9.0.2" />
         <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.2.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
-        <PackageReference Include="Blazor.Serilog.Sinks.SQLite" Version="1.0.8" />
+        <PackageReference Include="Blazor.Serilog.Sinks.SQLite" Version="1.0.9" />
         <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0" />
     </ItemGroup>
     <ItemGroup>
