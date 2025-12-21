@@ -15,7 +15,6 @@
 
 <MudDialog>
     <DialogContent>
-        <ActiveUserSession PageComponent="@($"{nameof(ProductFormDialog)}/{ Model.Id}")" />
         <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
             <MudGrid Spacing="2">
                 <MudItem xs="12">
