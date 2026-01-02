@@ -136,18 +136,14 @@
     {
         if (Model.Pictures != null)
         {
-            var parameters = new DialogParameters<ConfirmationDialog>
-            {
-                { x => x.ContentText, $"{L["Are you sure you want to erase this image?"]}" }
-            };
-            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-            var dialog = await DialogService.ShowAsync<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
-            var state = await dialog.Result;
-
-            if (state is not null && !state.Canceled)
-            {
-                Model.Pictures.Remove(picture);
-            }
+			await DialogServiceHelper.ShowConfirmationDialogAsync(
+				$"{L["Erase imatge"]}",
+				$"{L["Are you sure you want to erase this image?"]}",
+				async () =>
+				{
+					Model.Pictures.Remove(picture);
+				});
+             
         }
     }
 
