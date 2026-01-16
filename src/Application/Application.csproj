@@ -17,13 +17,13 @@
         <PackageReference Include="jcamp.FluentEmail.Razor" Version="4.0.0" />
         <PackageReference Include="FluentValidation" Version="12.1.1" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="Riok.Mapperly" Version="4.3.0" />
+        <PackageReference Include="Riok.Mapperly" Version="4.3.1" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
         <PackageReference Include="Hangfire.Core" Version="1.8.22" />
-        <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.4.0" />
+        <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.5.0" />
            <PackageReference Include="ActualLab.Fusion" Version="11.3.84" />
         <PackageReference Include="ActualLab.Fusion.Blazor" Version="11.3.84" />
         <PackageReference Include="ActualLab.Generators" Version="11.3.84">

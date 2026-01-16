@@ -1,0 +1,397 @@
+﻿@page "/ai/chatbot"
+
+@using OpenAI
+@using OpenAI.Chat
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+
+
+<PageTitle>Chatbot</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="chat-container">
+	<MudPaper Elevation="0" Class="chat-messages-container">
+		<div class="messages-wrapper">
+			@if (!messages.Any())
+			{
+				<div class="welcome-message">
+					<MudIcon Icon="@Icons.Material.Filled.Chat" Size="Size.Large" Color="Color.Primary" />
+					<MudText Typo="Typo.h5" Class="mt-4">Start Conversation</MudText>
+					<MudText Typo="Typo.body2" Color="Color.Secondary">Chat with AI Assistant</MudText>
+				</div>
+			}
+			@foreach (var message in messages)
+			{
+				<div class="message-row @(message.Role == "user" ? "message-user" : "message-assistant")">
+					<div class="message-avatar">
+						@if (message.Role == "user")
+						{
+							<MudAvatar Color="Color.Primary" Size="Size.Small">
+								@if (!string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl ?? ""))
+								{
+									<MudImage Src="@UserProfile.ProfilePictureDataUrl" />
+								}
+								else
+								{
+									<MudIcon Icon="@Icons.Material.Filled.Person" />
+								}
+							</MudAvatar>
+						}
+						else
+						{
+							<MudAvatar Color="Color.Secondary" Size="Size.Small">
+								<MudIcon Icon="@Icons.Material.Filled.SmartToy" />
+							</MudAvatar>
+						}
+					</div>
+					<div class="message-content-wrapper">
+						@{
+							var bubbleClass = $"message-bubble {(message.Role == "user" ? "message-bubble-user" : "message-bubble-assistant")}";
+						}
+						<MudPaper Class="@bubbleClass" Elevation="1">
+							<MudText Typo="Typo.body1" Class="message-text">@message.Content</MudText>
+						</MudPaper>
+						@if (message.Role == "assistant")
+						{
+							<div class="message-actions">
+								<MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+											   Size="Size.Small"
+											   Color="Color.Default"
+											   OnClick="@(() => CopyToClipboardAsync(message.Content))"
+											   title="Copy to clipboard" />
+							</div>
+						}
+					</div>
+				</div>
+			}
+			@if (isLoading)
+			{
+				<div class="message-row message-assistant">
+					<div class="message-avatar">
+						<MudAvatar Color="Color.Secondary" Size="Size.Small">
+							<MudIcon Icon="@Icons.Material.Filled.SmartToy" />
+						</MudAvatar>
+					</div>
+					<div class="message-content-wrapper">
+						<MudPaper Class="message-bubble message-bubble-assistant" Elevation="1">
+							<MudProgressCircular Color="Color.Secondary" Size="Size.Small" Indeterminate="true" />
+						</MudPaper>
+					</div>
+				</div>
+			}
+			<div @ref="messagesEndRef"></div>
+		</div>
+	</MudPaper>
+
+	<div class="chat-input-container">
+		<MudPaper Elevation="3" Class="input-paper">
+			<MudTextField @bind-Value="userInput"
+						  @onkeydown="HandleKeyDown"
+						  Label="Type a message..."
+						  Variant="Variant.Outlined"
+						  ShrinkLabel="true"
+						  MaxLines="8"
+						  Disabled="@isLoading"
+						  Class="chat-input"
+						  Immediate="false" />
+			<MudButton Variant="Variant.Filled"
+					   Color="Color.Primary"
+					   EndIcon="@Icons.Material.Filled.Send"
+					   OnClick="SendAsync"
+					   Disabled="@(isLoading || string.IsNullOrWhiteSpace(userInput))"
+					   Class="send-button">
+				Send
+			</MudButton>
+		</MudPaper>
+	</div>
+</MudContainer>
+
+<style>
+	.chat-container {
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		padding: 0;
+		max-width: 1200px !important;
+	}
+
+	.chat-messages-container {
+		flex: 1;
+		overflow-y: auto;
+		background-color: var(--mud-palette-background);
+		margin-bottom: 20px;
+		border-radius: 8px;
+	}
+
+	.messages-wrapper {
+		padding: 20px;
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+	.welcome-message {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		min-height: 300px;
+		opacity: 0.6;
+	}
+
+	.message-row {
+		display: flex;
+		gap: 12px;
+		margin-bottom: 24px;
+		align-items: flex-start;
+	}
+
+	.message-user {
+		flex-direction: row-reverse;
+	}
+
+	.message-assistant {
+		flex-direction: row;
+	}
+
+	.message-avatar {
+		flex-shrink: 0;
+		padding-top: 4px;
+	}
+
+	.message-content-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		max-width: 70%;
+	}
+
+	.message-user .message-content-wrapper {
+		align-items: flex-end;
+	}
+
+	.message-assistant .message-content-wrapper {
+		align-items: flex-start;
+	}
+
+	.message-bubble {
+		padding: 12px 16px;
+		border-radius: 12px;
+		word-wrap: break-word;
+		white-space: pre-wrap;
+	}
+
+	.message-bubble-user {
+		background-color: var(--mud-palette-primary);
+		color: var(--mud-palette-dark-text);
+	}
+
+	.message-bubble-assistant {
+		background-color: var(--mud-palette-surface);
+		color: var(--mud-palette-text-primary);
+	}
+
+	.message-text {
+		margin: 0;
+	}
+
+	.message-actions {
+		display: flex;
+		gap: 4px;
+		opacity: 0.6;
+		transition: opacity 0.2s;
+	}
+
+	.message-row:hover .message-actions {
+		opacity: 1;
+	}
+
+	.chat-input-container {
+		position: sticky;
+		bottom: 0;
+		background-color: var(--mud-palette-background);
+		padding: 16px 0;
+		border-top: 1px solid var(--mud-palette-divider);
+	}
+
+	.input-paper {
+		display: flex;
+		align-items: flex-end;
+		gap: 12px;
+		padding: 16px;
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+	.chat-input {
+		flex: 1;
+	}
+
+	.send-button {
+		margin-bottom: 4px;
+	}
+
+	@@media (max-width: 960px) {
+		.message-content-wrapper {
+			max-width: 80%;
+		}
+	}
+
+	@@media (max-width: 600px) {
+		.message-content-wrapper {
+			max-width: 85%;
+		}
+
+		.messages-wrapper {
+			padding: 12px;
+		}
+	}
+</style>
+
+@code {
+	// 定义本地数据模型
+	private class ChatMessage
+	{
+		public string Role { get; set; } = "user";
+		public string Content { get; set; } = string.Empty;
+	}
+
+	private List<ChatMessage> messages = new();
+	private string userInput = string.Empty;
+	private bool isLoading = false;
+	private ElementReference messagesEndRef;
+	private ChatClient? _chatClient;
+	private List<OpenAI.Chat.ChatMessage> _conversationHistory = new();
+
+	[CascadingParameter]
+	private UserProfile? UserProfile { get; set; }
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		await base.OnAfterRenderAsync(firstRender);
+		await ScrollToBottomAsync();
+	}
+
+	private async Task HandleKeyDown(KeyboardEventArgs e)
+	{
+		if (e.Key == "Enter" && e.CtrlKey)
+		{
+			await SendAsync();
+		}
+	}
+
+	private void InitializeChatClient()
+	{
+		if (_chatClient is not null) return;
+
+		var apiKey = Configuration["AISettings:OpenAIApiKey"];
+		if (string.IsNullOrEmpty(apiKey) || apiKey == "your-openai-api-key")
+		{
+			throw new InvalidOperationException("OpenAI API Key is missing or invalid in AISettings.");
+		}
+
+		var modelId = Configuration["AISettings:OpenAIModel"] ?? "gpt-5-nano";
+		var client = new OpenAIClient(apiKey);
+		_chatClient = client.GetChatClient(modelId);
+
+		// 添加系统提示
+		_conversationHistory.Add(new SystemChatMessage("You are a helpful AI assistant. Be concise and accurate in your responses."));
+	}
+
+	private async Task SendAsync()
+	{
+		if (string.IsNullOrWhiteSpace(userInput) || isLoading)
+		{
+			return;
+		}
+
+		var userMessageContent = userInput.Trim();
+		userInput = string.Empty;
+
+		messages.Add(new ChatMessage
+		{
+			Role = "user",
+			Content = userMessageContent
+		});
+
+		StateHasChanged();
+		await ScrollToBottomAsync();
+
+		isLoading = true;
+		StateHasChanged();
+
+		try
+		{
+			InitializeChatClient();
+
+			// 添加用户消息到对话历史
+			_conversationHistory.Add(new UserChatMessage(userMessageContent));
+
+			// 调用 OpenAI API
+			var response = await _chatClient!.CompleteChatAsync(_conversationHistory);
+			var assistantResponseText = response.Value.Content[0].Text;
+
+			if (!string.IsNullOrEmpty(assistantResponseText))
+			{
+				// 添加助手回复到对话历史
+				_conversationHistory.Add(new AssistantChatMessage(assistantResponseText));
+
+				messages.Add(new ChatMessage
+				{
+					Role = "assistant",
+					Content = assistantResponseText
+				});
+			}
+			else
+			{
+				throw new Exception("No response received from the API.");
+			}
+		}
+		catch (Exception ex)
+		{
+			var errorMessage = $"Error: {ex.Message}";
+			messages.Add(new ChatMessage
+			{
+				Role = "assistant",
+				Content = errorMessage
+			});
+			Snackbar.Add(errorMessage, Severity.Error);
+		}
+		finally
+		{
+			isLoading = false;
+			StateHasChanged();
+			await ScrollToBottomAsync();
+		}
+	}
+
+	private async Task CopyToClipboardAsync(string text)
+	{
+		try
+		{
+			await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
+			Snackbar.Add("Copied to clipboard", Severity.Success);
+		}
+		catch (Exception ex)
+		{
+			Snackbar.Add($"Copy failed: {ex.Message}", Severity.Error);
+		}
+	}
+
+	private async Task ScrollToBottomAsync()
+	{
+		try
+		{
+			await JS.InvokeVoidAsync("eval", @"
+                var element = document.querySelector('.chat-messages-container');
+                if (element) {
+                    element.scrollTop = element.scrollHeight;
+                }
+            ");
+		}
+		catch
+		{
+			// Ignore JS interop errors during pre-rendering
+		}
+	}
+}
