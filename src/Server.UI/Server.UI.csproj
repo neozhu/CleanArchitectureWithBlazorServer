@@ -15,7 +15,6 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="OpenAI" Version="2.8.0" />
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.22" />
         <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />

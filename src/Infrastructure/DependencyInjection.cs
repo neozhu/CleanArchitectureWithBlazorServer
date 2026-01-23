@@ -17,7 +17,7 @@ using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
-using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
+using CleanArchitecture.Blazor.Infrastructure.Services.OpenAI;
 using CleanArchitecture.Blazor.Infrastructure.Services.Serialization;
 using FluentEmail.MailKitSmtp;
 using Microsoft.AspNetCore.Components.Server.Circuits;
