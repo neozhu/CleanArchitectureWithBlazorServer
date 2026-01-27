@@ -2,7 +2,10 @@
 
 @using OpenAI
 @using OpenAI.Chat
+@using Microsoft.Agents.AI
+@using Microsoft.Extensions.AI
 @using Microsoft.Extensions.Configuration
+@using System.ComponentModel
 
 @inject IConfiguration Configuration
 
@@ -29,7 +32,7 @@
 							<MudAvatar Color="Color.Primary" Size="Size.Small">
 								@if (!string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl ?? ""))
 								{
-									<MudImage Src="@UserProfile.ProfilePictureDataUrl" />
+									<MudImage Src="@(UserProfile?.ProfilePictureDataUrl ?? string.Empty)" />
 								}
 								else
 								{
@@ -49,9 +52,16 @@
 							var bubbleClass = $"message-bubble {(message.Role == "user" ? "message-bubble-user" : "message-bubble-assistant")}";
 						}
 						<MudPaper Class="@bubbleClass" Elevation="1">
-							<MudText Typo="Typo.body1" Class="message-text">@message.Content</MudText>
+							@if (message.Role == "assistant" && string.IsNullOrEmpty(message.Content) && isLoading)
+							{
+								<MudProgressCircular Color="Color.Secondary" Size="Size.Small" Indeterminate="true" />
+							}
+							else
+							{
+								<MudText Typo="Typo.body1" Class="message-text">@message.Content</MudText>
+							}
 						</MudPaper>
-						@if (message.Role == "assistant")
+						@if (message.Role == "assistant" && !string.IsNullOrEmpty(message.Content))
 						{
 							<div class="message-actions">
 								<MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
@@ -61,21 +71,6 @@
 											   title="Copy to clipboard" />
 							</div>
 						}
-					</div>
-				</div>
-			}
-			@if (isLoading)
-			{
-				<div class="message-row message-assistant">
-					<div class="message-avatar">
-						<MudAvatar Color="Color.Secondary" Size="Size.Small">
-							<MudIcon Icon="@Icons.Material.Filled.SmartToy" />
-						</MudAvatar>
-					</div>
-					<div class="message-content-wrapper">
-						<MudPaper Class="message-bubble message-bubble-assistant" Elevation="1">
-							<MudProgressCircular Color="Color.Secondary" Size="Size.Small" Indeterminate="true" />
-						</MudPaper>
 					</div>
 				</div>
 			}
@@ -249,7 +244,7 @@
 </style>
 
 @code {
-	// 定义本地数据模型
+	// Define local data model
 	private class ChatMessage
 	{
 		public string Role { get; set; } = "user";
@@ -259,9 +254,10 @@
 	private List<ChatMessage> messages = new();
 	private string userInput = string.Empty;
 	private bool isLoading = false;
+	private bool preventDefaultEnter = false;
 	private ElementReference messagesEndRef;
-	private ChatClient? _chatClient;
-	private List<OpenAI.Chat.ChatMessage> _conversationHistory = new();
+	private AIAgent? _agent;
+	private AgentThread? _thread;
 
 	[CascadingParameter]
 	private UserProfile? UserProfile { get; set; }
@@ -274,15 +270,21 @@
 
 	private async Task HandleKeyDown(KeyboardEventArgs e)
 	{
-		if (e.Key == "Enter" && e.CtrlKey)
+		// Enter sends message, Shift+Enter for new line
+		if (e.Key == "Enter" && !e.ShiftKey)
 		{
+			preventDefaultEnter = true;
 			await SendAsync();
+		}
+		else
+		{
+			preventDefaultEnter = false;
 		}
 	}
 
-	private void InitializeChatClient()
+	private void InitializeAgent()
 	{
-		if (_chatClient is not null) return;
+		if (_agent is not null) return;
 
 		var apiKey = Configuration["AISettings:OpenAIApiKey"];
 		if (string.IsNullOrEmpty(apiKey) || apiKey == "your-openai-api-key")
@@ -292,11 +294,31 @@
 
 		var modelId = Configuration["AISettings:OpenAIModel"] ?? "gpt-5-nano";
 		var client = new OpenAIClient(apiKey);
-		_chatClient = client.GetChatClient(modelId);
+		var chatClient = client.GetChatClient(modelId);
 
-		// 添加系统提示
-		_conversationHistory.Add(new SystemChatMessage("You are a helpful AI assistant. Be concise and accurate in your responses."));
+		const string instructions = "You are a helpful AI assistant. Be concise and accurate in your responses.";
+		_agent = chatClient.AsAIAgent(new ChatClientAgentOptions
+		{
+			Name = "Chatbot",
+			ChatOptions = new()
+			{
+				Instructions = instructions,
+				Tools = [AIFunctionFactory.Create(GetCurrentDate)]
+			},
+			ChatMessageStoreFactory = (ctx, ct) => new ValueTask<ChatMessageStore>(
+				new InMemoryChatMessageStore(
+					#pragma warning disable MEAI001
+					new MessageCountingChatReducer(5),
+					#pragma warning restore MEAI001
+					ctx.SerializedState,
+					ctx.JsonSerializerOptions,
+					InMemoryChatMessageStore.ChatReducerTriggerEvent.AfterMessageAdded))
+		});
 	}
+
+	[Description("Get the current date (local server time) in ISO-8601 format (yyyy-MM-dd).")]
+	private static string GetCurrentDate()
+		=> DateTimeOffset.Now.ToString("yyyy-MM-dd");
 
 	private async Task SendAsync()
 	{
@@ -318,43 +340,42 @@
 		await ScrollToBottomAsync();
 
 		isLoading = true;
+
+		// Add an empty assistant message for streaming updates
+		var assistantMessage = new ChatMessage
+		{
+			Role = "assistant",
+			Content = string.Empty
+		};
+		messages.Add(assistantMessage);
 		StateHasChanged();
 
 		try
 		{
-			InitializeChatClient();
+			InitializeAgent();
+			_thread ??= await _agent!.GetNewThreadAsync();
 
-			// 添加用户消息到对话历史
-			_conversationHistory.Add(new UserChatMessage(userMessageContent));
-
-			// 调用 OpenAI API
-			var response = await _chatClient!.CompleteChatAsync(_conversationHistory);
-			var assistantResponseText = response.Value.Content[0].Text;
-
-			if (!string.IsNullOrEmpty(assistantResponseText))
+			var options = new AgentRunOptions();
+			await foreach (var update in _agent!.RunStreamingAsync(userMessageContent, _thread, options, CancellationToken.None))
 			{
-				// 添加助手回复到对话历史
-				_conversationHistory.Add(new AssistantChatMessage(assistantResponseText));
-
-				messages.Add(new ChatMessage
+				if (!string.IsNullOrEmpty(update.Text))
 				{
-					Role = "assistant",
-					Content = assistantResponseText
-				});
+					assistantMessage.Content += update.Text;
+					StateHasChanged();
+					await ScrollToBottomAsync();
+				}
 			}
-			else
+
+			if (string.IsNullOrWhiteSpace(assistantMessage.Content))
 			{
-				throw new Exception("No response received from the API.");
+				throw new Exception("No response received from the agent.");
 			}
 		}
 		catch (Exception ex)
 		{
 			var errorMessage = $"Error: {ex.Message}";
-			messages.Add(new ChatMessage
-			{
-				Role = "assistant",
-				Content = errorMessage
-			});
+			assistantMessage.Content = errorMessage;
+			StateHasChanged();
 			Snackbar.Add(errorMessage, Severity.Error);
 		}
 		finally
