@@ -22,7 +22,7 @@
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.2" />
         <PackageReference Include="MudBlazor" Version="8.15.0" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="6.2.0" />
-        <PackageReference Include="Blazor-ApexCharts" Version="6.0.2" />
+        <PackageReference Include="Blazor-ApexCharts" Version="6.1.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

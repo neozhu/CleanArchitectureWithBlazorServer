@@ -1,5 +1,6 @@
 ﻿@page "/ai/chatbot"
 
+@using Microsoft.Extensions.VectorData
 @using OpenAI
 @using OpenAI.Chat
 @using Microsoft.Agents.AI
@@ -244,23 +245,22 @@
 </style>
 
 @code {
-	// Define local data model
-	private class ChatMessage
-	{
-		public string Role { get; set; } = "user";
-		public string Content { get; set; } = string.Empty;
-	}
+    // Define local data model
+    private class ChatMessage
+    {
+        public string Role { get; set; } = "user";
+        public string Content { get; set; } = string.Empty;
+    }
 
-	private List<ChatMessage> messages = new();
-	private string userInput = string.Empty;
-	private bool isLoading = false;
-	private bool preventDefaultEnter = false;
-	private ElementReference messagesEndRef;
-	private AIAgent? _agent;
-	private AgentThread? _thread;
-
-	[CascadingParameter]
-	private UserProfile? UserProfile { get; set; }
+    private List<ChatMessage> messages = new();
+    private string userInput = string.Empty;
+    private bool isLoading = false;
+    private bool preventDefaultEnter = false;
+    private ElementReference messagesEndRef;
+    private AIAgent? _agent;
+    private AgentSession? _agentSession;
+    [CascadingParameter]
+    private UserProfile UserProfile { get; set; }
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -286,6 +286,7 @@
 	{
 		if (_agent is not null) return;
 
+         
 		var apiKey = Configuration["AISettings:OpenAIApiKey"];
 		if (string.IsNullOrEmpty(apiKey) || apiKey == "your-openai-api-key")
 		{
@@ -305,14 +306,14 @@
 				Instructions = instructions,
 				Tools = [AIFunctionFactory.Create(GetCurrentDate)]
 			},
-			ChatMessageStoreFactory = (ctx, ct) => new ValueTask<ChatMessageStore>(
-				new InMemoryChatMessageStore(
-					#pragma warning disable MEAI001
-					new MessageCountingChatReducer(5),
-					#pragma warning restore MEAI001
-					ctx.SerializedState,
-					ctx.JsonSerializerOptions,
-					InMemoryChatMessageStore.ChatReducerTriggerEvent.AfterMessageAdded))
+            ChatHistoryProviderFactory = (ctx, ct) => new ValueTask<ChatHistoryProvider>(
+            new InMemoryChatHistoryProvider(
+#pragma warning disable MEAI001
+                new MessageCountingChatReducer(5),
+#pragma warning restore MEAI001
+                ctx.SerializedState,
+                ctx.JsonSerializerOptions,
+                InMemoryChatHistoryProvider.ChatReducerTriggerEvent.AfterMessageAdded))
 		});
 	}
 
@@ -353,10 +354,10 @@
 		try
 		{
 			InitializeAgent();
-			_thread ??= await _agent!.GetNewThreadAsync();
+            _agentSession ??= await _agent!.GetNewSessionAsync();
 
 			var options = new AgentRunOptions();
-			await foreach (var update in _agent!.RunStreamingAsync(userMessageContent, _thread, options, CancellationToken.None))
+            await foreach (var update in _agent!.RunStreamingAsync(userMessageContent, _agentSession, options, CancellationToken.None))
 			{
 				if (!string.IsNullOrEmpty(update.Text))
 				{
