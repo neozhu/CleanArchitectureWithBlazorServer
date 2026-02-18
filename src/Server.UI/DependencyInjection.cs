@@ -17,6 +17,7 @@ using QuestPDF.Infrastructure;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using CleanArchitecture.Blazor.Application;
+using CleanArchitecture.Blazor.Server.UI.Extensions;
 
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -133,13 +134,14 @@ public static class DependencyInjection
         }
         else
         {
-            app.UseExceptionHandler("/Error", true);
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
         app.InitializeCacheFactory();
+        app.UseExceptionHandler();
         app.UseStatusCodePagesWithReExecute("/not-found",createScopeForStatusCodePages: true);
         app.MapHealthChecks("/health");
+        app.UseDataProtectionKeyCheck();
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseAntiforgery();

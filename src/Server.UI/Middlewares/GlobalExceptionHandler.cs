@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
+using System.Security;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Server.UI.Middlewares;
@@ -12,40 +12,49 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
         var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
         logger.LogError(exception,
-            $"Could not process a request on machine {Environment.MachineName}. TraceId: {traceId}");
+            "Could not process a request on machine {MachineName}. TraceId: {TraceId}",
+            Environment.MachineName, traceId);
 
-        await GenerateProblemDetails(httpContext, traceId, exception).ConfigureAwait(false);
+        var rootException = GetRootException(exception);
+        var (statusCode, title) = MapExceptionToStatusCode(rootException);
+
+        httpContext.Response.StatusCode = statusCode;
+
+        await Results.Problem(
+            title: title,
+            statusCode: statusCode,
+            extensions: new Dictionary<string, object?>
+            {
+                { "traceId", traceId }
+            }).ExecuteAsync(httpContext).ConfigureAwait(false);
 
         return true;
     }
 
-    private static async Task GenerateProblemDetails(HttpContext httpContext,
-        string traceId,
-        Exception exception)
+    private static Exception GetRootException(Exception exception)
     {
-        var (statusCode, title) = MapExceptionWithStatusCode(exception);
-
-        await Results.Problem(title: title,
-            statusCode: statusCode,
-            extensions: new Dictionary<string, object?>
-            {
-                {
-                    "traceId", traceId
-                }
-            }).ExecuteAsync(httpContext).ConfigureAwait(false);
+        while (exception.InnerException is not null)
+        {
+            exception = exception.InnerException;
+        }
+        return exception;
     }
 
-    private static (int statusCode, string title) MapExceptionWithStatusCode(Exception exception)
+    private static (int statusCode, string title) MapExceptionToStatusCode(Exception exception)
     {
-        if (exception is not ServerException && exception.InnerException != null)
-            while (exception.InnerException != null)
-                exception = exception.InnerException;
         return exception switch
         {
-            ArgumentOutOfRangeException => (StatusCodes.Status400BadRequest, exception.Message),
-            ServerException => (StatusCodes.Status500InternalServerError, exception.Message),
-            KeyNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
-            _ => (StatusCodes.Status500InternalServerError, "We are sorry for the inconvenience but we are on it.")
+            ArgumentOutOfRangeException or ArgumentNullException or ArgumentException
+                => (StatusCodes.Status400BadRequest, "Bad request."),
+            KeyNotFoundException or FileNotFoundException
+                => (StatusCodes.Status404NotFound, "Resource not found."),
+            UnauthorizedAccessException or SecurityException
+                => (StatusCodes.Status403Forbidden, "Access denied."),
+            TimeoutException or TaskCanceledException
+                => (StatusCodes.Status504GatewayTimeout, "The request timed out."),
+            NotImplementedException
+                => (StatusCodes.Status501NotImplemented, "This feature is not implemented."),
+            _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred. Please try again later.")
         };
     }
 }
