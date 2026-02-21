@@ -35,10 +35,11 @@
                 }
                 <MudTooltip Text="@L["Click upload a image"]">
                     <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="UploadPhoto" Style="margin-top:-10px;margin-left:-15px">
-                        <ActivatorContent>
+                        <CustomContent>
                             <MudIconButton Icon="@Icons.Material.Filled.PhotoCamera">
                             </MudIconButton>
-                        </ActivatorContent>
+                        </CustomContent>
+                        <SelectedTemplate/>
                     </MudFileUpload>
                 </MudTooltip>
 
@@ -48,6 +49,8 @@
             <MultiTenantAutocomplete For="@(() => Model.Tenant)"
                                      T="TenantDto"
                                      Label="@L[Model.GetMemberDescription(x=>x.Tenant)]"
+
+
                                      Required="true"
                                      ValueChanged="@(x=>TenantChanged(x))"
                                      Value="@Model.Tenant">

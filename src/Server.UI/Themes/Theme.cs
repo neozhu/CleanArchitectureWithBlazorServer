@@ -12,10 +12,10 @@ public static class Theme
                 PrimaryContrastText = "#ffffff",
                 PrimaryDarken = "#020617",
                 PrimaryLighten = "#1e293b",
-                Secondary = "#64748b", // Neutral gray, clean and professional
+                Secondary = "#71717a",
                 SecondaryContrastText = "#ffffff",
-                SecondaryLighten = "#475569",
-                SecondaryDarken = "#94a3b8",
+                SecondaryLighten = "#52525b",
+                SecondaryDarken = "#a1a1aa",
                 Success = "#10b981", // Fresh green, success
                 Info = "#0ea5e9", // Info blue, clear
                 Tertiary = "#8b5cf6",              // Purple 500
@@ -42,6 +42,8 @@ public static class Theme
                 DrawerBackground = "#ffffff",
                 TextPrimary = "#0f172a", // Deep blue-gray, modern professional
                 TextSecondary = "#64748b", // Neutral gray, hierarchy
+
+                DrawerIcon = "#71717a",
 
                 TextDisabled = "#94a3b8", // Soft gray
                 ActionDefault = "#262626",
@@ -75,10 +77,10 @@ public static class Theme
                 WarningDarken = "#d97706",
                 WarningLighten = "#fbbf24",
 
-                Error = "#dc2626", // Red for error
+                Error = "#ef4444", // Red for error
                 ErrorContrastText = "#fafafa",
-                ErrorDarken = "#b91c1c",
-                ErrorLighten = "#ef4444",
+                ErrorDarken = "#dc2626",
+                ErrorLighten = "#f87171",
 
                 Black = "#020817",
                 White = "#fafafa",
@@ -87,6 +89,8 @@ public static class Theme
                 AppbarBackground = "#0c0a09",
                 AppbarText = "#fafafa",
                 DrawerText = "#fafafa",
+                DrawerIcon = "#a1a1aa",
+
                 DrawerBackground = "#0c0a09",
                 TextPrimary = "#fafafa", // shadcn/ui white text
                 TextSecondary = "#a1a1aa", // Neutral gray secondary text
@@ -120,100 +124,110 @@ public static class Theme
                     FontWeight = "400",
                     LineHeight = "1.43",
                     LetterSpacing = "normal",
-                    FontFamily = ["Inter var", "Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji"]
+                    FontFamily = [
+    "Inter",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    "Segoe UI",
+    "PingFang SC",
+    "Microsoft YaHei UI",
+    "Microsoft YaHei",
+    "sans-serif"
+]
                 },
                 H1 = new H1Typography
                 {
-                    FontSize = "2.25rem",
-                    FontWeight = "800",
-                    LineHeight = "2.5rem",
+                    FontSize = "2.5rem",
+                    FontWeight = "700",
+                    LineHeight = "3rem",
                     LetterSpacing = "-0.025em"
                 },
                 H2 = new H2Typography
                 {
-                    FontSize = "1.875rem",
+                    FontSize = "2rem",
                     FontWeight = "600",
-                    LineHeight = "2.25rem",
+                    LineHeight = "2.5rem",
                     LetterSpacing = "-0.025em"
                 },
                 H3 = new H3Typography
                 {
-                    FontSize = "1.5rem",
+                    FontSize = "1.75rem",
                     FontWeight = "600",
                     LineHeight = "2rem",
                     LetterSpacing = "-0.025em"
                 },
                 H4 = new H4Typography
                 {
-                    FontSize = "1.25rem",
+                    FontSize = "1.5rem",
                     FontWeight = "600",
                     LineHeight = "1.75rem",
                     LetterSpacing = "-0.025em"
                 },
                 H5 = new H5Typography
                 {
-                    FontSize = "1.125rem",
+                    FontSize = "1.25rem",
                     FontWeight = "600",
                     LineHeight = "1.75rem",
-                    LetterSpacing = "-0.025em"
+                    LetterSpacing = "normal"
                 },
                 H6 = new H6Typography
                 {
                     FontSize = "1rem",
                     FontWeight = "600",
-                    LineHeight = "1.25rem",
-                    LetterSpacing = "-0.025em"
+                    LineHeight = "1.5rem",
+                    LetterSpacing = "normal"
                 },
                 Button = new ButtonTypography
                 {
                     FontSize = ".875rem",
                     FontWeight = "500",
                     LineHeight = "1.75rem",
-                    LetterSpacing = "normal",
+                    LetterSpacing = "0.01em",
                     TextTransform = "none"
                 },
                 Subtitle1 = new Subtitle1Typography
                 {
-                    FontSize = ".875rem",
-                    FontWeight = "400",
-                    LineHeight = "1.5rem",
-                    LetterSpacing = ".00938em",
-                },
-                Subtitle2 = new Subtitle2Typography
-                {
                     FontSize = "1rem",
                     FontWeight = "500",
                     LineHeight = "1.75rem",
-                    LetterSpacing = ".00714em"
+                    LetterSpacing = ".00714em",
+                },
+                Subtitle2 = new Subtitle2Typography
+                {
+                    FontSize = ".875rem",
+                    FontWeight = "400",
+                    LineHeight = "1.5rem",
+                    LetterSpacing = "normal"
                 },
                 Body1 = new Body1Typography
                 {
                     FontSize = ".875rem",
                     FontWeight = "400",
                     LineHeight = "1.5rem",
-                    LetterSpacing = ".00938em"
+                    LetterSpacing = "normal"
                 },
                 Body2 = new Body2Typography
                 {
                     FontSize = ".75rem",
                     FontWeight = "400",
                     LineHeight = "1.25rem",
-                    LetterSpacing = ".01071em"
+                    LetterSpacing = "0.01em"
                 },
                 Caption = new CaptionTypography
                 {
                     FontSize = "0.75rem",
                     FontWeight = "400",
-                    LineHeight = "1.5rem",
-                    LetterSpacing = ".03333em"
+                    LineHeight = "1.25rem",
+                    LetterSpacing = "0.02em"
+
                 },
                 Overline = new OverlineTypography
                 {
                     FontSize = "0.75rem",
-                    FontWeight = "400",
-                    LineHeight = "1.75rem",
-                    LetterSpacing = ".03333em",
-                    TextTransform = "none"
+                    FontWeight = "500",
+                    LineHeight = "1.5rem",
+                    LetterSpacing = "0.08em",
+                    TextTransform = "uppercase"
                 }
             }
         };

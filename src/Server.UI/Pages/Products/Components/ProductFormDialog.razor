@@ -80,31 +80,33 @@
                                        @ondragleave="@ClearDragClass"
                                        @ondragend="@ClearDragClass"
                                        AppendMultipleFiles>
-                            <ActivatorContent>
+                            <CustomContent>
                                 <MudPaper Class="@_dragClass" Style="width:260px;height:70px;">
                                     <MudLoadingButton Loading="@_uploading" Disabled="@_uploading" Variant="Variant.Text" Class="align-self-center" Style="text-transform:none"
                                                       StartIcon="@Icons.Material.Filled.CloudUpload">
                                         @L["choose image or pdf"]
                                     </MudLoadingButton>
                                 </MudPaper>
-                            </ActivatorContent>
-
+                            </CustomContent>
+                            <SelectedTemplate>
+                                @if (Model.Pictures is not null)
+                                {
+                                    <MudSimpleTable Hover Dense Elevation="0">
+                                        <tbody>
+                                            @foreach (var dto in Model.Pictures)
+                                            {
+                                                <tr @onclick="() => OnDownloadFile(dto.Url)" style="cursor:pointer">
+                                                    <td><Thumbnail FileName="@dto.Name" FileUrl="@dto.Url"> </Thumbnail></td>
+                                                    <td><FileSizeFormatter FileSizeInBytes="@dto.Size"></FileSizeFormatter></td>
+                                                    <td style="width:50px"><MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" title="@ConstantString.Delete" OnClick="@(() => DeleteImage(dto))"></MudIconButton></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </MudSimpleTable>
+                                }
+                            </SelectedTemplate>
                         </MudFileUpload>
-                        @if (Model.Pictures is not null)
-                        {
-                            <MudSimpleTable Hover Dense Elevation="0">
-                                <tbody>
-                                    @foreach (var dto in Model.Pictures)
-                                    {
-                                        <tr @onclick="()=>OnDownloadFile(dto.Url)" style="cursor:pointer">
-                                            <td><Thumbnail FileName="@dto.Name" FileUrl="@dto.Url"> </Thumbnail></td>
-                                            <td><FileSizeFormatter FileSizeInBytes="@dto.Size"></FileSizeFormatter></td>
-                                            <td style="width:50px"><MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" title="@ConstantString.Delete" OnClick="@(()=>DeleteImage(dto))"></MudIconButton></td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </MudSimpleTable>
-                        }
+                       
                     </MudStack>
                 </MudItem>
             </MudGrid>
