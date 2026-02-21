@@ -19,7 +19,7 @@
 
 <PageTitle>@Title</PageTitle>
 
-<MudDataGrid ServerData="@(new Func<GridState<DocumentDto>, Task<GridData<DocumentDto>>>(ServerReload))"
+<MudDataGrid ServerData="@(ServerReload)"
              FixedHeader="true"
              FixedFooter="false"
              Virtualize="false"
@@ -265,7 +265,7 @@
         Client.JobStartedEvent -= _client_JobStarted;
     }
 
-    private async Task<GridData<DocumentDto>> ServerReload(GridState<DocumentDto> state)
+    private async Task<GridData<DocumentDto>> ServerReload(GridState<DocumentDto> state, CancellationToken cancellationToken)
     {
         try
         {

@@ -24,9 +24,9 @@
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
         <PackageReference Include="Hangfire.Core" Version="1.8.23" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.5.0" />
-           <PackageReference Include="ActualLab.Fusion" Version="12.1.14" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="12.1.14" />
-        <PackageReference Include="ActualLab.Generators" Version="12.1.14">
+           <PackageReference Include="ActualLab.Fusion" Version="12.1.61" />
+        <PackageReference Include="ActualLab.Fusion.Blazor" Version="12.1.61" />
+        <PackageReference Include="ActualLab.Generators" Version="12.1.61">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

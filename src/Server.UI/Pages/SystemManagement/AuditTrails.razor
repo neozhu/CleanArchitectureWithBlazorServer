@@ -154,7 +154,7 @@
         return Task.CompletedTask;
     }
 
-    private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state)
+    private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state, CancellationToken cancellationToken)
     {
         try
         {

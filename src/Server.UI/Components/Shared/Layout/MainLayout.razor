@@ -37,7 +37,7 @@
 
     private async Task ApplyUserPreferences()
     {
-        _defaultDarkMode = await _mudThemeProvider.GetSystemPreference();
+        _defaultDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
         await LayoutService.ApplyUserPreferences(_defaultDarkMode);
     }
 

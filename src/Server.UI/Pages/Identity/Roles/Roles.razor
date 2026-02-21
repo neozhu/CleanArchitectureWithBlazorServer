@@ -210,7 +210,7 @@
            (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
     }
 
-    private async Task<GridData<ApplicationRoleDto>> ServerReload(GridState<ApplicationRoleDto> state)
+    private async Task<GridData<ApplicationRoleDto>> ServerReload(GridState<ApplicationRoleDto> state, CancellationToken cancellationToken)
     {
         try
         {

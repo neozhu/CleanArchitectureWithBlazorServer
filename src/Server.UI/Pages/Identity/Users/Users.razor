@@ -330,7 +330,7 @@
             (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole))) &&
             (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
     }
-    private async Task<GridData<ApplicationUserDto>> ServerReload(GridState<ApplicationUserDto> state)
+    private async Task<GridData<ApplicationUserDto>> ServerReload(GridState<ApplicationUserDto> state, CancellationToken cancellationToken)
     {
         try
         {
