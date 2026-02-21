@@ -143,7 +143,7 @@
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Delete)).Succeeded;
     }
 
-    private async Task<GridData<TenantDto>> ServerReload(GridState<TenantDto> state)
+    private async Task<GridData<TenantDto>> ServerReload(GridState<TenantDto> state, CancellationToken cancellationToken)
     {
         try
         {

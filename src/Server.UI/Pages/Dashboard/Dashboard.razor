@@ -38,8 +38,9 @@
 
 					<!-- Center: Donut Chart -->
 					<MudItem xs="12" md="4" Class="d-flex justify-center align-center">
-						<MudChart ChartType="ChartType.Donut" Width="140px" Height="140px"
-								  InputData="@ChartData" InputLabels="@ChartLabels" LegendPosition="Position.Right" />
+						<MudChart T="double" ChartType="ChartType.Donut" Width="140px" Height="140px"
+								  ChartLabels="@ChartLabels" ChartSeries="@([ChartData])"
+								    LegendPosition="Position.Right" />
 					</MudItem>
 
 					<!-- Right: Detailed Breakdown -->
@@ -79,7 +80,7 @@
 					</MudAvatar>
 				</div>
 
-
+			 
 
 				<div class="d-flex align-center gap-2 mt-2">
 					<MudChip T="string" Color="Color.Success" Size="Size.Small" Variant="Variant.Text" Icon="@Icons.Material.Filled.ArrowUpward">+14.2%</MudChip>
@@ -101,7 +102,7 @@
 					</MudAvatar>
 				</div>
 
-
+			 
 
 				<div class="d-flex align-center gap-2 mt-2">
 					<MudChip T="string" Color="Color.Warning" Size="Size.Small" Variant="Variant.Text" Icon="@Icons.Material.Filled.TrendingUp">+5.4%</MudChip>
@@ -123,7 +124,7 @@
 					</MudAvatar>
 				</div>
 
-
+				 
 
 				<div class="d-flex align-center gap-2 mt-2">
 					<MudChip T="string" Color="Color.Default" Size="Size.Small" Variant="Variant.Text">Stable</MudChip>
@@ -206,7 +207,7 @@
 					<MudTd DataLabel="Position">@context.Position</MudTd>
 					<MudTd DataLabel="Molar" Style="text-align:right; font-family: monospace;">@context.Molar</MudTd>
 				</RowTemplate>
-
+		
 			</MudTable>
 		</MudItem>
 
@@ -222,9 +223,9 @@
 	public double[] ChartData = { 68, 21, 11 };
 	public string[] ChartLabels = { "Paid", "Awaiting", "Overdue" };
 
+	
 
-
-
+	 
 
 
 	// --- TABLE DATA ---

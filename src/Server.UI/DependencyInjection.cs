@@ -41,9 +41,7 @@ public static class DependencyInjection
         services.AddScoped<IdentityRedirectManager>();
         services.AddMudServices(config =>
         {
-            MudGlobal.InputDefaults.ShrinkLabel = true;
-            //MudGlobal.InputDefaults.Variant = Variant.Outlined;
-            //MudGlobal.ButtonDefaults.Variant = Variant.Outlined;
+ 
             config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomCenter;
             config.SnackbarConfiguration.NewestOnTop = false;
             config.SnackbarConfiguration.ShowCloseIcon = true;

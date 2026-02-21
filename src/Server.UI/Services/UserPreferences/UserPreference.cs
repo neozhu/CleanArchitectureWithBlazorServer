@@ -8,24 +8,26 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 
 public class UserPreference
 {
+    // List of available primary colors (Updated to Tailwind 600 scale for better white text contrast)
     public static readonly List<string> PrimaryColors = new()
     {
-        "#2d4275", // 蓝色
-        "#6A1B9A", // 深紫色
-        "#4CAF50" , // 绿色
-        "#FF9800", // 橙色
-        "#F44336", // 红色
-        "#FF69B4" // 粉色
+        "#0f172a", // Slate-900
+        "#2563eb", // Blue-600
+        "#7c3aed", // Violet-600
+        "#059669", // Emerald-600
+        "#ea580c", // Orange-600
+        "#e11d48", // Rose-600
     };
 
+    // List of available dark primary colors (Tailwind 500 scale or White)
     public static readonly List<string> DarkPrimaryColors = new()
     {
-        "#0077b6", // 蓝色的暗色调
-        "#a541be", // 深紫色的暗色调
-        "#388E3C",  // 绿色的暗色调
-        "#FB8C00", // 橙色的暗色调
-        "#ca322d", // 红色的暗色调
-        "#cf2d86", // 粉色的暗色调
+        "#fafafa", // Zinc-50
+        "#3b82f6", // Blue-500
+        "#8b5cf6", // Violet-500
+        "#10b981", // Emerald-500
+        "#f97316", // Orange-500
+        "#f43f5e", // Rose-500
     };
 
     /// <summary>
@@ -38,8 +40,8 @@ public class UserPreference
     /// </summary>
     public bool IsDarkMode { get; set; }
 
-    public string PrimaryColor { get; set; } = "#2d4275";
-    public string DarkPrimaryColor { get; set; } = "#8b9ac6";
+    public string PrimaryColor { get; set; } = "#0f172a";
+    public string DarkPrimaryColor { get; set; } = "#fafafa";
     public string PrimaryDarken => AdjustBrightness(PrimaryColor, 0.8);
     public string PrimaryLighten => AdjustBrightness(PrimaryColor, 0.7);
     public string SecondaryColor { get; set; } = "#ff4081ff";

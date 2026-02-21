@@ -83,14 +83,15 @@
                         {
                             <MudMenuItem>
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
-                                    <ActivatorContent>
+                                    <CustomContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
                                                    Variant="Variant.Text"
                                                    Disabled="@_uploading"
                                                    >
                                                 @ConstantString.Import
                                         </MudButton>
-                                    </ActivatorContent>
+                                    </CustomContent>
+                                    <SelectedTemplate />
                                 </MudFileUpload>
                             </MudMenuItem>
                         }
@@ -214,7 +215,7 @@
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Export)).Succeeded;
     }
 
-    private async Task<GridData<ProductDto>> ServerReload(GridState<ProductDto> state)
+    private async Task<GridData<ProductDto>> ServerReload(GridState<ProductDto> state, CancellationToken cancellationToken)
     {
         try
         {

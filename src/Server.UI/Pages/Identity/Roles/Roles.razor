@@ -78,13 +78,14 @@
                         {
                             <MudMenuItem>
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
-                                    <ActivatorContent>
+                                    <CustomContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
                                                    Variant="Variant.Text"
                                                    Disabled="@_uploading">
                                             @ConstantString.Import
                                         </MudButton>
-                                    </ActivatorContent>
+                                    </CustomContent>
+                                    <SelectedTemplate />
                                 </MudFileUpload>
                             </MudMenuItem>
                         }
@@ -210,7 +211,7 @@
            (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
     }
 
-    private async Task<GridData<ApplicationRoleDto>> ServerReload(GridState<ApplicationRoleDto> state)
+    private async Task<GridData<ApplicationRoleDto>> ServerReload(GridState<ApplicationRoleDto> state, CancellationToken cancellationToken)
     {
         try
         {

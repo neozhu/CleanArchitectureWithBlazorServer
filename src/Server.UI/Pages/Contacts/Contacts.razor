@@ -76,13 +76,14 @@
                         {
                             <MudMenuItem>
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
-                                    <ActivatorContent>
+                                    <CustomContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
                                                    Variant="Variant.Text"
                                                    Disabled="@_uploading">
                                             @ConstantString.Import
                                         </MudButton>
-                                    </ActivatorContent>
+                                    </CustomContent>
+                                    <SelectedTemplate />
                                 </MudFileUpload>
                             </MudMenuItem>
                         }
@@ -189,7 +190,7 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Export)).Succeeded;
     }
-    private async Task<GridData<ContactDto>> ServerReload(GridState<ContactDto> state)
+    private async Task<GridData<ContactDto>> ServerReload(GridState<ContactDto> state, CancellationToken cancellationToken)
     {
         try
         {
@@ -234,7 +235,7 @@
                 { x=>x.model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<ContactFormDialog>(title, parameters, options);
+        var dialog =await DialogService.ShowAsync<ContactFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
         if (state != null && !state.Canceled)
