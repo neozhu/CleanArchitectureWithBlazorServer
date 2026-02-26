@@ -9,7 +9,7 @@
 @using System.ComponentModel
 
 @inject IConfiguration Configuration
-
+@inject UserProfileStateService UserProfileStateService
 
 <PageTitle>Chatbot</PageTitle>
 
@@ -245,22 +245,22 @@
 </style>
 
 @code {
-    // Define local data model
-    private class ChatMessage
-    {
-        public string Role { get; set; } = "user";
-        public string Content { get; set; } = string.Empty;
-    }
+	// Define local data model
+	private class ChatMessage
+	{
+		public string Role { get; set; } = "user";
+		public string Content { get; set; } = string.Empty;
+	}
 
-    private List<ChatMessage> messages = new();
-    private string userInput = string.Empty;
-    private bool isLoading = false;
-    private bool preventDefaultEnter = false;
-    private ElementReference messagesEndRef;
-    private AIAgent? _agent;
-    private AgentSession? _agentSession;
-    [CascadingParameter]
-    private UserProfile UserProfile { get; set; }
+	private List<ChatMessage> messages = new();
+	private string userInput = string.Empty;
+	private bool isLoading = false;
+	private bool preventDefaultEnter = false;
+	private ElementReference messagesEndRef;
+	private AIAgent? _agent;
+	private AgentSession? _agentSession;
+
+    private UserProfile UserProfile => UserProfileStateService.UserProfile;
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -306,14 +306,7 @@
 				Instructions = instructions,
 				Tools = [AIFunctionFactory.Create(GetCurrentDate)]
 			},
-            ChatHistoryProviderFactory = (ctx, ct) => new ValueTask<ChatHistoryProvider>(
-            new InMemoryChatHistoryProvider(
-#pragma warning disable MEAI001
-                new MessageCountingChatReducer(5),
-#pragma warning restore MEAI001
-                ctx.SerializedState,
-                ctx.JsonSerializerOptions,
-                InMemoryChatHistoryProvider.ChatReducerTriggerEvent.AfterMessageAdded))
+            ChatHistoryProvider = new InMemoryChatHistoryProvider(new() { })
 		});
 	}
 
@@ -354,7 +347,7 @@
 		try
 		{
 			InitializeAgent();
-            _agentSession ??= await _agent!.GetNewSessionAsync();
+            _agentSession ??= await _agent!.CreateSessionAsync();
 
 			var options = new AgentRunOptions();
             await foreach (var update in _agent!.RunStreamingAsync(userMessageContent, _agentSession, options, CancellationToken.None))
