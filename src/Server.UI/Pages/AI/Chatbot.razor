@@ -7,6 +7,7 @@
 @using Microsoft.Extensions.AI
 @using Microsoft.Extensions.Configuration
 @using System.ComponentModel
+@using System.Text.Json
 
 @inject IConfiguration Configuration
 @inject UserProfileStateService UserProfileStateService
@@ -245,26 +246,37 @@
 </style>
 
 @code {
-	// Define local data model
-	private class ChatMessage
-	{
-		public string Role { get; set; } = "user";
-		public string Content { get; set; } = string.Empty;
-	}
+    // Define local data model
+    private class ChatMessage
+    {
+        public string Role { get; set; } = "user";
+        public string Content { get; set; } = string.Empty;
+    }
 
-	private List<ChatMessage> messages = new();
-	private string userInput = string.Empty;
-	private bool isLoading = false;
-	private bool preventDefaultEnter = false;
-	private ElementReference messagesEndRef;
-	private AIAgent? _agent;
-	private AgentSession? _agentSession;
+    private List<ChatMessage> messages = new();
+    private string userInput = string.Empty;
+    private bool isLoading = false;
+    private bool preventDefaultEnter = false;
+    private ElementReference messagesEndRef;
+    private AIAgent? _agent;
+    private AgentSession? _agentSession;
+    private bool _isSessionRestored;
+
+    private const string SessionStorageKey = "ai.chatbot.session.v1";
+    private const string MessagesStorageKey = "ai.chatbot.messages.v1";
 
     private UserProfile UserProfile => UserProfileStateService.UserProfile;
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		await base.OnAfterRenderAsync(firstRender);
+
+		if (firstRender && !_isSessionRestored)
+		{
+			await RestorePersistedStateAsync();
+			_isSessionRestored = true;
+		}
+
 		await ScrollToBottomAsync();
 	}
 
@@ -306,7 +318,9 @@
 				Instructions = instructions,
 				Tools = [AIFunctionFactory.Create(GetCurrentDate)]
 			},
-            ChatHistoryProvider = new InMemoryChatHistoryProvider(new() { })
+			ChatHistoryProvider = new CleanArchitecture.Blazor.Server.UI.Services.AI.LocalStorageChatHistoryProvider(
+				LoadChatHistoryAsync,
+				SaveChatHistoryAsync)
 		});
 	}
 
@@ -364,6 +378,8 @@
 			{
 				throw new Exception("No response received from the agent.");
 			}
+
+			await PersistStateAsync();
 		}
 		catch (Exception ex)
 		{
@@ -378,6 +394,115 @@
 			StateHasChanged();
 			await ScrollToBottomAsync();
 		}
+	}
+
+	private async Task PersistStateAsync()
+	{
+		var serializedMessages = JsonSerializer.Serialize(messages);
+		await JS.InvokeVoidAsync("localStorage.setItem", MessagesStorageKey, serializedMessages);
+
+		if (_agent is null || _agentSession is null)
+		{
+			return;
+		}
+
+		var agent = _agent;
+		var session = _agentSession;
+		JsonElement serializedSession = await agent.SerializeSessionAsync(session);
+		await JS.InvokeVoidAsync("localStorage.setItem", SessionStorageKey, serializedSession.GetRawText());
+	}
+
+	private async Task RestorePersistedStateAsync()
+	{
+		try
+		{
+			var restoredHistory = await LoadChatHistoryAsync(CancellationToken.None);
+			messages = restoredHistory
+				.Select(m => new ChatMessage
+				{
+					Role = ToUiRole(m.Role),
+					Content = string.Concat(m.Contents.OfType<TextContent>().Select(c => c.Text))
+				})
+				.Where(m => !string.IsNullOrWhiteSpace(m.Content))
+				.ToList();
+
+			var serializedSession = await JS.InvokeAsync<string?>("localStorage.getItem", SessionStorageKey);
+			if (string.IsNullOrWhiteSpace(serializedSession))
+			{
+				return;
+			}
+
+			InitializeAgent();
+
+			using var sessionDoc = JsonDocument.Parse(serializedSession);
+			var agent = _agent!;
+			JsonElement serializedSessionElement = sessionDoc.RootElement.Clone();
+			AgentSession restoredSession = await agent.DeserializeSessionAsync(serializedSessionElement);
+			_agentSession = restoredSession;
+		}
+		catch
+		{
+			await JS.InvokeVoidAsync("localStorage.removeItem", SessionStorageKey);
+			await JS.InvokeVoidAsync("localStorage.removeItem", MessagesStorageKey);
+			messages.Clear();
+		}
+
+		StateHasChanged();
+	}
+
+	private async ValueTask<IReadOnlyList<Microsoft.Extensions.AI.ChatMessage>> LoadChatHistoryAsync(CancellationToken cancellationToken)
+	{
+		cancellationToken.ThrowIfCancellationRequested();
+
+		var serializedMessages = await JS.InvokeAsync<string?>("localStorage.getItem", MessagesStorageKey);
+		if (string.IsNullOrWhiteSpace(serializedMessages))
+		{
+			return [];
+		}
+
+		var restoredMessages = JsonSerializer.Deserialize<List<ChatMessage>>(serializedMessages) ?? [];
+		return restoredMessages
+			.Select(m => new Microsoft.Extensions.AI.ChatMessage(
+				ToAgentRole(m.Role),
+				[new TextContent(m.Content)]))
+			.ToList();
+	}
+
+	private async ValueTask SaveChatHistoryAsync(
+		IReadOnlyList<Microsoft.Extensions.AI.ChatMessage> history,
+		CancellationToken cancellationToken)
+	{
+		cancellationToken.ThrowIfCancellationRequested();
+
+		var restoredMessages = history
+			.Select(m => new ChatMessage
+			{
+				Role = ToUiRole(m.Role),
+				Content = string.Concat(m.Contents.OfType<TextContent>().Select(c => c.Text))
+			})
+			.Where(m => !string.IsNullOrWhiteSpace(m.Content))
+			.ToList();
+
+		messages = restoredMessages;
+		var serializedMessages = JsonSerializer.Serialize(restoredMessages);
+		await JS.InvokeVoidAsync("localStorage.setItem", MessagesStorageKey, serializedMessages);
+	}
+
+	private static ChatRole ToAgentRole(string role)
+		=> role.ToLowerInvariant() switch
+		{
+			"assistant" => ChatRole.Assistant,
+			"system" => ChatRole.System,
+			"tool" => ChatRole.Tool,
+			_ => ChatRole.User
+		};
+
+	private static string ToUiRole(ChatRole role)
+	{
+		if (role == ChatRole.Assistant) return "assistant";
+		if (role == ChatRole.System) return "system";
+		if (role == ChatRole.Tool) return "tool";
+		return "user";
 	}
 
 	private async Task CopyToClipboardAsync(string text)
