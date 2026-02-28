@@ -8,6 +8,7 @@
 @using Microsoft.Extensions.Configuration
 @using System.ComponentModel
 @using System.Text.Json
+@using System.Net.Http.Headers
 
 @inject IConfiguration Configuration
 @inject UserProfileStateService UserProfileStateService
@@ -15,234 +16,234 @@
 <PageTitle>Chatbot</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="chat-container">
-	<MudPaper Elevation="0" Class="chat-messages-container">
-		<div class="messages-wrapper">
-			@if (!messages.Any())
-			{
-				<div class="welcome-message">
-					<MudIcon Icon="@Icons.Material.Filled.Chat" Size="Size.Large" Color="Color.Primary" />
-					<MudText Typo="Typo.h5" Class="mt-4">Start Conversation</MudText>
-					<MudText Typo="Typo.body2" Color="Color.Secondary">Chat with AI Assistant</MudText>
-				</div>
-			}
-			@foreach (var message in messages)
-			{
-				<div class="message-row @(message.Role == "user" ? "message-user" : "message-assistant")">
-					<div class="message-avatar">
-						@if (message.Role == "user")
-						{
-							<MudAvatar Color="Color.Primary" Size="Size.Small">
-								@if (!string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl ?? ""))
-								{
-									<MudImage Src="@(UserProfile?.ProfilePictureDataUrl ?? string.Empty)" />
-								}
-								else
-								{
-									<MudIcon Icon="@Icons.Material.Filled.Person" />
-								}
-							</MudAvatar>
-						}
-						else
-						{
-							<MudAvatar Color="Color.Secondary" Size="Size.Small">
-								<MudIcon Icon="@Icons.Material.Filled.SmartToy" />
-							</MudAvatar>
-						}
-					</div>
-					<div class="message-content-wrapper">
-						@{
-							var bubbleClass = $"message-bubble {(message.Role == "user" ? "message-bubble-user" : "message-bubble-assistant")}";
-						}
-						<MudPaper Class="@bubbleClass" Elevation="1">
-							@if (message.Role == "assistant" && string.IsNullOrEmpty(message.Content) && isLoading)
-							{
-								<MudProgressCircular Color="Color.Secondary" Size="Size.Small" Indeterminate="true" />
-							}
-							else
-							{
-								<MudText Typo="Typo.body1" Class="message-text">@message.Content</MudText>
-							}
-						</MudPaper>
-						@if (message.Role == "assistant" && !string.IsNullOrEmpty(message.Content))
-						{
-							<div class="message-actions">
-								<MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
-											   Size="Size.Small"
-											   Color="Color.Default"
-											   OnClick="@(() => CopyToClipboardAsync(message.Content))"
-											   title="Copy to clipboard" />
-							</div>
-						}
-					</div>
-				</div>
-			}
-			<div @ref="messagesEndRef"></div>
-		</div>
-	</MudPaper>
+    <MudPaper Elevation="0" Class="chat-messages-container">
+        <div class="messages-wrapper">
+            @if (!messages.Any())
+            {
+                <div class="welcome-message">
+                    <MudIcon Icon="@Icons.Material.Filled.Chat" Size="Size.Large" Color="Color.Primary" />
+                    <MudText Typo="Typo.h5" Class="mt-4">Start Conversation</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">Chat with AI Assistant</MudText>
+                </div>
+            }
+            @foreach (var message in messages)
+            {
+                <div class="message-row @(message.Role == "user" ? "message-user" : "message-assistant")">
+                    <div class="message-avatar">
+                        @if (message.Role == "user")
+                        {
+                            <MudAvatar Color="Color.Primary" Size="Size.Small">
+                                @if (!string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl ?? ""))
+                                {
+                                    <MudImage Src="@(UserProfile?.ProfilePictureDataUrl ?? string.Empty)" />
+                                }
+                                else
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Person" />
+                                }
+                            </MudAvatar>
+                        }
+                        else
+                        {
+                            <MudAvatar Color="Color.Secondary" Size="Size.Small">
+                                <MudIcon Icon="@Icons.Material.Filled.SmartToy" />
+                            </MudAvatar>
+                        }
+                    </div>
+                    <div class="message-content-wrapper">
+                        @{
+                            var bubbleClass = $"message-bubble {(message.Role == "user" ? "message-bubble-user" : "message-bubble-assistant")}";
+                        }
+                        <MudPaper Class="@bubbleClass" Elevation="1">
+                            @if (message.Role == "assistant" && string.IsNullOrEmpty(message.Content) && isLoading)
+                            {
+                                <MudProgressCircular Color="Color.Secondary" Size="Size.Small" Indeterminate="true" />
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.body1" Class="message-text">@message.Content</MudText>
+                            }
+                        </MudPaper>
+                        @if (message.Role == "assistant" && !string.IsNullOrEmpty(message.Content))
+                        {
+                            <div class="message-actions">
+                                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                                               Size="Size.Small"
+                                               Color="Color.Default"
+                                               OnClick="@(() => CopyToClipboardAsync(message.Content))"
+                                               title="Copy to clipboard" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            <div @ref="messagesEndRef"></div>
+        </div>
+    </MudPaper>
 
-	<div class="chat-input-container">
-		<MudPaper Elevation="3" Class="input-paper">
-			<MudTextField @bind-Value="userInput"
-						  @onkeydown="HandleKeyDown"
-						  Label="Type a message..."
-						  Variant="Variant.Outlined"
-						  ShrinkLabel="true"
-						  MaxLines="8"
-						  Disabled="@isLoading"
-						  Class="chat-input"
-						  Immediate="false" />
-			<MudButton Variant="Variant.Filled"
-					   Color="Color.Primary"
-					   EndIcon="@Icons.Material.Filled.Send"
-					   OnClick="SendAsync"
-					   Disabled="@(isLoading || string.IsNullOrWhiteSpace(userInput))"
-					   Class="send-button">
-				Send
-			</MudButton>
-		</MudPaper>
-	</div>
+    <div class="chat-input-container">
+        <MudPaper Elevation="3" Class="input-paper">
+            <MudTextField @bind-Value="userInput"
+                          @onkeydown="HandleKeyDown"
+                          Label="Type a message..."
+                          Variant="Variant.Outlined"
+                          ShrinkLabel="true"
+                          MaxLines="8"
+                          Disabled="@isLoading"
+                          Class="chat-input"
+                          Immediate="false" />
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       EndIcon="@Icons.Material.Filled.Send"
+                       OnClick="SendAsync"
+                       Disabled="@(isLoading || string.IsNullOrWhiteSpace(userInput))"
+                       Class="send-button">
+                Send
+            </MudButton>
+        </MudPaper>
+    </div>
 </MudContainer>
 
 <style>
-	.chat-container {
-		height: 100vh;
-		display: flex;
-		flex-direction: column;
-		padding: 0;
-		max-width: 1200px !important;
-	}
+    .chat-container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        max-width: 1200px !important;
+    }
 
-	.chat-messages-container {
-		flex: 1;
-		overflow-y: auto;
-		background-color: var(--mud-palette-background);
-		margin-bottom: 20px;
-		border-radius: 8px;
-	}
+    .chat-messages-container {
+        flex: 1;
+        overflow-y: auto;
+        background-color: var(--mud-palette-background);
+        margin-bottom: 20px;
+        border-radius: 8px;
+    }
 
-	.messages-wrapper {
-		padding: 20px;
-		max-width: 900px;
-		margin: 0 auto;
-	}
+    .messages-wrapper {
+        padding: 20px;
+        max-width: 900px;
+        margin: 0 auto;
+    }
 
-	.welcome-message {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		height: 100%;
-		min-height: 300px;
-		opacity: 0.6;
-	}
+    .welcome-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 300px;
+        opacity: 0.6;
+    }
 
-	.message-row {
-		display: flex;
-		gap: 12px;
-		margin-bottom: 24px;
-		align-items: flex-start;
-	}
+    .message-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+        align-items: flex-start;
+    }
 
-	.message-user {
-		flex-direction: row-reverse;
-	}
+    .message-user {
+        flex-direction: row-reverse;
+    }
 
-	.message-assistant {
-		flex-direction: row;
-	}
+    .message-assistant {
+        flex-direction: row;
+    }
 
-	.message-avatar {
-		flex-shrink: 0;
-		padding-top: 4px;
-	}
+    .message-avatar {
+        flex-shrink: 0;
+        padding-top: 4px;
+    }
 
-	.message-content-wrapper {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		max-width: 70%;
-	}
+    .message-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        max-width: 70%;
+    }
 
-	.message-user .message-content-wrapper {
-		align-items: flex-end;
-	}
+    .message-user .message-content-wrapper {
+        align-items: flex-end;
+    }
 
-	.message-assistant .message-content-wrapper {
-		align-items: flex-start;
-	}
+    .message-assistant .message-content-wrapper {
+        align-items: flex-start;
+    }
 
-	.message-bubble {
-		padding: 12px 16px;
-		border-radius: 12px;
-		word-wrap: break-word;
-		white-space: pre-wrap;
-	}
+    .message-bubble {
+        padding: 12px 16px;
+        border-radius: 12px;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
 
-	.message-bubble-user {
-		background-color: var(--mud-palette-primary);
-		color: var(--mud-palette-dark-text);
-	}
+    .message-bubble-user {
+        background-color: var(--mud-palette-primary);
+        color: var(--mud-palette-dark-text);
+    }
 
-	.message-bubble-assistant {
-		background-color: var(--mud-palette-surface);
-		color: var(--mud-palette-text-primary);
-	}
+    .message-bubble-assistant {
+        background-color: var(--mud-palette-surface);
+        color: var(--mud-palette-text-primary);
+    }
 
-	.message-text {
-		margin: 0;
-	}
+    .message-text {
+        margin: 0;
+    }
 
-	.message-actions {
-		display: flex;
-		gap: 4px;
-		opacity: 0.6;
-		transition: opacity 0.2s;
-	}
+    .message-actions {
+        display: flex;
+        gap: 4px;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+    }
 
-	.message-row:hover .message-actions {
-		opacity: 1;
-	}
+    .message-row:hover .message-actions {
+        opacity: 1;
+    }
 
-	.chat-input-container {
-		position: sticky;
-		bottom: 0;
-		background-color: var(--mud-palette-background);
-		padding: 16px 0;
-		border-top: 1px solid var(--mud-palette-divider);
-	}
+    .chat-input-container {
+        position: sticky;
+        bottom: 0;
+        background-color: var(--mud-palette-background);
+        padding: 16px 0;
+        border-top: 1px solid var(--mud-palette-divider);
+    }
 
-	.input-paper {
-		display: flex;
-		align-items: flex-end;
-		gap: 12px;
-		padding: 16px;
-		max-width: 900px;
-		margin: 0 auto;
-	}
+    .input-paper {
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+        padding: 16px;
+        max-width: 900px;
+        margin: 0 auto;
+    }
 
-	.chat-input {
-		flex: 1;
-	}
+    .chat-input {
+        flex: 1;
+    }
 
-	.send-button {
-		margin-bottom: 4px;
-	}
+    .send-button {
+        margin-bottom: 4px;
+    }
 
-	@@media (max-width: 960px) {
-		.message-content-wrapper {
-			max-width: 80%;
-		}
-	}
+    @@media (max-width: 960px) {
+        .message-content-wrapper {
+            max-width: 80%;
+        }
+    }
 
-	@@media (max-width: 600px) {
-		.message-content-wrapper {
-			max-width: 85%;
-		}
+    @@media (max-width: 600px) {
+        .message-content-wrapper {
+            max-width: 85%;
+        }
 
-		.messages-wrapper {
-			padding: 12px;
-		}
-	}
+        .messages-wrapper {
+            padding: 12px;
+        }
+    }
 </style>
 
 @code {
@@ -267,271 +268,299 @@
 
     private UserProfile UserProfile => UserProfileStateService.UserProfile;
 
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		await base.OnAfterRenderAsync(firstRender);
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
 
-		if (firstRender && !_isSessionRestored)
-		{
-			await RestorePersistedStateAsync();
-			_isSessionRestored = true;
-		}
+        if (firstRender && !_isSessionRestored)
+        {
+            await RestorePersistedStateAsync();
+            _isSessionRestored = true;
+        }
 
-		await ScrollToBottomAsync();
-	}
+        await ScrollToBottomAsync();
+    }
 
-	private async Task HandleKeyDown(KeyboardEventArgs e)
-	{
-		// Enter sends message, Shift+Enter for new line
-		if (e.Key == "Enter" && !e.ShiftKey)
-		{
-			preventDefaultEnter = true;
-			await SendAsync();
-		}
-		else
-		{
-			preventDefaultEnter = false;
-		}
-	}
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        // Enter sends message, Shift+Enter for new line
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            preventDefaultEnter = true;
+            await SendAsync();
+        }
+        else
+        {
+            preventDefaultEnter = false;
+        }
+    }
 
-	private void InitializeAgent()
-	{
-		if (_agent is not null) return;
+    private void InitializeAgent()
+    {
+        if (_agent is not null) return;
 
          
-		var apiKey = Configuration["AISettings:OpenAIApiKey"];
-		if (string.IsNullOrEmpty(apiKey) || apiKey == "your-openai-api-key")
-		{
-			throw new InvalidOperationException("OpenAI API Key is missing or invalid in AISettings.");
-		}
+        var apiKey = Configuration["AISettings:OpenAIApiKey"];
+        
 
-		var modelId = Configuration["AISettings:OpenAIModel"] ?? "gpt-5-nano";
-		var client = new OpenAIClient(apiKey);
-		var chatClient = client.GetChatClient(modelId);
+        if (string.IsNullOrEmpty(apiKey) || apiKey == "your-openai-api-key")
+        {
+            throw new InvalidOperationException("OpenAI API Key is missing or invalid in AISettings.");
+        }
 
-		const string instructions = "You are a helpful AI assistant. Be concise and accurate in your responses.";
-		_agent = chatClient.AsAIAgent(new ChatClientAgentOptions
-		{
-			Name = "Chatbot",
-			ChatOptions = new()
-			{
-				Instructions = instructions,
-				Tools = [AIFunctionFactory.Create(GetCurrentDate)]
-			},
-			ChatHistoryProvider = new CleanArchitecture.Blazor.Server.UI.Services.AI.LocalStorageChatHistoryProvider(
-				LoadChatHistoryAsync,
-				SaveChatHistoryAsync)
-		});
-	}
+        var modelId = Configuration["AISettings:OpenAIModel"] ?? "gpt-5-nano";
+        var client = new OpenAIClient(apiKey);
+        var chatClient = client.GetChatClient(modelId);
+        
 
-	[Description("Get the current date (local server time) in ISO-8601 format (yyyy-MM-dd).")]
-	private static string GetCurrentDate()
-		=> DateTimeOffset.Now.ToString("yyyy-MM-dd");
+        const string instructions = "You are a helpful AI assistant. Be concise and accurate in your responses.";
+        _agent = chatClient.AsAIAgent(new ChatClientAgentOptions
+        {
+            Name = "Chatbot",
+            ChatOptions = new()
+            {
+                Instructions = instructions,
+                Tools = [AIFunctionFactory.Create(GetCurrentDate)]
+            },
+            AIContextProviders =
+            [
+                new CleanArchitecture.Blazor.Server.UI.Services.AI.ProjectIntroductionContextProvider(
+                    GetProjectIntroduction())
+            ],
+            ChatHistoryProvider = new CleanArchitecture.Blazor.Server.UI.Services.AI.LocalStorageChatHistoryProvider(
+                LoadChatHistoryAsync,
+                SaveChatHistoryAsync)
+        });
+    }
 
-	private async Task SendAsync()
-	{
-		if (string.IsNullOrWhiteSpace(userInput) || isLoading)
-		{
-			return;
-		}
+    [Description("Get the current date (local server time) in ISO-8601 format (yyyy-MM-dd).")]
+    private static string GetCurrentDate()
+        => DateTimeOffset.Now.ToString("yyyy-MM-dd");
 
-		var userMessageContent = userInput.Trim();
-		userInput = string.Empty;
+    private string GetProjectIntroduction()
+    {
+        var configuredIntroduction = Configuration["AISettings:ProjectIntroduction"];
+        if (!string.IsNullOrWhiteSpace(configuredIntroduction))
+        {
+            return configuredIntroduction;
+        }
 
-		messages.Add(new ChatMessage
-		{
-			Role = "user",
-			Content = userMessageContent
-		});
+        return
+			 """                                                                                                                                                                                                                                                       
+      CleanArchitecture.Blazor is an enterprise-ready Blazor Server template built on .NET 10 and follows Clean Architecture principles.                                                                                                                                                                                                                                                                                                                                                                             
+      The solution is organized into Domain, Application, Infrastructure, and Server.UI layers, with business workflows structured using MediatR patterns.                                                                                                                                                                                                                                              
+      The frontend uses MudBlazor and includes real-time communication through SignalR.                                                                                                                                                                                                                                                                                                                
+      The platform includes common enterprise capabilities: authentication and authorization (including MFA/RBAC/OAuth), multi-tenancy, auditing, background jobs (Hangfire),                                                                                                                                                                                                         
+      and business modules such as documents, products, and contacts, with support for AI-assisted development workflows and code generation.                                                                                                                                                                                                                                                                                   
+      The data layer is based on EF Core and supports SQL Server, PostgreSQL, and SQLite.                                                                                                                                                                                                                                                                                                                                        
+      When answering project-related questions, prioritize practical, actionable guidance that aligns with this architecture and engineering practices.                                                                                                         
+      """;
+    }
 
-		StateHasChanged();
-		await ScrollToBottomAsync();
+    private async Task SendAsync()
+    {
+        if (string.IsNullOrWhiteSpace(userInput) || isLoading)
+        {
+            return;
+        }
 
-		isLoading = true;
+        var userMessageContent = userInput.Trim();
+        userInput = string.Empty;
 
-		// Add an empty assistant message for streaming updates
-		var assistantMessage = new ChatMessage
-		{
-			Role = "assistant",
-			Content = string.Empty
-		};
-		messages.Add(assistantMessage);
-		StateHasChanged();
+        messages.Add(new ChatMessage
+        {
+            Role = "user",
+            Content = userMessageContent
+        });
 
-		try
-		{
-			InitializeAgent();
+        StateHasChanged();
+        await ScrollToBottomAsync();
+
+        isLoading = true;
+
+        // Add an empty assistant message for streaming updates
+        var assistantMessage = new ChatMessage
+        {
+            Role = "assistant",
+            Content = string.Empty
+        };
+        messages.Add(assistantMessage);
+        StateHasChanged();
+
+        try
+        {
+            InitializeAgent();
             _agentSession ??= await _agent!.CreateSessionAsync();
 
-			var options = new AgentRunOptions();
+            var options = new AgentRunOptions();
             await foreach (var update in _agent!.RunStreamingAsync(userMessageContent, _agentSession, options, CancellationToken.None))
-			{
-				if (!string.IsNullOrEmpty(update.Text))
-				{
-					assistantMessage.Content += update.Text;
-					StateHasChanged();
-					await ScrollToBottomAsync();
-				}
-			}
+            {
+                if (!string.IsNullOrEmpty(update.Text))
+                {
+                    assistantMessage.Content += update.Text;
+                    StateHasChanged();
+                    await ScrollToBottomAsync();
+                }
+            }
 
-			if (string.IsNullOrWhiteSpace(assistantMessage.Content))
-			{
-				throw new Exception("No response received from the agent.");
-			}
+            if (string.IsNullOrWhiteSpace(assistantMessage.Content))
+            {
+                throw new Exception("No response received from the agent.");
+            }
 
-			await PersistStateAsync();
-		}
-		catch (Exception ex)
-		{
-			var errorMessage = $"Error: {ex.Message}";
-			assistantMessage.Content = errorMessage;
-			StateHasChanged();
-			Snackbar.Add(errorMessage, Severity.Error);
-		}
-		finally
-		{
-			isLoading = false;
-			StateHasChanged();
-			await ScrollToBottomAsync();
-		}
-	}
+            await PersistStateAsync();
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = $"Error: {ex.Message}";
+            assistantMessage.Content = errorMessage;
+            StateHasChanged();
+            Snackbar.Add(errorMessage, Severity.Error);
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+            await ScrollToBottomAsync();
+        }
+    }
 
-	private async Task PersistStateAsync()
-	{
-		var serializedMessages = JsonSerializer.Serialize(messages);
-		await JS.InvokeVoidAsync("localStorage.setItem", MessagesStorageKey, serializedMessages);
+    private async Task PersistStateAsync()
+    {
+        var serializedMessages = JsonSerializer.Serialize(messages);
+        await JS.InvokeVoidAsync("localStorage.setItem", MessagesStorageKey, serializedMessages);
 
-		if (_agent is null || _agentSession is null)
-		{
-			return;
-		}
+        if (_agent is null || _agentSession is null)
+        {
+            return;
+        }
 
-		var agent = _agent;
-		var session = _agentSession;
-		JsonElement serializedSession = await agent.SerializeSessionAsync(session);
-		await JS.InvokeVoidAsync("localStorage.setItem", SessionStorageKey, serializedSession.GetRawText());
-	}
+        var agent = _agent;
+        var session = _agentSession;
+        JsonElement serializedSession = await agent.SerializeSessionAsync(session);
+        await JS.InvokeVoidAsync("localStorage.setItem", SessionStorageKey, serializedSession.GetRawText());
+    }
 
-	private async Task RestorePersistedStateAsync()
-	{
-		try
-		{
-			var restoredHistory = await LoadChatHistoryAsync(CancellationToken.None);
-			messages = restoredHistory
-				.Select(m => new ChatMessage
-				{
-					Role = ToUiRole(m.Role),
-					Content = string.Concat(m.Contents.OfType<TextContent>().Select(c => c.Text))
-				})
-				.Where(m => !string.IsNullOrWhiteSpace(m.Content))
-				.ToList();
+    private async Task RestorePersistedStateAsync()
+    {
+        try
+        {
+            var restoredHistory = await LoadChatHistoryAsync(CancellationToken.None);
+            messages = restoredHistory
+                .Select(m => new ChatMessage
+                {
+                    Role = ToUiRole(m.Role),
+                    Content = string.Concat(m.Contents.OfType<TextContent>().Select(c => c.Text))
+                })
+                .Where(m => !string.IsNullOrWhiteSpace(m.Content))
+                .ToList();
 
-			var serializedSession = await JS.InvokeAsync<string?>("localStorage.getItem", SessionStorageKey);
-			if (string.IsNullOrWhiteSpace(serializedSession))
-			{
-				return;
-			}
+            var serializedSession = await JS.InvokeAsync<string?>("localStorage.getItem", SessionStorageKey);
+            if (string.IsNullOrWhiteSpace(serializedSession))
+            {
+                return;
+            }
 
-			InitializeAgent();
+            InitializeAgent();
 
-			using var sessionDoc = JsonDocument.Parse(serializedSession);
-			var agent = _agent!;
-			JsonElement serializedSessionElement = sessionDoc.RootElement.Clone();
-			AgentSession restoredSession = await agent.DeserializeSessionAsync(serializedSessionElement);
-			_agentSession = restoredSession;
-		}
-		catch
-		{
-			await JS.InvokeVoidAsync("localStorage.removeItem", SessionStorageKey);
-			await JS.InvokeVoidAsync("localStorage.removeItem", MessagesStorageKey);
-			messages.Clear();
-		}
+            using var sessionDoc = JsonDocument.Parse(serializedSession);
+            var agent = _agent!;
+            JsonElement serializedSessionElement = sessionDoc.RootElement.Clone();
+            AgentSession restoredSession = await agent.DeserializeSessionAsync(serializedSessionElement);
+            _agentSession = restoredSession;
+        }
+        catch
+        {
+            await JS.InvokeVoidAsync("localStorage.removeItem", SessionStorageKey);
+            await JS.InvokeVoidAsync("localStorage.removeItem", MessagesStorageKey);
+            messages.Clear();
+        }
 
-		StateHasChanged();
-	}
+        StateHasChanged();
+    }
 
-	private async ValueTask<IReadOnlyList<Microsoft.Extensions.AI.ChatMessage>> LoadChatHistoryAsync(CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
+    private async ValueTask<IReadOnlyList<Microsoft.Extensions.AI.ChatMessage>> LoadChatHistoryAsync(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
 
-		var serializedMessages = await JS.InvokeAsync<string?>("localStorage.getItem", MessagesStorageKey);
-		if (string.IsNullOrWhiteSpace(serializedMessages))
-		{
-			return [];
-		}
+        var serializedMessages = await JS.InvokeAsync<string?>("localStorage.getItem", MessagesStorageKey);
+        if (string.IsNullOrWhiteSpace(serializedMessages))
+        {
+            return [];
+        }
 
-		var restoredMessages = JsonSerializer.Deserialize<List<ChatMessage>>(serializedMessages) ?? [];
-		return restoredMessages
-			.Select(m => new Microsoft.Extensions.AI.ChatMessage(
-				ToAgentRole(m.Role),
-				[new TextContent(m.Content)]))
-			.ToList();
-	}
+        var restoredMessages = JsonSerializer.Deserialize<List<ChatMessage>>(serializedMessages) ?? [];
+        return restoredMessages
+            .Select(m => new Microsoft.Extensions.AI.ChatMessage(
+                ToAgentRole(m.Role),
+                [new TextContent(m.Content)]))
+            .ToList();
+    }
 
-	private async ValueTask SaveChatHistoryAsync(
-		IReadOnlyList<Microsoft.Extensions.AI.ChatMessage> history,
-		CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
+    private async ValueTask SaveChatHistoryAsync(
+        IReadOnlyList<Microsoft.Extensions.AI.ChatMessage> history,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
 
-		var restoredMessages = history
-			.Select(m => new ChatMessage
-			{
-				Role = ToUiRole(m.Role),
-				Content = string.Concat(m.Contents.OfType<TextContent>().Select(c => c.Text))
-			})
-			.Where(m => !string.IsNullOrWhiteSpace(m.Content))
-			.ToList();
+        var restoredMessages = history
+            .Select(m => new ChatMessage
+            {
+                Role = ToUiRole(m.Role),
+                Content = string.Concat(m.Contents.OfType<TextContent>().Select(c => c.Text))
+            })
+            .Where(m => !string.IsNullOrWhiteSpace(m.Content))
+            .ToList();
 
-		messages = restoredMessages;
-		var serializedMessages = JsonSerializer.Serialize(restoredMessages);
-		await JS.InvokeVoidAsync("localStorage.setItem", MessagesStorageKey, serializedMessages);
-	}
+        messages = restoredMessages;
+        var serializedMessages = JsonSerializer.Serialize(restoredMessages);
+        await JS.InvokeVoidAsync("localStorage.setItem", MessagesStorageKey, serializedMessages);
+    }
 
-	private static ChatRole ToAgentRole(string role)
-		=> role.ToLowerInvariant() switch
-		{
-			"assistant" => ChatRole.Assistant,
-			"system" => ChatRole.System,
-			"tool" => ChatRole.Tool,
-			_ => ChatRole.User
-		};
+    private static ChatRole ToAgentRole(string role)
+        => role.ToLowerInvariant() switch
+        {
+            "assistant" => ChatRole.Assistant,
+            "system" => ChatRole.System,
+            "tool" => ChatRole.Tool,
+            _ => ChatRole.User
+        };
 
-	private static string ToUiRole(ChatRole role)
-	{
-		if (role == ChatRole.Assistant) return "assistant";
-		if (role == ChatRole.System) return "system";
-		if (role == ChatRole.Tool) return "tool";
-		return "user";
-	}
+    private static string ToUiRole(ChatRole role)
+    {
+        if (role == ChatRole.Assistant) return "assistant";
+        if (role == ChatRole.System) return "system";
+        if (role == ChatRole.Tool) return "tool";
+        return "user";
+    }
 
-	private async Task CopyToClipboardAsync(string text)
-	{
-		try
-		{
-			await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
-			Snackbar.Add("Copied to clipboard", Severity.Success);
-		}
-		catch (Exception ex)
-		{
-			Snackbar.Add($"Copy failed: {ex.Message}", Severity.Error);
-		}
-	}
+    private async Task CopyToClipboardAsync(string text)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
+            Snackbar.Add("Copied to clipboard", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Copy failed: {ex.Message}", Severity.Error);
+        }
+    }
 
-	private async Task ScrollToBottomAsync()
-	{
-		try
-		{
-			await JS.InvokeVoidAsync("eval", @"
+    private async Task ScrollToBottomAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("eval", @"
                 var element = document.querySelector('.chat-messages-container');
                 if (element) {
                     element.scrollTop = element.scrollHeight;
                 }
             ");
-		}
-		catch
-		{
-			// Ignore JS interop errors during pre-rendering
-		}
-	}
+        }
+        catch
+        {
+            // Ignore JS interop errors during pre-rendering
+        }
+    }
 }
