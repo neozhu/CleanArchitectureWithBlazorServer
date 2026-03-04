@@ -218,7 +218,7 @@
         try
         {
             _saving = true;
-            await _form!.Validate().ConfigureAwait(false);
+            await _form!.ValidateAsync();
 
             if (!_form!.IsValid)
                 return;
@@ -248,7 +248,7 @@
         try
         {
             _saveingnew = true;
-            await _form!.Validate().ConfigureAwait(false);
+            await _form!.ValidateAsync();
             if (!_form!.IsValid)
                 return;
             var result = await Mediator.Send(Model);
