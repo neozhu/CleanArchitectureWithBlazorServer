@@ -31,8 +31,8 @@ jobs:
       - name: Begin Sonar Analysis
         run: |
           dotnet sonarscanner begin \
-          /k:"neozhu" \
-          /o:"neo.zhu" \
+          /k:"neozhu_CleanArchitectureWithBlazorServer" \
+          /o:"neozhu" \
           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.host.url="https://sonarcloud.io"
 
