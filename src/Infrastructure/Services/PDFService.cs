@@ -14,11 +14,11 @@ public class PDFService : IPDFService
     private const int MaxCharsPerCell = 80;
     private const int MinCharsPerCell = 10;
 
-    public async Task<byte[]> ExportAsync<TData>(IEnumerable<TData> data
+    public Task<byte[]> ExportAsync<TData>(IEnumerable<TData> data
         , Dictionary<string, Func<TData, object?>> mappers
         , string title, bool landscape)
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         //QuestPDF.Settings.DocumentLayoutExceptionThreshold = 1000;
         Document.Create(container =>
             {
@@ -38,8 +38,13 @@ public class PDFService : IPDFService
                         .PaddingVertical(5, Unit.Millimetre)
                         .Table(table =>
                         {
-                            var headers = mappers.Keys.Select(x => x).ToList();
+                            var headers = mappers.Keys.ToList();
                             var dataList = data.ToList();
+
+                            // Pre-evaluate all mapper values to avoid calling mappers twice
+                            var allValues = dataList
+                                .Select(item => headers.Select(header => mappers[header](item)).ToList())
+                                .ToList();
 
                             // Rough fit columns calculation
                             var tableWidth = landscape
@@ -47,27 +52,20 @@ public class PDFService : IPDFService
                                 : (int)(PageSizes.A4.Width - MarginPTs * 2);
                             var columnsWidth = new int[headers.Count];
 
-                            for (uint c = 0; c < headers.Count; c++)
+                            for (var c = 0; c < headers.Count; c++)
                             {
-                                var cellWidth = Math.Max(MinCharsPerCell,
-                                    Math.Min($"{headers[(int)c]}".Length, MaxCharsPerCell));
-
-                                if (columnsWidth[c] < cellWidth)
-                                    columnsWidth[c] = cellWidth;
+                                columnsWidth[c] = Math.Max(MinCharsPerCell,
+                                    Math.Min(headers[c].Length, MaxCharsPerCell));
                             }
 
-                            foreach (var item in dataList)
+                            foreach (var row in allValues)
                             {
-                                var result = headers.Select(header => mappers[header](item));
-
-                                uint c = 0;
-                                foreach (var value in result)
+                                for (var c = 0; c < row.Count; c++)
                                 {
                                     var cellWidth = Math.Max(MinCharsPerCell,
-                                        Math.Min($"{value}".Length, MaxCharsPerCell));
+                                        Math.Min($"{row[c]}".Length, MaxCharsPerCell));
                                     if (columnsWidth[c] < cellWidth)
                                         columnsWidth[c] = cellWidth;
-                                    c += 1;
                                 }
                             }
 
@@ -76,34 +74,33 @@ public class PDFService : IPDFService
                             for (var i = 0; i < columnsWidth.Length; i++)
                                 columnsWidth[i] = (int)(columnsWidth[i] * ratio);
 
-                            // Create columns
+                            // Define columns
                             table.ColumnsDefinition(columns =>
                             {
-                                for (uint c = 0; c < headers.Count; c++)
-                                {
+                                for (var c = 0; c < headers.Count; c++)
                                     columns.ConstantColumn(columnsWidth[c]);
-                                    table.Cell().Row(1).Column(c + 1).Element(BlockHeader).Text(headers[(int)c]);
-                                }
                             });
 
-                            // Create rows
+                            // Create header row
+                            for (uint c = 0; c < headers.Count; c++)
+                            {
+                                table.Cell().Row(1).Column(c + 1).Element(BlockHeader).Text(headers[(int)c]);
+                            }
+
+                            // Create data rows
                             uint rowIndex = 1;
-                            foreach (var item in dataList)
+                            foreach (var row in allValues)
                             {
                                 uint colIndex = 1;
                                 rowIndex++;
 
-                                var result = headers.Select(header => mappers[header](item));
-
-                                foreach (var value in result)
+                                foreach (var value in row)
                                 {
+                                    var cell = table.Cell().Row(rowIndex).Column(colIndex);
                                     if (IsNumber(value))
-                                        table.Cell().Row(rowIndex).Column(colIndex).Element(BlockCell).AlignRight()
-                                            .Text($"{value}");
+                                        cell.Element(BlockCell).AlignRight().Text($"{value}");
                                     else
-                                        table.Cell().Row(rowIndex).Column(colIndex).Element(BlockCell).AlignLeft()
-                                            .Text($"{value}");
-                                    ;
+                                        cell.Element(BlockCell).AlignLeft().Text($"{value}");
 
                                     colIndex += 1;
                                 }
@@ -123,7 +120,7 @@ public class PDFService : IPDFService
             })
             .GeneratePdf(stream);
 
-        return await Task.FromResult(stream.ToArray());
+        return Task.FromResult(stream.ToArray());
     }
 
     private static bool IsNumber(object? value)
