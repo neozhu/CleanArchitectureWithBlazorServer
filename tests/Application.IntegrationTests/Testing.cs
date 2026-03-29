@@ -117,6 +117,8 @@ public class Testing
         return await mediator.Send(request);
     }
 
+    public static IServiceScope CreateScope() => _scopeFactory.CreateScope();
+
     public static async Task<string> RunAsDefaultUserAsync()
     {
         return await RunAsUserAsync("Demo", "Password123!", new string[] { });
