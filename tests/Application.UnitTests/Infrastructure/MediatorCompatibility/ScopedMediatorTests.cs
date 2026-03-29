@@ -6,11 +6,10 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace CleanArchitecture.Blazor.Application.UnitTests.Infrastructure.MediatorWrapper;
+namespace CleanArchitecture.Blazor.Application.UnitTests.Infrastructure.MediatorCompatibility;
 
 public class ScopedMediatorTests
 {
@@ -26,7 +25,7 @@ public class ScopedMediatorTests
     {
         var services = new ServiceCollection();
         services.AddScoped<ScopeProbe>();
-        services.AddScoped<IMediator, FakeMediator>();
+        services.AddScoped<Mediator.IMediator, FakeMediator>();
 
         using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
         {
@@ -48,7 +47,7 @@ public class ScopedMediatorTests
         Assert.That(FakeMediator.ResolvedProbeIds, Is.EquivalentTo(ScopeProbe.CreatedIds));
     }
 
-    private sealed record PingQuery : IRequest<string>;
+    private sealed record PingQuery : Mediator.IRequest<string>;
 
     private sealed class ScopeProbe : IDisposable
     {
@@ -81,7 +80,7 @@ public class ScopedMediatorTests
         }
     }
 
-    private sealed class FakeMediator : IMediator
+    private sealed class FakeMediator : Mediator.IMediator
     {
         public static int SendCallCount { get; private set; }
 
@@ -100,7 +99,7 @@ public class ScopedMediatorTests
             ResolvedProbeIds.Clear();
         }
 
-        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+        public Task<TResponse> Send<TResponse>(Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
             SendCallCount++;
             ResolvedProbeIds.Add(_scopeProbe.Id);
@@ -114,7 +113,7 @@ public class ScopedMediatorTests
         }
 
         public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-            where TRequest : IRequest
+            where TRequest : Mediator.IRequest
         {
             throw new NotSupportedException();
         }
@@ -125,7 +124,7 @@ public class ScopedMediatorTests
         }
 
         public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
-            where TNotification : INotification
+            where TNotification : Mediator.INotification
         {
             throw new NotSupportedException();
         }
@@ -136,7 +135,7 @@ public class ScopedMediatorTests
         }
 
         public async IAsyncEnumerable<TResponse> CreateStream<TResponse>(
-            IStreamRequest<TResponse> request,
+            Mediator.IStreamRequest<TResponse> request,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;
