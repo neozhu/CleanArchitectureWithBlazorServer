@@ -16,34 +16,57 @@ public class ScopedMediatorTests
     [Test]
     public async Task Send_resolves_mediator_from_a_created_scope()
     {
-        FakeMediator.SendCallCount = 0;
-        FakeMediator.ResolvedRequests.Clear();
-
         var services = new ServiceCollection();
+        services.AddScoped<ScopeProbe>();
         services.AddScoped<Mediator.IMediator, FakeMediator>();
 
-        using ServiceProvider provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
+        {
+            ValidateScopes = true,
+            ValidateOnBuild = true,
+        });
         var sut = new ScopedMediator(provider.GetRequiredService<IServiceScopeFactory>());
 
         string result = await sut.Send(new PingQuery());
 
         Assert.That(result, Is.EqualTo("pong"));
         Assert.That(FakeMediator.SendCallCount, Is.EqualTo(1));
-        Assert.That(FakeMediator.ResolvedRequests, Has.Some.InstanceOf<PingQuery>());
+        Assert.That(ScopeProbe.CreatedCount, Is.EqualTo(1));
+        Assert.That(FakeMediator.ResolvedProbeIds, Has.Count.EqualTo(1));
+        Assert.That(FakeMediator.ResolvedProbeIds[0], Is.Not.EqualTo(Guid.Empty));
     }
 
     private sealed record PingQuery : Mediator.IRequest<string>;
+
+    private sealed class ScopeProbe
+    {
+        public static int CreatedCount { get; private set; }
+
+        public Guid Id { get; } = Guid.NewGuid();
+
+        public ScopeProbe()
+        {
+            CreatedCount++;
+        }
+    }
 
     private sealed class FakeMediator : Mediator.IMediator
     {
         public static int SendCallCount { get; private set; }
 
-        public static List<object> ResolvedRequests { get; } = new();
+        public static List<Guid> ResolvedProbeIds { get; } = new();
+
+        private readonly ScopeProbe _scopeProbe;
+
+        public FakeMediator(ScopeProbe scopeProbe)
+        {
+            _scopeProbe = scopeProbe;
+        }
 
         public Task<TResponse> Send<TResponse>(Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
             SendCallCount++;
-            ResolvedRequests.Add(request!);
+            ResolvedProbeIds.Add(_scopeProbe.Id);
 
             if (request is PingQuery)
             {
