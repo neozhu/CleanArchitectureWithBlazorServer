@@ -1,5 +1,4 @@
 using System.Linq;
-using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -17,7 +16,7 @@ public class MediatorAbstractionsSmokeTests
     }
 
     [Test]
-    public void AddApplication_ShouldRegisterMessageExceptionHandlers()
+    public void AddApplication_ShouldNotRegisterMediatorPipelineBehaviorsDirectly()
     {
         var services = new ServiceCollection();
 
@@ -28,10 +27,7 @@ public class MediatorAbstractionsSmokeTests
             .Select(d => d.ImplementationType)
             .ToList();
 
-        Assert.That(pipelineImplementations, Contains.Item(typeof(DbExceptionHandler<,>)));
-        Assert.That(pipelineImplementations, Contains.Item(typeof(GlobalExceptionHandler<,>)));
-        Assert.That(pipelineImplementations, Contains.Item(typeof(ServerExceptionHandler<,>)));
-        Assert.That(pipelineImplementations, Contains.Item(typeof(ValidationExceptionHandler<,>)));
+        Assert.That(pipelineImplementations, Is.Empty);
     }
 
     private sealed record SmokeNotification : INotification;

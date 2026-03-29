@@ -1,4 +1,7 @@
+#nullable enable
+
 using System.Collections.Generic;
+using System.Linq;
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 using CleanArchitecture.Blazor.Infrastructure;
@@ -14,13 +17,9 @@ public class MediatorRuntimeRegistrationTests
     [Test]
     public void AddInfrastructure_And_AddApplication_ShouldResolveMediatorRuntime()
     {
-        using ServiceProvider provider = CreateServices().BuildServiceProvider(new ServiceProviderOptions
-        {
-            ValidateScopes = true,
-            ValidateOnBuild = true,
-        });
-
-        IMediator mediator = provider.GetRequiredService<IMediator>();
+        using ServiceProvider provider = CreateServices().BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
+        using IServiceScope scope = provider.CreateScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         Assert.That(mediator, Is.Not.Null);
     }
@@ -28,15 +27,26 @@ public class MediatorRuntimeRegistrationTests
     [Test]
     public void AddInfrastructure_And_AddApplication_ShouldUseParallelNoWaitPublisher()
     {
-        using ServiceProvider provider = CreateServices().BuildServiceProvider(new ServiceProviderOptions
-        {
-            ValidateScopes = true,
-            ValidateOnBuild = true,
-        });
-
-        INotificationPublisher publisher = provider.GetRequiredService<INotificationPublisher>();
+        using ServiceProvider provider = CreateServices().BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
+        using IServiceScope scope = provider.CreateScope();
+        INotificationPublisher publisher = scope.ServiceProvider.GetRequiredService<INotificationPublisher>();
 
         Assert.That(publisher, Is.TypeOf<ParallelNoWaitPublisher>());
+    }
+
+    [Test]
+    public void AddInfrastructure_And_AddApplication_ShouldRegisterEachPipelineBehaviorOnce()
+    {
+        var services = CreateServices();
+
+        var duplicatePipelineRegistrations = services
+            .Where(d => d.ServiceType == typeof(IPipelineBehavior<,>))
+            .GroupBy(d => d.ImplementationType)
+            .Where(group => group.Key is not null && group.Count() > 1)
+            .Select(group => group.Key!.Name)
+            .ToList();
+
+        Assert.That(duplicatePipelineRegistrations, Is.Empty);
     }
 
     private static IServiceCollection CreateServices()
