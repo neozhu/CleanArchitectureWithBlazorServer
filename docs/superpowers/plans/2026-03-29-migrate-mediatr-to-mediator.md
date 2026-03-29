@@ -4,7 +4,7 @@
 
 **Goal:** Replace the repository's MediatR runtime dependency with `martinothamar/Mediator` while preserving the current request, notification, pipeline, exception-handler, domain-event, and scoped-mediator behavior with minimal source churn.
 
-**Architecture:** Keep the repository-facing `MediatR` API shape by introducing repo-owned compatibility contracts in the `MediatR` and `MediatR.Pipeline` namespaces inside the lowest shared layer that both `Domain` and `Application` can consume, then back those contracts with a `Mediator`-powered runtime adapter registered through DI. Concentrate package-specific code in compatibility and registration files so feature handlers, Razor pages, and tests mostly stay unchanged.
+**Architecture:** Keep the repository-facing `MediatR` API shape by introducing repo-owned compatibility contracts in the `MediatR` and `MediatR.Pipeline` namespaces inside the lowest shared layer that both `Domain` and `Application` can consume, then back those contracts with a `Mediator`-powered runtime adapter registered through DI. Concentrate package-specific code in compatibility and registration files so feature handlers and Razor pages mostly stay unchanged, while allowing low-level migration tests and adapter wiring to validate the underlying `Mediator` runtime surface directly where useful.
 
 **Tech Stack:** .NET 10, Blazor Server, NUnit, FluentAssertions, `martinothamar/Mediator`, Microsoft DI
 
@@ -66,11 +66,11 @@
 - `src/Infrastructure/Services/MediatorCompatibility/CompatibilityServiceCollectionExtensions.cs`
   Hold the DI wiring that registers compatibility abstractions, runtime adapters, and `Mediator`.
 - `tests/Application.UnitTests/Common/MediatorCompatibility/ParallelNoWaitPublisherTests.cs`
-  Lock the custom publisher's fire-and-forget semantics.
+  Lock the custom publisher's fire-and-forget semantics against the planned low-level `Mediator` runtime contracts.
 - `tests/Application.UnitTests/Infrastructure/MediatorCompatibility/ScopedMediatorTests.cs`
-  Lock `IScopedMediator` behavior against the repo-owned `IMediator`.
+  Lock `IScopedMediator` behavior against the planned low-level `Mediator` runtime contracts while the repository-facing facade remains `MediatR`-shaped.
 - `tests/Application.IntegrationTests/Common/MediatorCompatibility/MediatorCompatibilityTests.cs`
-  Verify `IMediator` and `IScopedMediator` can resolve and send existing requests through DI after migration.
+  Verify the underlying `Mediator.IMediator` service and `IScopedMediator` can resolve and send existing requests through DI after migration.
 
 ## Task 1: Add Migration Safety-Net Tests
 
@@ -125,7 +125,7 @@ public class ParallelNoWaitPublisherTests
 - [ ] **Step 2: Run the unit test to confirm it fails**
 
 Run: `dotnet test tests/Application.UnitTests/Application.UnitTests.csproj --filter "FullyQualifiedName~ParallelNoWaitPublisherTests" -v minimal`
-Expected: FAIL because `NotificationHandlerExecutor` and `INotification` compatibility types do not exist yet.
+Expected: FAIL because the planned low-level `Mediator.NotificationHandlerExecutor` and `Mediator.INotification` types are not available to this test project yet.
 
 - [ ] **Step 3: Write the failing scoped mediator test**
 
@@ -186,7 +186,7 @@ public class ScopedMediatorTests
 - [ ] **Step 4: Run the scoped mediator test to confirm it fails**
 
 Run: `dotnet test tests/Application.UnitTests/Application.UnitTests.csproj --filter "FullyQualifiedName~ScopedMediatorTests" -v minimal`
-Expected: FAIL because the repo-owned compatibility `IMediator`, `IRequest<T>`, and `IStreamRequest<T>` contracts do not exist yet.
+Expected: FAIL because the planned low-level `Mediator.IMediator`, `Mediator.IRequest<T>`, and `Mediator.IStreamRequest<T>` contracts do not exist yet.
 
 - [ ] **Step 5: Write the failing integration test**
 
@@ -238,7 +238,7 @@ public static IServiceScope CreateScope()
 - [ ] **Step 7: Run the integration test to confirm it fails**
 
 Run: `dotnet test tests/Application.IntegrationTests/Application.IntegrationTests.csproj --filter "FullyQualifiedName~MediatorCompatibilityTests" -v minimal`
-Expected: FAIL because the container does not yet expose the repo-owned compatibility `IMediator`.
+Expected: FAIL because the container does not yet expose the planned low-level `Mediator.IMediator` service.
 
 - [ ] **Step 8: Commit**
 
