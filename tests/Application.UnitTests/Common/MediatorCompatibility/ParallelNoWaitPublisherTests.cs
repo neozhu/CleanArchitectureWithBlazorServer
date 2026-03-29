@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
-using MediatR;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.MediatorCompatibility;
@@ -18,8 +16,7 @@ public class ParallelNoWaitPublisherTests
         var publisher = new ParallelNoWaitPublisher();
         var notification = new TestNotification();
 
-        NotificationHandlerExecutor handlerExecutor = new(
-            new object(),
+        Mediator.NotificationHandlerExecutor handlerExecutor = new(
             async (_, _) =>
             {
                 handlerStarted.TrySetResult(true);
@@ -33,7 +30,7 @@ public class ParallelNoWaitPublisherTests
 
         Assert.That(publishTask.IsCompleted, Is.True);
 
-        await Task.WhenAny(handlerStarted.Task, Task.Delay(TimeSpan.FromSeconds(1)));
+        await handlerStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
         Assert.That(handlerStarted.Task.IsCompleted, Is.True);
         Assert.That(releaseHandler.Task.IsCompleted, Is.False);
 
