@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
@@ -30,7 +30,7 @@ public class PicklistSetsQueryHandler : IRequestHandler<PicklistSetsWithPaginati
         _context = context;
     }
 
-    public async Task<PaginatedData<PicklistSetDto>> Handle(PicklistSetsWithPaginationQuery request,
+    public async ValueTask<PaginatedData<PicklistSetDto>> Handle(PicklistSetsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
         var data = await _context.PicklistSets.OrderBy($"{request.OrderBy} {request.SortDirection}")

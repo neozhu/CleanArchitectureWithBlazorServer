@@ -1,6 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
-using MediatR;
+using Mediator;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
 
@@ -21,112 +21,111 @@ public class ScopedMediator : IScopedMediator
     }
 
     /// <inheritdoc/>
-    public async Task<TResponse> Send<TResponse>(
+    public async ValueTask<TResponse> Send<TResponse>(
         IRequest<TResponse> request,
         CancellationToken cancellationToken = default)
     {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            TResponse response = await mediator.Send(request, cancellationToken);
-
-            return response;
-        }
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        return await mediator.Send(request, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public async Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-        where TRequest : IRequest
+    public async ValueTask<TResponse> Send<TResponse>(
+        ICommand<TResponse> command,
+        CancellationToken cancellationToken = default)
     {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            await mediator.Send(request, cancellationToken);
-        }
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        return await mediator.Send(command, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public async Task<object?> Send(object request, CancellationToken cancellationToken = default)
+    public async ValueTask<TResponse> Send<TResponse>(
+        IQuery<TResponse> query,
+        CancellationToken cancellationToken = default)
     {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            object? response = await mediator.Send(request, cancellationToken);
-
-            return response;
-        }
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        return await mediator.Send(query, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public async Task Publish<TNotification>(
+    public async ValueTask<object?> Send(object request, CancellationToken cancellationToken = default)
+    {
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        return await mediator.Send(request, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public async ValueTask Publish<TNotification>(
         TNotification notification,
         CancellationToken cancellationToken = default)
         where TNotification : INotification
     {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            await mediator.Publish(notification, cancellationToken);
-        }
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await mediator.Publish(notification, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public async Task Publish(object notification, CancellationToken cancellationToken = default)
+    public async ValueTask Publish(object notification, CancellationToken cancellationToken = default)
     {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            await mediator.Publish(notification, cancellationToken);
-        }
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await mediator.Publish(notification, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
     public async IAsyncEnumerable<TResponse> CreateStream<TResponse>(
         IStreamRequest<TResponse> request,
-        [EnumeratorCancellation]
-            CancellationToken cancellationToken = default)
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await foreach (TResponse item in mediator.CreateStream(request, cancellationToken).ConfigureAwait(false))
         {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            yield return item;
+        }
+    }
 
-            IAsyncEnumerable<TResponse> items = mediator.CreateStream(request, cancellationToken);
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<TResponse> CreateStream<TResponse>(
+        IStreamCommand<TResponse> command,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await foreach (TResponse item in mediator.CreateStream(command, cancellationToken).ConfigureAwait(false))
+        {
+            yield return item;
+        }
+    }
 
-            await foreach (TResponse item in items)
-            {
-                yield return item;
-            }
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<TResponse> CreateStream<TResponse>(
+        IStreamQuery<TResponse> query,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await foreach (TResponse item in mediator.CreateStream(query, cancellationToken).ConfigureAwait(false))
+        {
+            yield return item;
         }
     }
 
     /// <inheritdoc/>
     public async IAsyncEnumerable<object?> CreateStream(
         object request,
-        [EnumeratorCancellation]
-            CancellationToken cancellationToken = default)
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
+        await using AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
+        IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await foreach (object? item in mediator.CreateStream(request, cancellationToken).ConfigureAwait(false))
         {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            IAsyncEnumerable<object?> items = mediator.CreateStream(request, cancellationToken);
-
-            await foreach (object? item in items)
-            {
-                yield return item;
-            }
+            yield return item;
         }
     }
 }

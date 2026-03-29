@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
+using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
@@ -25,7 +26,7 @@ public class ScopedMediatorTests
     {
         var services = new ServiceCollection();
         services.AddScoped<ScopeProbe>();
-        services.AddScoped<Mediator.IMediator, FakeMediator>();
+        services.AddScoped<IMediator, FakeMediator>();
 
         using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions
         {
@@ -47,7 +48,7 @@ public class ScopedMediatorTests
         Assert.That(FakeMediator.ResolvedProbeIds, Is.EquivalentTo(ScopeProbe.CreatedIds));
     }
 
-    private sealed record PingQuery : Mediator.IRequest<string>;
+    private sealed record PingQuery : IRequest<string>;
 
     private sealed class ScopeProbe : IDisposable
     {
@@ -80,7 +81,7 @@ public class ScopedMediatorTests
         }
     }
 
-    private sealed class FakeMediator : Mediator.IMediator
+    private sealed class FakeMediator : IMediator
     {
         public static int SendCallCount { get; private set; }
 
@@ -99,43 +100,63 @@ public class ScopedMediatorTests
             ResolvedProbeIds.Clear();
         }
 
-        public Task<TResponse> Send<TResponse>(Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default)
+        public ValueTask<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
             SendCallCount++;
             ResolvedProbeIds.Add(_scopeProbe.Id);
 
             if (request is PingQuery)
             {
-                return Task.FromResult((TResponse)(object)"pong");
+                return new ValueTask<TResponse>((TResponse)(object)"pong");
             }
 
             throw new NotSupportedException($"Unexpected request type: {request.GetType().Name}");
         }
 
-        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-            where TRequest : Mediator.IRequest
+        public ValueTask<TResponse> Send<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public Task<object?> Send(object request, CancellationToken cancellationToken = default)
+        public ValueTask<TResponse> Send<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
-            where TNotification : Mediator.INotification
+        public ValueTask<object?> Send(object request, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public Task Publish(object notification, CancellationToken cancellationToken = default)
+        public ValueTask Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
+            where TNotification : INotification
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask Publish(object notification, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
         public async IAsyncEnumerable<TResponse> CreateStream<TResponse>(
-            Mediator.IStreamRequest<TResponse> request,
+            IStreamRequest<TResponse> request,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            await Task.CompletedTask;
+            yield break;
+        }
+
+        public async IAsyncEnumerable<TResponse> CreateStream<TResponse>(
+            IStreamCommand<TResponse> command,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            await Task.CompletedTask;
+            yield break;
+        }
+
+        public async IAsyncEnumerable<TResponse> CreateStream<TResponse>(
+            IStreamQuery<TResponse> query,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             await Task.CompletedTask;

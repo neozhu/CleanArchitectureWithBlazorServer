@@ -1,17 +1,16 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
-public class GlobalExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
+public class GlobalExceptionHandler<TRequest, TResponse> : MessageExceptionHandler<TRequest, TResponse>
     where TRequest : IRequest<IResult>
     where TResponse : IResult
-    where TException : Exception
 {
-    private readonly ILogger<GlobalExceptionHandler<TRequest, TResponse, TException>> _logger;
+    private readonly ILogger<GlobalExceptionHandler<TRequest, TResponse>> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GlobalExceptionHandler{TRequest, TResponse, TException}"/> class.
     /// </summary>
     /// <param name="logger">The logger.</param>
-    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler<TRequest, TResponse, TException>> logger)
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler<TRequest, TResponse>> logger)
     {
         _logger = logger;
     }
@@ -24,7 +23,7 @@ public class GlobalExceptionHandler<TRequest, TResponse, TException> : IRequestE
     /// <param name="state">The request exception handler state.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state,
+    protected override ValueTask<ExceptionHandlingResult<TResponse>> Handle(TRequest request, Exception exception,
         CancellationToken cancellationToken)
     {
         TResponse failureResult;
@@ -48,8 +47,7 @@ public class GlobalExceptionHandler<TRequest, TResponse, TException> : IRequestE
         }
 
         // Set the handled response
-        state.SetHandled(failureResult!);
         _logger.LogError(exception, exception.Message);
-        return Task.CompletedTask;
+        return Handled(failureResult!);
     }
 }

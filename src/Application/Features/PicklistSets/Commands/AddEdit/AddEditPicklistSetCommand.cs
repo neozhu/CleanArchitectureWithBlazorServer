@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
@@ -28,7 +28,7 @@ public class AddEditPicklistSetCommandHandler : IRequestHandler<AddEditPicklistS
         _context = context;
     }
 
-    public async Task<Result<int>> Handle(AddEditPicklistSetCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<int>> Handle(AddEditPicklistSetCommand request, CancellationToken cancellationToken)
     {
         if (request.Id > 0)
         {

@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome;
 
 public record SendWelcomeNotification(string LoginUrl, string Email, string UserName) : INotification;
 
@@ -23,7 +23,7 @@ public class SendWelcomeNotificationHandler : INotificationHandler<SendWelcomeNo
     }
 
 
-    public async Task Handle(SendWelcomeNotification notification, CancellationToken cancellationToken)
+    public async ValueTask Handle(SendWelcomeNotification notification, CancellationToken cancellationToken)
     {
         var subject = string.Format(_localizer["Welcome to {0}"], _settings.AppName);
         var sendMailResult = await _mailService.SendAsync(

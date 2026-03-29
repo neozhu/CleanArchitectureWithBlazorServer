@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
@@ -33,7 +33,7 @@ public class DeleteTenantCommandHandler :
         _context = context;
     }
 
-    public async Task<Result<int>> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<int>> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
     {
         var items = await _context.Tenants.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items) _context.Tenants.Remove(item);

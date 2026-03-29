@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
@@ -27,7 +27,7 @@ public class PicklistSetsQueryByNameHandler : IRequestHandler<PicklistSetsQueryB
         _context = context;
     }
 
-    public async Task<IEnumerable<PicklistSetDto>> Handle(PicklistSetsQueryByName request,
+    public async ValueTask<IEnumerable<PicklistSetDto>> Handle(PicklistSetsQueryByName request,
         CancellationToken cancellationToken)
     {
         var data = await _context.PicklistSets.Where(x => x.Name == request.Name)

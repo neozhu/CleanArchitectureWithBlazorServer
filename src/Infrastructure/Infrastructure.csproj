@@ -8,6 +8,10 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Mediator.SourceGenerator" Version="3.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-rc4" />
         <PackageReference Include="OpenAI" Version="2.9.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.5" />

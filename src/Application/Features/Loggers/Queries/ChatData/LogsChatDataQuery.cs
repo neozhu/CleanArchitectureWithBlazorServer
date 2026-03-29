@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
@@ -28,7 +28,7 @@ public class LogsChatDataQueryHandler : IRequestHandler<LogsTimeLineChatDataQuer
         _localizer = localizer;
     }
 
-    public async Task<List<LogTimeLineDto>> Handle(LogsTimeLineChatDataQuery request,
+    public async ValueTask<List<LogTimeLineDto>> Handle(LogsTimeLineChatDataQuery request,
         CancellationToken cancellationToken)
     {
         var data = await _context.Loggers.Where(x => x.TimeStamp >= request.LastDateTime)

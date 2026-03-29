@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
+using Mediator;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.MediatorCompatibility;
@@ -15,18 +17,10 @@ public class ParallelNoWaitPublisherTests
         var releaseHandler = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         var publisher = new ParallelNoWaitPublisher();
         var notification = new TestNotification();
+        var handler = new TestHandler(handlerStarted, releaseHandler);
+        var handlers = new NotificationHandlers<TestNotification>(new[] { handler }, true);
 
-        Mediator.NotificationHandlerExecutor handlerExecutor = new(
-            async (_, _) =>
-            {
-                handlerStarted.TrySetResult(true);
-                await releaseHandler.Task;
-            });
-
-        Task publishTask = publisher.Publish(
-            new[] { handlerExecutor },
-            notification,
-            CancellationToken.None);
+        ValueTask publishTask = publisher.Publish(handlers, notification, CancellationToken.None);
 
         Assert.That(publishTask.IsCompleted, Is.True);
 
@@ -38,5 +32,23 @@ public class ParallelNoWaitPublisherTests
         await publishTask;
     }
 
-    private sealed record TestNotification : Mediator.INotification;
+    private sealed class TestHandler : INotificationHandler<TestNotification>
+    {
+        private readonly TaskCompletionSource<bool> _handlerStarted;
+        private readonly TaskCompletionSource<bool> _releaseHandler;
+
+        public TestHandler(TaskCompletionSource<bool> handlerStarted, TaskCompletionSource<bool> releaseHandler)
+        {
+            _handlerStarted = handlerStarted;
+            _releaseHandler = releaseHandler;
+        }
+
+        public async ValueTask Handle(TestNotification notification, CancellationToken cancellationToken)
+        {
+            _handlerStarted.TrySetResult(true);
+            await _releaseHandler.Task.WaitAsync(cancellationToken);
+        }
+    }
+
+    private sealed record TestNotification : INotification;
 }

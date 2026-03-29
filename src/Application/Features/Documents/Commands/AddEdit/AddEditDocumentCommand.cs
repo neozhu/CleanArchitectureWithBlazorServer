@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
@@ -37,7 +37,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         _uploadService = uploadService;
     }
 
-    public async Task<Result<int>> Handle(AddEditDocumentCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<int>> Handle(AddEditDocumentCommand request, CancellationToken cancellationToken)
     {
         if (request.Id > 0)
         {
