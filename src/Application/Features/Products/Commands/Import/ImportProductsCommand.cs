@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -49,7 +49,7 @@ public class ImportProductsCommandHandler :
         _serializer = serializer;
     }
 
-    public async Task<Result<byte[]>> Handle(CreateProductsTemplateCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<byte[]>> Handle(CreateProductsTemplateCommand request, CancellationToken cancellationToken)
     {
         var fields = new string[]
         {
@@ -64,7 +64,7 @@ public class ImportProductsCommandHandler :
         return await Result<byte[]>.SuccessAsync(result);
     }
 #nullable disable warnings
-    public async Task<Result<int>> Handle(ImportProductsCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<int>> Handle(ImportProductsCommand request, CancellationToken cancellationToken)
     {
         var result = await _excelService.ImportAsync(request.Data,
             new Dictionary<string, Func<DataRow, ProductDto, object?>>

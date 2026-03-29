@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
@@ -35,7 +35,7 @@ public class GetAllProductsQueryHandler :
         _context = context;
     }
 
-    public async Task<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
+    public async ValueTask<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Products
             .ProjectTo()
@@ -43,7 +43,7 @@ public class GetAllProductsQueryHandler :
         return data;
     }
 
-    public async Task<ProductDto?> Handle(GetProductQuery request, CancellationToken cancellationToken)
+    public async ValueTask<ProductDto?> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Products.Where(x => x.Id == request.Id)
                        .ProjectTo()

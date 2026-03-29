@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.EventHandlers;
@@ -12,12 +12,12 @@ public class DocumentDeletedEventHandler : INotificationHandler<DeletedEvent<Doc
         _logger = logger;
     }
 
-    public Task Handle(DeletedEvent<Document> notification, CancellationToken cancellationToken)
+    public ValueTask Handle(DeletedEvent<Document> notification, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(notification.Entity.URL))
         {
             _logger.LogWarning("The document URL is null or empty, skipping file deletion.");
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         var folder = UploadType.Document.GetDescription();
@@ -41,6 +41,6 @@ public class DocumentDeletedEventHandler : INotificationHandler<DeletedEvent<Doc
             _logger.LogWarning("File not found for deletion: {FilePath}", deleteFilePath);
         }
 
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 }

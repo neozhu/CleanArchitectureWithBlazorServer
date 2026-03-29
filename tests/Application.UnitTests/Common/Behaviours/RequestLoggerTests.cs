@@ -1,9 +1,10 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Pipeline.PreProcessors;
+using Mediator;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -26,21 +27,23 @@ public class RequestLoggerTests
     [Test]
     public async Task ShouldCallGetUserNameAsyncOnceIfAuthenticated()
     {
-        _currentUserAccessor.Setup(x => x.SessionInfo).Returns(new SessionInfo("Administrator", "Administrator", "","","","", UserPresence.Available));
-        var requestLogger = new LoggingPreProcessor<AddEditProductCommand>(_logger.Object, _currentUserAccessor.Object);
-        await requestLogger.Process(
+        _currentUserAccessor.Setup(x => x.SessionInfo).Returns(new SessionInfo("Administrator", "Administrator", "", "", "", "", UserPresence.Available));
+        var requestLogger = new LoggingPreProcessor<AddEditProductCommand, string>(_logger.Object, _currentUserAccessor.Object);
+        await requestLogger.Handle(
             new AddEditProductCommand { Brand = "Brand", Name = "Brand", Price = 1.0m, Unit = "EA" },
-            new CancellationToken());
+            (_, _) => new ValueTask<string>("ok"),
+            CancellationToken.None);
         _currentUserAccessor.Verify(i => i.SessionInfo, Times.Once);
     }
 
     [Test]
     public async Task ShouldNotCallGetUserNameAsyncOnceIfUnauthenticated()
     {
-        var requestLogger = new LoggingPreProcessor<AddEditProductCommand>(_logger.Object, _currentUserAccessor.Object);
-        await requestLogger.Process(
+        var requestLogger = new LoggingPreProcessor<AddEditProductCommand, string>(_logger.Object, _currentUserAccessor.Object);
+        await requestLogger.Handle(
             new AddEditProductCommand { Brand = "Brand", Name = "Brand", Price = 1.0m, Unit = "EA" },
-            new CancellationToken());
+            (_, _) => new ValueTask<string>("ok"),
+            CancellationToken.None);
         _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>(), CancellationToken.None), Times.Never);
     }
 }

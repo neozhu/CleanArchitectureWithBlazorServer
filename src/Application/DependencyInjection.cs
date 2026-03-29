@@ -14,17 +14,14 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddTransient(typeof(IRequestExceptionHandler<,,>), typeof(DbExceptionHandler<,,>));
-        services.AddMediatR(config =>
-        {
-            config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            config.NotificationPublisher = new ParallelNoWaitPublisher();
-            config.AddRequestPreProcessor(typeof(IRequestPreProcessor<>), typeof(ValidationPreProcessor<>));
-            config.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
-            config.AddOpenBehavior(typeof(FusionCacheBehaviour<,>));
-            config.AddOpenBehavior(typeof(CacheInvalidationBehaviour<,>));
-
-        });
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DbExceptionHandler<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(GlobalExceptionHandler<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ServerExceptionHandler<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationExceptionHandler<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPreProcessor<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FusionCacheBehaviour<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehaviour<,>));
         services.AddScoped<UserProfileStateService>();
         return services;
     }

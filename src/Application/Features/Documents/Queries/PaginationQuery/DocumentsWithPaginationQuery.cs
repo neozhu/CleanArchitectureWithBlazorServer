@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
@@ -33,7 +33,7 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
         _context = context;
     }
 
-    public async Task<PaginatedData<DocumentDto>> Handle(DocumentsWithPaginationQuery request,
+    public async ValueTask<PaginatedData<DocumentDto>> Handle(DocumentsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
         var data = await _context.Documents.OrderBy($"{request.OrderBy} {request.SortDirection}")

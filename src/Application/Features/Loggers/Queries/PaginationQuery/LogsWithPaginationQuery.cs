@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
@@ -33,7 +33,7 @@ public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, Paginat
         _context = context;
     }
 
-    public async Task<PaginatedData<LogDto>> Handle(LogsWithPaginationQuery request,
+    public async ValueTask<PaginatedData<LogDto>> Handle(LogsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
         var data = await _context.Loggers.OrderBy($"{request.OrderBy} {request.SortDirection}")

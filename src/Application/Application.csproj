@@ -8,6 +8,7 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Mediator.Abstractions" Version="3.0.1" />
    
         <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />

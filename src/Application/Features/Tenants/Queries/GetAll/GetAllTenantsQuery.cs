@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
@@ -24,7 +24,7 @@ public class GetAllTenantsQueryHandler :
         _context = context;
     }
 
-    public async Task<IEnumerable<TenantDto>> Handle(GetAllTenantsQuery request, CancellationToken cancellationToken)
+    public async ValueTask<IEnumerable<TenantDto>> Handle(GetAllTenantsQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Tenants.OrderBy(x => x.Name)
             .ProjectTo()

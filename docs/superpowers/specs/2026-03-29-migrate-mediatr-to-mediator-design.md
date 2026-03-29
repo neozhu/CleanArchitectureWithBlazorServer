@@ -2,200 +2,126 @@
 
 ## Status
 
-Approved for planning.
+Approved for planning and implementation.
 
 ## Summary
 
-Migrate the repository from the `MediatR` package to `martinothamar/Mediator` while preserving the current repository-facing API shape and runtime behavior as closely as practical.
+Migrate the repository from `MediatR` to `martinothamar/Mediator` by deleting `MediatR` package and namespace dependencies rather than preserving a repository-owned MediatR-compatible facade.
 
-This migration is intentionally conservative:
+This migration is still conservative about behavior, but it is no longer conservative about API shape:
 
-- Keep existing request, notification, handler, and mediator usage patterns stable across `Application`, `Infrastructure`, `Server.UI`, and tests.
-- Preserve pipeline behaviors, request preprocessors, request exception handlers, domain event publishing, and scoped mediator behavior.
-- Isolate `Mediator` package details inside a compatibility layer instead of spreading them across feature code.
+- Application, domain, infrastructure, UI, and tests should move to `Mediator` / `Mediator.Abstractions` namespaces directly.
+- `Mediator.Abstractions` should be referenced by projects that only need contracts.
+- `Mediator.SourceGenerator` should be referenced only by the outer runtime layer that owns DI wiring and generated handler dispatch.
+- Existing behaviors such as request handling, notification publishing, domain event dispatch, and scoped mediator usage should remain intact or be reconnected with equivalent semantics.
 
 ## Goals
 
-- Replace the current MediatR runtime dependency with `martinothamar/Mediator`.
-- Minimize churn in existing handlers, Razor pages, dialogs, and tests.
-- Keep domain events and notification handlers working with equivalent semantics.
-- Keep current cross-cutting behavior ordering and responsibilities intact.
-- Make the migration safe for a template repository that downstream projects may follow.
+- Remove direct `MediatR` references from source, tests, and project files.
+- Move shared contracts to `Mediator.Abstractions`.
+- Preserve current application behavior for request sending, notification publishing, and scoped mediator usage.
+- Prepare the repository for a later runtime registration step that adds `Mediator.SourceGenerator` in the correct outer layer.
 
 ## Non-Goals
 
+- Do not keep or expand the temporary repo-owned `MediatR` compatibility layer.
 - Do not redesign the command/query architecture.
-- Do not split mediator usage into separate command/query/publisher abstractions in this change.
-- Do not rewrite all handlers to use `Mediator` native interfaces directly.
-- Do not do unrelated refactoring outside mediator migration touchpoints.
+- Do not change feature behavior unless required by the mediator migration.
+- Do not pull `Mediator.SourceGenerator` into low-level shared projects that only need abstractions.
 
 ## Current State
 
-The repository currently depends on MediatR semantics in several places:
+The repository currently contains three conflicting mediator shapes:
 
-- `Application` uses `IRequest<T>`, `IRequestHandler<,>`, `INotificationHandler<>`, `IPipelineBehavior<,>`, `IRequestPreProcessor<>`, and `IRequestExceptionHandler<,,>`.
-- `Application/DependencyInjection.cs` registers MediatR handlers, behaviors, preprocessors, and a custom notification publisher.
-- `Domain/Common/DomainEvent.cs` inherits from `INotification`.
-- `Infrastructure` provides `IScopedMediator : IMediator` and a scoped wrapper implementation.
-- `Server.UI` injects `IMediator` directly in Razor components.
-- Integration tests resolve `IMediator` from DI and send requests through it.
+- Legacy source files still import `MediatR`.
+- Temporary compatibility contracts exist under `src/Domain/Common/MediatorCompatibility/MediatR/*`.
+- Migration safety-net tests already target low-level `Mediator` runtime concepts in a few places.
 
-## Proposed Architecture
+That mixed state is unstable. The next implementation step must simplify the contract layer instead of adding more compatibility code.
 
-Introduce an internal compatibility layer that preserves the current MediatR-like API shape used by the repository, while delegating execution to `martinothamar/Mediator`.
+## Approved Architecture
 
-### Boundary
+Use direct `Mediator` abstractions throughout the codebase.
 
-- Feature code continues to use familiar mediator abstractions.
-- The compatibility layer becomes the only repository-wide mediator facade.
-- `Mediator` becomes the execution engine behind that facade.
-- Direct package-specific assumptions stay concentrated in registration and adapter code.
+### Contract Layer
 
-### Compatibility Layer Responsibilities
+- `Domain` references `Mediator.Abstractions`.
+- `Application` imports `Mediator` namespaces directly for requests, notifications, handlers, behaviors, preprocessors, and exception handlers.
+- `DomainEvent` implements `Mediator.INotification` directly.
+- UI and integration tests may resolve `Mediator.IMediator` directly once runtime wiring is in place.
 
-The compatibility layer should provide repository-local abstractions or aliases for:
+### Runtime Layer
 
-- `IRequest<TResponse>`
-- `IRequest`
-- `INotification`
-- `IMediator`
-- `IRequestHandler<,>`
-- `IRequestHandler<>`
-- `INotificationHandler<>`
-- `IPipelineBehavior<,>`
-- `IRequestPreProcessor<>`
-- `IRequestExceptionHandler<,,>`
+- `Infrastructure` will eventually own `Mediator.SourceGenerator` and registration.
+- `Application/DependencyInjection.cs` must stop depending on `AddMediatR(...)`.
+- `IScopedMediator` remains as a repository abstraction, but its implementation should resolve the real `Mediator.IMediator` service from a created scope.
 
-This layer must make existing application code compile with minimal source changes.
+### Temporary Transition Rule
 
-### Runtime Adapter Responsibilities
+Until the runtime registration task lands:
 
-Runtime adapters should:
+- Contract-only work may add `Mediator.Abstractions`.
+- Temporary `MediatR` compatibility files should be removed instead of expanded.
+- A minimal compile shim for `AddMediatR(...)` is allowed only as a short-lived bridge while the old DI registration still exists, but it must not become part of the final architecture.
 
-- Resolve and dispatch requests through `Mediator`.
-- Publish notifications through `Mediator`.
-- Execute repository-defined behaviors and preprocessors in the expected order.
-- Invoke registered request exception handlers using current result-oriented semantics.
-- Support the existing scoped mediator behavior for domain event dispatch and other out-of-band publishing.
+## Behavioral Requirements
 
-The runtime layer may also expose `global::Mediator.IMediator` in DI for low-level adapter wiring and migration-safety tests, but repository-facing application and UI code should continue to target the compatibility facade rather than the third-party `Mediator` namespace directly.
+The migration must preserve or re-establish these behaviors:
 
-## DI And Registration Design
-
-`Application/DependencyInjection.cs` should stop calling `AddMediatR(...)` and instead:
-
-- Register `Mediator`.
-- Register compatibility-layer abstractions and adapters.
-- Register handlers from the application assembly through the new execution path.
-- Register behaviors, preprocessors, and exception-handler bridges.
-- Register the custom notification publishing strategy through the compatibility layer rather than via MediatR-specific configuration hooks.
-
-`IScopedMediator` remains in place, but its implementation resolves the repository's compatibility `IMediator` facade rather than the external MediatR implementation.
-
-## Behavioral Compatibility Strategy
-
-### Requests And Handlers
-
-- Existing request and handler types should remain structurally unchanged wherever possible.
-- The migration should avoid touching feature-level business logic unless a direct compatibility issue forces a small edit.
-
-### Pipeline Behaviors
-
-The following existing behaviors remain active:
-
-- `PerformanceBehaviour<,>`
-- `FusionCacheBehaviour<,>`
-- `CacheInvalidationBehaviour<,>`
-
-The compatibility layer must preserve behavior ordering and execution position relative to handler invocation.
-
-### Request Preprocessors
-
-Current preprocessors such as `ValidationPreProcessor<TRequest>` and `LoggingPreProcessor<TRequest>` should be bridged into the new execution chain through a preprocessor adapter or equivalent behavior wrapper.
-
-### Request Exception Handlers
-
-Current `IRequestExceptionHandler<TRequest, TResponse, TException>` implementations should continue to translate exceptions into existing `Result`-style responses. If `Mediator` does not provide a directly equivalent hook, the compatibility layer must implement this behavior explicitly.
-
-### Notifications And Domain Events
-
-- `DomainEvent : INotification` remains conceptually unchanged.
-- Existing notification handlers remain in place.
-- `DispatchDomainEventsInterceptor` continues to publish events through `IScopedMediator`.
-- Transaction-sensitive domain event publication semantics should remain consistent with current behavior.
-
-### Notification Publishing Strategy
-
-`ParallelNoWaitPublisher` is a migration risk because it depends on MediatR-specific notification publishing configuration.
-
-The new design moves notification dispatch strategy into repository-owned compatibility code so behavior can be explicitly implemented instead of relying on a package-specific extension point.
+- Existing request handlers still execute for current commands and queries.
+- Existing notification handlers still execute for current notifications and domain events.
+- `ParallelNoWaitPublisher` remains available and keeps its fire-and-forget behavior if the runtime layer still needs that strategy.
+- `DispatchDomainEventsInterceptor` continues to publish domain events through `IScopedMediator`.
+- `ScopedMediator` continues to resolve a fresh scoped `IMediator`.
 
 ## File Organization
 
-Likely new or updated areas:
+Expected migration touchpoints:
 
-- `src/Application/Common/MediatorCompatibility/*`
-- `src/Infrastructure/Services/MediatorCompatibility/*`
-- `src/Application/DependencyInjection.cs`
+- `src/Domain/Domain.csproj`
 - `src/Application/_Imports.cs`
+- `src/Application/DependencyInjection.cs`
 - `src/Domain/Common/DomainEvent.cs`
 - `src/Infrastructure/Services/MediatorWrapper/ScopedMediator.cs`
+- `src/Server.UI/_Imports.razor`
+- `src/Server.UI/Services/DialogServiceHelper.cs`
 - `tests/Application.IntegrationTests/Testing.cs`
-- `README.md`
+- `tests/Application.UnitTests/Common/MediatorCompatibility/*`
+- `tests/Application.IntegrationTests/Common/MediatorCompatibility/*`
 
-Exact filenames may vary, but compatibility code should be centralized and not mixed into feature folders.
+Files under `src/Domain/Common/MediatorCompatibility/MediatR/*` are temporary and should be deleted rather than treated as a stable design boundary.
 
-## Migration Steps
+## Migration Sequence
 
-1. Work on branch `migrate-mediatr-to-mediator`.
-2. Add `martinothamar/Mediator` package references where needed.
-3. Remove direct `MediatR` package references once compatibility replacements are ready.
-4. Introduce the repository compatibility abstractions.
-5. Implement request, notification, and mediator runtime adapters.
-6. Rewire DI registration away from `AddMediatR(...)`.
-7. Reconnect behaviors, preprocessors, and exception handling.
-8. Reconnect custom notification publishing strategy.
-9. Update scoped mediator implementation to use the compatibility facade.
-10. Fix compile breaks in UI, tests, and shared imports.
-11. Update documentation that names MediatR as the backend mediator technology.
-12. Run verification before claiming success.
+1. Keep the safety-net tests from Task 1.
+2. Remove the temporary MediatR compatibility contracts.
+3. Add `Mediator.Abstractions` where compile-time contracts are required.
+4. Update source imports and contract usage to direct `Mediator` namespaces.
+5. Keep DI compiling with the smallest temporary bridge necessary until runtime registration is replaced.
+6. In a later task, add the real `Mediator.SourceGenerator` runtime registration in the outer layer and reconnect behaviors.
+7. Remove any temporary DI shims before completion.
 
 ## Verification Scope
 
 At minimum, verify:
 
-- Solution or affected projects compile successfully.
-- `Application` request handling works for at least one command and one query.
-- Notification publishing works for at least one existing notification flow.
-- Validation preprocessing still runs before handler execution.
-- Request exception handlers still convert exceptions to expected responses.
-- Domain events still publish from `DispatchDomainEventsInterceptor`.
-- `IScopedMediator` still works when publishing and sending from a scoped context.
-- Integration tests that rely on `Testing.SendAsync(...)` continue to function or are updated with minimal API churn.
+- Contract-layer projects compile against `Mediator.Abstractions`.
+- Safety-net tests that intentionally exercise `Mediator` low-level contracts compile in the expected direction.
+- `IScopedMediator` still resolves `IMediator` from a created scope after runtime wiring is updated.
+- There are no leftover `MediatR` package references or stable source dependencies outside temporary transitional code that is explicitly scheduled for deletion.
 
 ## Risks
 
-### Highest Risks
-
-- `ParallelNoWaitPublisher` may not have a direct analogue in `Mediator`.
-- Open generic pipeline and exception-handler wiring may differ enough to require explicit bridging code.
-- Preserving near-zero source churn while changing runtime semantics may expose edge-case mismatches during compilation or tests.
-
-### Risk Mitigation
-
-- Validate notification dispatch strategy early before broad refactoring.
-- Prove one request, one notification, and one exception-handler path end to end before converting the whole registration pipeline.
-- Keep the compatibility layer narrow and repository-owned to limit fallout.
+- `Mediator` does not provide a drop-in equivalent for every MediatR interface, so request exception handling and DI registration need explicit redesign instead of namespace swapping.
+- The temporary compatibility files can hide architectural drift if they are left in place.
+- `AddMediatR(...)` currently anchors application startup, so contract-layer migration and runtime registration need to be staged carefully.
 
 ## Success Criteria
 
 The migration is complete when:
 
-- The repository no longer depends on `MediatR` as its runtime mediator library.
-- Existing application and UI mediator usage patterns remain substantially unchanged.
-- Behaviors, preprocessors, exception handlers, notifications, domain events, and scoped mediator usage continue to work.
-- Documentation reflects the new underlying mediator engine without misleading consumers about how the template behaves.
-
-## Follow-Up
-
-After this design is reviewed and accepted, the next step is to create a detailed implementation plan before any code migration begins.
+- The repository no longer depends on `MediatR`.
+- Shared code compiles against `Mediator.Abstractions` instead of `MediatR`.
+- Runtime registration is owned by `Mediator.SourceGenerator` in the correct outer layer.
+- Scoped mediator, notifications, and domain events still work.
+- Documentation accurately describes the repository as using `Mediator`, not `MediatR`.

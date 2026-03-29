@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
@@ -30,7 +30,7 @@ public class ExportLogsQueryHandler : IRequestHandler<ExportLogsQuery, byte[]>
         _localizer = localizer;
     }
 
-    public async Task<byte[]> Handle(ExportLogsQuery request, CancellationToken cancellationToken)
+    public async ValueTask<byte[]> Handle(ExportLogsQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Loggers
             .Where(x => x.Message!.Contains(request.Keyword) || x.Exception!.Contains(request.Keyword))

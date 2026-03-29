@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendFactorCode;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendFactorCode;
 
 public record SendFactorCodeNotification(string Email, string UserName, string AuthenticatorCode) : INotification;
 
@@ -23,7 +23,7 @@ public class SendFactorCodeNotificationHandler : INotificationHandler<SendFactor
     }
 
 
-    public async Task Handle(SendFactorCodeNotification notification, CancellationToken cancellationToken)
+    public async ValueTask Handle(SendFactorCodeNotification notification, CancellationToken cancellationToken)
     {
         var subject = _localizer["Your Verification Code"];
         var sendMailResult = await _mailService.SendAsync(

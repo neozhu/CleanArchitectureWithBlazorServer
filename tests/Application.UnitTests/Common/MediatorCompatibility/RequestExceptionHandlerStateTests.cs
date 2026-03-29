@@ -1,22 +1,37 @@
-using MediatR;
+using System.Linq;
+using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
+using Mediator;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.MediatorCompatibility;
 
-public class RequestExceptionHandlerStateTests
+public class MediatorAbstractionsSmokeTests
 {
     [Test]
-    public void RequestExceptionHandlerState_ShouldStoreHandledResponse()
+    public void Contracts_ShouldCompileAgainstMediatorAbstractions()
     {
         _ = new SmokeNotification();
         _ = new SmokeRequest();
+        _ = typeof(IPipelineBehavior<SmokeRequest, string>);
+    }
 
-        var state = new RequestExceptionHandlerState<string>();
+    [Test]
+    public void AddApplication_ShouldRegisterMessageExceptionHandlers()
+    {
+        var services = new ServiceCollection();
 
-        state.SetHandled("ok");
+        services.AddApplication();
 
-        Assert.That(state.Handled, Is.True);
-        Assert.That(state.Response, Is.EqualTo("ok"));
+        var pipelineImplementations = services
+            .Where(d => d.ServiceType == typeof(IPipelineBehavior<,>))
+            .Select(d => d.ImplementationType)
+            .ToList();
+
+        Assert.That(pipelineImplementations, Contains.Item(typeof(DbExceptionHandler<,>)));
+        Assert.That(pipelineImplementations, Contains.Item(typeof(GlobalExceptionHandler<,>)));
+        Assert.That(pipelineImplementations, Contains.Item(typeof(ServerExceptionHandler<,>)));
+        Assert.That(pipelineImplementations, Contains.Item(typeof(ValidationExceptionHandler<,>)));
     }
 
     private sealed record SmokeNotification : INotification;

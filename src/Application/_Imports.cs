@@ -19,9 +19,7 @@ global using CleanArchitecture.Blazor.Domain.Common.Events;
 global using CleanArchitecture.Blazor.Domain.Events;
 global using CleanArchitecture.Blazor.Domain.Entities;
 global using FluentValidation;
-// These namespace imports are satisfied by the repo-owned compatibility contracts.
-global using MediatR;
-global using MediatR.Pipeline;
+global using Mediator;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Localization;
 global using Microsoft.Extensions.Logging;

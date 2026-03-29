@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -31,7 +31,7 @@ public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand,
         _context = context;
     }
 
-    public async Task<Result<string>> Handle(AddEditTenantCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<string>> Handle(AddEditTenantCommand request, CancellationToken cancellationToken)
     {
         var item = await _context.Tenants.FindAsync(new object[] { request.Id }, cancellationToken);
         if (item is null)

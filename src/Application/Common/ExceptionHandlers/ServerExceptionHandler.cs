@@ -1,23 +1,26 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
 public class
-    ServerExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
+    ServerExceptionHandler<TRequest, TResponse> : MessageExceptionHandler<TRequest, TResponse>
     where TRequest : IRequest<Result<int>>
     where TResponse : Result<int>
-    where TException : ServerException
 {
-    private readonly ILogger<ServerExceptionHandler<TRequest, TResponse, TException>> _logger;
+    private readonly ILogger<ServerExceptionHandler<TRequest, TResponse>> _logger;
 
-    public ServerExceptionHandler(ILogger<ServerExceptionHandler<TRequest, TResponse, TException>> logger)
+    public ServerExceptionHandler(ILogger<ServerExceptionHandler<TRequest, TResponse>> logger)
     {
         _logger = logger;
     }
 
-    public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state,
+    protected override ValueTask<ExceptionHandlingResult<TResponse>> Handle(TRequest request, Exception exception,
         CancellationToken cancellationToken)
     {
-        state.SetHandled((TResponse)Result<int>.Failure(exception.Message));
-        _logger.LogError(exception, exception.Message);
-        return Task.CompletedTask;
+        if (exception is not ServerException serverException)
+        {
+            return NotHandled;
+        }
+
+        _logger.LogError(serverException, serverException.Message);
+        return Handled((TResponse)Result<int>.Failure(serverException.Message));
     }
 }

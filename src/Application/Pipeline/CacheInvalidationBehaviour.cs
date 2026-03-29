@@ -20,11 +20,11 @@ public class CacheInvalidationBehaviour<TRequest, TResponse> : IPipelineBehavior
         _logger = logger;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+    public async ValueTask<TResponse> Handle(TRequest request, MessageHandlerDelegate<TRequest, TResponse> next,
         CancellationToken cancellationToken)
     {
         _logger.LogTrace("Handling request of type {RequestType} with details {@Request}", nameof(request), request);
-        var response = await next().ConfigureAwait(false);
+        var response = await next(request, cancellationToken).ConfigureAwait(false);
         if (!string.IsNullOrEmpty(request.CacheKey))
         {
             _cache.Remove(request.CacheKey);
