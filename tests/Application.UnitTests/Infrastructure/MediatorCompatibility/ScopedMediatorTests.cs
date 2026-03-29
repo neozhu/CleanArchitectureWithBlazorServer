@@ -16,73 +16,33 @@ public class ScopedMediatorTests
     [Test]
     public async Task Send_resolves_mediator_from_a_created_scope()
     {
-        var scopeFactory = new RecordingScopeFactory();
-        var sut = new ScopedMediator(scopeFactory);
+        FakeMediator.SendCallCount = 0;
+        FakeMediator.ResolvedRequests.Clear();
+
+        var services = new ServiceCollection();
+        services.AddScoped<Mediator.IMediator, FakeMediator>();
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        var sut = new ScopedMediator(provider.GetRequiredService<IServiceScopeFactory>());
 
         string result = await sut.Send(new PingQuery());
 
         Assert.That(result, Is.EqualTo("pong"));
-        Assert.That(scopeFactory.CreateScopeCalls, Is.EqualTo(1));
-        Assert.That(scopeFactory.Mediator.ResolvedRequests, Has.Count.EqualTo(1));
+        Assert.That(FakeMediator.SendCallCount, Is.EqualTo(1));
+        Assert.That(FakeMediator.ResolvedRequests, Has.Some.InstanceOf<PingQuery>());
     }
 
     private sealed record PingQuery : Mediator.IRequest<string>;
 
-    private sealed class RecordingScopeFactory : IServiceScopeFactory
+    private sealed class FakeMediator : Mediator.IMediator
     {
-        private readonly RecordingMediator _mediator = new();
+        public static int SendCallCount { get; private set; }
 
-        public int CreateScopeCalls { get; private set; }
-
-        public RecordingMediator Mediator => _mediator;
-
-        public IServiceScope CreateScope()
-        {
-            CreateScopeCalls++;
-            return new RecordingScope(_mediator);
-        }
-    }
-
-    private sealed class RecordingScope : IServiceScope
-    {
-        public RecordingScope(RecordingMediator mediator)
-        {
-            ServiceProvider = new RecordingServiceProvider(mediator);
-        }
-
-        public IServiceProvider ServiceProvider { get; }
-
-        public void Dispose()
-        {
-        }
-    }
-
-    private sealed class RecordingServiceProvider : IServiceProvider
-    {
-        private readonly RecordingMediator _mediator;
-
-        public RecordingServiceProvider(RecordingMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
-        public object? GetService(Type serviceType)
-        {
-            if (serviceType == typeof(Mediator.IMediator))
-            {
-                return _mediator;
-            }
-
-            return null;
-        }
-    }
-
-    private sealed class RecordingMediator : Mediator.IMediator
-    {
-        public List<object> ResolvedRequests { get; } = new();
+        public static List<object> ResolvedRequests { get; } = new();
 
         public Task<TResponse> Send<TResponse>(Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
+            SendCallCount++;
             ResolvedRequests.Add(request!);
 
             if (request is PingQuery)

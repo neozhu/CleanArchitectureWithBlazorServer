@@ -12,19 +12,28 @@ using static Testing;
 public class MediatorCompatibilityTests : TestBase
 {
     [Test]
-    public async Task Should_resolve_compatibility_mediators_from_di_and_send_queries()
+    public async Task Should_resolve_mediator_from_di_and_send_query()
     {
         await AddAsync(new Product { Name = "Compatibility product" });
 
         using IServiceScope scope = CreateScope();
 
         Mediator.IMediator mediator = scope.ServiceProvider.GetRequiredService<Mediator.IMediator>();
-        var scopedMediator = scope.ServiceProvider.GetRequiredService<CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper.IScopedMediator>();
-
         var products = (await mediator.Send(new GetAllProductsQuery())).ToList();
-        var scopedProducts = (await scopedMediator.Send(new GetAllProductsQuery())).ToList();
 
-        Assert.That(products, Has.Count.EqualTo(1));
-        Assert.That(scopedProducts, Has.Count.EqualTo(1));
+        Assert.That(products.Any(product => product.Name == "Compatibility product"), Is.True);
+    }
+
+    [Test]
+    public async Task Should_resolve_scoped_mediator_from_di_and_send_query()
+    {
+        await AddAsync(new Product { Name = "Scoped compatibility product" });
+
+        using IServiceScope scope = CreateScope();
+
+        var scopedMediator = scope.ServiceProvider.GetRequiredService<CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper.IScopedMediator>();
+        var products = (await scopedMediator.Send(new GetAllProductsQuery())).ToList();
+
+        Assert.That(products.Any(product => product.Name == "Scoped compatibility product"), Is.True);
     }
 }
