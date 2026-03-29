@@ -3,10 +3,14 @@
 
 using System.Reflection;
 using ActualLab.Fusion;
+using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
+using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Fusion;
+using CleanArchitecture.Blazor.Application.Pipeline;
+using CleanArchitecture.Blazor.Application.Pipeline.PreProcessors;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
@@ -24,6 +28,7 @@ using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using Mediator;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
@@ -53,6 +58,27 @@ public static class DependencyInjection
             .AddDatabase(configuration)
             .AddServices()
             .AddMessageServices(configuration);
+
+        services.AddMediator(options =>
+        {
+            options.ServiceLifetime = ServiceLifetime.Scoped;
+            options.NotificationPublisherType = typeof(ParallelNoWaitPublisher);
+            options.Assemblies =
+            [
+                typeof(CleanArchitecture.Blazor.Application.DependencyInjection),
+            ];
+            options.PipelineBehaviors =
+            [
+                typeof(DbExceptionHandler<,>),
+                typeof(GlobalExceptionHandler<,>),
+                typeof(ServerExceptionHandler<,>),
+                typeof(ValidationExceptionHandler<,>),
+                typeof(ValidationPreProcessor<,>),
+                typeof(PerformanceBehaviour<,>),
+                typeof(FusionCacheBehaviour<,>),
+                typeof(CacheInvalidationBehaviour<,>),
+            ];
+        });
 
         services
             .AddAuthenticationService(configuration)

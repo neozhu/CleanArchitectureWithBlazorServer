@@ -107,6 +107,7 @@ public class Testing
     {
         using var scope = _scopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        context.Database.EnsureDeleted();
         context.Database.Migrate();
     }
 
