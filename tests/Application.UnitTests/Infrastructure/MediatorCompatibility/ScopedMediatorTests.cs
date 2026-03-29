@@ -13,8 +13,15 @@ namespace CleanArchitecture.Blazor.Application.UnitTests.Infrastructure.Mediator
 
 public class ScopedMediatorTests
 {
+    [SetUp]
+    public void SetUp()
+    {
+        ScopeProbe.Reset();
+        FakeMediator.Reset();
+    }
+
     [Test]
-    public async Task Send_resolves_mediator_from_a_created_scope()
+    public async Task Send_creates_and_disposes_a_child_scope()
     {
         var services = new ServiceCollection();
         services.AddScoped<ScopeProbe>();
@@ -27,26 +34,49 @@ public class ScopedMediatorTests
         });
         var sut = new ScopedMediator(provider.GetRequiredService<IServiceScopeFactory>());
 
-        string result = await sut.Send(new PingQuery());
+        string firstResult = await sut.Send(new PingQuery());
+        string secondResult = await sut.Send(new PingQuery());
 
-        Assert.That(result, Is.EqualTo("pong"));
-        Assert.That(FakeMediator.SendCallCount, Is.EqualTo(1));
-        Assert.That(ScopeProbe.CreatedCount, Is.EqualTo(1));
-        Assert.That(FakeMediator.ResolvedProbeIds, Has.Count.EqualTo(1));
-        Assert.That(FakeMediator.ResolvedProbeIds[0], Is.Not.EqualTo(Guid.Empty));
+        Assert.That(firstResult, Is.EqualTo("pong"));
+        Assert.That(secondResult, Is.EqualTo("pong"));
+        Assert.That(FakeMediator.SendCallCount, Is.EqualTo(2));
+        Assert.That(ScopeProbe.CreatedCount, Is.EqualTo(2));
+        Assert.That(ScopeProbe.DisposedCount, Is.EqualTo(2));
+        Assert.That(ScopeProbe.CreatedIds[0], Is.Not.EqualTo(ScopeProbe.CreatedIds[1]));
+        Assert.That(ScopeProbe.DisposedIds, Is.EquivalentTo(ScopeProbe.CreatedIds));
+        Assert.That(FakeMediator.ResolvedProbeIds, Is.EquivalentTo(ScopeProbe.CreatedIds));
     }
 
     private sealed record PingQuery : Mediator.IRequest<string>;
 
-    private sealed class ScopeProbe
+    private sealed class ScopeProbe : IDisposable
     {
         public static int CreatedCount { get; private set; }
+        public static int DisposedCount { get; private set; }
+
+        public static List<Guid> CreatedIds { get; } = new();
+        public static List<Guid> DisposedIds { get; } = new();
 
         public Guid Id { get; } = Guid.NewGuid();
 
         public ScopeProbe()
         {
             CreatedCount++;
+            CreatedIds.Add(Id);
+        }
+
+        public void Dispose()
+        {
+            DisposedCount++;
+            DisposedIds.Add(Id);
+        }
+
+        public static void Reset()
+        {
+            CreatedCount = 0;
+            DisposedCount = 0;
+            CreatedIds.Clear();
+            DisposedIds.Clear();
         }
     }
 
@@ -61,6 +91,12 @@ public class ScopedMediatorTests
         public FakeMediator(ScopeProbe scopeProbe)
         {
             _scopeProbe = scopeProbe;
+        }
+
+        public static void Reset()
+        {
+            SendCallCount = 0;
+            ResolvedProbeIds.Clear();
         }
 
         public Task<TResponse> Send<TResponse>(Mediator.IRequest<TResponse> request, CancellationToken cancellationToken = default)
