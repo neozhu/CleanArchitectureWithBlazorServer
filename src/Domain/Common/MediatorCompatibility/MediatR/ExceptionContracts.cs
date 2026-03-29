@@ -21,17 +21,3 @@ namespace MediatR
         }
     }
 }
-
-namespace Mediator
-{
-    public interface IRequestExceptionHandler<in TRequest, TResponse, in TException>
-        : global::MediatR.IRequestExceptionHandler<TRequest, TResponse, TException>
-        where TRequest : notnull
-        where TException : Exception
-    {
-    }
-
-    public class RequestExceptionHandlerState<TResponse> : global::MediatR.RequestExceptionHandlerState<TResponse>
-    {
-    }
-}

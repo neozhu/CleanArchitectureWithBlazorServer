@@ -12,16 +12,3 @@ namespace MediatR
         Task Handle(TNotification notification, CancellationToken cancellationToken);
     }
 }
-
-namespace Mediator
-{
-    public interface IRequestHandler<in TRequest, TResponse> : global::MediatR.IRequestHandler<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
-    {
-    }
-
-    public interface INotificationHandler<in TNotification> : global::MediatR.INotificationHandler<TNotification>
-        where TNotification : INotification
-    {
-    }
-}

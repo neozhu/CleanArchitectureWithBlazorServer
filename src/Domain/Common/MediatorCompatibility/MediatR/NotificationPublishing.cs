@@ -16,18 +16,3 @@ namespace MediatR
         public Func<INotification, CancellationToken, Task> HandlerCallback { get; }
     }
 }
-
-namespace Mediator
-{
-    public interface INotificationPublisher : global::MediatR.INotificationPublisher
-    {
-    }
-
-    public class NotificationHandlerExecutor : global::MediatR.NotificationHandlerExecutor
-    {
-        public NotificationHandlerExecutor(Func<global::MediatR.INotification, CancellationToken, Task> handlerCallback)
-            : base(handlerCallback)
-        {
-        }
-    }
-}

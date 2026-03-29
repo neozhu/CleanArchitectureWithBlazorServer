@@ -9,13 +9,3 @@ namespace MediatR
             CancellationToken cancellationToken);
     }
 }
-
-namespace Mediator
-{
-    public delegate Task<TResponse> RequestHandlerDelegate<TResponse>();
-
-    public interface IPipelineBehavior<in TRequest, TResponse> : global::MediatR.IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
-    {
-    }
-}

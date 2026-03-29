@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
+using MediatR;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.MediatorCompatibility;
@@ -16,7 +17,7 @@ public class ParallelNoWaitPublisherTests
         var publisher = new ParallelNoWaitPublisher();
         var notification = new TestNotification();
 
-        Mediator.NotificationHandlerExecutor handlerExecutor = new(
+        NotificationHandlerExecutor handlerExecutor = new(
             async (_, _) =>
             {
                 handlerStarted.TrySetResult(true);
@@ -38,5 +39,5 @@ public class ParallelNoWaitPublisherTests
         await publishTask;
     }
 
-    private sealed record TestNotification : Mediator.INotification;
+    private sealed record TestNotification : INotification;
 }
