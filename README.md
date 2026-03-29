@@ -59,7 +59,7 @@ Experience the application in action:
 | Layer | Technologies |
 |-------|-------------|
 | **Frontend** | Blazor Server, MudBlazor, SignalR |
-| **Backend** | .NET 10, ASP.NET Core, MediatR, FluentValidation |
+| **Backend** | .NET 10, ASP.NET Core, Mediator, FluentValidation |
 | **Database** | Entity Framework Core, MSSQL/PostgreSQL/SQLite |
 | **Authentication** | ASP.NET Core Identity, OAuth 2.0, JWT |
 | **Caching** | FusionCache, Redis |
@@ -193,7 +193,7 @@ OpenSpec enables spec-driven, reviewable changes with clear proposals, deltas, a
 - Use the patterns in `openspec/project.md`:
   - For data access in handlers use `IApplicationDbContextFactory` and per-operation context lifetime:
     - `await using var db = await _dbContextFactory.CreateAsync(cancellationToken);`
-  - Follow MediatR pipeline behaviors, caching tags, and specification patterns.
+  - Follow mediator pipeline behaviors, caching tags, and specification patterns.
   - Mirror the Contacts module for a new entity's DTOs, commands, queries, specs, security, and UI pages/components.
 
 5) Archive after deployment

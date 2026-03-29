@@ -20,13 +20,13 @@ public class FusionCacheBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
         _logger = logger;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+    public async ValueTask<TResponse> Handle(TRequest request, MessageHandlerDelegate<TRequest, TResponse> next,
         CancellationToken cancellationToken)
     {
         _logger.LogTrace("Handling request of type {RequestType} with cache key {CacheKey}", nameof(request), request.CacheKey);
-        var response = await _fusionCache.GetOrSetAsync(
+        var response = await _fusionCache.GetOrSetAsync<TResponse>(
             request.CacheKey,
-            _ => next(),
+            (_, ct) => next(request, ct).AsTask(),
             tags:request.Tags
             ).ConfigureAwait(false);
 

@@ -8,7 +8,7 @@ using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -107,6 +107,7 @@ public class Testing
     {
         using var scope = _scopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        context.Database.EnsureDeleted();
         context.Database.Migrate();
     }
 
@@ -116,6 +117,8 @@ public class Testing
         var mediator = scope.ServiceProvider.GetService<IMediator>();
         return await mediator.Send(request);
     }
+
+    public static IServiceScope CreateScope() => _scopeFactory.CreateScope();
 
     public static async Task<string> RunAsDefaultUserAsync()
     {

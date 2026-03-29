@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation;
 
 public record UserActivationNotification(string ActivationUrl, string Email, string UserId, string UserName)
     : INotification;
@@ -23,7 +23,7 @@ public class UserActivationNotificationHandler : INotificationHandler<UserActiva
     }
 
 
-    public async Task Handle(UserActivationNotification notification, CancellationToken cancellationToken)
+    public async ValueTask Handle(UserActivationNotification notification, CancellationToken cancellationToken)
     {
         var sendMailResult = await _mailService.SendAsync(
             notification.Email,

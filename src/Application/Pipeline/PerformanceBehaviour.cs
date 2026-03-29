@@ -4,7 +4,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 namespace CleanArchitecture.Blazor.Application.Pipeline;
 
 /// <summary>
-///     This class is a behavior pipeline in MediatR. It is used to monitor performance
+///     This class is a mediator pipeline behavior. It is used to monitor performance
 ///     and log warnings if a request takes longer to execute than a specified threshold.
 /// </summary>
 /// <typeparam name="TRequest">Type of the Request</typeparam>
@@ -30,7 +30,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
     /// <param name="next">The delegate for the next action in the pipeline process.</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Response from the next delegate</returns>
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+    public async ValueTask<TResponse> Handle(TRequest request, MessageHandlerDelegate<TRequest, TResponse> next,
         CancellationToken cancellationToken)
     {
         Stopwatch? timer = null;
@@ -39,7 +39,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
         Interlocked.Increment(ref RequestCounter.ExecutionCount);
         if (RequestCounter.ExecutionCount > 3) timer = Stopwatch.StartNew();
 
-        var response = await next().ConfigureAwait(false);
+        var response = await next(request, cancellationToken).ConfigureAwait(false);
 
         timer?.Stop();
         var elapsedMilliseconds = timer?.ElapsedMilliseconds;

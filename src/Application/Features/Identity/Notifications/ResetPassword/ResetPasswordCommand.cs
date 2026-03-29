@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword;
 
 public record ResetPasswordNotification(string RequestUrl, string Email, string UserName) : INotification;
 
@@ -22,7 +22,7 @@ public class ResetPasswordNotificationHandler : INotificationHandler<ResetPasswo
     }
 
 
-    public async Task Handle(ResetPasswordNotification notification, CancellationToken cancellationToken)
+    public async ValueTask Handle(ResetPasswordNotification notification, CancellationToken cancellationToken)
     {
         var sendMailResult = await _mailService.SendAsync(
             notification.Email,

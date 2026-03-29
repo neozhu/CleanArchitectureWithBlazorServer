@@ -17,12 +17,12 @@ public class GlobalExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<T
         _currentUserAccessor = currentUserAccessor;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+    public async ValueTask<TResponse> Handle(TRequest request, MessageHandlerDelegate<TRequest, TResponse> next,
         CancellationToken cancellationToken)
     {
         try
         {
-            return await next().ConfigureAwait(false);
+            return await next(request, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

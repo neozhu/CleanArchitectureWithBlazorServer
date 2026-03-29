@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -34,7 +34,7 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
         _context = context;
     }
 
-    public async Task<Result<int>> Handle(AddEditProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<int>> Handle(AddEditProductCommand request, CancellationToken cancellationToken)
     {
         if (request.Id > 0)
         {

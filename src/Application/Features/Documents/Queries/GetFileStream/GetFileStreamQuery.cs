@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
@@ -28,7 +28,7 @@ public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (st
         _context = context;
     }
 
-    public async Task<(string, byte[])> Handle(GetFileStreamQuery request, CancellationToken cancellationToken)
+    public async ValueTask<(string, byte[])> Handle(GetFileStreamQuery request, CancellationToken cancellationToken)
     {
         var item = await _context.Documents.FindAsync(new object?[] { request.Id }, cancellationToken);
         if (item is null) throw new Exception($"not found document entry by Id:{request.Id}.");

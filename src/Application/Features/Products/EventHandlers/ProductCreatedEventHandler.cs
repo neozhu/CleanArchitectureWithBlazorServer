@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -19,7 +19,7 @@ public class ProductCreatedEventHandler : INotificationHandler<CreatedEvent<Prod
         _timer = new Stopwatch();
     }
 
-    public async Task Handle(CreatedEvent<Product> notification, CancellationToken cancellationToken)
+    public async ValueTask Handle(CreatedEvent<Product> notification, CancellationToken cancellationToken)
     {
         _timer.Start();
         await Task.Delay(3000, cancellationToken);

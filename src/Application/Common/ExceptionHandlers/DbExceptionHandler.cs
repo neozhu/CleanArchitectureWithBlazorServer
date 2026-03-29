@@ -2,10 +2,9 @@
 
 namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
-public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
+public class DbExceptionHandler<TRequest, TResponse> : MessageExceptionHandler<TRequest, TResponse>
     where TRequest : IRequest<Result<int>>
     where TResponse : Result<int>
-    where TException : DbUpdateException
 {
     private readonly ILogger _logger;
     private readonly ILoggerFactory _loggerFactory;
@@ -14,14 +13,18 @@ public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExcep
     {
         
         _loggerFactory = loggerFactory;
-        _logger = _loggerFactory.CreateLogger(nameof(DbExceptionHandler<TRequest, TResponse, TException>));
+        _logger = _loggerFactory.CreateLogger(nameof(DbExceptionHandler<TRequest, TResponse>));
     }
 
-    public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state,
+    protected override ValueTask<ExceptionHandlingResult<TResponse>> Handle(TRequest request, Exception exception,
         CancellationToken cancellationToken)
     {
-        state.SetHandled((TResponse)Result<int>.Failure(GetErrors(exception)));
-        return Task.CompletedTask;
+        if (exception is not DbUpdateException dbUpdateException)
+        {
+            return NotHandled;
+        }
+
+        return Handled((TResponse)Result<int>.Failure(GetErrors(dbUpdateException)));
     }
 
     private  string[] GetErrors(DbUpdateException exception)

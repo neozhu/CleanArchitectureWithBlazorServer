@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -27,7 +27,7 @@ public class ClearLogsCommandHandler : IRequestHandler<ClearLogsCommand, Result>
         _logger = logger;
     }
 
-    public async Task<Result> Handle(ClearLogsCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(ClearLogsCommand request, CancellationToken cancellationToken)
     {
         await _context.Loggers.ExecuteDeleteAsync();
         _logger.LogInformation("Logs have been erased");

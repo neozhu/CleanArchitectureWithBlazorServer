@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching;
@@ -32,7 +32,7 @@ public class AuditTrailsQueryHandler : IRequestHandler<AuditTrailsWithPagination
         _context = context;
     }
 
-    public async Task<PaginatedData<AuditTrailDto>> Handle(AuditTrailsWithPaginationQuery request,
+    public async ValueTask<PaginatedData<AuditTrailDto>> Handle(AuditTrailsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
         var data = await _context.AuditTrails.OrderBy($"{request.OrderBy} {request.SortDirection}")

@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -15,10 +15,10 @@ public class ProductUpdatedEventHandler : INotificationHandler<UpdatedEvent<Prod
         _logger = logger;
     }
 
-    public Task Handle(UpdatedEvent<Product> notification, CancellationToken cancellationToken)
+    public ValueTask Handle(UpdatedEvent<Product> notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} ", notification.GetType().Name, notification);
 
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 }

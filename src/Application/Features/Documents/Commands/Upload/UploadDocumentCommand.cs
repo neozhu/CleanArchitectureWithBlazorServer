@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
@@ -29,7 +29,7 @@ public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentComman
         _uploadService = uploadService;
     }
 
-    public async Task<Result<int>> Handle(UploadDocumentCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<int>> Handle(UploadDocumentCommand request, CancellationToken cancellationToken)
     {
         var list = new List<Document>();
         foreach (var uploadRequest in request.UploadRequests)

@@ -1,5 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
-using MediatR;
+using Mediator;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
