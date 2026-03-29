@@ -78,6 +78,8 @@ Runtime adapters should:
 - Invoke registered request exception handlers using current result-oriented semantics.
 - Support the existing scoped mediator behavior for domain event dispatch and other out-of-band publishing.
 
+The runtime layer may also expose `global::Mediator.IMediator` in DI for low-level adapter wiring and migration-safety tests, but repository-facing application and UI code should continue to target the compatibility facade rather than the third-party `Mediator` namespace directly.
+
 ## DI And Registration Design
 
 `Application/DependencyInjection.cs` should stop calling `AddMediatR(...)` and instead:
