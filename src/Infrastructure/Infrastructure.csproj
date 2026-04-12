@@ -12,8 +12,8 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-rc4" />
-        <PackageReference Include="OpenAI" Version="2.9.1" />
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.1.0" />
+        <PackageReference Include="OpenAI" Version="2.10.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="10.0.5" />
