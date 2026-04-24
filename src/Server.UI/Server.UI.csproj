@@ -33,11 +33,7 @@
         </PackageReference>
         
     </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj" />
-        <ProjectReference Include="..\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj" />
-        <ProjectReference Include="..\Migrators\Migrators.SqLite\Migrators.SqLite.csproj" />
-    </ItemGroup>
+ 
     <ItemGroup>
         <EmbeddedResource Include="Resources\EmailTemplates\_useractivation.cshtml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -51,6 +47,13 @@
         <EmbeddedResource Include="Resources\EmailTemplates\_welcome.cshtml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
+    </ItemGroup>
+ 
+    <ItemGroup>
+      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+      <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj" />
+      <ProjectReference Include="..\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj" />
+      <ProjectReference Include="..\Migrators\Migrators.SqLite\Migrators.SqLite.csproj" />
     </ItemGroup>
     
      
