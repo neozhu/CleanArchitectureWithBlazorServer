@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Extensions;
+namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
 /// <summary>
 /// Provides extension methods for <see cref="ISpecificationBuilder{T}"/> to simplify query building.

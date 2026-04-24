@@ -1,0 +1,436 @@
+﻿@using CleanArchitecture.Blazor.Server.UI.Components.Presence
+@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
+@using System.Globalization
+@inject LayoutService LayoutService
+@inject IStringLocalizer<ThemesMenu> L
+
+<MudDrawer Anchor="LayoutService.IsRTL ? Anchor.Start : Anchor.End"
+@bind-Open="@_open"
+OverlayAutoClose="true"
+Elevation="1"
+Variant="@DrawerVariant.Temporary">
+    <MudDrawerHeader Class="align-center">
+        <MudText Typo="Typo.body1">
+            <b>@L["Themes"]</b>
+        </MudText>
+        <MudSpacer />
+        <MudIconButton Color="Color.Default"
+        Icon="@Icons.Material.Filled.Close"
+        OnClick="@(() => _open = false)"
+        Size="Size.Small" />
+    </MudDrawerHeader>
+    <div class="themes-content">
+        <!-- Theme Mode Section -->
+        <div class="theme-section">
+            <div class="section-header">
+                <MudIcon Icon="@Icons.Material.Outlined.AutoMode" Class="section-icon" />
+                <MudText Typo="Typo.subtitle2" Class="section-title">@L["Mode"]</MudText>
+            </div>
+        
+            <MudGrid Class="my-3"
+                     Spacing="2">
+                <MudItem xs="4">
+                    <MudTooltip Duration="1000" Text="@L["Switch to system"]">
+                        <MudButton Class="mode-button"
+                                   FullWidth="true"
+                                   OnClick="@(() => ToggleDarkLightMode(DarkLightMode.System))"
+                                   Style="background: white;">
+                            <ChildContent>
+								<MudIcon Color="Color.Dark"
+                                         Icon="@Icons.Material.Filled.AutoMode" />
+                            </ChildContent>
+                        </MudButton>
+                    </MudTooltip>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudTooltip Duration="1000" Text="@L["Switch to Light Theme"]">
+                        <MudButton Class="mode-button"
+                                   FullWidth="true"
+                                   OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Light))"
+                                   Style="background: white;">
+                            <ChildContent>
+                                <MudIcon Color="Color.Dark"
+                                         Icon="@Icons.Material.Filled.WbSunny" />
+                            </ChildContent>
+                        </MudButton>
+                    </MudTooltip>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudTooltip Duration="1000" Text="@L["Switch to Dark Theme"]">
+                        <MudButton Class="mode-button"
+                                   FullWidth="true"
+                                   OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Dark))"
+                                   Style="background: #333333;">
+                            <ChildContent>
+                                <MudIcon Icon="@Icons.Material.Filled.DarkMode"
+                                         Style="color: #c9c9c9" />
+                            </ChildContent>
+                        </MudButton>
+                    </MudTooltip>
+                </MudItem>
+            </MudGrid>
+        </div>
+
+        <MudDivider Class="section-divider" />
+
+        <!-- Color Section -->
+        <div class="theme-section">
+            <div class="section-header">
+                <MudIcon Icon="@Icons.Material.Outlined.Palette" Class="section-icon" />
+                <MudText Typo="Typo.subtitle2" Class="section-title">@L["Primary Color"]</MudText>
+            </div>
+            <div class="color-section">
+                <PrimaryColorPicker
+                    Colors="@(UserPreferences.IsDarkMode || UserPreferences.DarkLightTheme == DarkLightMode.Dark ? UserPreference.DarkPrimaryColors : UserPreference.PrimaryColors)"
+                    Selected="@(UserPreferences.IsDarkMode || UserPreferences.DarkLightTheme == DarkLightMode.Dark ? UserPreferences.DarkPrimaryColor : UserPreferences.PrimaryColor)"
+                    OnSelect="UpdateThemePrimaryColor"
+                    ShowCustomInput="true" />
+            </div>
+        </div>
+
+        <MudDivider Class="section-divider" />
+
+        <!-- Border Radius Section -->
+        <div class="theme-section">
+            <div class="section-header">
+                <MudIcon Icon="@Icons.Material.Outlined.CropFree" Class="section-icon" />
+                <MudText Typo="Typo.subtitle2" Class="section-title">@L["Border Radius"]</MudText>
+                <MudChip T="string" Size="Size.Small"  Variant="Variant.Text" >
+                    @UserPreferences.BorderRadius.ToString("F0")px
+                </MudChip>
+            </div>
+            <div class="slider-container">
+         
+                <MudSlider T="double" 
+                          Value="@UserPreferences.BorderRadius" 
+                          Min="0" 
+                          Max="@MaxValue" 
+                          Immediate="true" 
+                          Step="1" 
+                          Color="Color.Primary"
+                          ValueChanged="@(e => ChangedSelection(e))"
+                          Class="theme-slider" />
+                <div class="slider-labels">
+                    <MudText Typo="Typo.caption">0px</MudText>
+                    <MudText Typo="Typo.caption">@(MaxValue)px</MudText>
+                </div>
+            </div>
+        </div>
+
+        <MudDivider Class="section-divider" />
+
+        <!-- Font Size Section -->
+        <div class="theme-section">
+            <div class="section-header">
+                <MudIcon Icon="@Icons.Material.Outlined.FormatSize" Class="section-icon" />
+                <MudText Typo="Typo.subtitle2" Class="section-title">@L["Default Font Size"]</MudText>
+                <MudChip T="string" Size="Size.Small" >
+                    @UserPreferences.DefaultFontSize.ToString("F0")px
+                </MudChip>
+            </div>
+            <div class="slider-container">
+     
+                <MudSlider T="double" 
+                          Value="@UserPreferences.DefaultFontSize" 
+                          Min="12" 
+                          Max="18" 
+                          Immediate="true" 
+                          Step="1" 
+                          Color="Color.Primary"
+                          ValueChanged="@(e => ChangedFontSize(e))"
+                          Class="theme-slider" />
+                <div class="slider-labels">
+                    <MudText Typo="Typo.caption">12px</MudText>
+                    <MudText Typo="Typo.caption">18px</MudText>
+                </div>
+            </div>
+        </div>
+
+        <MudDivider Class="section-divider" />
+
+        <!-- Online Users Section -->
+        <div class="theme-section">
+            <div class="section-header">
+                <MudIcon Icon="@Icons.Material.Outlined.People" Class="section-icon" />
+                <MudText Typo="Typo.subtitle2" Class="section-title">@L["Online Users"]</MudText>
+            </div>
+            <div class="online-users-container">
+                <OnlineUsersTracker />
+            </div>
+        </div>
+    </div>
+</MudDrawer>
+<ThemesButton OnClick="@(() => _open = true)" />
+<style>
+    .themes-content {
+        padding: 20px;
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--mud-palette-primary) transparent;
+    }
+
+    .themes-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .themes-content::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .themes-content::-webkit-scrollbar-thumb {
+        background: var(--mud-palette-primary);
+        border-radius: 3px;
+    }
+
+    .theme-section {
+        margin-bottom: 24px;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 8px;
+    }
+
+    .section-icon {
+        color: var(--mud-palette-primary);
+        font-size: 20px;
+    }
+
+    .section-title {
+        font-weight: 600;
+        color: var(--mud-palette-text-primary);
+        flex: 1;
+    }
+
+    .value-chip {
+        font-weight: 600;
+        background: var(--mud-palette-primary-lighten) !important;
+        color: var(--mud-palette-primary) !important;
+    }
+
+    .section-divider {
+        margin: 24px 0;
+        opacity: 0.6;
+    }
+
+    /* Mode Button Styles */
+    .mode-button {
+        border: 1px solid var(--mud-palette-table-lines);
+        height: 64px;
+        transition: all 0.3s ease;
+    }
+
+    .mode-button.selected {
+        border: 2px solid var(--mud-palette-primary);
+        box-shadow: 0 4px 12px rgba(var(--mud-palette-primary-rgb), 0.3);
+        transform: scale(1.02);
+    }
+
+    .mode-button:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .mode-button.selected:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(var(--mud-palette-primary-rgb), 0.4);
+    }
+
+    /* Color Section */
+    .color-section {
+        padding: 8px 0;
+    }
+
+    /* Slider Styles */
+    .slider-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .radius-preview {
+        width: 100%;
+        height: 60px;
+        background: var(--mud-palette-surface);
+        border: 2px solid var(--mud-palette-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: border-radius 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .preview-content {
+        width: 80%;
+        height: 80%;
+        background: var(--mud-palette-primary);
+        border-radius: inherit;
+        opacity: 0.3;
+        transition: all 0.3s ease;
+    }
+
+    .radius-preview:hover .preview-content {
+        opacity: 0.5;
+        transform: scale(1.05);
+    }
+
+    .font-preview {
+        width: 100%;
+        height: 60px;
+        background: var(--mud-palette-surface);
+        border: 2px solid var(--mud-palette-primary);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: var(--mud-palette-primary);
+        transition: all 0.3s ease;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    }
+
+    .font-preview:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .theme-slider {
+        margin: 8px 0;
+    }
+
+    .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: -8px;
+        opacity: 0.7;
+    }
+
+    /* Online Users Container */
+    .online-users-container {
+        padding: 8px 0;
+    }
+
+    /* Dark theme adjustments */
+
+    /* Responsive design */
+    @@media (max-width: 600px) {
+        .themes-content {
+            padding: 16px;
+        }
+
+        .section-header {
+            gap: 8px;
+        }
+
+        .mode-button {
+            height: 56px;
+        }
+
+        .radius-preview,
+        .font-preview {
+            height: 50px;
+        }
+    }
+
+    /* Accessibility improvements */
+    @@media (prefers-reduced-motion: reduce) {
+        .mode-button,
+        .radius-preview,
+        .font-preview,
+        .preview-content {
+            transition: none;
+        }
+
+        .mode-button:hover {
+            transform: none;
+        }
+    }
+
+    /* Focus styles for keyboard navigation */
+    .mode-button:focus-visible {
+        outline: 2px solid var(--mud-palette-primary);
+        outline-offset: 2px;
+    }
+</style>
+
+
+@code
+{
+
+	private bool _open { get; set; }
+
+	[EditorRequired][Parameter] public UserPreference UserPreferences { get; set; } = new();
+
+	[EditorRequired][Parameter] public EventCallback<UserPreference> UserPreferencesChanged { get; set; }
+
+	public double Radius { get; set; }
+
+	public double MaxValue { get; set; } = 32;
+
+	private async Task UpdateThemePrimaryColor(string color)
+	{
+		switch (UserPreferences.DarkLightTheme)
+		{
+			case DarkLightMode.Dark:
+				UserPreferences.DarkPrimaryColor = color;
+				break;
+			case DarkLightMode.Light:
+				UserPreferences.PrimaryColor = color;
+				break;
+			case DarkLightMode.System:
+				if (UserPreferences.IsDarkMode)
+				{
+					UserPreferences.DarkPrimaryColor = color;
+				}
+				else
+				{
+					UserPreferences.PrimaryColor = color;
+				}
+
+				break;
+		}
+
+		await UserPreferencesChanged.InvokeAsync(UserPreferences);
+	}
+
+	private async Task ChangedSelection(double? args)
+	{
+		UserPreferences.BorderRadius = args ?? 0;
+		await UserPreferencesChanged.InvokeAsync(UserPreferences);
+	}
+
+	public async Task ToggleDarkLightMode(DarkLightMode mode)
+	{
+		UserPreferences.DarkLightTheme = mode;
+		if (mode == DarkLightMode.System)
+		{
+			UserPreferences.IsDarkMode = true;
+		}
+		else if (mode == DarkLightMode.Light)
+		{
+			UserPreferences.IsDarkMode = false;
+		}else if(mode== DarkLightMode.Dark)
+		{
+			UserPreferences.IsDarkMode = true;
+		}
+        await LayoutService.UpdateUserPreferences(UserPreferences);
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
+    }
+
+    private async Task ChangedFontSize(double? args)
+    {
+        var size = args ?? 14;
+        UserPreferences.DefaultFontSize = size;
+        await LayoutService.UpdateUserPreferences(UserPreferences);
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
+    }
+
+
+    public void OpenSetting()
+    {
+        _open = true;
+    }
+}

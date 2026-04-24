@@ -10,6 +10,8 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 {
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
+        builder.Property(x => x.PhoneNumber).HasMaxLength(450);
+
         // Each User can have many UserLogins
         builder.HasMany(e => e.Logins)
             .WithOne()
@@ -30,8 +32,6 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 
         builder.HasOne(x => x.Superior).WithMany().HasForeignKey(u => u.SuperiorId);
         builder.HasOne(x => x.Tenant).WithMany().HasForeignKey(u => u.TenantId);
-        builder.HasOne(x=>x.CreatedByUser).WithMany().HasForeignKey(x=>x.CreatedBy);
-        builder.HasOne(x => x.LastModifiedByUser).WithMany().HasForeignKey(x => x.LastModifiedBy);
         builder.Navigation(e => e.Tenant).AutoInclude();
     }
 }
@@ -39,10 +39,7 @@ public class ApplicationRoleConfiguration : IEntityTypeConfiguration<Application
 {
     public void Configure(EntityTypeBuilder<ApplicationRole> builder)
     {
-        builder.HasIndex(x => x.NormalizedName).HasDatabaseName("RoleNameIndex").IsUnique(false);
-        builder.HasIndex(x=>new { x.TenantId, x.Name }).IsUnique();
-        builder.HasOne(x => x.Tenant).WithMany().HasForeignKey(u => u.TenantId);
-        builder.Navigation(e => e.Tenant).AutoInclude();
+        builder.HasIndex(x => x.NormalizedName).HasDatabaseName("RoleNameIndex").IsUnique(true);
     }
 }
 public class ApplicationRoleClaimConfiguration : IEntityTypeConfiguration<ApplicationRoleClaim>
@@ -86,6 +83,8 @@ public class ApplicationUserLoginConfiguration : IEntityTypeConfiguration<Applic
 {
     public void Configure(EntityTypeBuilder<ApplicationUserLogin> builder)
     {
+        builder.Property(x=>x.ProviderKey).HasMaxLength(450);
+        builder.Property(x=>x.LoginProvider).HasMaxLength(450);
         builder.HasOne(d => d.User)
             .WithMany(p => p.Logins)
             .HasForeignKey(d => d.UserId)
@@ -97,6 +96,9 @@ public class ApplicationUserTokenConfiguration : IEntityTypeConfiguration<Applic
 {
     public void Configure(EntityTypeBuilder<ApplicationUserToken> builder)
     {
+        builder.Property(x => x.Name).HasMaxLength(450);
+        builder.Property(x => x.LoginProvider).HasMaxLength(450);
+
         builder.HasOne(d => d.User)
             .WithMany(p => p.Tokens)
             .HasForeignKey(d => d.UserId)

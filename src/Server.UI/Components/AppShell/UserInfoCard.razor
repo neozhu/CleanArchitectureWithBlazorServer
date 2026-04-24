@@ -1,0 +1,122 @@
+﻿@using CleanArchitecture.Blazor.Application.Common.Security
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@inject IStringLocalizer<UserInfoCard> L
+@inject IUserProfileState UserProfileState
+@implements IDisposable
+
+<div class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+        @if (UserProfile is null || string.IsNullOrEmpty(UserProfile.UserId))
+        {
+            <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+            <MudStack Justify="Justify.Center" Spacing="0" Style="flex: 1;">
+                <MudSkeleton Width="100px" Height="16px" />
+                <MudSkeleton Width="120px" Height="14px" />
+            </MudStack>
+        }
+        else
+        {
+            <MudAvatar Style="width: 32px; height: 32px;">
+                @if (string.IsNullOrEmpty(UserProfile.ProfilePictureDataUrl))
+                {
+                    @(string.IsNullOrEmpty(UserProfile.UserName) ? "" : UserProfile.UserName.First())
+                }
+                else
+                {
+                    <MudImage Src="@UserProfile.ProfilePictureDataUrl"></MudImage>
+                }
+            </MudAvatar>
+            
+            <MudStack Justify="Justify.SpaceBetween" Spacing="0" Style="flex: 1; min-width: 0;">
+                <MudText Typo="Typo.body2" Style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    @UserProfile.DisplayName
+                </MudText>
+                <MudText Typo="Typo.caption" Class="mud-secondary-text" Style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    @UserProfile.DefaultRole
+                </MudText>
+            </MudStack>
+        }
+        
+        <MudMenu AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" LockScroll="true">
+            <ActivatorContent>
+				<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" OnClick="@context.ToggleAsync" />
+            </ActivatorContent>
+            <ChildContent>
+                <div style="min-width: 240px;">
+                    <MudStack Row Spacing="2" Class="px-4 pt-2" AlignItems="AlignItems.Center">
+                    <MudAvatar Style="width: 30px; height: 30px;">
+                        @if (string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl))
+                        {
+                            @(string.IsNullOrEmpty(UserProfile?.UserName) ? "" : UserProfile?.UserName.First())
+                        }
+                        else
+                        {
+                            <MudImage Src="@UserProfile.ProfilePictureDataUrl"></MudImage>
+                        }
+                    </MudAvatar>
+
+                    <MudStack Justify="Justify.SpaceBetween" Spacing="0" Style="flex: 1; min-width: 0;">
+                        <MudText Typo="Typo.body2" Style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            @UserProfile?.DisplayName
+                        </MudText>
+                        <MudText Typo="Typo.caption" Class="mud-secondary-text" Style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            @UserProfile?.Email
+                        </MudText>
+                    </MudStack>
+                    </MudStack>
+                    <MudDivider Class="my-2" />
+                   
+                    <MudMenuItem Href="/user/profile">
+                        <div class="d-flex align-center">
+                            <MudIcon Class="mx-2" Icon="@Icons.Material.Filled.Person" />
+                            <MudText Typo="Typo.body2">@L["Profile"]</MudText>
+                        </div>
+                    </MudMenuItem>
+                    <MudMenuItem OnClick="OnSettingClick">
+                        <div class="d-flex align-center">
+                            <MudIcon Class="mx-2" Icon="@Icons.Material.Filled.Settings" />
+                            <MudText Typo="Typo.body2">@L["Settings"]</MudText>
+                        </div>
+                    </MudMenuItem>
+                    <MudDivider Class="my-2" />
+                    <div class="mx-4 mb-2">
+                        <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
+                            <input type="hidden" name="ReturnUrl" value="/account/login" />
+                            <MudButton Color="Color.Primary"
+                                      ButtonType="ButtonType.Submit"
+                                      FullWidth="true"
+                                      StartIcon="@Icons.Material.Filled.Logout"
+                                      Variant="Variant.Outlined"
+                                      Size="Size.Small">
+                                @L["Logout"]
+                            </MudButton>
+                        </form>
+                    </div>
+                </div>
+            </ChildContent>
+        </MudMenu>
+    </MudStack>
+</div>
+
+@code
+{
+    [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
+    
+    private UserProfile UserProfile => UserProfileState.Value;
+
+    protected override void OnInitialized()
+    {
+        UserProfileState.Changed += UserProfileState_OnChange;
+    }
+
+    public void Dispose()
+    {
+        UserProfileState.Changed -= UserProfileState_OnChange;
+    }
+
+    private async void UserProfileState_OnChange(object? sender, UserProfile userProfile)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+}

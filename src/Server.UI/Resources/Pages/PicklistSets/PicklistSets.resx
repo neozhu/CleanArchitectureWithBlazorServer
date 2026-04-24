@@ -123,6 +123,9 @@
   <data name="Picklist Set" xml:space="preserve">
     <value>Picklist Set</value>
   </data>
+  <data name="Select picklist name" xml:space="preserve">
+    <value>Select picklist name</value>
+  </data>
   <data name="Create a picklist" xml:space="preserve">
     <value>Create a picklist</value>
   </data>
@@ -144,16 +147,34 @@
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>Enter description</value>
+  </data>
+  <data name="Enter text" xml:space="preserve">
+    <value>Enter text</value>
+  </data>
+  <data name="Enter value" xml:space="preserve">
+    <value>Enter value</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
-  <data name="Name is required!" xml:space="preserve">
+  <data name="Name is required." xml:space="preserve">
     <value>Name is required!</value>
   </data>
-  <data name="Value is required!" xml:space="preserve">
+  <data name="Value is required." xml:space="preserve">
     <value>Value is required!</value>
   </data>
-  <data name="Text is required!" xml:space="preserve">
+  <data name="Text is required." xml:space="preserve">
     <value>Text is required!</value>
+  </data>
+  <data name="No Picklist Items Found" xml:space="preserve">
+    <value>No Picklist Items Found</value>
+  </data>
+  <data name="Try adjusting your search or filter to find what you're looking for." xml:space="preserve">
+    <value>Try adjusting your search or filter to find what you're looking for.</value>
+  </data>
+  <data name="Loading Picklist Items..." xml:space="preserve">
+    <value>Loading Picklist Items...</value>
   </data>
 </root>

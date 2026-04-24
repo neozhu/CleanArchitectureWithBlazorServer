@@ -1,9 +1,7 @@
 ﻿using System.Reflection;
+using CleanArchitecture.Blazor.Application.Common.Constants;
+using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Domain.Identity;
-using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
-using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
@@ -15,11 +13,12 @@ public class ApplicationDbContextInitializer
     private readonly UserManager<ApplicationUser> _userManager;
 
     public ApplicationDbContextInitializer(ILogger<ApplicationDbContextInitializer> logger,
-        ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+        IDbContextFactory<ApplicationDbContext> dbContextFactory,
+        UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager)
     {
         _logger = logger;
-        _context = context;
+        _context = dbContextFactory.CreateDbContext();
         _userManager = userManager;
         _roleManager = roleManager;
     }
@@ -86,11 +85,11 @@ public class ApplicationDbContextInitializer
     {
         if (await _context.Tenants.AnyAsync()) return;
 
-        _logger.LogInformation("Seeding tenants...");
+        _logger.LogInformation("Seeding organizations...");
         var tenants = new[]
         {
-                new Tenant { Name = "Master", Description = "Master Site" },
-                new Tenant { Name = "Slave", Description = "Slave Site" }
+                new Tenant { Name = "Main", Description = "Main Site" },
+                new Tenant { Name = "Europe", Description = "Europe Site" }
             };
 
         await _context.Tenants.AddRangeAsync(tenants);
@@ -99,8 +98,8 @@ public class ApplicationDbContextInitializer
 
     private async Task SeedRolesAsync()
     {
-        var adminRoleName = RoleName.Admin;
-        var userRoleName = RoleName.Basic;
+        var adminRoleName = Roles.Admin;
+        var userRoleName = Roles.Basic;
 
         if (await _roleManager.RoleExistsAsync(adminRoleName)) return;
 
@@ -108,12 +107,12 @@ public class ApplicationDbContextInitializer
         var administratorRole = new ApplicationRole(adminRoleName)
         {
             Description = "Admin Group",
-            TenantId = (await _context.Tenants.FirstAsync()).Id
+            CreatedAt= DateTime.UtcNow,
         };
         var userRole = new ApplicationRole(userRoleName)
         {
             Description = "Basic Group",
-            TenantId = (await _context.Tenants.FirstAsync()).Id
+            CreatedAt = DateTime.UtcNow,
         };
 
         await _roleManager.CreateAsync(administratorRole);
@@ -138,40 +137,46 @@ public class ApplicationDbContextInitializer
         if (await _userManager.Users.AnyAsync()) return;
 
         _logger.LogInformation("Seeding users...");
+        var tenants = await _context.Tenants.ToListAsync();
         var adminUser = new ApplicationUser
         {
-            UserName = UserName.Administrator,
+            UserName = Users.Administrator,
             Provider = "Local",
             IsActive = true,
             TenantId = (await _context.Tenants.FirstAsync()).Id,
-            DisplayName = UserName.Administrator,
+            DisplayName = Users.Administrator,
             Email = "admin@example.com",
             EmailConfirmed = true,
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80",
             LanguageCode="en-US",
             TimeZoneId= "Asia/Shanghai",
-            TwoFactorEnabled = false
+            TwoFactorEnabled = false,
+            CreatedAt=DateTime.UtcNow,
+            TenantUsers = tenants.Select(t => new TenantUser { TenantId = t.Id }).ToList()
         };
-
+        await _userManager.CreateAsync(adminUser, Users.DefaultPassword);
+        await _userManager.AddToRoleAsync(adminUser, Roles.Admin);
         var demoUser = new ApplicationUser
         {
-            UserName = UserName.Demo,
+            UserName = Users.Demo,
             IsActive = true,
             Provider = "Local",
             TenantId = (await _context.Tenants.FirstAsync()).Id,
-            DisplayName = UserName.Demo,
+            DisplayName = Users.Demo,
+            SuperiorId = adminUser.Id,
             Email = "demo@example.com",
             EmailConfirmed = true,
             LanguageCode = "de-DE",
             TimeZoneId = "Europe/Berlin",
-            ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80"
+            TenantUsers = new List<TenantUser> { new TenantUser { TenantId = tenants.First().Id } },
+            ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80",
+            CreatedAt = DateTime.UtcNow
         };
 
-        await _userManager.CreateAsync(adminUser, UserName.DefaultPassword);
-        await _userManager.AddToRoleAsync(adminUser, RoleName.Admin);
+       
 
-        await _userManager.CreateAsync(demoUser, UserName.DefaultPassword);
-        await _userManager.AddToRoleAsync(demoUser, RoleName.Basic);
+        await _userManager.CreateAsync(demoUser, Users.DefaultPassword);
+        await _userManager.AddToRoleAsync(demoUser, Roles.Basic);
     }
 
     private async Task SeedDataAsync()

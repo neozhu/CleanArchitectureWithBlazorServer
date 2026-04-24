@@ -9,15 +9,6 @@
     <DockerServiceName>dashboard</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="docker-compose.yml" />
-    <None Include="docker-compose.override.yml" />
-    <None Include=".dockerignore" />
-    <None Include="docs\Serilog-Configuration-Migration.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="launchSettings.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="src\**" />
+    <None Include=".github\copilot-instructions.md" />
   </ItemGroup>
 </Project>

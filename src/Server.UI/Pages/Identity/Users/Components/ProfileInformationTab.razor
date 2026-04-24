@@ -1,0 +1,264 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using CleanArchitecture.Blazor.Server.UI.Resources.ValidationMessages
+@using CleanArchitecture.Blazor.Server.UI.Services
+@using CleanArchitecture.Blazor.Application.Common.Models
+@using CleanArchitecture.Blazor.Domain.Common.Enums
+@using CleanArchitecture.Blazor.Application.Common.Constants
+@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@inherits OwningComponentBase
+@inject IStringLocalizer<CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Profile> L
+@inject IFileUploadService UploadService
+
+@inject IUserProfileState UserProfileState
+@implements IDisposable
+
+@if (_profileModel != null)
+{
+    <EditForm Model="@_profileModel" OnValidSubmit="HandleValidSubmitAsync" style="display: flex; align-items: center; flex-direction: column;">
+        <DataAnnotationsValidator />
+        <MudGrid Justify="Justify.Center" Spacing="2" Style="max-width:600px; display:flex;">
+            <!-- Profile Picture and Roles -->
+            <MudItem sm="12" xs="12">
+                <div class="d-flex justify-center">
+                    <MudElement Class="d-flex flex-column align-center">
+                        @if (string.IsNullOrEmpty(_profileModel.ProfilePictureDataUrl))
+                        {
+                            <MudAvatar Style="height:120px; width:120px; font-size:2rem;">
+                                @(string.IsNullOrEmpty(_profileModel.UserName) ? "" : _profileModel.UserName.ToUpper().First())
+                            </MudAvatar>
+                        }
+                        else
+                        {
+                            <MudAvatar Style="height:120px; width:120px; font-size:2rem;">
+                                <MudImage Src="@_profileModel.ProfilePictureDataUrl" />
+                            </MudAvatar>
+                        }
+                        @if (_profileModel.AssignedRoles is not null)
+                        {
+                            <div class="d-flex">
+                                @foreach (var role in _profileModel.AssignedRoles)
+                                {
+                                    <MudChip T="string" Size="MudBlazor.Size.Small">@role</MudChip>
+                                }
+                            </div>
+                        }
+                    </MudElement>
+                    <MudTooltip Text="@L["Click upload an image"]">
+                        <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="HandleFileChangedAsync" 
+                                       Style="margin-top:-10px; margin-left:-15px">
+                            <CustomContent Context="uploadContext">
+                                <MudIconButton Icon="@Icons.Material.Filled.PhotoCamera" OnClick="@uploadContext.OpenFilePickerAsync" />
+                            </CustomContent>
+                            <SelectedTemplate Context="uploadContext"></SelectedTemplate>
+                        </MudFileUpload>
+                    </MudTooltip>
+                </div>
+            </MudItem>
+
+            <!-- User Information Fields -->
+            <MudItem sm="6" xs="12">
+                <MudTextField For="@(() => _profileModel.TenantName)" @bind-Value="_profileModel.TenantName" Label="@L["Tenant Name"]" ReadOnly="true" ShrinkLabel="true" />
+            </MudItem>
+            <MudItem xs="12" sm="6">
+				<MudTextField For="@(() => _profileModel.SuperiorName)" @bind-Value="_profileModel.SuperiorName" Label="@L["Superior"]" ReadOnly="true" ShrinkLabel="true" />
+            </MudItem>
+            <MudItem sm="6" xs="12">
+                <MudTextField For="@(() => _profileModel.UserName)" @bind-Value="_profileModel.UserName" Label="@L["User Name"]" ReadOnly="true" />
+            </MudItem>
+            <MudItem sm="6" xs="12">
+                <MudTextField For="@(() => _profileModel.Email)" @bind-Value="_profileModel.Email" Label="@L["Email"]" ReadOnly="true" />
+            </MudItem>
+            <MudItem sm="6" xs="12">
+                <MudTextField For="@(() => _profileModel.DisplayName)" @bind-Value="_profileModel.DisplayName" Label="@L["Full Name"]" Placeholder="@L["Enter your full name"]" />
+            </MudItem>
+            <MudItem sm="6" xs="12">
+                <MudTextField For="@(() => _profileModel.PhoneNumber)" @bind-Value="_profileModel.PhoneNumber" Label="@L["Phone Number"]" Placeholder="@L["Enter your phone number"]"  />
+            </MudItem>
+            <MudItem sm="6" xs="12">
+                <TimeZoneAutocomplete T="string" For="@(() => _profileModel.TimeZoneId)" @bind-Value="_profileModel.TimeZoneId" Label="@L["Time Zone"]" Placeholder="@L["Select a time zone"]" />
+            </MudItem>
+            <MudItem sm="6" xs="12">
+                <LanguageAutocomplete T="string" For="@(() => _profileModel.LanguageCode)" @bind-Value="_profileModel.LanguageCode" Label="@L["Language"]" Placeholder="@L["Select a language"]" />
+            </MudItem>
+            <MudItem sm="12" xs="12" Class="d-flex justify-end">
+				<MudButton ButtonType="ButtonType.Submit"  Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">@AppStrings.Save
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}
+ 
+@code {
+    private UserProfile UserProfile => UserProfileState.Value;
+    private ChangeUserProfileModel? _profileModel { get; set; } = null!;
+    private UserManager<ApplicationUser> _userManager { get; set; } = null!;
+    protected override Task OnInitializedAsync()
+    {
+        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        InitializeProfileModel();
+        // Subscribe to UserProfileState changes
+        UserProfileState.Changed += HandleUserProfileChanged;
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        // Unsubscribe from UserProfileState changes
+        UserProfileState.Changed -= HandleUserProfileChanged;
+    }
+
+    private void HandleUserProfileChanged(object? sender, UserProfile userProfile)
+    {
+        // Re-initialize the profile model when the service state changes
+        InitializeProfileModel();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void InitializeProfileModel()
+    {
+        if (UserProfile != null)
+        {
+            _profileModel = new ChangeUserProfileModel
+            {
+                UserId = UserProfile.UserId,
+                UserName = UserProfile.UserName,
+                Email = UserProfile.Email,
+                Provider = UserProfile.Provider,
+                SuperiorName = UserProfile.Superior?.UserName,
+                SuperiorId = UserProfile.SuperiorId,
+                ProfilePictureDataUrl = UserProfile.ProfilePictureDataUrl,
+                DisplayName = UserProfile.DisplayName,
+                PhoneNumber = UserProfile.PhoneNumber,
+                DefaultRole = UserProfile.DefaultRole,
+                AssignedRoles = UserProfile.AssignedRoles,
+                IsActive = UserProfile.IsActive,
+                TenantId = UserProfile.TenantId,
+                TenantName = UserProfile.Tenant?.Name,
+                TimeZoneId = UserProfile.TimeZoneId,
+                LanguageCode = UserProfile.LanguageCode
+            };
+        }
+        else
+        {
+            _profileModel = null;
+        }
+    }
+    
+    private async Task HandleFileChangedAsync(IBrowserFile file)
+    {
+        await UploadProfilePhotoAsync(file);
+    }
+
+    private async Task HandleValidSubmitAsync(EditContext context)
+    {
+        if (_profileModel == null) return;
+
+        await UserProfileState.UpdateAsync(profile => profile with
+        {
+            ProfilePictureDataUrl = _profileModel.ProfilePictureDataUrl,
+            DisplayName = _profileModel.DisplayName,
+            PhoneNumber = _profileModel.PhoneNumber,
+            TimeZoneId = _profileModel.TimeZoneId,
+            LanguageCode = _profileModel.LanguageCode
+        });
+
+        Snackbar.Add(AppStrings.SaveSuccess, Severity.Info);
+    }
+
+    private async Task UploadProfilePhotoAsync(IBrowserFile file)
+    {
+        if (_profileModel == null) return;
+
+        using var fileStream = file.OpenReadStream(GlobalVariables.MaxAllowedSize);
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+        byte[] fileData = memoryStream.ToArray();
+
+        var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(memoryStream, 128, 128, 80);
+        var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, resizedStream.ToArray(), overwrite: true, _profileModel.UserId);
+
+        var result = await UploadService.UploadAsync(uploadRequest);
+        if (result.Succeeded && result.Data is not null)
+        {
+            _profileModel.ProfilePictureDataUrl = result.Data.Url;
+
+            // Update database and state with new profile picture
+            await UserProfileState.UpdateAsync(profile => profile with
+            {
+                ProfilePictureDataUrl = result.Data.Url
+            });
+
+            Snackbar.Add(L["The avatar has been updated"], Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add(result.ErrorMessage, Severity.Error);
+        }
+    }
+
+
+
+    public class ChangeUserProfileModel
+    {
+        public string? Provider { get; set; }
+
+        [Display(Name = "Superior")]
+        [MaxLength(100,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public string? SuperiorName { get; set; }
+
+        public string? SuperiorId { get; set; }
+
+        public string? ProfilePictureDataUrl { get; set; }
+
+        [Display(Name = "Full Name")]
+        [MaxLength(50,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public string? DisplayName { get; set; }
+
+        [Required(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.UserNameRequired))]
+        [Display(Name = "User Name")]
+        [MaxLength(30,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public required string UserName { get; set; }
+
+        [Required(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.EmailRequired))]
+        [EmailAddress(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.EmailInvalid))]
+        [Display(Name = "Email")]
+        [MaxLength(50,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public required string Email { get; set; }
+
+        [Phone(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.PhoneNumberInvalid))]
+        [Display(Name = "Phone Number")]
+        [MaxLength(20,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public string? PhoneNumber { get; set; }
+
+        public string? DefaultRole { get; set; }
+        public string[]? AssignedRoles { get; set; }
+
+        [Required]
+        public required string UserId { get; set; } = Guid.NewGuid().ToString();
+
+        public bool IsActive { get; set; }
+        public string? TenantId { get; set; }
+        public string? TenantName { get; set; }
+        public string? TimeZoneId { get; set; }
+        public string? LanguageCode { get; set; }
+    }
+}

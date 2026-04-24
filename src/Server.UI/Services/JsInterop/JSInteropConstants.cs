@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
+namespace CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 
 public static class JSInteropConstants
 {

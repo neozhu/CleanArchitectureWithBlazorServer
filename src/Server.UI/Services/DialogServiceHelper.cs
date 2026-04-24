@@ -1,5 +1,9 @@
-﻿using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
+﻿using System;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
 using Mediator;
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
@@ -10,6 +14,12 @@ public class DialogServiceHelper
 {
     private readonly IDialogService _dialogService;
 
+    // Predefined default options
+    private static readonly DialogOptions DefaultOptions = new()
+    { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+    private static readonly DialogOptions SmallOptions = new()
+    { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogServiceHelper"/> class.
@@ -21,61 +31,117 @@ public class DialogServiceHelper
     }
 
     /// <summary>
-    /// Shows a delete confirmation dialog.
+    /// Displays a dialog of the specified type asynchronously.
+    /// This is the CORE method containing the logic for showing the dialog and handling results.
     /// </summary>
-    /// <param name="command">The command to execute on confirmation.</param>
-    /// <param name="title">The title of the dialog.</param>
-    /// <param name="contentText">The content text of the dialog.</param>
-    /// <param name="onConfirm">The action to perform on confirmation.</param>
-    /// <param name="onCancel">The action to perform on cancellation (optional).</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task ShowDeleteConfirmationDialogAsync(IRequest<Result<int>> command, string title, string contentText, Func<Task> onConfirm, Func<Task>? onCancel = null)
+    /// <typeparam name="TDialog">The type of the dialog component to display.</typeparam>
+    /// <param name="title">The title to display in the dialog header.</param>
+    /// <param name="onConfirm">A callback invoked with the dialog result when the user confirms.</param>
+    /// <param name="configureParameters">An optional action to configure the parameters via lambda.</param>
+    /// <param name="options">Optional dialog display options.</param>
+    /// <param name="onCancel">An optional callback invoked if the dialog is canceled.</param>
+    public async Task ShowDialogAsync<TDialog>(
+        string title,
+        Func<DialogResult, Task> onConfirm,
+        Action<DialogParameters<TDialog>>? configureParameters = null,
+        DialogOptions? options = null,
+        Func<Task>? onCancel = null) where TDialog : IComponent
     {
-        var parameters = new DialogParameters
-            {
-                { nameof(DeleteConfirmation.ContentText), contentText },
-                { nameof(DeleteConfirmation.Command), command }
-            };
+        // 1. Build parameters internally
+        var parameters = new DialogParameters<TDialog>();
+        configureParameters?.Invoke(parameters);
 
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-        var dialog = await _dialogService.ShowAsync<DeleteConfirmation>(title, parameters, options).ConfigureAwait(false);
-        var result = await dialog.Result.ConfigureAwait(false);
+        // 2. Set options
+        var finalOptions = options ?? DefaultOptions;
+
+        // 3. Show dialog
+        var dialog = await _dialogService.ShowAsync<TDialog>(title, parameters, finalOptions);
+        var result = await dialog.Result;
+
+        // 4. Handle result
         if (result is not null && !result.Canceled)
         {
-            await onConfirm().ConfigureAwait(false);
+            await onConfirm.Invoke(result);
         }
-        else if (onCancel != null)
+        else
         {
-            await onCancel().ConfigureAwait(false);
+            if (onCancel != null)
+            {
+                await onCancel.Invoke();
+            }
         }
     }
 
     /// <summary>
-    /// Shows a confirmation dialog.
+    /// Displays a form dialog of the specified component type.
+    /// Essentially a wrapper around ShowDialogAsync with type constraints for TCommand.
     /// </summary>
-    /// <param name="title">The title of the dialog.</param>
-    /// <param name="contentText">The content text of the dialog.</param>
-    /// <param name="onConfirm">The action to perform on confirmation.</param>
-    /// <param name="onCancel">The action to perform on cancellation (optional).</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task ShowConfirmationDialogAsync(string title, string contentText, Func<Task> onConfirm, Func<Task>? onCancel = null)
+    public async Task ShowFormDialogAsync<TDialog, TCommand>(
+        string title,
+        Func<DialogResult, Task> onDialogResult,
+        Action<DialogParameters<TDialog>>? configureParameters = null,
+        DialogOptions? options = null,
+        Func<Task>? onCancel = null)
+        where TDialog : ComponentBase
+        where TCommand : IRequest<Result>
     {
-        var parameters = new DialogParameters
+        // Delegate directly to the core method
+        await ShowDialogAsync<TDialog>(
+            title,
+            onDialogResult,
+            configureParameters,
+            options ?? DefaultOptions,
+            onCancel
+        );
+    }
+
+    /// <summary>
+    /// Shows a delete confirmation dialog with a Generic Command.
+    /// </summary>
+    public async Task ShowDeleteConfirmationDialogAsync<TCommand>(
+        TCommand command,
+        string title,
+        string contentText,
+        Func<Task> onConfirm,
+        Func<Task>? onCancel = null)
+        where TCommand : IRequest<Result>
+    {
+        // Adapt: Wrap Func<Task> into Func<DialogResult, Task>
+        Func<DialogResult, Task> confirmWrapper = _ => onConfirm();
+
+        // Delegate to core method, configuring parameters via Lambda
+        await ShowDialogAsync<DeleteConfirmation>(
+            title,
+            confirmWrapper,
+            parameters =>
             {
-                { nameof(ConfirmationDialog.ContentText), contentText }
-            };
+                parameters.Add(x => x.ContentText, contentText);
+                parameters.Add(x => x.Command, command);
+            },
+            SmallOptions,
+            onCancel
+        );
+    }
 
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-        var dialog = await _dialogService.ShowAsync<ConfirmationDialog>(title, parameters, options).ConfigureAwait(false);
-        var result = await dialog.Result.ConfigureAwait(false);
+    /// <summary>
+    /// Shows a simple confirmation dialog.
+    /// </summary>
+    public async Task ShowConfirmationDialogAsync(
+        string title,
+        string contentText,
+        Func<Task> onConfirm,
+        Func<Task>? onCancel = null)
+    {
+        // Adapt: Wrap Func<Task> into Func<DialogResult, Task>
+        Func<DialogResult, Task> confirmWrapper = _ => onConfirm();
 
-        if (result is not null && !result.Canceled)
-        {
-            await onConfirm().ConfigureAwait(false);
-        }
-        else if (onCancel != null)
-        {
-            await onCancel().ConfigureAwait(false);
-        }
+        // Delegate to core method, configuring parameters via Lambda
+        await ShowDialogAsync<ConfirmationDialog>(
+            title,
+            confirmWrapper,
+            parameters => parameters.Add(x => x.ContentText, contentText),
+            SmallOptions,
+            onCancel
+        );
     }
 }

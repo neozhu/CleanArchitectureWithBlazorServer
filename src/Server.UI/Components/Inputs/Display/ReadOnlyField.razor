@@ -1,0 +1,114 @@
+﻿@{
+	string displayValue = "";
+
+	if (Value == null || string.IsNullOrWhiteSpace(Value.ToString()))
+	{
+		displayValue = "<span class='mud-text-disabled' style='font-style: italic;'>—</span>";
+	}
+	else if (Value is IEnumerable<object> enumerable)
+	{
+		// If Value is a collection or array, use string.Join()
+		displayValue = string.Join(", ", enumerable);
+	}
+	else
+	{
+        displayValue = Value?.ToString() ?? string.Empty;
+	}
+}
+
+@if (Dense)
+{
+    <!-- Dense mode: Pure d-flex layout, Label fixed width for consistent alignment, Value adapts to remaining space -->
+    <div class="d-flex align-center">
+        <!-- Label area: Fixed width for consistent cross-column alignment -->
+        <div class="flex-shrink-0 pr-3" style="width: 140px;">
+            <span class="mud-typography mud-typography-body2 mud-text-secondary" style="font-weight: 500;">
+                @Label
+            </span>
+        </div>
+        <!-- Value area: Occupy remaining space -->
+        <div class="flex-grow-1 d-flex align-center">
+            @if (CheckBox)
+            {
+                <div class="d-flex align-center">
+                    <MudIcon Icon="@(Convert.ToBoolean(Value) ? Icons.Material.Filled.CheckCircle : Icons.Material.Outlined.Cancel)" Color="@(Convert.ToBoolean(Value) ? Color.Primary : Color.Default)" />
+                </div>
+            }
+            else
+            {
+                <span class="mud-typography mud-typography-body1" style="word-break: break-word; font-weight: 400;">
+                    @if (Value == null || string.IsNullOrWhiteSpace(Value.ToString()))
+                    {
+                        <span class="mud-text-disabled" style="font-style: italic;">—</span>
+                    }
+					else if (Value is IEnumerable<object> enumerable)
+					{
+						@foreach (var item in enumerable)
+						{
+							<MudChip T="string" Variant="Variant.Text">@item</MudChip>
+						}
+						
+					}
+                    else
+                    {
+                        @Value
+                    }
+                </span>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <!-- Standard mode: Label on top, value below, pure CSS implementation -->
+    <div>
+        <div class="mb-1">
+            <span class="mud-typography mud-typography-body2 mud-text-secondary" style="font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                @Label
+            </span>
+        </div>
+        <div>
+            @if (CheckBox)
+            {
+                <div class="d-flex align-center mt-1">
+					<MudIcon Icon="@(Convert.ToBoolean(Value) ? Icons.Material.Filled.CheckCircle : Icons.Material.Outlined.Cancel)" Color="@(Convert.ToBoolean(Value) ? Color.Primary : Color.Default)" />
+                </div>
+            }
+            else
+            {
+                <span class="mud-typography mud-typography-body1" style="min-height: 24px; font-weight: 400; word-break: break-word; display: block;">
+                    @if (Value == null || string.IsNullOrWhiteSpace(Value.ToString()))
+                    {
+                        <span class="mud-text-disabled" style="font-style: italic;">—</span>
+					}
+					else if (Value is IEnumerable<object> enumerable)
+					{
+						@foreach(var item in enumerable)
+						{
+							<MudChip T="string" Variant="Variant.Text">@item</MudChip>
+						}
+
+					}
+					else
+                    {
+                        @Value
+                    }
+                </span>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? Label { get; set; }
+    
+    [Parameter]
+    public object? Value { get; set; }
+    
+    [Parameter]
+    public bool CheckBox { get; set; }
+    
+    [Parameter]
+    public bool Dense { get; set; } = false;
+}

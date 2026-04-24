@@ -1,29 +1,31 @@
-﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
+﻿using CleanArchitecture.Blazor.Domain.Common;
 using CleanArchitecture.Blazor.Domain.Common.Entities;
+using Mediator;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
-
 
 /// <summary>
 /// Interceptor for dispatching domain events when saving changes in the database.
 /// </summary>
 public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
 {
-    private readonly IScopedMediator _mediator;
+    private readonly IMediator _mediator;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DispatchDomainEventsInterceptor"/> class.
     /// </summary>
     /// <param name="mediator">The mediator instance used for publishing domain events.</param>
-    public DispatchDomainEventsInterceptor(IScopedMediator mediator)
+    public DispatchDomainEventsInterceptor(IMediator mediator)
     {
         _mediator = mediator;
     }
 
     /// <inheritdoc/>
-    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
-        InterceptionResult<int> result, CancellationToken cancellationToken = default)
+    public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
+        DbContextEventData eventData,
+        InterceptionResult<int> result,
+        CancellationToken cancellationToken = default)
     {
         var context = eventData.Context;
         if (context == null)
@@ -49,7 +51,7 @@ public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
                 domainEventEntities.ForEach(e => e.ClearDomainEvents());
                 foreach (var domainEvent in domainEvents)
                 {
-                    await _mediator.Publish(domainEvent, cancellationToken);
+                    await PublishDomainEvent(domainEvent, cancellationToken);
                 }
 
                 await transaction.CommitAsync(cancellationToken);
@@ -66,7 +68,9 @@ public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
     }
 
     /// <inheritdoc/>
-    public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result,
+    public override async ValueTask<int> SavedChangesAsync(
+        SaveChangesCompletedEventData eventData,
+        int result,
         CancellationToken cancellationToken = default)
     {
         var context = eventData.Context;
@@ -93,7 +97,7 @@ public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
                 domainEventEntities.ForEach(e => e.ClearDomainEvents());
                 foreach (var domainEvent in domainEvents)
                 {
-                    await _mediator.Publish(domainEvent, cancellationToken);
+                    await PublishDomainEvent(domainEvent, cancellationToken);
                 }
 
                 await transaction.CommitAsync(cancellationToken);
@@ -125,6 +129,11 @@ public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
         entities.ToList().ForEach(e => e.ClearDomainEvents());
 
         foreach (var domainEvent in domainEvents)
-            await _mediator.Publish(domainEvent);
+            await PublishDomainEvent(domainEvent, CancellationToken.None);
+    }
+
+    private async ValueTask PublishDomainEvent(DomainEvent domainEvent, CancellationToken cancellationToken)
+    {
+        await _mediator.Publish(domainEvent, cancellationToken);
     }
 }

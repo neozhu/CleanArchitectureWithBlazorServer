@@ -136,13 +136,13 @@
   <data name="Tenant Id" xml:space="preserve">
     <value>租户 ID</value>
   </data>
-  <data name="Tenant id is required!" xml:space="preserve">
+  <data name="Tenant id is required." xml:space="preserve">
     <value>需要租客身份证！</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>租户名称</value>
   </data>
-  <data name="Tenant name is required!" xml:space="preserve">
+  <data name="Tenant name is required." xml:space="preserve">
     <value>租客姓名为必填项！</value>
   </data>
   <data name="Tenants" xml:space="preserve">
@@ -150,5 +150,29 @@
   </data>
   <data name="Description" xml:space="preserve">
     <value>描述</value>
+  </data>
+  <data name="No available tenants" xml:space="preserve">
+    <value>没有可用的租户</value>
+  </data>
+  <data name="Auto-generated tenant id" xml:space="preserve">
+    <value>租户标识自动生成</value>
+  </data>
+  <data name="This identifier cannot be changed" xml:space="preserve">
+    <value>此标识符不可更改</value>
+  </data>
+  <data name="Enter tenant name" xml:space="preserve">
+    <value>请输入租户名称</value>
+  </data>
+  <data name="Enter tenant description" xml:space="preserve">
+    <value>请输入租户描述</value>
+  </data>
+  <data name="No Tenants Found" xml:space="preserve">
+    <value>未找到租户</value>
+  </data>
+  <data name="Try adjusting your search or filter to find what you're looking for." xml:space="preserve">
+    <value>请尝试调整搜索或筛选条件以找到您需要的内容。</value>
+  </data>
+  <data name="Loading Tenants..." xml:space="preserve">
+    <value>正在加载租户...</value>
   </data>
 </root>

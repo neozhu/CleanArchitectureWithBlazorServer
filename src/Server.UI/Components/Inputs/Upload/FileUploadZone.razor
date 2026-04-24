@@ -1,0 +1,225 @@
+﻿@using CleanArchitecture.Blazor.Domain.Common
+@using CleanArchitecture.Blazor.Domain.Common.Enums
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
+
+@inject IFileUploadService UploadService
+
+<MudStack Spacing="1" Class="mb-2">
+    @if (!string.IsNullOrEmpty(Hint))
+    {
+        <MudText Typo="Typo.body2">@Hint</MudText>
+    }
+    <MudFileUpload T="IReadOnlyList<IBrowserFile>" multiple
+                   @bind-Files="UploadBrowserFiles"
+                   For="@(() => UploadBrowserFiles)"
+                   OnFilesChanged="UploadFiles" Accept="@Accept"
+                   Hidden="true"
+                   InputClass="absolute mud-width-full mud-height-full overflow-hidden z-100"
+                   tabindex="-1"
+                   @ondrop="@ClearDragClass"
+                   @ondragenter="@SetDragClass"
+                   @ondragleave="@ClearDragClass"
+                   @ondragend="@ClearDragClass"
+                   AppendMultipleFiles>
+        <CustomContent>
+            <MudPaper Class="@_dragClass" Style="width:260px;height:70px;">
+                <MudLoadingButton OnClick="@context.OpenFilePickerAsync" Loading="@_uploading" Disabled="@_uploading" Variant="Variant.Text" Class="align-self-center" Style="text-transform:none"
+                                  StartIcon="@Icons.Material.Filled.CloudUpload">
+                    @ButtonText
+                </MudLoadingButton>
+            </MudPaper>
+        </CustomContent>
+        <SelectedTemplate>
+            @if (Files is not null && Files.Count > 0)
+            {
+                <MudSimpleTable Hover Dense Elevation="0">
+                    <tbody>
+                        @foreach (var file in Files)
+                        {
+                            <tr @onclick="() => OnPreviewFile(file.Url)" style="cursor:pointer">
+                                <td><Thumbnail FileName="@file.Name" FileUrl="@file.Url"></Thumbnail></td>
+                                <td><FileSizeFormatter FileSizeInBytes="@file.Size"></FileSizeFormatter></td>
+                                <td style="width:50px"><MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" title="@AppStrings.Delete" OnClick="@(() => DeleteFile(file))"></MudIconButton></td>
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            }
+        </SelectedTemplate>
+    </MudFileUpload>
+</MudStack>
+
+@code {
+    /// <summary>
+    /// The list of uploaded files to display and manage.
+    /// </summary>
+    [Parameter]
+    public List<UploadedFileInfo>? Files { get; set; }
+
+    /// <summary>
+    /// Callback when the Files list changes.
+    /// </summary>
+    [Parameter]
+    public EventCallback<List<UploadedFileInfo>?> FilesChanged { get; set; }
+
+    /// <summary>
+    /// The upload type used for categorizing uploaded files.
+    /// </summary>
+    [Parameter]
+    public UploadType UploadType { get; set; } = UploadType.Product;
+
+    /// <summary>
+    /// File accept filter (e.g. ".pdf,image/*").
+    /// </summary>
+    [Parameter]
+    public string Accept { get; set; } = ".pdf,image/*";
+
+    /// <summary>
+    /// Optional hint text displayed above the upload area.
+    /// </summary>
+    [Parameter]
+    public string? Hint { get; set; }
+
+    /// <summary>
+    /// Text displayed on the upload button.
+    /// </summary>
+    [Parameter]
+    public string ButtonText { get; set; } = "Choose files";
+
+    /// <summary>
+    /// Maximum width for image resizing. Set to 0 to disable resizing.
+    /// </summary>
+    [Parameter]
+    public int ImageMaxWidth { get; set; } = 640;
+
+    /// <summary>
+    /// Maximum height for image resizing. Set to 0 to disable resizing.
+    /// </summary>
+    [Parameter]
+    public int ImageMaxHeight { get; set; } = 320;
+
+    /// <summary>
+    /// Callback invoked after files have been uploaded successfully.
+    /// </summary>
+    [Parameter]
+    public EventCallback<List<UploadedFileInfo>> OnFilesUploaded { get; set; }
+
+    /// <summary>
+    /// Callback invoked after a file has been deleted.
+    /// </summary>
+    [Parameter]
+    public EventCallback<UploadedFileInfo> OnFileDeleted { get; set; }
+
+    private IReadOnlyList<IBrowserFile>? UploadBrowserFiles { get; set; }
+    private bool _uploading;
+
+    private const string DefaultDragClass = "pa-4 d-flex align-content-center align-center flex-grow-1 mb-2 flex-wrap border-2 border-dashed";
+    private string _dragClass = DefaultDragClass;
+
+    private void SetDragClass()
+        => _dragClass = $"{DefaultDragClass} mud-border-primary mud-elevation-25 border-4";
+
+    private void ClearDragClass()
+        => _dragClass = DefaultDragClass;
+
+    private async Task DeleteFile(UploadedFileInfo file)
+    {
+        if (Files is null) return;
+
+        await DialogServiceHelper.ShowConfirmationDialogAsync(
+            AppStrings.Delete,
+            string.Format(AppStrings.DeleteConfirmation,file.Name),
+            async () =>
+            {
+                Files.Remove(file);
+                await UploadService.RemoveAsync(file.Url);
+                await FilesChanged.InvokeAsync(Files);
+                await OnFileDeleted.InvokeAsync(file);
+            });
+    }
+
+    private async Task UploadFiles(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            ClearDragClass();
+            _uploading = true;
+            var list = new List<UploadedFileInfo>();
+            foreach (var file in e.GetMultipleFiles())
+            {
+                try
+                {
+                    using var filestream = file.OpenReadStream(GlobalVariables.MaxAllowedSize);
+                    using var attachStream = new MemoryStream();
+                    await filestream.CopyToAsync(attachStream);
+                    attachStream.Position = 0;
+                    var filename = file.Name;
+                    var ext = Path.GetExtension(filename);
+                    if (ext.Equals(".pdf", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var uploadResult = await UploadService.UploadAsync(new UploadRequest(filename, UploadType, attachStream.ToArray()));
+                        if (uploadResult.Succeeded && uploadResult.Data is not null)
+                        {
+                            list.Add(uploadResult.Data);
+                        }
+                        else
+                        {
+                            Snackbar.Add(uploadResult.ErrorMessage, Severity.Error);
+                        }
+                    }
+                    else
+                    {
+                        if (ImageMaxWidth > 0 && ImageMaxHeight > 0)
+                        {
+                            using var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(attachStream, ImageMaxWidth, ImageMaxHeight);
+                            var uploadResult = await UploadService.UploadAsync(new UploadRequest(filename, UploadType, resizedStream.ToArray(), overwrite: false, null));
+                            if (uploadResult.Succeeded && uploadResult.Data is not null)
+                            {
+                                list.Add(uploadResult.Data);
+                            }
+                            else
+                            {
+                                Snackbar.Add(uploadResult.ErrorMessage, Severity.Error);
+                            }
+                        }
+                        else
+                        {
+                            var uploadResult = await UploadService.UploadAsync(new UploadRequest(filename, UploadType, attachStream.ToArray()));
+                            if (uploadResult.Succeeded && uploadResult.Data is not null)
+                            {
+                                list.Add(uploadResult.Data);
+                            }
+                            else
+                            {
+                                Snackbar.Add(uploadResult.ErrorMessage, Severity.Error);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Snackbar.Add($"{ex.Message}", Severity.Error);
+                }
+            }
+
+            Snackbar.Add(AppStrings.UploadSuccess, Severity.Info);
+
+            if (Files is null)
+                Files = list;
+            else
+                Files.AddRange(list);
+
+            await FilesChanged.InvokeAsync(Files);
+            await OnFilesUploaded.InvokeAsync(list);
+        }
+        finally
+        {
+            _uploading = false;
+        }
+    }
+
+    private async Task OnPreviewFile(string? url)
+    {
+        await new Fancybox(JS).Preview(url ?? string.Empty, []);
+    }
+}

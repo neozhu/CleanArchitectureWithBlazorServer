@@ -1,0 +1,38 @@
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
+@inject IJSRuntime JSRuntime
+@if (UTCDateTime != null && localTime!=null)
+{
+   <MudText Typo="@Typo" Class="@Class">@localTime.Value.ToString(Format)</MudText>
+}
+
+@code {
+    private UserProfile UserProfile => UserProfileState.Value;
+    // Parameter to accept the UTC time that needs to be converted
+    [Parameter]
+    public DateTime? UTCDateTime { get; set; }
+
+    [Parameter]
+    public Typo Typo{get;set;}=Typo.body2;
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Parameter to accept a custom format for displaying the date and time
+    [Parameter]
+    public string Format { get; set; } = "yyyy-MM-dd HH:mm:ss"; // Default format
+
+    // Local time after converting from UTC
+    private DateTime? localTime;
+
+    // This method is called when the component is initialized
+    protected override Task OnInitializedAsync()
+    {
+        if (UTCDateTime!=null){
+            var timeOffset = UserProfile?.LocalTimeOffset ?? TimeZoneInfo.Local.BaseUtcOffset;
+            // Convert the UTC time to local time by adding the time zone offset
+            localTime = UTCDateTime.Value.Add(timeOffset);
+        }
+        return Task.CompletedTask;
+
+    }
+}

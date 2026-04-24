@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CleanArchitecture.Blazor.Server.UI.Hubs;
 

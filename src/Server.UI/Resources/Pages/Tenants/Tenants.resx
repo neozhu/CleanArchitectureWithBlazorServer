@@ -136,13 +136,13 @@
   <data name="Tenant Id" xml:space="preserve">
     <value>Tenant Id</value>
   </data>
-  <data name="Tenant id is required!" xml:space="preserve">
+  <data name="Tenant id is required." xml:space="preserve">
     <value>Tenant id is required!</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>Tenant Name</value>
   </data>
-  <data name="Tenant name is required!" xml:space="preserve">
+  <data name="Tenant name is required." xml:space="preserve">
     <value>Tenant name is required!</value>
   </data>
   <data name="Tenants" xml:space="preserve">
@@ -150,5 +150,29 @@
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="No available tenants" xml:space="preserve">
+    <value>No available tenants</value>
+  </data>
+  <data name="Auto-generated tenant id" xml:space="preserve">
+    <value>Auto-generated tenant id</value>
+  </data>
+  <data name="This identifier cannot be changed" xml:space="preserve">
+    <value>This identifier cannot be changed</value>
+  </data>
+  <data name="Enter tenant name" xml:space="preserve">
+    <value>Enter tenant name</value>
+  </data>
+  <data name="Enter tenant description" xml:space="preserve">
+    <value>Enter tenant description</value>
+  </data>
+  <data name="No Tenants Found" xml:space="preserve">
+    <value>No Tenants Found</value>
+  </data>
+  <data name="Try adjusting your search or filter to find what you're looking for." xml:space="preserve">
+    <value>Try adjusting your search or filter to find what you're looking for.</value>
+  </data>
+  <data name="Loading Tenants..." xml:space="preserve">
+    <value>Loading Tenants...</value>
   </data>
 </root>

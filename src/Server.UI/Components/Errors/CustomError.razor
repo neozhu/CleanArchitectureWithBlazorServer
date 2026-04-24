@@ -1,0 +1,137 @@
+﻿@using System.Net
+@inject ILogger<CustomError> Logger
+@inject IStringLocalizer<CustomError> L
+
+<div style="display: flex; justify-content: center; align-items: center; min-height: 60vh; padding: 2rem;">
+    <MudPaper Class="pa-8" Elevation="1" Style="max-width: 600px; text-align: center;">
+        
+        <MudIcon Icon="@Icons.Material.Filled.Error" Color="Color.Error" Style="font-size: 3.5rem;" Class="mb-4" />
+        
+        <MudText Typo="Typo.h3" Class="mb-3" Style="font-weight: 300;">
+            @StatusCode
+        </MudText>
+        
+        <!-- User-Friendly Message Display -->
+        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Class="mb-4">
+            <MudText Typo="Typo.h6" Class="mb-2">@UserFriendlyMessage</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                @L["If the problem persists, please contact your system administrator."]
+            </MudText>
+        </MudAlert>
+        
+        <MudPaper Elevation="0" Class="mb-4 pa-2" Style="background-color: var(--mud-palette-background-grey);">
+            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                @L["Time"]: @DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            </MudText>
+        </MudPaper>
+
+        <!-- Technical Details Section -->
+        <MudStack AlignItems="AlignItems.Center" Class="mb-4">
+            <MudButton 
+                Variant="Variant.Text" 
+                EndIcon="@(ShowStackTrace ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)" 
+                OnClick="@(() => ShowStackTrace = !ShowStackTrace)">
+                @(ShowStackTrace ? L["Hide Technical Details"] : L["Show Technical Details"])
+            </MudButton>
+        </MudStack>
+
+        @if (ShowStackTrace)
+        {
+            <MudPaper Elevation="0" Class="mb-4 pa-4" Style="background-color: var(--mud-palette-background-grey); text-align: left;">
+                
+                <!-- Original Exception Message (For IT/Debug) -->
+                <MudText Typo="Typo.subtitle2" Class="mb-1" Color="Color.Error">@L["Error Message"]:</MudText>
+                <MudText Typo="Typo.body2" Class="mb-3" Style="font-weight: bold;">@OriginalMessage</MudText>
+                
+                <MudDivider Class="mb-3"/>
+
+                <!-- Stack Trace -->
+                <MudText Typo="Typo.subtitle2" Class="mb-2">@L["Stack Trace"]:</MudText>
+                <MudText Typo="Typo.body2" Style="white-space: pre-wrap; overflow-x: auto; max-height: 200px; font-family: monospace; font-size: 0.75rem;">
+                    @StackTrace
+                </MudText>
+            </MudPaper>
+        }
+        
+        <MudStack Row Justify="Justify.Center" Spacing="2">
+            <MudButton Variant="Variant.Filled" 
+                      StartIcon="@Icons.Material.Filled.Refresh"
+                      OnClick="OnRefresh">
+                @AppStrings.Refresh
+            </MudButton>
+            
+            <MudButton Variant="Variant.Outlined" 
+                      StartIcon="@Icons.Material.Filled.Home"
+                      Href="/">
+                @L["Return Home"]
+            </MudButton>
+        </MudStack>
+        
+    </MudPaper>
+</div>
+
+@code
+{
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [EditorRequired] [Parameter] public Exception Exception { get; set; } = default!;
+
+    // Message displayed to the end-user (Friendly)
+    private string? UserFriendlyMessage { get; set; } 
+    // Actual exception message (Technical)
+    private string? OriginalMessage { get; set; }     
+    private bool ShowStackTrace { get; set; }
+    private string? StackTrace { get; set; }
+    private string? StatusCode { get; set; } = HttpStatusCode.InternalServerError.ToString();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState;
+        var userName = state.User.GetUserName();
+
+        // Recursively get the innermost exception, which is usually the root cause of the error.
+        if (Exception.InnerException != null)
+        {
+            while (Exception.InnerException != null)
+            {
+                Exception = Exception.InnerException;
+            }
+        }
+
+        // Store the original technical message for logging and the "Details" view.
+        OriginalMessage = Exception.Message;
+        StackTrace = Exception.StackTrace;
+        
+        // Generate a simplified, friendly message based on the exception type.
+        UserFriendlyMessage = GetUserFriendlyMessage(Exception);
+
+        var sanitizedUri = Navigation.Uri.Replace("\n", "").Replace("\r", "");
+        
+        // Log the full exception details including the original message.
+        Logger.LogError(Exception, "{Message}. request url: {@url} {@UserName}", OriginalMessage, sanitizedUri, userName);
+    }
+
+    private void OnRefresh()
+    {
+        Navigation.NavigateTo(Navigation.Uri, true);
+    }
+
+    /// <summary>
+    /// Maps specific exception types to user-friendly messages.
+    /// </summary>
+    /// <param name="ex">The exception to process.</param>
+    /// <returns>A localized friendly string.</returns>
+    private string GetUserFriendlyMessage(Exception ex)
+    {
+        return ex switch
+        {
+            TimeoutException => L["The operation timed out. Please check your internet connection and try again."],
+            HttpRequestException => L["Unable to connect to the server. Please check your network."],
+            UnauthorizedAccessException => L["You do not have permission to perform this action."],
+            FileNotFoundException => L["The requested resource could not be found."],
+            InvalidOperationException => L["The current operation is invalid in this context."],
+            ArgumentException => L["Invalid data was provided. Please check your input."],
+            // Default fallback for unhandled exceptions
+            _ => L["An unexpected system error occurred."]
+        };
+    }
+}

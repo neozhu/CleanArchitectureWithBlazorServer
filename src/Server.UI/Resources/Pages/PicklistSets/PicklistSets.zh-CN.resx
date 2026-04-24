@@ -123,13 +123,22 @@
   <data name="Description" xml:space="preserve">
     <value>描述</value>
   </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>输入描述</value>
+  </data>
+  <data name="Enter text" xml:space="preserve">
+    <value>输入文本</value>
+  </data>
+  <data name="Enter value" xml:space="preserve">
+    <value>输入值</value>
+  </data>
   <data name="Id" xml:space="preserve">
     <value>ID</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>名称</value>
   </data>
-  <data name="Name is required!" xml:space="preserve">
+  <data name="Name is required." xml:space="preserve">
     <value>名称为必填项！</value>
   </data>
   <data name="Picklist" xml:space="preserve">
@@ -137,6 +146,9 @@
   </data>
   <data name="Picklist Set" xml:space="preserve">
     <value>选项列表集</value>
+  </data>
+  <data name="Select picklist name" xml:space="preserve">
+    <value>选择选项列表名称</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>搜索</value>
@@ -147,13 +159,22 @@
   <data name="Text" xml:space="preserve">
     <value>文本</value>
   </data>
-  <data name="Text is required!" xml:space="preserve">
+  <data name="Text is required." xml:space="preserve">
     <value>文本为必填项！</value>
   </data>
   <data name="Value" xml:space="preserve">
     <value>值</value>
   </data>
-  <data name="Value is required!" xml:space="preserve">
+  <data name="Value is required." xml:space="preserve">
     <value>值为必填项！</value>
+  </data>
+  <data name="No Picklist Items Found" xml:space="preserve">
+    <value>未找到选项列表项</value>
+  </data>
+  <data name="Try adjusting your search or filter to find what you're looking for." xml:space="preserve">
+    <value>请尝试调整搜索或筛选条件以找到您需要的内容。</value>
+  </data>
+  <data name="Loading Picklist Items..." xml:space="preserve">
+    <value>正在加载选项列表项...</value>
   </data>
 </root>

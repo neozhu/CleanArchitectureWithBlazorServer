@@ -1,0 +1,61 @@
+﻿@page "/account/registerconfirmation"
+@using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
+@using CleanArchitecture.Blazor.Server.UI.Services
+@using Microsoft.AspNetCore.Identity
+
+@inherits OwningComponentBase
+
+
+@inject IStringLocalizer<RegisterConfirmation> L
+<PageTitle>@ApplicationSettings.AppName - @L["Register confirmation"]</PageTitle>
+<MudStack Spacing="2">
+	<MudText Typo="Typo.h4" GutterBottom="true">@L["Register confirmation"]</MudText>
+
+	<StatusMessage Message="@_statusMessage" Error="@_hasError" />
+
+	@if (EmailConfirmationLink is not null)
+	{
+		<MudText>@L["For testing purposes, you can directly access the email confirmation link below."]</MudText>
+		<MudButton href="@EmailConfirmationLink" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">
+			<MudText>@L["Confirm Account"]</MudText>
+		</MudButton>
+	}
+	else
+	{
+		<MudText Typo="Typo.body1">@L["Please check your email and follow the instructions to confirm your account."]</MudText>
+	}
+</MudStack>
+@code {
+	private UserManager<ApplicationUser> _userManager = null!;
+
+
+	public const string PageUrl = "/account/registerconfirmation";
+	[SupplyParameterFromQuery] private string? EmailConfirmationLink { get; set; }
+	private string? _statusMessage;
+	private bool _hasError;
+
+	[SupplyParameterFromQuery] private string? Email { get; set; }
+
+
+
+	protected override async Task OnInitializedAsync()
+	{
+
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+
+		if (Email is null)
+		{
+			Navigation.NavigateTo("/");
+			return;
+		}
+
+		var user = await _userManager.FindByEmailAsync(Email);
+		if (user is null)
+		{
+			_statusMessage = L["Error finding user for unspecified email"];
+			_hasError = true;
+		}
+	}
+
+}

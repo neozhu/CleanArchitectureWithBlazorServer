@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Infrastructure.Configurations;
@@ -12,42 +12,10 @@ public class AppConfigurationSettings : IApplicationSettings
     ///     App configuration key constraint
     /// </summary>
     public const string Key = nameof(AppConfigurationSettings);
-
-    /// <summary>
-    ///     Contains the application secret, used for signing
-    /// </summary>
-    public string Secret { get; set; } = string.Empty;
-
-    /// <summary>
-    ///     Undocumented
-    /// </summary>
-    public bool BehindSSLProxy { get; set; }
-
-    /// <summary>
-    ///     Undocumented
-    /// </summary>
-    public string ProxyIP { get; set; } = string.Empty;
-
     /// <summary>
     ///     Undocumented
     /// </summary>
     public string ApplicationUrl { get; set; } = string.Empty;
-
-    /// <summary>
-    ///     Undocumented
-    /// </summary>
-    public bool Resilience { get; set; }
-
-    /// <summary>
-    ///     Application framework including the version
-    /// </summary>
-
-    public string AppFlavor { get; set; } = "Blazor .NET 7.0";
-
-    /// <summary>
-    ///     Application .NET version
-    /// </summary>
-    public string AppFlavorSubscript { get; set; } = ".NET 7";
 
     /// <summary>
     ///     The name of the company

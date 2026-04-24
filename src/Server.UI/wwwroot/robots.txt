@@ -1,0 +1,48 @@
+# Robots.txt for Clean Architecture Blazor Server
+# https://www.robotstxt.org/
+
+User-agent: *
+
+# Allow crawling of main content
+Allow: /
+Allow: /pages/
+Allow: /img/
+Allow: /css/
+Allow: /js/
+
+# Disallow crawling of sensitive areas
+Disallow: /api/
+Disallow: /identity/
+Disallow: /pages/identity/
+Disallow: /admin/
+Disallow: /files/
+Disallow: /health
+Disallow: /_framework/
+Disallow: /_content/
+Disallow: /hub/
+Disallow: /signalr/
+
+# Allow demo login page for showcasing
+Allow: /account/login
+
+# Disallow other authentication pages
+Disallow: /register
+Disallow: /logout
+Disallow: /account/register
+Disallow: /account/logout
+Disallow: /account/manage
+Disallow: /manage/
+
+# Disallow crawling of test pages
+Disallow: /test/
+Disallow: /pages/test/
+
+# Disallow crawling of management interfaces
+Disallow: /hangfire/
+Disallow: /swagger/
+
+# Sitemap location
+Sitemap: https://architecture.blazorserver.com/sitemap.xml
+
+# Crawl delay (optional - removes if not needed)
+Crawl-delay: 1

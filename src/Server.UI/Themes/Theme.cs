@@ -12,7 +12,7 @@ public static class Theme
                 PrimaryContrastText = "#ffffff",
                 PrimaryDarken = "#020617",
                 PrimaryLighten = "#1e293b",
-                Secondary = "#71717a",
+                Secondary = "#71717a",         
                 SecondaryContrastText = "#ffffff",
                 SecondaryLighten = "#52525b",
                 SecondaryDarken = "#a1a1aa",
@@ -54,6 +54,9 @@ public static class Theme
                 TableLines = "#e2e8f0", // Table lines, elegant
                 LinesDefault = "#e2e8f0",
                 LinesInputs = "#cbd5e1",
+                OverlayLight = "rgba(0, 0, 0, 0.4)",
+                OverlayDark = "rgba(0, 0, 0, 0.6)"
+
             },
             PaletteDark = new PaletteDark
             {
@@ -106,7 +109,9 @@ public static class Theme
                 DarkContrastText = "#020817",
                 SecondaryContrastText = "#fafafa",
                 SecondaryDarken = "#57534e",
-                SecondaryLighten = "#a8a29e"
+                SecondaryLighten = "#a8a29e",
+                OverlayLight = "rgba(250, 250, 250, 0.1)",
+                OverlayDark = "rgba(0, 0, 0, 0.8)",
 
             },
             LayoutProperties = new LayoutProperties
@@ -114,7 +119,7 @@ public static class Theme
                 AppbarHeight = "64px", // More modern height
                 DefaultBorderRadius = "8px", // More modern border radius
                 DrawerWidthLeft = "280px", // Wider sidebar
-                DrawerMiniWidthRight = "260px"
+                DrawerMiniWidthRight= "260px"
             },
             Typography = new Typography
             {
@@ -125,21 +130,21 @@ public static class Theme
                     LineHeight = "1.43",
                     LetterSpacing = "normal",
                     FontFamily = [
-    "Inter",
-    "-apple-system",
-    "BlinkMacSystemFont",
-    "Segoe UI",
-    "PingFang SC",
-    "Microsoft YaHei UI",
-    "Microsoft YaHei",
-    "sans-serif"
+    "Inter",               
+    "-apple-system",       
+    "BlinkMacSystemFont",   
+    "Segoe UI",            
+    "PingFang SC",     
+    "Microsoft YaHei UI",   
+    "Microsoft YaHei",     
+    "sans-serif"           
 ]
                 },
                 H1 = new H1Typography
                 {
-                    FontSize = "2.5rem",
-                    FontWeight = "700",
-                    LineHeight = "3rem",
+                    FontSize = "2.5rem", 
+                    FontWeight = "700",        
+                    LineHeight = "3rem",       
                     LetterSpacing = "-0.025em"
                 },
                 H2 = new H2Typography
@@ -151,7 +156,7 @@ public static class Theme
                 },
                 H3 = new H3Typography
                 {
-                    FontSize = "1.75rem",
+                    FontSize = "1.75rem", 
                     FontWeight = "600",
                     LineHeight = "2rem",
                     LetterSpacing = "-0.025em"
@@ -215,11 +220,11 @@ public static class Theme
                 },
                 Caption = new CaptionTypography
                 {
-                    FontSize = "0.75rem",
+                    FontSize = "0.75rem", 
                     FontWeight = "400",
                     LineHeight = "1.25rem",
                     LetterSpacing = "0.02em"
-
+                   
                 },
                 Overline = new OverlineTypography
                 {

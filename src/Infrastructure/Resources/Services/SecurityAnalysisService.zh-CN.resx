@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="AccountBruteForceFactor" xml:space="preserve"><value>检测到账户暴力破解：在 {1} 分钟内有 {0} 次登录失败</value></data>
+  <data name="IpBruteForceFactor" xml:space="preserve"><value>检测到基于 IP 的暴力破解：来自 IP {1} 的 {0} 次失败尝试，目标为 {2} 个不同账户</value></data>
+  <data name="NewIpFactor" xml:space="preserve"><value>新的 IP 地址（{0}）</value></data>
+  <data name="NewRegionFactor" xml:space="preserve"><value>新的地理位置（{0}）</value></data>
+  <data name="NewBrowserFactor" xml:space="preserve"><value>新的设备/浏览器（{0}）</value></data>
+  <data name="LoginFromFactors" xml:space="preserve"><value>来自 {0} 的登录</value></data>
+  <data name="UnusualHoursFactor" xml:space="preserve"><value>在非常规时间登录（UTC {0}）</value></data>
+  <data name="Advice_Critical_ImmediateAction" xml:space="preserve"><value>需要立即处理：请立即保护您的账户</value></data>
+  <data name="Advice_Critical_ChangePassword" xml:space="preserve"><value>请立即修改密码</value></data>
+  <data name="Advice_Critical_Enable2FA" xml:space="preserve"><value>立即启用双重验证</value></data>
+  <data name="Advice_Critical_ReviewDevices" xml:space="preserve"><value>检查并撤销所有设备的访问权限</value></data>
+  <data name="Advice_Critical_ContactSecurity" xml:space="preserve"><value>若此活动并非您本人操作，请联系安全团队</value></data>
+  <data name="Advice_High_ReviewActivity" xml:space="preserve"><value>立即检查最近的账户活动</value></data>
+  <data name="Advice_High_ChangePasswordConsider" xml:space="preserve"><value>建议修改密码</value></data>
+  <data name="Advice_High_Enable2FA" xml:space="preserve"><value>如果尚未启用，请开启双重验证</value></data>
+  <data name="Advice_High_MonitorAccount" xml:space="preserve"><value>未来几天请密切关注您的账户</value></data>
+  <data name="Advice_Medium_Monitor" xml:space="preserve"><value>关注账户是否存在异常活动</value></data>
+  <data name="Advice_Medium_Enable2FAConsider" xml:space="preserve"><value>建议开启双重验证</value></data>
+  <data name="Advice_Medium_ReviewLoginHistory" xml:space="preserve"><value>查看您最近的登录记录</value></data>
+  <data name="Advice_Low_Normal" xml:space="preserve"><value>您的账户安全状况正常</value></data>
+  <data name="Advice_Factor_BruteForce_ChangePassword" xml:space="preserve"><value>检测到暴力破解，请立即修改密码</value></data>
+  <data name="Advice_Factor_BruteForce_ReviewDevices" xml:space="preserve"><value>检查并撤销所有未知设备的访问权限</value></data>
+  <data name="Advice_Factor_BruteForce_StrongerPassword" xml:space="preserve"><value>建议使用更复杂的密码或口令</value></data>
+  <data name="Advice_Factor_NewLocation_Verify" xml:space="preserve"><value>请确认该登录来自您的新位置</value></data>
+  <data name="Advice_Factor_NewLocation_SecureIfUnrecognized" xml:space="preserve"><value>如非本人，请立即保护账户并更改凭据</value></data>
+  <data name="Advice_Factor_NewDevice_Verify" xml:space="preserve"><value>请确认该登录来自您的设备</value></data>
+  <data name="Advice_Factor_NewDevice_PublicDevice" xml:space="preserve"><value>若为公共/共享设备，请确保完全登出</value></data>
+  <data name="Advice_Factor_UnusualHours_Secure" xml:space="preserve"><value>如非本人在非常规时间登录，请立即保护账户</value></data>
+</root>
+

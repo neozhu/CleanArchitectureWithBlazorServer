@@ -1,8 +1,7 @@
 ﻿// Copyright (c) MudBlazor 2021
 // MudBlazor licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
-
-using System.Drawing;
+using System.Globalization;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 
@@ -30,137 +29,119 @@ public class UserPreference
         "#f43f5e", // Rose-500
     };
 
-    /// <summary>
-    ///     Set the direction layout of the docs to RTL or LTR. If true RTL is used
-    /// </summary>
+    public bool IsDarkMode { get; set; }
     public bool RightToLeft { get; set; }
 
-    /// <summary>
-    ///     If true DarkTheme is used. LightTheme otherwise
-    /// </summary>
-    public bool IsDarkMode { get; set; }
-
-    public string PrimaryColor { get; set; } = "#0f172a";
-    public string DarkPrimaryColor { get; set; } = "#fafafa";
-    public string PrimaryDarken => AdjustBrightness(PrimaryColor, 0.8);
-    public string PrimaryLighten => AdjustBrightness(PrimaryColor, 0.7);
-    public string SecondaryColor { get; set; } = "#ff4081ff";
+    // Default assignments
+    public string PrimaryColor { get; set; } = PrimaryColors[0];
+    public string DarkPrimaryColor { get; set; } = DarkPrimaryColors[0];
     public double BorderRadius { get; set; } = 4;
-    public double DefaultFontSize { get; set; } = 0.8125;
-    public double LineHeight => Math.Min(1.7, Math.Max(1.3, 1.43 * (DefaultFontSize / 0.875)));
-    public double LetterSpacing => 0.00938 * (DefaultFontSize / 0.875);
-
-    public double H6FontSize => DefaultFontSize + 0.185;
-    public double H5FontSize => DefaultFontSize + 0.435;
-    public double Body1FontSize => DefaultFontSize;
-    public double Body1LineHeight => LineHeight;
-    public double Body1LetterSpacing => LetterSpacing;
-    public double Body2FontSize => DefaultFontSize - 0.0625;
-    public double Body2LineHeight => LineHeight;
-    public double Body2LetterSpacing => LetterSpacing;
-    public double ButtonFontSize => DefaultFontSize;
-    public double ButtonLineHeight => Math.Min(2.15, Math.Max(1.5, 1.75 * (DefaultFontSize / 0.875)));
-    public double CaptionFontSize => DefaultFontSize - 0.1875;
-    public double CaptionLineHeight => Math.Min(1.8, Math.Max(1.3, 1.4 * (DefaultFontSize / 0.625)));
-    public double OverlineFontSize => DefaultFontSize - 0.1875;
-    public double OverlineLineHeight => Math.Min(2.0, Math.Max(1.5, 1.6 * (DefaultFontSize / 0.625)));
-    public double Subtitle1FontSize => DefaultFontSize + 0.125;
-    public double Subtitle2FontSize => DefaultFontSize - 0.0625;
+    public double DefaultFontSize { get; set; } = 15;
     public DarkLightMode DarkLightTheme { get; set; }
 
-    private string AdjustBrightness(string hexColor, double factor)
+    /// <summary>
+    /// Static map defining the interaction states (Contrast, Darken, Lighten) for each primary color.
+    /// </summary>
+    private static readonly Dictionary<string, ColorConfig> ColorMap = new()
     {
-        if (string.IsNullOrWhiteSpace(hexColor))
-            throw new ArgumentException("Color code cannot be null or empty.", nameof(hexColor));
+        // ----------------------------------------------------------------------
+        // Light Mode Mappings (Base: 600 series -> Darken: 700 series, Lighten: 500 series)
+        // Note: White text (#ffffff) is used for all 600-series colors.
+        // ----------------------------------------------------------------------
+        
+        // Slate-900 -> D: Slate-950, L: Slate-800
+        { "#0f172a", new ColorConfig("#ffffff", "#020617", "#1e293b") }, 
+        
+        // Blue-600 -> D: Blue-700, L: Blue-500
+        { "#2563eb", new ColorConfig("#ffffff", "#1d4ed8", "#3b82f6") }, 
+        
+        // Violet-600 -> D: Violet-700, L: Violet-500
+        { "#7c3aed", new ColorConfig("#ffffff", "#6d28d9", "#8b5cf6") }, 
+        
+        // Emerald-600 -> D: Emerald-700, L: Emerald-500
+        { "#059669", new ColorConfig("#ffffff", "#047857", "#10b981") }, 
+        
+        // Orange-600 -> D: Orange-700, L: Orange-500
+        { "#ea580c", new ColorConfig("#ffffff", "#c2410c", "#f97316") }, 
+        
+        // Rose-600 -> D: Rose-700, L: Rose-500
+        { "#e11d48", new ColorConfig("#ffffff", "#be123c", "#f43f5e") }, 
 
-        // 使用 ColorTranslator 解析十六进制颜色
-        var color = ColorTranslator.FromHtml(hexColor);
 
-        // 将 RGB 转换为 HSL
-        double h, s, l;
-        ColorToHsl(color, out h, out s, out l);
+        // ----------------------------------------------------------------------
+        // Dark Mode Mappings (Base: 500 series/White -> Darken: 600 series/Gray, Lighten: 400 series/White)
+        // ----------------------------------------------------------------------
 
-        // 调整亮度
-        l = Math.Clamp(l * factor, 0.0, 1.0);
+        // Zinc-50 (White) -> D: Zinc-200, L: Pure White. *Contrast Text is Black*.
+        { "#fafafa", new ColorConfig("#020817", "#e4e4e7", "#ffffff") }, 
+        
+        // Blue-500 -> D: Blue-600, L: Blue-400
+        { "#3b82f6", new ColorConfig("#ffffff", "#2563eb", "#60a5fa") }, 
+        
+        // Violet-500 -> D: Violet-600, L: Violet-400
+        { "#8b5cf6", new ColorConfig("#ffffff", "#7c3aed", "#a78bfa") }, 
+        
+        // Emerald-500 -> D: Emerald-600, L: Emerald-400
+        { "#10b981", new ColorConfig("#ffffff", "#059669", "#34d399") }, 
+        
+        // Orange-500 -> D: Orange-600, L: Orange-400
+        { "#f97316", new ColorConfig("#ffffff", "#ea580c", "#fb923c") }, 
+        
+        // Rose-500 -> D: Rose-600, L: Rose-400
+        { "#f43f5e", new ColorConfig("#ffffff", "#e11d48", "#fb7185") }
+    };
 
-        // 将 HSL 转换回 Color
-        var adjustedColor = HslToColor(h, s, l);
 
-        // 返回十六进制表示
-        return ColorTranslator.ToHtml(adjustedColor);
-    }
 
-    private void ColorToHsl(System.Drawing.Color color, out double h, out double s, out double l)
+    // -------------------------------------------------------------------------
+    // Optimized Color Logic
+    // -------------------------------------------------------------------------
+
+    public string PrimaryDarken
     {
-        // 归一化 RGB 值到 0-1
-        double r = color.R / 255.0;
-        double g = color.G / 255.0;
-        double b = color.B / 255.0;
-
-        double max = Math.Max(r, Math.Max(g, b));
-        double min = Math.Min(r, Math.Min(g, b));
-
-        h = s = l = (max + min) / 2.0;
-
-        if (max == min)
+        get
         {
-            // 无色相
-            h = s = 0.0;
-        }
-        else
-        {
-            double delta = max - min;
-            s = l > 0.5 ? delta / (2.0 - max - min) : delta / (max + min);
-
-            if (max == r)
-                h = (g - b) / delta + (g < b ? 6.0 : 0.0);
-            else if (max == g)
-                h = (b - r) / delta + 2.0;
-            else
-                h = (r - g) / delta + 4.0;
-
-            h /= 6.0;
-        }
-    }
-
-    private System.Drawing.Color HslToColor(double h, double s, double l)
-    {
-        double r, g, b;
-
-        if (s == 0.0)
-        {
-            // 灰色
-            r = g = b = l;
-        }
-        else
-        {
-            Func<double, double, double, double> hue2rgb = (p, q, t) =>
+            var currentColor = IsDarkMode ? DarkPrimaryColor : PrimaryColor;
+            if (ColorMap.TryGetValue(currentColor, out var config))
             {
-                if (t < 0.0) t += 1.0;
-                if (t > 1.0) t -= 1.0;
-                if (t < 1.0 / 6.0) return p + (q - p) * 6.0 * t;
-                if (t < 1.0 / 2.0) return q;
-                if (t < 2.0 / 3.0) return p + (q - p) * (2.0 / 3.0 - t) * 6.0;
-                return p;
-            };
-
-            double q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;
-            double p = 2.0 * l - q;
-
-            r = hue2rgb(p, q, h + 1.0 / 3.0);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1.0 / 3.0);
+                return config.Darken;
+            }
+            return (currentColor == "#fafafa" || currentColor == "#ffffff") ? "#e4e4e7" : currentColor;
         }
-
-        // 将归一化的值转换回 0-255 并创建 Color 对象
-        return System.Drawing.Color.FromArgb(
-            (int)Math.Round(r * 255.0),
-            (int)Math.Round(g * 255.0),
-            (int)Math.Round(b * 255.0)
-        );
     }
-}
+    public string PrimaryLighten
+    {
+        get
+        {
+            var currentColor = IsDarkMode ? DarkPrimaryColor : PrimaryColor;
+            if (ColorMap.TryGetValue(currentColor, out var config))
+            {
+                return config.Lighten;
+            }
+            return (currentColor == "#fafafa" || currentColor == "#ffffff") ? "#ffffff" : currentColor;
+        }
+    }
+    public string PrimaryContrastText
+    {
+        get
+        {
+            var currentColor = IsDarkMode ? DarkPrimaryColor : PrimaryColor;
+            if (ColorMap.TryGetValue(currentColor, out var config))
+            {
+                return config.ContrastText;
+            }
+            return currentColor == "#fafafa" || currentColor == "#ffffff" ? "#020817" : "#ffffff";
+        }
+    }
 
+    /// <summary>
+    /// Configuration record for color states.
+    /// </summary>
+    /// <param name="ContrastText">The text color to use on top of the primary color.</param>
+    /// <param name="Darken">The darker shade for hover states.</param>
+    /// <param name="Lighten">The lighter shade for ripple/active states.</param>
+    private record ColorConfig(string ContrastText, string Darken, string Lighten);
+}
 public enum DarkLightMode
 {
     System = 0,

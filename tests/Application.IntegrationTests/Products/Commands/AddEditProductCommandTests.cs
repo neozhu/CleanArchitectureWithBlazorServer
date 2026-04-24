@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 using CleanArchitecture.Blazor.Domain.Entities;

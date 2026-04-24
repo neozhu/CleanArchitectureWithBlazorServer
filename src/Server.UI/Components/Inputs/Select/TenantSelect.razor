@@ -1,0 +1,132 @@
+﻿@using System.Linq.Expressions
+@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using CleanArchitecture.Blazor.Application.Common.Interfaces
+@using Microsoft.AspNetCore.Components
+@using MudBlazor
+
+<MudSelect T="TenantDto"
+		   For="For"
+		   Value="@Value"
+		   ValueChanged="@ValueChanged"
+		   SelectedValues="@SelectedValues"
+           SelectedValuesChanged="@SelectedValuesChanged"
+		   ToStringFunc="@(ToStringFunc ?? (x => x?.Name))"
+		   Label="@Label"
+		   Placeholder="@Placeholder"
+		   Dense="@Dense"
+		   Required="@Required"
+		   RequiredError="@RequiredError"
+		   MultiSelection="@MultiSelection"
+		   Disabled="@Disabled"
+		   Variant="@Variant"
+		   Class="@Class"
+		   HelperText="@HelperText"
+		   Clearable="@Clearable"
+		   @attributes="FilteredAttributes">
+
+	@if (_loading)
+	{
+		<MudSelectItem Disabled="true" Value="default(TenantDto)">@LoadingText</MudSelectItem>
+	}
+	else
+	{
+		@foreach (var tenant in TenantsService.DataSource)
+		{
+			<MudSelectItem T="TenantDto" Value="tenant">@tenant.Name</MudSelectItem>
+		}
+	}
+</MudSelect>
+
+@code {
+	// Service that provides tenant data and notifies changes
+	[Inject] public IDataSourceService<TenantDto> TenantsService { get; set; } = default!;
+
+	// Selected value (supports @bind-Value)
+	[Parameter] public TenantDto? Value { get; set; }
+
+	// Value change callback (supports @bind-Value)
+	[Parameter] public EventCallback<TenantDto?> ValueChanged { get; set; }
+
+	// Expression used by MudBlazor for validation / field identification.
+	// IMPORTANT: Must be Expression<Func<T>> (NOT Func<T>), otherwise MudSelect will throw at runtime.
+	[Parameter] public Expression<Func<TenantDto?>>? For { get; set; }
+
+	// Common MudSelect parameters you used previously
+	[Parameter] public string? Label { get; set; }
+	[Parameter] public string? Placeholder { get; set; }
+	[Parameter] public bool Dense { get; set; } = true;
+	[Parameter] public bool Required { get; set; }
+	[Parameter] public string? RequiredError { get; set; }
+	[Parameter] public bool Disabled { get; set; }
+	[Parameter] public Variant Variant { get; set; } = Variant.Text;
+	[Parameter] public string? Class { get; set; }
+	[Parameter] public string? HelperText { get; set; }
+	[Parameter] public bool Clearable { get; set; } = false;
+
+	[Parameter] public bool MultiSelection { get; set; } = false;
+	[Parameter] public IReadOnlyCollection<TenantDto> SelectedValues { get; set; } = new HashSet<TenantDto>();
+    [Parameter] public EventCallback<IReadOnlyCollection<TenantDto>> SelectedValuesChanged { get; set; }
+	[Parameter] public Func<TenantDto, string>? ToStringFunc { get; set; }
+	// Allows passing through additional MudSelect parameters without expanding this wrapper API.
+	// Example: AnchorOrigin, TransformOrigin, MaxHeight, DisableUnderLine, etc.
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object?>? UserAttributes { get; set; }
+
+	// Loading state
+	[Parameter] public string LoadingText { get; set; } = "Loading...";
+	private bool _loading = true;
+
+	// Prevent UI updates after the component is disposed
+	private bool _disposed;
+
+	// Filter out "For" from unmatched attributes to avoid:
+	// 1) duplicate parameter assignment (explicit For + forwarded For)
+	// 2) invalid type assignment (Func<T> forwarded into Expression<Func<T>>)
+	private IReadOnlyDictionary<string, object?>? FilteredAttributes
+		=> UserAttributes is null
+			? null
+			: new Dictionary<string, object?>(
+				UserAttributes.Where(kv => !string.Equals(kv.Key, "For", StringComparison.Ordinal)));
+
+	protected override async Task OnInitializedAsync()
+	{
+		// Subscribe to datasource updates
+		TenantsService.OnChange += TenantsService_OnChange;
+
+		// Initialize datasource as early as possible (no need to wait for first render)
+		await InitializeTenantsAsync();
+	}
+
+	private async Task InitializeTenantsAsync()
+	{
+		try
+		{
+			_loading = true;
+			await TenantsService.InitializeAsync();
+		}
+		finally
+		{
+			_loading = false;
+
+			// Use InvokeAsync to marshal back onto the renderer synchronization context
+			if (!_disposed)
+				await InvokeAsync(StateHasChanged);
+		}
+	}
+
+	private async Task TenantsService_OnChange()
+	{
+		// Defensive: the service might fire after the component is disposed
+		if (_disposed) return;
+
+		_loading = false;
+		await InvokeAsync(StateHasChanged);
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		_disposed = true;
+		TenantsService.OnChange -= TenantsService_OnChange;
+		await ValueTask.CompletedTask;
+	}
+}

@@ -1,14 +1,16 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications;
+using System.ComponentModel.DataAnnotations;
+
+namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications;
 
 public enum PickListView
 {
-    [Description("All")]
+    [Display(Name = "All", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))]
     All,
-    [Description("My")]
+    [Display(Name =  "Created_by_me", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))]
     My,
-    [Description("Created Toady")]
+    [Display(Name = "Created_today", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))]
     TODAY,
-    [Description("Created within the last 30 days")]
+    [Display(Name = "Created_in_the_last_30_days", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))]
     LAST_30_DAYS
 }
 public class PicklistSetAdvancedFilter : PaginationFilter

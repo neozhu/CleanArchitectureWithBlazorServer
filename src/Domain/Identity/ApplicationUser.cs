@@ -1,11 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Domain.Common.Entities;
-
 namespace CleanArchitecture.Blazor.Domain.Identity;
 
-public class ApplicationUser : IdentityUser, IAuditableEntity
+public class ApplicationUser : IdentityUser
 {
     public ApplicationUser()
     {
@@ -13,6 +11,7 @@ public class ApplicationUser : IdentityUser, IAuditableEntity
         UserRoles = new HashSet<ApplicationUserRole>();
         Logins = new HashSet<ApplicationUserLogin>();
         Tokens = new HashSet<ApplicationUserToken>();
+        TenantUsers = new HashSet<TenantUser>();
     }
 
     public string? DisplayName { get; set; }
@@ -30,16 +29,11 @@ public class ApplicationUser : IdentityUser, IAuditableEntity
     public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
     public virtual ICollection<ApplicationUserLogin> Logins { get; set; }
     public virtual ICollection<ApplicationUserToken> Tokens { get; set; }
-
+    public ICollection<TenantUser> TenantUsers { get; set; } 
     public string? SuperiorId { get; set; } = null;
     public ApplicationUser? Superior { get; set; } = null;
-    public DateTime? Created { get; set; }
-    public string? CreatedBy { get; set; }
-    public ApplicationUser? CreatedByUser { get; set; } = null;
-    public DateTime? LastModified { get; set; }
-    public string? LastModifiedBy { get; set; }
-    public ApplicationUser? LastModifiedByUser { get; set; } = null;
-
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? LastModifiedAt { get; set; }
     public string? TimeZoneId { get; set; }
     public string? LanguageCode { get; set; }
 }

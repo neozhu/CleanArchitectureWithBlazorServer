@@ -3,7 +3,7 @@
 
 @inject IOptions<RequestLocalizationOptions> LocalizationOptions
 @inject LayoutService LayoutService
-@inject IStringLocalizer<HeaderMenu> L
+@inject IUserProfileState UserProfileState
 <MudTooltip Text="@CurrentLanguage">
     <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Class="mx-1" Icon="@Icons.Material.Outlined.Translate" Color="Color.Default" Dense="true">
         @if (SupportedLanguages is not null)
@@ -12,7 +12,7 @@
             {
                 if (language.Name == CurrentLanguage)
                 {
-                    <MudMenuItem style="background:var(--mud-palette-primary); color:white">@language.DisplayName</MudMenuItem>
+                    <MudMenuItem Icon="@Icons.Material.Filled.Check">@language.DisplayName</MudMenuItem>
                 }
                 else
                 {
@@ -38,6 +38,8 @@
     private async Task ChangeLanguageAsync(string languageCode)
     {
         CurrentLanguage = languageCode;
+        // Persist to current user profile if available
+        await UserProfileState.UpdateAsync(profile => profile with { LanguageCode = languageCode });
         Navigation.NavigateTo(Navigation.BaseUri + "?culture=" + languageCode, true);
 
         if (new CultureInfo(languageCode).TextInfo.IsRightToLeft)
@@ -45,6 +47,6 @@
         else
             await LayoutService.SetLeftToRight();
 
-        await Task.CompletedTask;
+       
     }
 }

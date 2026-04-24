@@ -1,0 +1,129 @@
+﻿@layout MainLayout
+@inherits LayoutComponentBase
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+
+@inject LayoutService LayoutService
+@implements IDisposable
+<MudLayout>
+    <AuthorizeView>
+        <NotAuthorized>
+            <RedirectToLogin/>
+        </NotAuthorized>
+        <Authorized>
+            <HeaderMenu NavigationMenuDrawerOpen="_navigationMenuDrawerOpen"
+                        OpenSearchDialog="OpenSearchDialog"
+                        IsDarkMode="@LayoutService.IsDarkMode"
+                        ToggleNavigationMenuDrawer="ToggleNavigationMenuDrawer"
+                        RightToLeft="@LayoutService.IsRTL"
+                        RightToLeftToggle="LayoutService.ToggleRightToLeft"
+                        OnSettingClick="@(() => themeSettings?.OpenSetting())" />
+            <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@(UserProfileState.Value.AssignedRoles??[])"
+                            DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler"
+                            OnSettingClick="@(() => themeSettings?.OpenSetting())"/>
+            <ThemesMenu @ref="themeSettings" UserPreferences="@LayoutService.UserPreferences"
+                        UserPreferencesChanged="LayoutService.UpdateUserPreferences"/>
+           
+            <MudMainContent>
+                <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4 mt-4">
+                    <ErrorBoundary @ref="ErrorBoundary">
+                        <ChildContent>
+                                @Body
+                        </ChildContent>
+                        <ErrorContent Context="exception">
+                            <CustomError Exception="exception"></CustomError>
+                        </ErrorContent>
+                    </ErrorBoundary>
+                </MudContainer>
+            </MudMainContent>
+          
+            <UserLoginState />
+        </Authorized>
+    </AuthorizeView>
+</MudLayout>
+
+
+@code
+{
+	private bool _commandPaletteOpen;
+	private bool _navigationMenuDrawerOpen = true;
+	private bool _themingDrawerOpen;
+	private ErrorBoundary? ErrorBoundary { set; get; }
+	private ThemesMenu? themeSettings { set; get; }
+	[CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+
+	protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState;
+        UserProfileState.Changed += OnUserProfileChanged;
+        
+        var userId = state.User.GetUserId();
+        if (state.User.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(userId))
+        {
+            await UserProfileState.EnsureInitializedAsync(userId);
+        }
+    }
+
+    public void Dispose()
+    {
+        UserProfileState.Changed -= OnUserProfileChanged;
+    }
+    
+    protected override void OnParametersSet()
+    {
+        ResetBoundary();
+    }
+    
+    private void OnUserProfileChanged(object? sender, UserProfile userProfile)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+    
+    private void ResetBoundary()
+    {
+        // On each page navigation, reset any error state
+        ErrorBoundary?.Recover();
+    }
+
+    protected void NavigationMenuDrawerOpenChangedHandler(bool state)
+    {
+        _navigationMenuDrawerOpen = state;
+    }
+
+    protected void ThemingDrawerOpenChangedHandler(bool state)
+    {
+        _themingDrawerOpen = state;
+    }
+
+    protected void ToggleNavigationMenuDrawer()
+    {
+        _navigationMenuDrawerOpen = !_navigationMenuDrawerOpen;
+    }
+
+    private async Task OpenSearchDialog()
+    {
+        if (!_commandPaletteOpen)
+        {
+            var options = new DialogOptions
+            {
+                NoHeader = true,
+                MaxWidth = MaxWidth.Medium,
+                FullWidth = true
+            };
+
+			_commandPaletteOpen = true;
+			try
+			{
+				await DialogServiceHelper.ShowDialogAsync<SearchDialog>(
+					"",
+					_ => Task.CompletedTask,
+					configureParameters: null,
+					options: options,
+					onCancel: () => Task.CompletedTask);
+			}
+			finally
+			{
+				_commandPaletteOpen = false;
+			}
+        }
+    }
+}

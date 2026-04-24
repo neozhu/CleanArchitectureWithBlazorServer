@@ -1,0 +1,20 @@
+﻿@code {
+    protected override void OnInitialized()
+    {
+        try
+        {
+            var uri = new Uri(Navigation.Uri);
+            var returnUrl = uri.PathAndQuery.TrimStart('/');
+
+            // Use forceLoad: true to perform a full page reload
+            // This avoids JavaScript interop issues with SignalR connections
+            Navigation.NavigateTo($"/account/login?returnUrl={returnUrl}", forceLoad: true);
+        }
+        catch (Exception)
+        {
+            // If navigation fails, try without return URL
+            Navigation.NavigateTo("/account/login", forceLoad: true);
+        }
+    }
+}
+

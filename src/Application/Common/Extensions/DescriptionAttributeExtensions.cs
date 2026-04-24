@@ -1,31 +1,39 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Extensions;
+using System.ComponentModel.DataAnnotations;
+
+namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
 public static class DescriptionAttributeExtensions
 {
-    public static string GetDescription(this Enum e)
-    {
-        var name = e.ToString();
-        var memberInfo = e.GetType().GetMember(name)[0];
-        var descriptionAttributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
-        if (descriptionAttributes.Any()) return ((DescriptionAttribute)descriptionAttributes.First()).Description;
-        return name;
-    }
-
-    public static string GetMemberDescription<T, TProperty>(this T t, Expression<Func<T, TProperty>> property)
+    
+    
+    public static string GetMemberDisplayName<T, TProperty>(this T t, Expression<Func<T, TProperty>> property)
         where T : class
     {
-        if (t is null) t = Activator.CreateInstance<T>();
-        var memberName = ((MemberExpression)property.Body).Member.Name;
-        var memberInfo = typeof(T).GetMember(memberName).FirstOrDefault();
-        if (memberInfo != null)
+        MemberExpression memberExpression = null;
+        if (property.Body is MemberExpression me)
         {
-            var descriptionAttributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
-            if (descriptionAttributes.Any()) return ((DescriptionAttribute)descriptionAttributes.First()).Description;
+            memberExpression = me;
+        }
+        else if (property.Body is UnaryExpression ue)
+        {
+           
+            memberExpression = ue.Operand as MemberExpression;
         }
 
-        return memberName;
-    }
+        if (memberExpression == null) return null;
 
+        var memberInfo = memberExpression.Member;
+
+        
+        var displayAttribute = memberInfo.GetCustomAttribute<DisplayAttribute>(false);
+
+        if (displayAttribute != null)
+        {
+           
+            return displayAttribute.GetName();
+        }
+        return memberInfo.Name;
+    }
     public static string GetClassDescription<T>(this T t) where T : class
     {
         if (t is null) t = (T)Activator.CreateInstance(typeof(T))!;

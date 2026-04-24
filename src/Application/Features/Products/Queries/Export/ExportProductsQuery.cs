@@ -2,9 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
+using Mapster;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.Mappers;
 using CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
@@ -18,22 +17,22 @@ public class ExportProductsQuery : ProductAdvancedFilter, IRequest<Result<byte[]
 public class ExportProductsQueryHandler :
     IRequestHandler<ExportProductsQuery, Result<byte[]>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly TypeAdapterConfig _typeAdapterConfig;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ExportProductsQueryHandler> _localizer;
     private readonly IPDFService _pdfService;
-    private readonly ISerializer _serializer;
 
     public ExportProductsQueryHandler(
-        IApplicationDbContext context,
-        ISerializer serializer,
+        IApplicationDbContextFactory dbContextFactory,
+        TypeAdapterConfig typeAdapterConfig,
         IExcelService excelService,
         IPDFService pdfService,
         IStringLocalizer<ExportProductsQueryHandler> localizer
     )
     {
-        _context = context;
-        _serializer = serializer;
+        _dbContextFactory = dbContextFactory;
+        _typeAdapterConfig = typeAdapterConfig;
         _excelService = excelService;
         _pdfService = pdfService;
         _localizer = localizer;
@@ -41,18 +40,19 @@ public class ExportProductsQueryHandler :
 #nullable disable warnings
     public async ValueTask<Result<byte[]>> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products.ApplySpecification(request.Specification)
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Products.ApplySpecification(request.Specification)
             .AsNoTracking()
-            .ProjectTo()
+            .ProjectToType<ProductDto>(_typeAdapterConfig)
             .ToListAsync(cancellationToken);
 
 
         byte[] result;
-        Dictionary<string, Func<ProductDto, object?>> mappers;
+        Dictionary<string, Func<ProductDto, object?>> typeAdapterConfigs;
         switch (request.ExportType)
         {
             case ExportType.PDF:
-                mappers = new Dictionary<string, Func<ProductDto, object?>>
+                typeAdapterConfigs = new Dictionary<string, Func<ProductDto, object?>>
                 {
                     { _localizer["Brand Name"], item => item.Brand },
                     { _localizer["Product Name"], item => item.Name },
@@ -61,19 +61,19 @@ public class ExportProductsQueryHandler :
                     { _localizer["Unit"], item => item.Unit }
                     //{ _localizer["Pictures"], item => string.Join(",",item.Pictures??new string[]{ }) },
                 };
-                result = await _pdfService.ExportAsync(data, mappers, _localizer["Products"], true);
+                result = await _pdfService.ExportAsync(data, typeAdapterConfigs, _localizer["Products"], true);
                 break;
             default:
-                mappers = new Dictionary<string, Func<ProductDto, object?>>
+                typeAdapterConfigs = new Dictionary<string, Func<ProductDto, object?>>
                 {
                     { _localizer["Brand Name"], item => item.Brand },
                     { _localizer["Product Name"], item => item.Name },
                     { _localizer["Description"], item => item.Description },
                     { _localizer["Price of unit"], item => item.Price },
                     { _localizer["Unit"], item => item.Unit },
-                    { _localizer["Pictures"], item => _serializer.Serialize(item.Pictures) }
+                    { _localizer["Pictures"], item => JsonSerializer.Serialize(item.Pictures) }
                 };
-                result = await _excelService.ExportAsync(data, mappers, _localizer["Products"]);
+                result = await _excelService.ExportAsync(data, typeAdapterConfigs, _localizer["Products"]);
                 break;
         }
 

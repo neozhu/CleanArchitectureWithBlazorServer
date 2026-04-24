@@ -19,7 +19,7 @@ public interface IUserPreferencesService
     ///     Loads UserPreference in local storage
     /// </summary>
     /// <returns>UserPreference object. Null when no settings were found.</returns>
-    public Task<UserPreference> LoadUserPreferences();
+    public Task<UserPreference> LoadUserPreferences(bool defaultDarkMode);
 }
 
 public class UserPreferencesService : IUserPreferencesService
@@ -34,20 +34,20 @@ public class UserPreferencesService : IUserPreferencesService
 
     public async Task SaveUserPreferences(UserPreference userPreferences)
     {
-        await _localStorage.SetAsync(Key, userPreferences).ConfigureAwait(false);
+        await _localStorage.SetAsync(Key, userPreferences);
     }
 
-    public async Task<UserPreference> LoadUserPreferences()
+    public async Task<UserPreference> LoadUserPreferences(bool defaultDarkMode)
     {
         try
         {
-            var result = await _localStorage.GetAsync<UserPreference>(Key).ConfigureAwait(false);
+            var result = await _localStorage.GetAsync<UserPreference>(Key);
             if (result.Success && result.Value is not null) return result.Value;
-            return new UserPreference();
+            return new UserPreference() { IsDarkMode= defaultDarkMode };
         }
         catch (CryptographicException)
         {
-            await _localStorage.DeleteAsync(Key).ConfigureAwait(false);
+            await _localStorage.DeleteAsync(Key);
             return new UserPreference();
         }
         catch (Exception)

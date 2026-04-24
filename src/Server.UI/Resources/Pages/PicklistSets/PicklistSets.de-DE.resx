@@ -123,13 +123,22 @@
   <data name="Description" xml:space="preserve">
     <value>Beschreibung</value>
   </data>
+  <data name="Enter description" xml:space="preserve">
+    <value>Beschreibung eingeben</value>
+  </data>
+  <data name="Enter text" xml:space="preserve">
+    <value>Text eingeben</value>
+  </data>
+  <data name="Enter value" xml:space="preserve">
+    <value>Wert eingeben</value>
+  </data>
   <data name="Id" xml:space="preserve">
     <value>ID</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="Name is required!" xml:space="preserve">
+  <data name="Name is required." xml:space="preserve">
     <value>Name ist erforderlich!</value>
   </data>
   <data name="Picklist" xml:space="preserve">
@@ -137,6 +146,9 @@
   </data>
   <data name="Picklist Set" xml:space="preserve">
     <value>Auswahllistensatz</value>
+  </data>
+  <data name="Select picklist name" xml:space="preserve">
+    <value>Picklistenname auswählen</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Suche</value>
@@ -147,13 +159,22 @@
   <data name="Text" xml:space="preserve">
     <value>Text</value>
   </data>
-  <data name="Text is required!" xml:space="preserve">
+  <data name="Text is required." xml:space="preserve">
     <value>Text ist erforderlich!</value>
   </data>
   <data name="Value" xml:space="preserve">
     <value>Wert</value>
   </data>
-  <data name="Value is required!" xml:space="preserve">
+  <data name="Value is required." xml:space="preserve">
     <value>Wert ist erforderlich!</value>
+  </data>
+  <data name="No Picklist Items Found" xml:space="preserve">
+    <value>Keine Auswahllisten-Elemente gefunden</value>
+  </data>
+  <data name="Try adjusting your search or filter to find what you're looking for." xml:space="preserve">
+    <value>Passen Sie Ihre Suche oder Filter an, um die gewünschten Ergebnisse zu finden.</value>
+  </data>
+  <data name="Loading Picklist Items..." xml:space="preserve">
+    <value>Auswahllisten-Elemente werden geladen...</value>
   </data>
 </root>

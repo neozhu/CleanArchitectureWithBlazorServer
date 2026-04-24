@@ -1,0 +1,60 @@
+﻿@inherits LayoutComponentBase
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
+@using CleanArchitecture.Blazor.Server.UI.Themes
+@implements IDisposable
+@inject LayoutService LayoutService
+<PageTitle>@ApplicationSettings.AppName</PageTitle>
+<MudRTLProvider RightToLeft="@LayoutService.IsRTL">
+    <MudPopoverProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+    <MudThemeProvider @ref="@_mudThemeProvider" Theme="@LayoutService.CurrentTheme" IsDarkMode="@LayoutService.IsDarkMode"  />
+    @Body
+</MudRTLProvider>
+
+@code
+{
+    private MudThemeProvider _mudThemeProvider = null!;
+    private bool _defaultDarkMode;
+    public void Dispose()
+    {
+        LayoutService.MajorUpdateOccurred -= LayoutServiceOnMajorUpdateOccurred;
+        GC.SuppressFinalize(this);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await ApplyUserPreferences();
+            StateHasChanged();
+        }
+    }
+
+    private async Task ApplyUserPreferences()
+    {
+        _defaultDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+        await LayoutService.ApplyUserPreferences(_defaultDarkMode);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LayoutService.MajorUpdateOccurred += LayoutServiceOnMajorUpdateOccurred;
+        await  LayoutService.SetBaseTheme(Theme.ApplicationTheme());
+         
+    }
+
+    private async Task LayoutServiceOnMajorUpdateOccurred()
+    {
+      
+        if (LayoutService.DarkModeToggle == Services.UserPreferences.DarkLightMode.System && _mudThemeProvider!=null)
+        {
+            _defaultDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+            await LayoutService.ApplyUserPreferences(_defaultDarkMode);
+            
+        }
+       await InvokeAsync(()=> StateHasChanged());
+    }
+
+}

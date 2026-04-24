@@ -1,60 +1,94 @@
-﻿@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
-@inherits MudComponentBase
-@inject IStringLocalizer<Roles> L
-@inject ITenantService TenantsService
+﻿@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using System.ComponentModel.DataAnnotations
+@using CleanArchitecture.Blazor.Server.UI.Resources.ValidationMessages
+@using CleanArchitecture.Blazor.Domain.Identity
+@inherits OwningComponentBase
+@inject IStringLocalizer<Identity.Roles.Roles> L
+
 <MudDialog>
     <DialogContent>
-        <MudForm Model="Model" @ref="_form">
+        <EditForm EditContext="@_editContext">
+            <DataAnnotationsValidator />
             <MudGrid>
-                <MudItem sm="6" xs="12">
-                    <MudSelect For="@(() => Model.TenantId)"
-                               T="string"
-                               Label="@L["Select Tenant"]"
-                               Required="true"
-                               @bind-Value="@Model.TenantId">
-                        @foreach (var item in TenantsService.DataSource)
-                        {
-                            <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudItem>
-                <MudItem sm="6" xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Name)]" @bind-Value="Model.Name"
-                                  Required="true"
-                                  For="@(() => Model.Name)"
-                                  RequiredError="@L["DefaultRole name is required!"]"
-                                  MaxLength="50">
+                
+                <MudItem xs="12">
+                    <MudTextField Label="@L[Model.GetMemberDisplayName(x => x.Name)]" 
+                                 @bind-Value="Model.Name"
+                                 Placeholder="@L["Enter role name"]"
+                                 Required="true"
+                                 For="@(() => Model.Name)"
+                                 RequiredError="@L["Role name is required."]"
+                                 MaxLength="50"
+                                 Immediate="true">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Description)]"
-                                  For="@(() => Model.Description)"
-                                  MaxLength="255"
-                                  @bind-Value="Model.Description">
+                    <MudTextField Label="@L[Model.GetMemberDisplayName(x => x.Description)]"
+                                 For="@(() => Model.Description)"
+                                 MaxLength="255"
+                                 Placeholder="@L["Enter description for this role"]"
+                                 @bind-Value="Model.Description">
                     </MudTextField>
                 </MudItem>
             </MudGrid>
-        </MudForm>
+        </EditForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">@ConstantString.Ok</MudButton>
+        <MudButton OnClick="Cancel" >@AppStrings.Cancel</MudButton>
+        <MudButton OnClick="Submit">
+            @AppStrings.Save
+        </MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public ApplicationRoleDto Model { get; set; } = default!;
-
-    private MudForm? _form;
+    [EditorRequired][Parameter] public InputModel Model { get; set; } = default!;
+    private RoleManager<ApplicationRole> _roleManager = null!;
+    private EditContext _editContext = default!;
+    protected override async Task OnInitializedAsync()
+    {
+        _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+    }
+    protected override void OnParametersSet()
+        => _editContext = new EditContext(Model);
 
     private async Task Submit()
     {
-        await _form!.ValidateAsync();
-        if (_form!.IsValid)
+        if (_editContext.Validate())
         {
+            var existingRole = await _roleManager.FindByIdAsync(Model.Id);
+            if (existingRole is not null)
+            {
+                existingRole.Description = Model.Description;
+                existingRole.Name = Model.Name;
+                existingRole.LastModifiedAt = DateTime.UtcNow;
+                var result = await _roleManager.UpdateAsync(existingRole);
+                if (!result.Succeeded)
+                {
+                    Snackbar.Add(string.Join(", ", result.Errors.Select(e => e.Description)), Severity.Error);
+                    return;
+                }
+            }
+            else
+            {
+                var newRole = new ApplicationRole
+                {
+                    Id = Model.Id,
+                    Name = Model.Name,
+                    Description = Model.Description,
+                    CreatedAt = DateTime.UtcNow
+                };
+                var result= await _roleManager.CreateAsync(newRole);
+                if (!result.Succeeded)
+                {
+                    Snackbar.Add(string.Join(", ", result.Errors.Select(e => e.Description)), Severity.Error);
+                    return;
+                }
+            }
+
             MudDialog.Close(DialogResult.Ok(true));
         }
     }
@@ -64,5 +98,27 @@
         MudDialog.Cancel();
     }
 
+    public class InputModel
+    {
+        [Display(Name = "Id")]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
+        [Display(Name = "Name")]
+        [Required(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.NameRequired))]
+        [StringLength(50, MinimumLength = 2,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.NameLength))]
+        public string Name { get; set; } = string.Empty;
+
+        [Display(Name = "Normalized Name")]
+        public string? NormalizedName { get; set; }
+
+        [Display(Name = "Description")]
+        [MaxLength(255,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public string? Description { get; set; }
+    }
 }

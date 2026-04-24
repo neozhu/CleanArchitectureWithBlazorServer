@@ -5,14 +5,17 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-12
-//     Last Modified: 2024-11-12
+//     Created Date: 2026-04-01
+//     Last Modified: 2026-04-01
 //     Description: 
 //       Defines the available views for filtering contacts and provides advanced 
 //       filtering options for contact lists. This includes pagination and various 
 //       filters such as view types and user-specific filters.
 // </auto-generated>
 //------------------------------------------------------------------------------
+#nullable enable
+#nullable disable warnings
+using System.ComponentModel.DataAnnotations;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 
@@ -22,13 +25,13 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 /// </summary>
 public enum ContactListView
 {
-    [Description("All")]
+    [Display(Name = "All", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))]
     All,
-    [Description("My")]
+    [Display(Name = "Created_by_me", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))]
     My,
-    [Description("Created Toady")]
+    [Display(Name = "Created_today", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))]
     TODAY,
-    [Description("Created within the last 30 days")]
+    [Display(Name = "Created_in_the_last_30_days", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))]
     LAST_30_DAYS
 }
 /// <summary>
@@ -36,7 +39,6 @@ public enum ContactListView
 /// </summary>
 public class ContactAdvancedFilter: PaginationFilter
 {
-    public TimeSpan LocalTimezoneOffset { get; set; }
     public ContactListView ListView { get; set; } = ContactListView.All;
     public UserProfile? CurrentUser { get; set; }
 }

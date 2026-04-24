@@ -7,7 +7,7 @@
 @using System.Buffers
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 
-@inject IUploadService UploadService
+@inject IFileUploadService UploadService
 @inject IStringLocalizer<Documents> L
 
 <MudDialog>
@@ -22,7 +22,7 @@
                             <MudText Typo="Typo.body2" Inline="false" Style="text-overflow:ellipsis;overflow: hidden;">@item.FileName</MudText>
                         </MudItem>
                         <MudItem xs="5">
-                            <MudProgressLinear Color="Color.Success" Value="@item.UploadedBytes" Max="@item.Size" Class="my-7"/>
+                            <MudProgressLinear Color="Color.Success" Value="@item.UploadedBytes" Max="@item.Size" Class="my-7" />
                         </MudItem>
                         <MudItem xs="3" Class="align-self-center justify-end">
                             <MudText Typo="Typo.body2" Style="float: right;">(@FormatBytes(item.UploadedBytes) / @FormatBytes(item.Size))</MudText>
@@ -33,33 +33,34 @@
         }
         else
         {
-            <MudAlert Severity="Severity.Info"> @L["Please click [Choose Files] button to upload your photo."]</MudAlert>
+            <MudAlert Severity="Severity.Info"> @L["Please click [Choose Files] button to upload your photo"]</MudAlert>
         }
     </DialogContent>
     <DialogActions>
 
-        <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!_uploadedFiles.Any())" OnClick="Clear">@ConstantString.Clear</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!_uploadedFiles.Any())" OnClick="Clear">@AppStrings.Clear</MudButton>
         <MudFileUpload @ref="@_fileUpload" T="IReadOnlyList<IBrowserFile>" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="LoadFiles">
             <CustomContent>
-                <MudLoadingButton Loading="@_uploading" Variant="Variant.Filled"  
-                StartIcon="@Icons.Material.Filled.AttachFile"
-                >
+                <MudLoadingButton Loading="@_uploading"
+                                  OnClick="@context.OpenFilePickerAsync"
+                                  Variant="Variant.Filled"
+                                  StartIcon="@Icons.Material.Filled.AttachFile">
                     @L["Choose files"]
                 </MudLoadingButton>
             </CustomContent>
-            <SelectedTemplate />
+            <SelectedTemplate></SelectedTemplate>
         </MudFileUpload>
 
-        <MudLoadingButton Loading="@_processing" Disabled="@(!_uploadedFiles.Any())" Variant="Variant.Filled" OnClick="Submit">@ConstantString.Submit</MudLoadingButton>
+        <MudLoadingButton Loading="@_processing" Disabled="@(!_uploadedFiles.Any())" Variant="Variant.Filled" OnClick="Submit">@AppStrings.Submit</MudLoadingButton>
 
     </DialogActions>
 </MudDialog>
 
-@code{
+@code {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public AddEditDocumentCommand Model { get; set; } = default!;
-    private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload=default!;
+    [EditorRequired][Parameter] public AddEditDocumentCommand Model { get; set; } = default!;
+    private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload = default!;
     private bool _processing;
     private bool _uploading;
     private List<FileUploadProgress> _uploadedFiles = new();
@@ -77,7 +78,7 @@
 
             // We don't want to refresh the UI too frequently,
             // So, we use a timer to update the UI every few hundred milliseconds
-            await using var timer = new Timer(_ => InvokeAsync(() => StateHasChanged()));
+            using var timer = new Timer(_ => InvokeAsync(() => StateHasChanged()));
             timer.Change(TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500));
 
             // Upload files
@@ -86,7 +87,7 @@
             {
                 foreach (var file in files)
                 {
-                    using (var stream = file.OpenReadStream(GlobalVariable.MaxAllowedSize))
+                    using (var stream = file.OpenReadStream(GlobalVariables.MaxAllowedSize))
                     {
                         while (true)
                         {
@@ -147,43 +148,42 @@
                 {
                     try
                     {
-                        var filestream = uploaded.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
-                        var imgStream = new MemoryStream();
+                        using var filestream = uploaded.File.OpenReadStream(GlobalVariables.MaxAllowedSize);
+                        using var imgStream = new MemoryStream();
                         await filestream.CopyToAsync(imgStream);
                         imgStream.Position = 0;
-                        using (var outStream = new MemoryStream())
+                        using var outStream = new MemoryStream();
+                        using (var image = Image.Load(imgStream))
                         {
-                            using (var image = Image.Load(imgStream))
+                            var scale = 0m;
+                            if (image.Width > 1600)
                             {
-                                var scale = 0m;
-                                if (image.Width > 1600)
-                                {
-                                    scale = 0.3m;
-                                }
-                                else if (image.Width <= 1600 && image.Width > 800)
-                                {
-                                    scale = 0.5m;
-                                }
-                                else
-                                {
-                                    scale = 0.9m;
-                                }
-
-                                image.Mutate(
-                                    i => i.AutoOrient().Resize(Convert.ToInt32(image.Width * scale), 0));
-                                image.Save(outStream, PngFormat.Instance);
+                                scale = 0.3m;
+                            }
+                            else if (image.Width <= 1600 && image.Width > 800)
+                            {
+                                scale = 0.5m;
+                            }
+                            else
+                            {
+                                scale = 0.9m;
                             }
 
-                            var request = new UploadRequest(uploaded.FileName, UploadType.Document, outStream.ToArray());
-                            list.Add(request);
+                            image.Mutate(
+                                i => i.AutoOrient().Resize(Convert.ToInt32(image.Width * scale), 0));
+                            image.Save(outStream, PngFormat.Instance);
                         }
+
+                        var request = new UploadRequest(uploaded.FileName, UploadType.Document, outStream.ToArray());
+                        list.Add(request);
                     }
                     catch (Exception e)
                     {
                         Snackbar.Add($"{e.Message}", Severity.Error);
                     }
                 }
-                if (list.Any()){
+                if (list.Any())
+                {
                     var uploadCommand = new UploadDocumentCommand(list);
                     await Mediator.Send(uploadCommand);
                     await Clear();
@@ -203,10 +203,10 @@
         MudDialog.Cancel();
     }
 
-    private  Task Clear()
+    private Task Clear()
     {
         _uploadedFiles.Clear();
-        return _fileUpload?.ClearAsync()??Task.CompletedTask;
+        return _fileUpload?.ClearAsync() ?? Task.CompletedTask;
     }
 
     private record FileUploadProgress(string FileName, long Size, IBrowserFile File)

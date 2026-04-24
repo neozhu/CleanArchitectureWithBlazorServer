@@ -1,0 +1,179 @@
+﻿@inject IStringLocalizer<ErrorPageComponent> L
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+
+<div style="display: flex; justify-content: center; align-items: center; min-height: @MinHeight; padding: 2rem;">
+    <MudPaper Class="pa-8 d-flex flex-column align-center justify-center" Elevation="1" Style="max-width: 500px; width: 100%; text-align: center;">
+        
+        <!-- Added: Icon Display -->
+        <MudIcon Icon="@GetErrorIcon()" 
+                 Color="@GetErrorColor()" 
+                 Style="font-size: 4rem; margin-bottom: 1rem;" />
+
+        <!-- Improved: Error Code Typography (Larger but lighter) -->
+        <MudText Typo="Typo.h2" Class="mb-2" Color="@GetErrorColor()" Style="font-weight: 700; opacity: 0.8;">
+            @ErrorCode
+        </MudText>
+        
+        <MudText Typo="Typo.h5" Class="mb-3" Color="Color.Default" Style="font-weight: 500;">
+            @Title
+        </MudText>
+        
+        <MudText Typo="Typo.body1" Class="mb-6" Color="Color.Secondary" Style="line-height: 1.6;">
+            @Description
+        </MudText>
+        
+        <MudStack Row Justify="Justify.Center" Spacing="2" Wrap="Wrap.Wrap">
+            @if (ShowRefreshButton)
+            {
+                <MudButton Variant="Variant.Filled" 
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Refresh"
+                           OnClick="OnRefresh">
+                    @L["Refresh"]
+                </MudButton>
+            }
+
+            @if (ShowHomeButton)
+            {
+                <MudButton Variant="Variant.Outlined" 
+                          StartIcon="@Icons.Material.Filled.Home"
+                          Href="/">
+                    @L["Return Home"]
+                </MudButton>
+            }
+            
+            @if (ShowBackButton)
+            {
+                <MudButton Variant="Variant.Text" 
+                          StartIcon="@Icons.Material.Filled.ArrowBack"
+                          OnClick="GoBack">
+                    @L["Go Back"]
+                </MudButton>
+            }
+            
+            @if (ShowContactButton)
+            {
+                <MudButton Variant="Variant.Text" 
+                          StartIcon="@Icons.Material.Filled.ContactSupport"
+                          OnClick="OnContactClick">
+                    @ContactButtonText
+                </MudButton>
+            }
+        </MudStack>
+        
+    </MudPaper>
+</div>
+
+@code {
+    [Parameter] public string? ErrorCode { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public string MinHeight { get; set; } = "60vh";
+    
+    // Button Visibility Controls
+    [Parameter] public bool ShowHomeButton { get; set; } = true;
+    [Parameter] public bool ShowBackButton { get; set; } = false;
+    [Parameter] public bool ShowRefreshButton { get; set; } = false;
+    [Parameter] public bool ShowContactButton { get; set; } = false;
+    
+    [Parameter] public string ContactButtonText { get; set; } = "";
+    [Parameter] public EventCallback OnContactClick { get; set; }
+    
+    [Parameter] public ErrorType Type { get; set; } = ErrorType.NotFound;
+
+    public enum ErrorType
+    {
+        NotFound,       // 404
+        AccessDenied,   // 403
+        ServerError,    // 500
+        Maintenance,    // 503
+        Custom
+    }
+
+    /// <summary>
+    /// Lifecycle method to set default values based on the ErrorType if parameters are missing.
+    /// Using OnParametersSet allows the component to update if the parameters change dynamically.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        // 1. Set Default Error Code
+        if (string.IsNullOrEmpty(ErrorCode))
+        {
+            ErrorCode = Type switch
+            {
+                ErrorType.AccessDenied => "403",
+                ErrorType.ServerError => "500",
+                ErrorType.Maintenance => "503",
+                ErrorType.NotFound => "404",
+                _ => "Error"
+            };
+        }
+
+        // 2. Set Default Title
+        if (string.IsNullOrEmpty(Title))
+        {
+            Title = Type switch
+            {
+                ErrorType.AccessDenied => L["Access Denied"],
+                ErrorType.ServerError => L["Server Error"],
+                ErrorType.Maintenance => L["Under Maintenance"],
+                ErrorType.NotFound => L["Page Not Found"],
+                _ => L["An Error Occurred"]
+            };
+        }
+
+        // 3. Set Default Description
+        if (string.IsNullOrEmpty(Description))
+        {
+            Description = Type switch
+            {
+                ErrorType.AccessDenied => L["You do not have permission to access this resource. Please contact your administrator if you believe this is a mistake."],
+                ErrorType.ServerError => L["An unexpected error occurred on the server. Please try again later."],
+                ErrorType.Maintenance => L["The system is currently undergoing maintenance. Please check back shortly."],
+                ErrorType.NotFound => L["The page you are looking for does not exist or has been moved."],
+                _ => L["We encountered an issue processing your request."]
+            };
+        }
+
+        // 4. Set Default Contact Button Text
+        if (string.IsNullOrEmpty(ContactButtonText))
+        {
+            ContactButtonText = Type == ErrorType.AccessDenied ? L["Contact Admin"] : L["Contact Support"];
+        }
+    }
+
+    private void OnRefresh()
+    {
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+
+    private async Task GoBack()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
+    }
+
+    private string GetErrorIcon()
+    {
+        return Type switch
+        {
+            ErrorType.AccessDenied => Icons.Material.Filled.Block,
+            ErrorType.ServerError => Icons.Material.Filled.Dns,
+            ErrorType.Maintenance => Icons.Material.Filled.Build,
+            ErrorType.NotFound => Icons.Material.Filled.SearchOff,
+            _ => Icons.Material.Filled.ErrorOutline
+        };
+    }
+
+    private Color GetErrorColor()
+    {
+        return Type switch
+        {
+            ErrorType.AccessDenied => Color.Warning,
+            ErrorType.ServerError => Color.Error,
+            ErrorType.Maintenance => Color.Info,
+            ErrorType.NotFound => Color.Secondary, // Grey/Neutral often looks better for 404
+            _ => Color.Error
+        };
+    }
+}

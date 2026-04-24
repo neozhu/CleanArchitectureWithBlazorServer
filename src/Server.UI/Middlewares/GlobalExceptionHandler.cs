@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Security;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Server.UI.Middlewares;
@@ -10,6 +11,19 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
         CancellationToken cancellationToken)
     {
         var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
+
+        // Handle antiforgery validation failures by redirecting to the login page.
+        // The redirect ensures the antiforgery cookie is set via App.razor's GetAndStoreTokens(),
+        // so the next login attempt will succeed.
+        if (IsAntiforgeryException(exception))
+        {
+            logger.LogWarning(
+                "Antiforgery token validation failed on machine {MachineName}. Redirecting to login. TraceId: {TraceId}",
+                Environment.MachineName, traceId);
+
+            httpContext.Response.Redirect("/account/login");
+            return true;
+        }
 
         logger.LogError(exception,
             "Could not process a request on machine {MachineName}. TraceId: {TraceId}",
@@ -29,6 +43,19 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
             }).ExecuteAsync(httpContext).ConfigureAwait(false);
 
         return true;
+    }
+
+    private static bool IsAntiforgeryException(Exception exception)
+    {
+        // Check the exception chain for AntiforgeryValidationException
+        var current = exception;
+        while (current is not null)
+        {
+            if (current is AntiforgeryValidationException)
+                return true;
+            current = current.InnerException;
+        }
+        return false;
     }
 
     private static Exception GetRootException(Exception exception)

@@ -1,400 +1,416 @@
 ﻿@page "/pages/documents"
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Documents.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.GetFileStream
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.Documents.Specifications
 @using CleanArchitecture.Blazor.Domain.Common.Enums
-@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Server.UI.Pages.Documents.Components
 @using CleanArchitecture.Blazor.Application.Features.Documents.Caching
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
+
 @implements IDisposable
-@inject IBlazorDownloadFileService BlazorDownloadFileService
-@inject HubClient Client
-@inject IStringLocalizer<Documents> L
+@inject BlazorDownloadFileService _downloadFileService
+@inject HubClient _hubClient
+@inject IStringLocalizer<Documents> _localizer
 
-<PageTitle>@Title</PageTitle>
+<PageTitle>@_title</PageTitle>
 
-<MudDataGrid ServerData="@(ServerReload)"
-             FixedHeader="true"
-             FixedFooter="false"
-             Virtualize="false"
-             @bind-RowsPerPage="_defaultPageSize"
-             Height="calc(100vh - 300px)"
-             Loading="@_loading"
-             MultiSelection="true"
-             @bind-SelectedItems="_selectedItems"
-             ColumnResizeMode="ResizeMode.Column"
-             Hover="true" @ref="_table">
-    <ToolBarContent>
-        <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
-            <MudStack Row AlignItems="AlignItems.Start">
-                <MudIcon Icon="@Icons.Material.Filled.Window" Size="Size.Large" />
-                <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle2" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
-                    </MudEnumSelect>
-                </MudStack>
-            </MudStack>
-            <MudStack Spacing="0" AlignItems="AlignItems.End">
-                <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
-                    <MudButton 
-                               Disabled="@_loading"
-                               OnClick="@(() => OnRefresh())"
-                               StartIcon="@Icons.Material.Outlined.Refresh" >
-                        @ConstantString.Refresh
-                    </MudButton>
-                    @if (_canCreate)
-                    {
-                        <MudButton 
-                                   StartIcon="@Icons.Material.Outlined.Camera"
-                                   OnClick="OnCreate">
-                            @L["Upload Pictures"]
-                        </MudButton>
-                    }
-                    @if (_canDelete)
-                    {
-                        <MudButton 
-                                   StartIcon="@Icons.Material.Outlined.Delete"
-                                   Disabled="@(!(_selectedItems.Count > 0))"
-                                   OnClick="OnDeleteChecked">
-                            @ConstantString.Delete
-                        </MudButton>
-                    }
-                </MudToolBar>
-                <MudStack Row Spacing="1">
-                    @if (_canSearch)
-                    {
-                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
-                        </MudTextField>
-                    }
-                </MudStack>
-            </MudStack>
-        </MudStack>
-
-
-    </ToolBarContent>
-    <Columns>
-        <SelectColumn ShowInFooter="false"> </SelectColumn>
-        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
-            <CellTemplate>
-                @if (_canEdit || _canDelete)
-                {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                        @if (_canEdit)
-                        {
-                            <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
-                        }
-                        @if (_canDelete)
-                        {
-                            <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
-                        }
-                        @if (_canDownload)
-                        {
-                            <MudMenuItem Disabled="@_downloading" OnClick="@(() => OnDownload(context.Item))">@ConstantString.Download</MudMenuItem>
-                        }
-                    </MudMenu>
-                }
-                else
-                {
-                    <MudButton Variant="Variant.Filled"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
-                        @ConstantString.NoAllowed
-                    </MudButton>
-                }
-            </CellTemplate>
-        </TemplateColumn>
-        <PropertyColumn Property="x => x.Title" Title="@L[_currentDto.GetMemberDescription(x => x.Title)]">
-            <CellTemplate>
-                <div class="d-flex flex-column">
-                    <MudText >@context.Item.Title</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
-                </div>
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.Status" Title="@L[_currentDto.GetMemberDescription(x => x.Status)]">
-            <CellTemplate>
-                <div class="d-flex flex-column">
-                    <div class="flex-grow-0">
-                        @switch (context.Item.Status)
-                        {
-                            case JobStatus.Queueing:
-                                <MudChip Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" Disabled="true">@context.Item.Status</MudChip>
-                                break;
-                            case JobStatus.Doing:
-                                <MudChip Icon="@Icons.Material.Outlined.DocumentScanner" Variant="Variant.Outlined" Size="Size.Small" Color="Color.Info"> @context.Item.Status</MudChip>
-                                break;
-                            case JobStatus.Done:
-                                <MudChip Icon="@Icons.Material.Filled.Done" Variant="Variant.Filled" Size="Size.Small" Color="Color.Success">@context.Item.Status</MudChip>
-                                break;
-                            default:
-                                <MudChip Variant="Variant.Outlined" Size="Size.Small" Color="Color.Primary">@context.Item.Status</MudChip>
-                                break;
-                        }
-                    </div>
-                    <div class="flex-grow-0  mud-text-secondary">
-                        <MudHighlighter Text="@context.Item.Content" HighlightedText="@_searchString" Class="mud-text-secondary"></MudHighlighter>
-                    </div>
-                </div>
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.DocumentType" Title="@L[_currentDto.GetMemberDescription(x => x.DocumentType)]">
-            <CellTemplate>
-                <div class="d-flex flex-column">
-                    <MudCheckBox Size="Size.Small" Label="@L[_currentDto.GetMemberDescription(x => x.IsPublic)]" Value="@context.Item.IsPublic" Disabled="true"></MudCheckBox>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.DocumentType</MudText>
-                </div>
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.CreatedByUser" Title="@L[_currentDto.GetMemberDescription(x => x.CreatedByUser)]">
-            <CellTemplate>
-                @if (UserProfile?.UserId == context.Item.CreatedByUser?.Id)
-                {
-                    <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Me </MudChip>
-                }
-                else
-                {
-                    <div class="d-flex flex-column">
-                        <MudText>@context.Item.CreatedByUser?.DisplayName</MudText>
-                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.CreatedByUser?.Email</MudText>
-                    </div>
-                }
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.TenantName" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
-            <CellTemplate>
-                <div class="d-flex flex-column">
-                    <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.TenantId</MudText>
-                </div>
-            </CellTemplate>
-        </PropertyColumn>
-    </Columns>
-    <NoRecordsContent>
-        <MudText>@ConstantString.NoRecords</MudText>
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudText>@ConstantString.Loading</MudText>
-    </LoadingContent>
-    <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
-    </PagerContent>
+<MudDataGrid T="DocumentDto" @ref="_dataGrid"
+			 ServerData="ServerReload"
+			 FixedHeader="true"
+			 FixedFooter="false"
+			 Virtualize="false"
+			 @bind-RowsPerPage="_defaultPageSize"
+			 Loading="@_isLoading"
+			 MultiSelection="true"
+			 @bind-SelectedItems="_selectedDocuments"
+			 ColumnResizeMode="ResizeMode.Column"
+			 Hover="true">
+	<ToolBarContent>
+		<MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
+			<!-- Left Toolbar: Icon, Title and List View selector -->
+			<MudStack Row AlignItems="AlignItems.Start">
+				<MudIcon Icon="@Icons.Material.Filled.Window" Size="Size.Large" />
+				<MudStack Spacing="0">
+					<MudText Typo="Typo.subtitle1" Class="mb-2">
+						@_localizer[_currentDto.GetClassDescription()]
+					</MudText>
+					<MudEnumSelect TEnum="DocumentListView" Style="min-width:120px"
+								   Value="Query.ListView"
+								   ValueChanged="OnChangedListView"
+								   Dense="true"
+								   Label="@AppStrings.ListView">
+					</MudEnumSelect>
+				</MudStack>
+			</MudStack>
+			<!-- Right Toolbar: Refresh, Create, Delete and Search -->
+			<MudStack Spacing="2" AlignItems="AlignItems.End">
+				<MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+					<MudButton Disabled="@_isLoading"
+							   OnClick="OnRefresh"
+							   StartIcon="@Icons.Material.Outlined.Refresh">
+						@AppStrings.Refresh
+					</MudButton>
+					@if (_accessRights.Create)
+					{
+						<MudButton StartIcon="@Icons.Material.Outlined.Camera"
+								   OnClick="OnCreate">
+							@_localizer["Upload Pictures"]
+						</MudButton>
+					}
+					@if (_accessRights.Delete)
+					{
+						<MudButton StartIcon="@Icons.Material.Outlined.Delete"
+								   Disabled="@(!_selectedDocuments.Any())"
+								   OnClick="OnDeleteChecked">
+							@AppStrings.Delete
+						</MudButton>
+					}
+				</MudStack>
+				@if (_accessRights.Search)
+				{
+					<MudTextField T="string" Value="@Query.Keyword"
+								  ValueChanged="OnSearch"
+								  Placeholder="@AppStrings.Search"
+								  Adornment="Adornment.End"
+								  AdornmentIcon="@Icons.Material.Filled.Search"
+								  IconSize="Size.Small">
+					</MudTextField>
+				}
+			</MudStack>
+		</MudStack>
+	</ToolBarContent>
+	<Columns>
+		<SelectColumn ShowInFooter="false" />
+		<TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Actions" Sortable="false">
+			<CellTemplate>
+				@if (_accessRights.Edit || _accessRights.Delete)
+				{
+					<MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small"
+							 Dense="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+							 IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+						@if (_accessRights.Edit)
+						{
+							<MudMenuItem OnClick="@(() => OnEdit(context.Item))">
+								@AppStrings.Edit
+							</MudMenuItem>
+						}
+						@if (_accessRights.Delete)
+						{
+							<MudMenuItem OnClick="@(() => OnDelete(context.Item))">
+								@AppStrings.Delete
+							</MudMenuItem>
+						}
+						@if (_accessRights.Download)
+						{
+							<MudMenuItem Disabled="@_isDownloading" OnClick="@(() => OnDownload(context.Item))">
+								@AppStrings.Download
+							</MudMenuItem>
+						}
+					</MudMenu>
+				}
+				else
+				{
+					<MudButton Variant="Variant.Outlined"
+							   StartIcon="@Icons.Material.Filled.DoNotTouch"
+							   IconColor="Color.Secondary" Size="Size.Small"
+							   Color="Color.Surface">
+						@AppStrings.NoAllowed
+					</MudButton>
+				}
+			</CellTemplate>
+		</TemplateColumn>
+		<PropertyColumn Property="x => x.Title" Title="@_localizer[_currentDto.GetMemberDisplayName(x => x.Title)]">
+			<CellTemplate>
+				<div class="d-flex flex-column">
+					<MudText>@context.Item.Title</MudText>
+					<MudText Typo="Typo.body2" Class="mud-text-secondary">
+						@context.Item.Description
+					</MudText>
+				</div>
+			</CellTemplate>
+		</PropertyColumn>
+		<PropertyColumn Property="x => x.Status" Title="@_localizer[_currentDto.GetMemberDisplayName(x => x.Status)]">
+			<CellTemplate>
+				<div class="d-flex flex-column">
+					<div>
+						@switch (context.Item.Status)
+						{
+							case JobStatus.Queueing:
+								<MudChip Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" Disabled="true">
+									@context.Item.Status
+								</MudChip>
+								break;
+							case JobStatus.Doing:
+								<MudChip Icon="@Icons.Material.Outlined.DocumentScanner" Variant="Variant.Outlined" Size="Size.Small" Color="Color.Info">
+									@context.Item.Status
+								</MudChip>
+								break;
+							case JobStatus.Done:
+								<MudChip Icon="@Icons.Material.Filled.Done" Variant="Variant.Filled" Size="Size.Small" Color="Color.Success">
+									@context.Item.Status
+								</MudChip>
+								break;
+							default:
+								<MudChip Variant="Variant.Outlined" Size="Size.Small" Color="Color.Primary">
+									@context.Item.Status
+								</MudChip>
+								break;
+						}
+					</div>
+					<div class="mud-text-secondary">
+						<MudHighlighter Text="@context.Item.Content" HighlightedText="@_searchString" />
+					</div>
+				</div>
+			</CellTemplate>
+		</PropertyColumn>
+		<PropertyColumn Property="x => x.DocumentType" Title="@_localizer[_currentDto.GetMemberDisplayName(x => x.DocumentType)]">
+			<CellTemplate>
+				<div class="d-flex flex-column">
+					<MudCheckBox Size="Size.Small"
+								 Label="@_localizer[_currentDto.GetMemberDisplayName(x => x.IsPublic)]"
+								 Value="@context.Item.IsPublic" Disabled="true" />
+					<MudText Typo="Typo.body2" Class="mud-text-secondary">
+						@context.Item.DocumentType
+					</MudText>
+				</div>
+			</CellTemplate>
+		</PropertyColumn>
+		<PropertyColumn Property="x => x.CreatedBy" Title="@_localizer[_currentDto.GetMemberDisplayName(x => x.CreatedBy)]">
+			<CellTemplate>
+                <UserActionInfo User="@context.Item.CreatedBy" TimeZoneId="@UserProfile.TimeZoneId"
+                                ActionTime="@context.Item.CreatedAt" />
+			</CellTemplate>
+		</PropertyColumn>
+		<PropertyColumn Property="x => x.TenantName" Title="@_localizer[_currentDto.GetMemberDisplayName(x => x.TenantName)]">
+			<CellTemplate>
+				<MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
+			</CellTemplate>
+		</PropertyColumn>
+	</Columns>
+	<NoRecordsContent>
+		<MudDataGridStatus Icon="@Icons.Material.TwoTone.FolderOff"
+					   Text="@_localizer["No Documents Found"]"
+					   SubText="@_localizer["Try adjusting your search or filter to find what you're looking for."]" />
+	</NoRecordsContent>
+	<LoadingContent>
+		<MudDataGridStatus IsLoading="true"
+					   Text="@_localizer["Loading Documents..."]" />
+	</LoadingContent>
+	<PagerContent>
+		<MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
+	</PagerContent>
 </MudDataGrid>
 
-
 @code {
-    [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
-    [CascadingParameter] private UserProfile? UserProfile { get; set; }
-    private string? Title { get; set; }
+	#region Fields and Properties
 
-    private HashSet<DocumentDto> _selectedItems = new();
-    private readonly DocumentDto _currentDto = new();
-    private MudDataGrid<DocumentDto> _table = null!;
-    private int _defaultPageSize = 15;
-    private string _searchString = string.Empty;
-    private bool _downloading;
-    private bool _loading;
+	[CascadingParameter] protected Task<AuthenticationState> _authState { get; set; } = default!;
+	private UserProfile UserProfile => UserProfileState.Value;
+	private string? _title { get; set; }
+	private HashSet<DocumentDto> _selectedDocuments = new();
+	private readonly DocumentDto _currentDto = new();
+	private MudDataGrid<DocumentDto> _dataGrid = null!;
+	private int _defaultPageSize = 15;
+	private string _searchString = string.Empty;
+	private bool _isDownloading;
+	private bool _isLoading;
+	private DocumentsWithPaginationQuery Query { get; set; } = new();
+	private DocumentsAccessRights _accessRights = new();
 
-    private string _tenantId = string.Empty;
-    private DocumentsWithPaginationQuery Query { get; set; } = default!;
+	#endregion
 
-    private bool _canSearch;
-    private bool _canCreate;
-    private bool _canEdit;
-    private bool _canDelete;
-    private bool _canImport;
-    private bool _canExport;
-    private bool _canDownload;
+	#region Lifecycle Methods
 
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        Title = L[_currentDto.GetClassDescription()];
-        var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Delete)).Succeeded;
-        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
-        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
-        _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
-        Client.JobCompletedEvent += _client_JobCompleted;
-        Client.JobStartedEvent += _client_JobStarted;
-        await Client.StartAsync();
-        Query = new DocumentsWithPaginationQuery { CurrentUser = UserProfile };
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		_title =$"{ApplicationSettings.AppName} - { _localizer[_currentDto.GetClassDescription()]}";
+		_accessRights = await PermissionService.GetAccessRightsAsync<DocumentsAccessRights>();
 
-    private void _client_JobCompleted(object? sender, JobCompletedEventArgs e)
-    {
-        InvokeAsync(async () =>
-        {
-            await _table.ReloadServerData();
-            if (e.Message.StartsWith("Error"))
-            {
-                Snackbar.Add(string.Format(L["{0}"], e.Id), Severity.Error);
-            }
-            else
-            {
-                Snackbar.Add(string.Format(L["{0}: {1} recognize completed."], e.Id, e.Message), Severity.Success);
-            }
+		// Subscribe to hub events
+		_hubClient.JobCompletedEvent += OnJobCompleted;
+		_hubClient.JobStartedEvent += OnJobStarted;
+		await _hubClient.StartAsync();
 
-        });
-    }
+		Query = new DocumentsWithPaginationQuery { CurrentUser = UserProfile };
+	}
 
-    private void _client_JobStarted(object? sender, JobStartedEventArgs e)
-    {
-        InvokeAsync(async () =>
-        {
-            await _table.ReloadServerData();
-            Snackbar.Add(string.Format(L["{0}: {1} job started."], e.Id, e.Message), Severity.Info);
-        });
-    }
+	public void Dispose()
+	{
+		// Unsubscribe from hub events
+		_hubClient.JobCompletedEvent -= OnJobCompleted;
+		_hubClient.JobStartedEvent -= OnJobStarted;
+	}
 
+	#endregion
 
-    public void Dispose()
-    {
-        Client.JobCompletedEvent -= _client_JobCompleted;
-        Client.JobStartedEvent -= _client_JobStarted;
-    }
+	#region Hub Event Handlers
 
-    private async Task<GridData<DocumentDto>> ServerReload(GridState<DocumentDto> state, CancellationToken cancellationToken)
-    {
-        try
-        {
-            _loading = true;
-            Query.Keyword = _searchString;
-            Query.CurrentUser = UserProfile;
-            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortDirection = state.SortDefinitions.FirstOrDefault() == null ? SortDirection.Descending.ToString() : state.SortDefinitions.First().Descending ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
-            Query.PageNumber = state.Page + 1;
-            Query.PageSize = state.PageSize;
-            var result = await Mediator.Send(Query);
-            return new GridData<DocumentDto> { TotalItems = result.TotalItems, Items = result.Items };
-        }
-        finally
-        {
-            _loading = false;
-        }
-    }
+	private void OnJobCompleted(object? sender, JobCompletedEventArgs e)
+	{
+		// Refresh grid data and display a notification based on job result.
+		InvokeAsync(async () =>
+		{
+			await _dataGrid.ReloadServerData();
+			if (e.Message.StartsWith("Error"))
+			{
+				Snackbar.Add(string.Format(_localizer["{0}"], e.Id), Severity.Error);
+			}
+			else
+			{
+				Snackbar.Add(string.Format(_localizer["{0}: {1} completed"], e.Id, e.Message), Severity.Success);
+			}
+		});
+	}
 
-    private void OnFilterChanged(string s)
-    {
-        InvokeAsync(async () => { await _table.ReloadServerData(); });
-    }
+	private void OnJobStarted(object? sender, JobStartedEventArgs e)
+	{
+		// Refresh grid data and notify job start.
+		InvokeAsync(async () =>
+		{
+			await _dataGrid.ReloadServerData();
+			Snackbar.Add(string.Format(_localizer["{0}: {1} job started"], e.Id, e.Message), Severity.Info);
+		});
+	}
 
-    private async Task OnChangedListView(DocumentListView listview)
-    {
-        Query.ListView = listview;
-        await _table.ReloadServerData();
-    }
+	#endregion
 
-    private async Task OnSearch(string text)
-    {
-        DocumentCacheKey.Refresh();
-        _selectedItems = new HashSet<DocumentDto>();
-        _searchString = text;
-        await _table.ReloadServerData();
-    }
+	#region Grid and Search
 
-    private async Task OnRefresh()
-    {
-        _selectedItems = new HashSet<DocumentDto>();
-        _searchString = string.Empty;
-        await _table.ReloadServerData();
-    }
+	private async Task<GridData<DocumentDto>> ServerReload(GridState<DocumentDto> state, CancellationToken cancellationToken )
+	{
+		_isLoading = true;
+		try
+		{
+			Query.Keyword = _searchString;
+			Query.CurrentUser = UserProfile;
+			var sortDefinition = state.SortDefinitions.FirstOrDefault();
+			Query.OrderBy = sortDefinition?.SortBy ?? "Id";
+			Query.SortDirection = sortDefinition == null
+									  ? SortDirection.Descending.ToString()
+									  : (sortDefinition.Descending ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString());
+			Query.PageNumber = state.Page + 1;
+			Query.PageSize = state.PageSize;
+			var result = await Mediator.Send(Query);
+			return new GridData<DocumentDto> { TotalItems = result.TotalItems, Items = result.Items };
+		}
+		finally
+		{
+			_isLoading = false;
+		}
+	}
 
-    private async Task OnCreate()
-    {
-        var command = new AddEditDocumentCommand { DocumentType = DocumentType.Document };
-        var parameters = new DialogParameters<UploadFilesFormDialog>
-        {
-            { x => x.Model, command }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<UploadFilesFormDialog>
-            (L["Upload Pictures"], parameters, options);
-        var state = await dialog.Result;
-        if (state is not null && !state.Canceled)
-        {
-            await _table.ReloadServerData();
-            Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
-        }
-    }
+	private async Task OnChangedListView(DocumentListView listView)
+	{
+		Query.ListView = listView;
+		await _dataGrid.ReloadServerData();
+	}
 
-    private async Task OnEdit(DocumentDto dto)
-    {
-        var command = DocumentMapper.ToEditCommand(dto);
-        var parameters = new DialogParameters<DocumentFormDialog>
-        {
-            { nameof(DocumentFormDialog.Model), command }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<DocumentFormDialog>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
+	private async Task OnSearch(string text)
+	{
+		await AppCache.RemoveByTagsAsync(DocumentCacheKey.Tags);
+		_selectedDocuments = new HashSet<DocumentDto>();
+		_searchString = text;
+		await _dataGrid.ReloadServerData();
+	}
 
+	private async Task OnRefresh()
+	{
+		await AppCache.RemoveByTagsAsync(DocumentCacheKey.Tags);
+		_selectedDocuments = new HashSet<DocumentDto>();
+		_searchString = string.Empty;
+		await _dataGrid.ReloadServerData();
+	}
 
-        var state = await dialog.Result;
-        if (state is not null && !state.Canceled)
-        {
-            await _table.ReloadServerData();
-        }
-    }
+	#endregion
 
-    private async Task OnDelete(DocumentDto dto)
-    {
-        var command = new DeleteDocumentCommand(new[] { dto.Id });
-        var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Title);
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, string.Format(ConstantString.DeleteTheItem, L["Document"]), contentText, async () =>
-        {
-            await InvokeAsync(async () =>
-              {
-                  await _table.ReloadServerData();
-                  _selectedItems.Clear();
-              });
+	#region Create, Edit, Delete Documents
 
-        });
-    }
+	private async Task OnCreate()
+	{
+		var command = new AddEditDocumentCommand { DocumentType = DocumentType.Document };
+		var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
 
-    private async Task OnDeleteChecked()
-    {
-        var command = new DeleteDocumentCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, string.Format(ConstantString.DeleteTheItem, L["Document"]), contentText, async () =>
-        {
-            await InvokeAsync(async () =>
-        {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
-        });
-        });
-    }
+		await DialogServiceHelper.ShowDialogAsync<UploadFilesFormDialog>(
+			_localizer["Upload Pictures"],
+			async _ =>
+			{
+				await _dataGrid.ReloadServerData();
+				Snackbar.Add(AppStrings.UploadSuccess, Severity.Info);
+			},
+			p => p.Add(x => x.Model, command),
+			options);
+	}
 
-    private async Task OnDownload(DocumentDto dto)
-    {
-        try
-        {
-            _downloading = true;
-            var file = await Mediator.Send(new GetFileStreamQuery(dto.Id));
-            if (file.Item2 != null)
-            {
-                var result = await BlazorDownloadFileService.DownloadFile(file.Item1, file.Item2, "application/octet-stream");
-            }
-        }
-        catch (Exception e)
-        {
-            Snackbar.Add($"{e.Message}", Severity.Error);
-        }
-        finally
-        {
-            _downloading = false;
-        }
-    }
+	private async Task OnEdit(DocumentDto dto)
+	{
+		var command = ObjectMapper.Map<AddEditDocumentCommand>(dto);
+		var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
 
+		await DialogServiceHelper.ShowDialogAsync<DocumentFormDialog>(
+			_localizer["Edit the document"],
+			_ => _dataGrid.ReloadServerData(),
+			p => p.Add(nameof(DocumentFormDialog.Model), command),
+			options);
+	}
+
+	private async Task OnDelete(DocumentDto dto)
+	{
+		var command = new DeleteDocumentCommand(new[] { dto.Id });
+		var contentText = string.Format(AppStrings.DeleteConfirmation, dto.Title);
+		await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(
+			command,
+			string.Format(AppStrings.DeleteTheItem, _localizer["Document"]),
+			contentText,
+			async () =>
+			{
+				await _dataGrid.ReloadServerData();
+                _selectedDocuments = new HashSet<DocumentDto>();
+			});
+	}
+
+	private async Task OnDeleteChecked()
+	{
+		var command = new DeleteDocumentCommand(_selectedDocuments.Select(x => x.Id).ToArray());
+		var contentText = string.Format(AppStrings.DeleteConfirmWithSelected, _selectedDocuments.Count);
+		await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(
+			command,
+			string.Format(AppStrings.DeleteTheItem, _localizer["Document"]),
+			contentText,
+			async () =>
+			{
+				await _dataGrid.ReloadServerData();
+                _selectedDocuments = new HashSet<DocumentDto>();
+			});
+	}
+
+	#endregion
+
+	#region Download Document
+
+	private async Task OnDownload(DocumentDto dto)
+	{
+		try
+		{
+			_isDownloading = true;
+			var file = await Mediator.Send(new GetFileStreamQuery(dto.Id));
+			if (file.Item2 != null)
+			{
+				await _downloadFileService.DownloadFileAsync(file.Item1, file.Item2, "application/octet-stream");
+			}
+		}
+		catch (Exception ex)
+		{
+			Snackbar.Add(ex.Message, Severity.Error);
+		}
+		finally
+		{
+			_isDownloading = false;
+		}
+	}
+
+	#endregion
 }

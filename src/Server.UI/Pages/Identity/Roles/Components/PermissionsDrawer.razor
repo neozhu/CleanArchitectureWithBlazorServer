@@ -1,6 +1,7 @@
-﻿@inherits MudComponentBase
+@using MudBlazor
+@inherits MudComponentBase
 
-@inject IStringLocalizer<Roles> L
+@inject IStringLocalizer<PermissionsDrawer> L
 
 <MudDrawer Open="@Open"
            Width="400px"
@@ -8,7 +9,7 @@
            OpenChanged="@(s => OnOpenChanged.InvokeAsync(s))"
            Anchor="Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
     <MudDrawerHeader>
-        <MudText Typo="Typo.h6">Set Permissions</MudText>
+        <MudText Typo="Typo.h5">@L["Set Permissions"]</MudText>
     </MudDrawerHeader>
     <MudStack AlignItems="AlignItems.Stretch" Class="px-5">
         <MudTextField @bind-Value="Keyword" Label="Search"
@@ -17,50 +18,77 @@
                       Adornment="Adornment.End"
                       AdornmentIcon="@Icons.Material.Filled.Search"
                       AdornmentColor="Color.Secondary" />
-    </MudStack>
+    </MudStack>   
     @if (Permissions != null && Permissions.Any())
     {
-        @foreach (var group in Permissions.Where(x => x.Group!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase) || x.Description!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Group).Distinct().ToList())
+        @foreach (var groupData in _filteredPermissionGroups)
         {
             <MudCard class="ma-4">
                 <MudCardHeader>
                     <CardHeaderContent>
                         <MudStack Spacing="2">
                             <MudText Typo="Typo.body1">
-                                @L[group]
+                                @L[groupData.Key]
                             </MudText>
-                            <MudText Typo="Typo.body2">
-                                @(L[Permissions.First(x => x.Group == group).Description])
+                            <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                                @(L[groupData.FirstItem.Description])
                             </MudText>
                         </MudStack>
                     </CardHeaderContent>
                     <CardHeaderActions>
-                        <MudTooltip Text="@L["Assign or Unassign all"]">
-                            <MudIconButton Disabled="@Waiting" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" OnClick="@(() => OnAssignAll(group))" />
+                        <MudTooltip Text="@L["Assign / Unassign all permission set"]">
+                            @if (groupData.Items.Any(x => x.IsInherit))
+                            {
+                                <MudIconButton Disabled="true" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" />
+                            }
+                            else
+                            {
+                                <MudIconButton Disabled="@Waiting" 
+                                               Icon="@Icons.Material.Filled.AutoFixHigh" 
+                                               Color="Color.Default" 
+                                               OnClick="@(() => OnAssignAll(groupData.Key))" />
+                            }
                         </MudTooltip>
                     </CardHeaderActions>
                 </MudCardHeader>
                 <MudCardContent>
-                    @for (var i = 0; i < Permissions.Count; i++)
+                    <MudList Dense="true" Class="pa-0" T="string">
+                    @foreach (var permission in groupData.Items)
                     {
-                        var x = i;
-                        if (Permissions[x].Group == group)
-                        {
-                            <MudTooltip Delay="400" Text="@L[Permissions[x].HelpText??Permissions[x].Name]">
+                        <MudListItem Class="py-1 px-0">
+                            <div class="d-flex align-center w-100">
                                 <MudCheckBox Dense="true"
                                              T="bool"
                                              Size="Size.Small"
-                                             Value="@Permissions[x].Assigned"
-                                             Label="@L[Permissions[x].Name]"
-                                             ValueChanged="@(s => OnAssignChanged.InvokeAsync(Permissions[x]))"
-                                             Color="Color.Primary">
+                                             Value="@permission.Assigned"
+                                             Disabled="@permission.IsInherit"
+                                                 ValueChanged="@(s => OnCheckChanged(s,permission))"
+                                             Color="@(permission.IsInherit ? Color.Default : Color.Primary)">
                                 </MudCheckBox>
-                            </MudTooltip>
-                        }
+                                <div class="d-flex flex-column ml-2">
+                                    <MudText Typo="Typo.body2">
+                                        @L[permission.Name]
+                                    </MudText>
+                                    @if (!string.IsNullOrEmpty(permission.HelpText))
+                                    {
+                                        <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                                            @L[permission.HelpText]
+                                        </MudText>
+                                    }
+                                </div>
+                            </div>
+                        </MudListItem>
                     }
+                    </MudList>
                 </MudCardContent>
-
             </MudCard>
+        }
+
+        @if (!_filteredPermissionGroups.Any())
+        {
+            <MudAlert Severity="Severity.Info" Class="ma-4">
+                @L["No permissions match your search criteria"]
+            </MudAlert>
         }
     }
     else
@@ -82,18 +110,86 @@
 
     [Parameter] public bool Waiting { get; set; }
 
-    private string Keyword { get; set; } = string.Empty;
+    private string _keyword = string.Empty;
+    private List<PermissionGroupData> _filteredPermissionGroups = new();
+
+    private string Keyword
+    {
+        get => _keyword;
+        set
+        {
+            if (_keyword != value)
+            {
+                _keyword = value;
+                UpdateFilteredPermissions();
+            }
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Permissions != null)
+        {
+            UpdateFilteredPermissions();
+        }
+    }
+    private void OnCheckChanged(bool isChecked, PermissionModel? permission)
+    {
+        if (permission == null) return;
+        permission.Assigned = isChecked;
+        OnAssignChanged.InvokeAsync(permission);
+    }
+
+    private void UpdateFilteredPermissions()
+    {
+        _filteredPermissionGroups = Permissions?
+            .Where(x => string.IsNullOrEmpty(_keyword) || 
+                        x.Group!.Contains(_keyword, StringComparison.InvariantCultureIgnoreCase) || 
+                        x.Name.Contains(_keyword, StringComparison.InvariantCultureIgnoreCase) ||
+                        x.Description!.Contains(_keyword, StringComparison.InvariantCultureIgnoreCase))
+            .GroupBy(x => x.Group)
+            .Select(group => new PermissionGroupData(
+                group.Key!,
+                group.OrderBy(x => x.Name).ToList(),
+                group.First().Description
+            ))
+            .OrderBy(x => x.Key)
+            .ToList() ?? new List<PermissionGroupData>();
+    }
 
     private async Task OnAssignAll(string? groupName)
     {
-        var list = new List<PermissionModel>();
-        foreach (var t in Permissions!.Where(t => t.Group == groupName))
-        {
-            t.Assigned = !t.Assigned;
-            list.Add(t);
-        }
+        if (string.IsNullOrEmpty(groupName) || Permissions == null)
+            return;
 
+        var list = new List<PermissionModel>();
+        var permissionsInGroup = Permissions.Where(t => t.Group == groupName && !t.IsInherit).ToList();
+        
+        // Check if all are currently assigned or not - if mixed, we'll make them all assigned
+        var allAssigned = permissionsInGroup.All(p => p.Assigned);
+        
+        foreach (var permission in permissionsInGroup)
+        {
+            permission.Assigned = !allAssigned;
+            list.Add(permission);
+        }
+        
         await OnAssignAllChanged.InvokeAsync(list);
     }
 
+    // Helper class to hold grouped permission data
+    private class PermissionGroupData
+    {
+        public string Key { get; }
+        public List<PermissionModel> Items { get; }
+        public PermissionModel FirstItem => Items.First();
+        public string Description { get; }
+        
+        public PermissionGroupData(string key, List<PermissionModel> items, string description)
+        {
+            Key = key;
+            Items = items;
+            Description = description;
+        }
+    }
 }

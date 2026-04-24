@@ -1,0 +1,109 @@
+﻿@using Microsoft.AspNetCore.Antiforgery
+@inject IHttpContextAccessor accessor
+@inject IAntiforgery Antiforgery
+@{
+    var tokens = accessor.HttpContext is not null
+        ? Antiforgery.GetAndStoreTokens(accessor.HttpContext)
+        : null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="/"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <link href="@Assets["_content/MudBlazor/MudBlazor.min.css"]" rel="stylesheet"/>
+    <link href="@Assets["css/app.css"]" rel="stylesheet"/>
+    <HeadOutlet @rendermode="RenderModeForPage"/>
+    <ImportMap />
+    <meta name="xsrf-token" content="@(tokens?.RequestToken)" />
+    <!-- Enhanced SEO Meta Tags -->
+    <meta name="description" content="Clean Architecture With Blazor Server: an enterprise-grade open source application template for rapid implementation using the Blazor stack (MudBlazor, EF Core, Identity, SignalR). Includes documented Best Practices for Blazor Clean Architecture (SOLID, DDD, CQRS, testability, performance optimization) enabling maintainable, scalable solutions with auditing, user & role management, multi-language support, and extensibility." />
+    <meta name="keywords" content="Clean Architecture With Blazor Server, Blazor Clean Architecture Best Practices, Blazor Server Template, Enterprise Application Template, Open Source GitHub, .NET, Rapid Development, CQRS, DDD, SOLID Principles, Separation of Concerns, Testability, Performance Optimization, Maintainability, Scalability, MudBlazor, EF Core, SignalR, Authentication, Authorization, Multi-Tenant" />
+    <meta name="author" content="Blazor Studio" />
+    <meta name="robots" content="index, follow" />
+    <meta name="application-name" content="Blazor Studio" />
+    <meta name="generator" content="Blazor Server" />
+    <meta name="theme-color" content="#1976d2" />
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Clean Architecture With Blazor Server - Enterprise Application Template" />
+    <meta property="og:description" content="Open source enterprise Blazor Server template implementing Clean Architecture with documented best practices (SOLID, DDD, CQRS, testability, performance) for rapid, maintainable development: modular design, auditing, user & role management, multi-language, extensible GitHub-backed ecosystem." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://architecture.blazorserver.com" />
+    <meta property="og:site_name" content="Clean Architecture Blazor Server" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content="https://architecture.blazorserver.com/img/blazorstudio.png" />
+    <meta property="og:image:alt" content="Clean Architecture With Blazor Server Application Template" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="1078" />
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Clean Architecture With Blazor Server - Enterprise Application Template" />
+    <meta name="twitter:description" content="Enterprise Blazor Server template with Clean Architecture best practices (SOLID, DDD, CQRS) for rapid, maintainable, performant development." />
+    <meta name="twitter:image" content="https://architecture.blazorserver.com/img/blazorstudio.png" />
+    <meta name="twitter:image:alt" content="Clean Architecture With Blazor Server Application Template" />
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "WebApplication",
+        "name": "Clean Architecture With Blazor Server",
+    "description": "Clean Architecture With Blazor Server: enterprise-grade open source Blazor Server application template with documented best practices (SOLID, DDD, CQRS, testability, performance) for rapid implementation and modular extension",
+        "url": "https://architecture.blazorserver.com",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "featureList": [
+            "Rapid Enterprise Application Implementation",
+            "Clean Architecture & Modular Design",
+            "Documented Best Practices (SOLID, DDD, CQRS, Testability, Performance)",
+            "Full Blazor Server Technology Stack (MudBlazor, EF Core, Identity, SignalR)",
+            "Ready-made Authentication & Authorization",
+            "Auditing & Logging Infrastructure",
+            "Multi-language & Localization Support",
+            "Role-Based & Policy-Based Access Control",
+            "Open Source on GitHub for Community Extension"
+        ]
+    }
+    </script>
+    
+    <title>@ApplicationSettings.AppName</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W1TQBGC3QH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-W1TQBGC3QH');
+    </script>
+</head>
+
+<body>
+    <Routes @rendermode="RenderModeForPage"/>
+	<ReconnectModal/>
+	<script src="@Assets["_framework/blazor.web.js"]"></script>
+	<script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
+ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+
+</html>
+
+@code {
+   private IComponentRenderMode? RenderModeForPage =>  new InteractiveServerRenderMode(false);
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+}

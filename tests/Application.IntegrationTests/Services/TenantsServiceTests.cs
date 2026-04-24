@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Domain.Entities;
 using NUnit.Framework;
@@ -17,12 +17,12 @@ public class TenantsServiceTests : TestBase
     }
 
     [Test]
-    public void ShouldLoadDataSource()
+    public async Task ShouldLoadDataSource()
     {
         var tenantsService = CreateTenantsService();
-        tenantsService.Initialize();
+        await tenantsService.InitializeAsync();
         var count = tenantsService.DataSource.Count();
-        Assert.Equals(2, count);
+        Assert.That(count, Is.EqualTo(2));
     }
 
     [Test]
@@ -30,8 +30,8 @@ public class TenantsServiceTests : TestBase
     {
         await AddAsync(new Tenant { Name = "Test3", Description = "Test3" });
         var tenantsService = CreateTenantsService();
-        tenantsService.Refresh();
+        await tenantsService.RefreshAsync();
         var count = tenantsService.DataSource.Count();
-        Assert.Equals(3, count);
+        Assert.That(count, Is.EqualTo(3));
     }
 }

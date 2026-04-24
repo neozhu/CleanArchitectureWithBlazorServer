@@ -4,26 +4,30 @@
 
 <MudDialog>
     <DialogContent>
-        <MudForm Model="Model" @ref="_form" Validation="@(Validator.ValidateValue(Model))">
+        <MudForm Model="_model" @ref="_form" Validation="@(Validator.ValidateValue(_model))">
             <MudGrid Spacing="2">
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Id)]" @bind-Value="Model.Id"
-                                  For="@(() => Model.Id)"
+                    <MudTextField Label="@L[_model.GetMemberDisplayName(x => x.Id)]" @bind-Value="_model.Id"
+                                  For="@(() => _model.Id)"
                                   ReadOnly="true"
                                   Required="true"
-                                  RequiredError="@L["Tenant id is required!"]">
+                                  Placeholder="@L["Auto-generated tenant id"]"
+                                  HelperText="@L["This identifier cannot be changed"]"
+                                  RequiredError="@L["Tenant id is required."]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Name)]" @bind-Value="Model.Name"
-                                  For="@(() => Model.Name)"
+                    <MudTextField Label="@L[_model.GetMemberDisplayName(x => x.Name)]" @bind-Value="_model.Name"
+                                  For="@(() => _model.Name)"
+                                  Placeholder="@L["Enter tenant name"]"
                                   Required="true"
-                                  RequiredError="@L["Tenant name is required!"]">
+                                  RequiredError="@L["Tenant name is required."]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Description)]" @bind-Value="Model.Description"
-                                  For="@(() => Model.Description)">
+                    <MudTextField Label="@L[_model.GetMemberDisplayName(x => x.Description)]" @bind-Value="_model.Description"
+                                  For="@(() => _model.Description)"
+                                  Placeholder="@L["Enter tenant description"]">
                     </MudTextField>
                 </MudItem>
 
@@ -31,17 +35,17 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudLoadingButton Loading="@_saving" Color="Color.Primary" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        <MudButton OnClick="Cancel">@AppStrings.Cancel</MudButton>
+        <MudLoadingButton Loading="@_saving" Color="Color.Primary" OnClick="Submit">@AppStrings.Save</MudLoadingButton>
     </DialogActions>
 </MudDialog>
 
 @code {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public AddEditTenantCommand Model { get; set; } = default!;
+    [EditorRequired] [Parameter] public AddEditTenantCommand _model { get; set; } = default!;
 
-    private MudForm? _form;
+    private MudForm _form = new();
     private bool _saving;
 
     private async Task Submit()
@@ -49,16 +53,16 @@
         try
         {
             _saving = true;
-            await _form!.ValidateAsync();
+            await _form.ValidateAsync();
 
-            if (!_form!.IsValid)
+            if (!_form.IsValid)
                 return;
-            var result = await Mediator.Send(Model);
+            var result = await Mediator.Send(_model);
 
             if (result.Succeeded)
             {
                 MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
+                Snackbar.Add(AppStrings.SaveSuccess, Severity.Info);
             }
             else
             {

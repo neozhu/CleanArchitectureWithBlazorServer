@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 public interface IIdentitySettings
 {

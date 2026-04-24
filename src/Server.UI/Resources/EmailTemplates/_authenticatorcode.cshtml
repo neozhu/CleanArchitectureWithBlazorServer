@@ -1,48 +1,67 @@
 ﻿<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            max-width: 600px;
-            margin: auto;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        p {
-            line-height: 1.6;
-        }
-        .x_verification-code{
-             font-size: 48px;
-             line-height: 60px;
-             color: #032e61; 
-             margin: 12px 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verification Code</title>
 </head>
+<body style="margin:0; padding:0; background-color:#f9fafb; font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <table role="presentation" style="width:100%; border-collapse:collapse; background-color:#f9fafb;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table role="presentation" style="width:100%; max-width:560px; border-collapse:collapse; background-color:#ffffff; border:1px solid #e5e7eb; border-radius:12px;">
 
-<body>
-    <div class="container">
-        <h2>Your Verification Code</h2>
-        <p>Dear @Model.UserName,</p>
-        <p>Thank you for choosing our service. Please use the following verification code to proceed with your secure login:</p>
-        <h1 class="x_verification-code">@Model.AuthenticatorCode</h1>
-        <p>This code is valid for 10 minutes only. Enter it on the verification page to continue.</p>
-        <p>If you did not request this code, please contact our support team immediately.</p>
-        <p>Best regards,</p>
-        <p>The @Model.Company Team</p>
-    </div>
+          <!-- Header -->
+          <tr>
+            <td style="padding:32px 24px; text-align:center; border-bottom:1px solid #f1f5f9;">
+              <span style="font-size:20px; font-weight:600; color:#111827; letter-spacing:-0.01em;">
+                {{ app_name }}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 32px 40px;">
+              <h1 style="font-size:24px; font-weight:600; color:#111827; text-align:center; margin:0 0 24px;">
+                Verification Code
+              </h1>
+
+              <p style="font-size:16px; color:#111827; line-height:1.6; margin:0 0 12px;">
+                Hi {{ user_name }},
+              </p>
+
+              <p style="font-size:16px; color:#374151; line-height:1.6; margin:0 0 24px;">
+                Here’s your {{ app_name }} verification code:
+              </p>
+
+              <div style="text-align:center; margin:24px 0;">
+                <div style="display:inline-block; background-color:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:16px 20px;">
+                  <span style="font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size:32px; font-weight:700; color:#111827; letter-spacing:8px; display:inline-block;">
+                    {{ authenticator_code }}
+                  </span>
+                </div>
+              </div>
+
+              <p style="font-size:14px; color:#6b7280; line-height:1.6; text-align:center; margin:0;">
+                This code is valid for the next 10 minutes.<br>
+                If you didn’t request it, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#f9fafb; padding:24px 32px; border-top:1px solid #e5e7eb;">
+              <p style="font-size:14px; color:#374151; margin:0;">
+                Best,<br>
+                <strong style="color:#111827;">The {{ company }} Team</strong>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>

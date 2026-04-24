@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
@@ -17,15 +17,16 @@ public class UploadDocumentCommand : ICacheInvalidatorRequest<Result<int>>
 
 public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentCommand, Result<int>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly IUploadService _uploadService;
+  
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly IFileUploadService _uploadService;
 
     public UploadDocumentCommandHandler(
-        IApplicationDbContext context,
-        IUploadService uploadService
+       IApplicationDbContextFactory dbContextFactory,
+        IFileUploadService uploadService
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _uploadService = uploadService;
     }
 
@@ -35,23 +36,27 @@ public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentComman
         foreach (var uploadRequest in request.UploadRequests)
         {
             var fileName = uploadRequest.FileName;
-            var url = await _uploadService.UploadAsync(uploadRequest);
+            var uploadResult = await _uploadService.UploadAsync(uploadRequest);
+            if (!uploadResult.Succeeded)
+            {
+                return await Result<int>.FailureAsync(uploadResult.ErrorMessage ?? "Failed to upload document");
+            }
             var document = new Document
             {
                 Title = fileName,
-                URL = url,
+                URL = uploadResult.Data!.Url,
                 Status = JobStatus.Queueing,
                 IsPublic = true,
                 DocumentType = DocumentType.Image
             };
-            document.AddDomainEvent(new CreatedEvent<Document>(document));
+            document.AddDomainEvent(new DocumentCreatedEvent(document));
             list.Add(document);
         }
 
         if (!list.Any()) return await Result<int>.SuccessAsync(0);
-
-        await _context.Documents.AddRangeAsync(list, cancellationToken);
-        var result = await _context.SaveChangesAsync(cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        await db.Documents.AddRangeAsync(list, cancellationToken);
+        var result = await db.SaveChangesAsync(cancellationToken);
         return await Result<int>.SuccessAsync(result);
     }
 }

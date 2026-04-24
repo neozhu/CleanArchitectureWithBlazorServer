@@ -1,6 +1,7 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Mapster;
 using Ardalis.Specification.EntityFrameworkCore;
 using CleanArchitecture.Blazor.Domain.Common.Entities;
 
@@ -27,6 +28,35 @@ public static class QueryableExtensions
         bool evaluateCriteriaOnly = false) where T : class, IEntity
     {
         return SpecificationEvaluator.Default.GetQuery(query, spec, evaluateCriteriaOnly);
+    }
+
+    /// <summary>
+    ///     Extension method to provided ordered queryable data to a paginated result set.
+    /// </summary>
+    /// <remarks>
+    ///     This method will apply the given specification to the query, paginate the results, and project them to the desired
+    ///     result type.
+    /// </remarks>
+    /// <typeparam name="T">Source type of the entities in the query</typeparam>
+    /// <typeparam name="TResult">Destination type to which the entities should be projected</typeparam>
+    /// <param name="query">The original ordered query to project and paginate</param>
+    /// <param name="spec">The specification to apply to the query before projection and pagination</param>
+    /// <param name="pageNumber">The desired page number of the paginated results</param>
+    /// <param name="pageSize">The number of items per page in the paginated results</param>
+    /// <param name="configuration">Configuration for the projection</param>
+    /// <param name="cancellationToken">Optional cancellation token to cancel the operation</param>
+    /// <returns>The paginated and projected data</returns>
+    public static async Task<PaginatedData<TResult>> ProjectToPaginatedDataAsync<T, TResult>(
+        this IOrderedQueryable<T> query, ISpecification<T> spec, int pageNumber, int pageSize,
+        TypeAdapterConfig configuration, CancellationToken cancellationToken = default) where T : class, IEntity
+    {
+        var specificationEvaluator = SpecificationEvaluator.Default;
+        var count = await specificationEvaluator.GetQuery(query.AsNoTracking(), spec).CountAsync();
+        var data = await specificationEvaluator.GetQuery(query.AsNoTracking(), spec).Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ProjectToType<TResult>(configuration)
+            .ToListAsync(cancellationToken);
+        return new PaginatedData<TResult>(data, count, pageNumber, pageSize);
     }
 
     /// <summary>
@@ -95,4 +125,66 @@ public static class QueryableExtensions
         var lambda = Expression.Lambda<Func<T, bool>>(predicate, parameter);
         return source.Where(lambda);
     }
+
+
+
+    #region OrderBy
+    public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, string orderByProperty)
+    {
+        var parts = orderByProperty.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        string property = parts[0];
+        string direction = parts.Length > 1 && parts[1].Equals("Descending", StringComparison.OrdinalIgnoreCase)
+            ? "OrderByDescending"
+            : "OrderBy";
+
+        return ApplyOrder(source, property, direction);
+    }
+
+    public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string orderByProperty)
+    {
+        return ApplyOrder(source, orderByProperty, "OrderByDescending");
+    }
+
+    public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> source, string orderByProperty)
+    {
+        return ApplyOrder(source, orderByProperty, "ThenBy");
+    }
+
+    public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> source, string orderByProperty)
+    {
+        return ApplyOrder(source, orderByProperty, "ThenByDescending");
+    }
+
+    private static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
+    {
+        var type = typeof(T);
+        var propertyInfo = type.GetProperty(property, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+        if (propertyInfo == null)
+        {
+            throw new ArgumentException($"Property '{property}' does not exist on type '{type.Name}'.");
+        }
+
+        var parameter = Expression.Parameter(type, "x");
+        var propertyAccess = Expression.MakeMemberAccess(parameter, propertyInfo);
+        var orderByExpression = Expression.Lambda(propertyAccess, parameter);
+
+        var resultExpression = Expression.Call(
+            typeof(Queryable),
+            methodName,
+            new[] { type, propertyInfo.PropertyType },
+            source.Expression,
+            Expression.Quote(orderByExpression));
+
+        return (IOrderedQueryable<T>)source.Provider.CreateQuery<T>(resultExpression);
+    }
+
+    public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, string orderBy, string sortDirection)
+    {
+        return sortDirection.Equals("Descending", StringComparison.OrdinalIgnoreCase)
+            ? source.OrderByDescending(orderBy)
+            : source.OrderBy(orderBy);
+    }
+    #endregion
+
+
 }

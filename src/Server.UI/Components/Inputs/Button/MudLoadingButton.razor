@@ -1,0 +1,145 @@
+@inherits MudBaseButton
+
+<MudButton OnClick="OnClickAsync"
+           StartIcon="@StartIcon"
+           Disabled="@IsDisabled"
+           IconColor="@IconColor"
+           Variant="@Variant"
+           Color="@Color"
+           Size="@Size">
+    @if (Loading)
+    {
+        @if (LoadingAdornment == Adornment.Start)
+        {
+            <MudProgressCircular Class="me-2"
+                                 Size="Size.Small"
+                                 Color="@LoadingCircularColor"
+                                 Indeterminate="true" />
+        }
+
+        @if (LoadingContent is not null)
+        {
+            @LoadingContent
+        }
+        else
+        {
+            @ChildContent
+        }
+
+        @if (LoadingAdornment == Adornment.End)
+        {
+            <MudProgressCircular Class="ms-2"
+                                 Size="Size.Small"
+                                 Color="@LoadingCircularColor"
+                                 Indeterminate="true" />
+        }
+    }
+    else
+    {
+        @ChildContent
+    }
+</MudButton>
+
+@code {
+
+    /// <summary>
+    /// Optional label text for the button.
+    /// </summary>
+    [Parameter]
+    public string? Label { get; set; }
+
+    /// <summary>
+    /// Color of the icon; supports theme colors.
+    /// </summary>
+    [Parameter]
+    public Color IconColor { get; set; } = Color.Inherit;
+
+    /// <summary>
+    /// Icon displayed at the start of the button.
+    /// </summary>
+    [Parameter]
+    public string? StartIcon { get; set; }
+
+    /// <summary>
+    /// Button color; supports theme colors.
+    /// </summary>
+    [Parameter]
+    public Color Color { get; set; } = Color.Default;
+
+    /// <summary>
+    /// Position of the loading adornment; defaults to Start.
+    /// </summary>
+    [Parameter]
+    public Adornment LoadingAdornment { get; set; } = Adornment.Start;
+
+    /// <summary>
+    /// Size of the button.
+    /// </summary>
+    [Parameter]
+    public Size Size { get; set; } = Size.Medium;
+
+    /// <summary>
+    /// Variant of the button.
+    /// </summary>
+    [Parameter]
+    public Variant Variant { get; set; } = Variant.Text;
+
+    /// <summary>
+    /// Indicates if the button is in a loading state. When true, displays a loading indicator and may disable the button.
+    /// </summary>
+    [Parameter]
+    public bool Loading { get; set; }
+
+    /// <summary>
+    /// When true, disables the button while it is loading. Default is true.
+    /// </summary>
+    [Parameter]
+    public bool DisableWhenLoading { get; set; } = true;
+
+    /// <summary>
+    /// The content displayed within the button.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Optional content displayed when the button is loading. If not provided, ChildContent is used.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? LoadingContent { get; set; }
+
+    /// <summary>
+    /// Color for the loading circular progress indicator.
+    /// </summary>
+    [Parameter]
+    public Color LoadingCircularColor { get; set; } = Color.Primary;
+
+    /// <summary>
+    /// Determines whether the button is disabled based on its Disabled property and loading state.
+    /// </summary>
+    private bool IsDisabled => Disabled || (Loading && DisableWhenLoading);
+
+    /// <summary>
+    /// Handles the button click event, setting the loading state during asynchronous execution.
+    /// Uses try/finally to ensure the loading state is reset even if an exception occurs.
+    /// </summary>
+    private async Task OnClickAsync()
+    {
+        if (IsDisabled)
+            return;
+
+        try
+        {
+            Loading = true;
+            Disabled = true;
+            StateHasChanged();
+            await base.OnClick.InvokeAsync(null);
+        }
+        finally
+        {
+            Loading = false;
+            Disabled = false;
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,134 @@
+﻿@using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu
+@using CleanArchitecture.Blazor.Server.UI.Services.Navigation
+@inject IMenuService MenuService
+@inject LayoutService LayoutService
+@inject IStringLocalizer<NavigationMenu> L
+
+<MudDrawer Breakpoint="Breakpoint.Md"
+           Class="side-menu"
+           Elevation="0"
+           Open="DrawerOpen"
+           OpenChanged="@(e => DrawerOpenChanged.InvokeAsync(e))"
+           Variant="DrawerVariant.Responsive">
+    <MudDrawerHeader Class="d-flex pa-0">
+        <TenantSelector />
+    </MudDrawerHeader>
+
+    <MudNavMenu>
+        @foreach (var section in MenuSections.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
+        {
+            @if (section is not null)
+            {
+                <div class="@(LayoutService.IsRTL ? "mr-6" : "ml-6") my-3">
+                    <MudText Typo="Typo.subtitle1">
+                        <b>
+                            @(L[section.Title])
+                        </b>
+                    </MudText>
+                </div>
+
+
+                @if (section.SectionItems is not null)
+                {
+                    @foreach (var sectionItem in section.SectionItems.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
+                    {
+                        @if (sectionItem is { IsParent: true, MenuItems: not null })
+                        {
+                            <MudNavGroup Icon="@sectionItem.Icon" Title="@L[sectionItem.Title]" Expanded="Expanded(sectionItem)">
+                                @foreach (var menuItem in sectionItem.MenuItems.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
+                                {
+                                    <MudNavLink Disabled="@(menuItem.PageStatus != PageStatus.Completed)" Href="@(menuItem.Href)" Target="@(menuItem.Target)" Match="NavLinkMatch.Prefix">
+                                        <div class="d-flex">
+                                            @(L[menuItem.Title])
+                                            @if (menuItem.PageStatus != PageStatus.Completed)
+                                            {
+                                                <MudSpacer/>
+                                                <MudChip T="string" Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
+                                                    @(L[menuItem.PageStatus.GetDisplayName()])
+                                                </MudChip>
+                                            }
+                                        </div>
+                                    </MudNavLink>
+                                }
+                            </MudNavGroup>
+                        }
+                        else
+                        {
+                            <MudNavLink Disabled="@(sectionItem.PageStatus != PageStatus.Completed)" Href="@(sectionItem.Href)" Icon="@(sectionItem.Icon)" Target="@(sectionItem.Target)" Match="NavLinkMatch.All">
+                                <div class="d-flex">
+                                    @(L[sectionItem.Title])
+                                    @if (sectionItem.PageStatus != PageStatus.Completed)
+                                    {
+                                        <MudSpacer/>
+                                        <MudChip T="string" Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
+											@(L[sectionItem.PageStatus.GetDisplayName()])
+                                        </MudChip>
+                                    }
+                                </div>
+                            </MudNavLink>
+                        }
+                    }
+                }
+            }
+        }
+    </MudNavMenu>
+
+    <MudDivider Class="mt-auto"></MudDivider>
+    
+    @* 用户信息显示区域 - 使用独立组件 *@
+    <UserInfoCard OnSettingClick="OnSettingClick" />
+    
+    <MudNavMenu Class="d-flex justify-space-between pa-2">
+        <MudLink Href="#" Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">@L[ApplicationSettings.Copyright]</MudLink>
+        <MudText Class="" Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">@L["version"] @ApplicationSettings.Version</MudText>
+    </MudNavMenu>
+
+</MudDrawer>
+
+
+@if (LayoutService.IsRTL)
+{
+    <style>
+        .mud-nav-link.active:not(.mud-nav-link-disabled) {
+            border-left: 3px solid var(--mud-palette-primary);
+            background-color: rgba(var(--mud-palette-primary-rgb), 0.1);
+        }
+
+        .side-menu {
+            border-left: 1px solid var(--mud-palette-table-lines)
+        }
+    </style>
+}
+else
+{
+    <style>
+        .mud-nav-link.active:not(.mud-nav-link-disabled) {
+            border-right: 3px solid var(--mud-palette-primary);
+        }
+
+        .side-menu {
+            border-right: 1px solid var(--mud-palette-table-lines)
+        }
+    </style>
+}
+
+@code
+{
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [EditorRequired] [Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
+
+    [EditorRequired] [Parameter] public bool DrawerOpen { get; set; }
+
+    private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
+    [EditorRequired] [Parameter] public string[] Roles { get; set; } = Array.Empty<string>();
+    
+    [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
+
+    private bool Expanded(MenuSectionItemModel menu)
+    {
+        var href = Navigation.Uri[(Navigation.BaseUri.Length - 1)..];
+        return menu is { IsParent: true, MenuItems: not null } &&
+               menu.MenuItems.Any(x => !string.IsNullOrEmpty(x.Href) && href.Contains(x.Href));
+    }
+
+}

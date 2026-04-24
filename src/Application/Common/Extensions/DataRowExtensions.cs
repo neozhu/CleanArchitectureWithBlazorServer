@@ -5,52 +5,28 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
 public static class DataRowExtensions
 {
-    public static T? FieldOrDefault<T>(this DataRow row, string columnName)
+    public static T? GetValue<T>(this DataRow row, string columnName, T? defaultValue = default)
     {
-        return row.IsNull(columnName) || string.IsNullOrEmpty(row[columnName].ToString())
-            ? default
-            : row.Field<T>(columnName);
-    }
+        if (!row.Table.Columns.Contains(columnName) || row.IsNull(columnName))
+        {
+            return defaultValue;
+        }
 
-    public static decimal? FieldDecimalOrNull(this DataRow row, string columnName)
-    {
-        return row.IsNull(columnName) || string.IsNullOrEmpty(row[columnName].ToString())
-            ? default(decimal?)
-            : Convert.ToDecimal(row[columnName]);
-    }
+        object value = row[columnName];
+        if (value is string str && string.IsNullOrWhiteSpace(str))
+        {
+            return defaultValue;
+        }
 
-    public static decimal FieldDecimalOrDefault(this DataRow row, string columnName)
-    {
-        return row.IsNull(columnName) || string.IsNullOrEmpty(row[columnName].ToString())
-            ? default
-            : Convert.ToDecimal(row[columnName]);
-    }
+        Type targetType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
 
-    public static int? FieldIntOrNull(this DataRow row, string columnName)
-    {
-        return row.IsNull(columnName) || string.IsNullOrEmpty(row[columnName].ToString())
-            ? default(int?)
-            : Convert.ToInt32(row[columnName]);
-    }
-
-    public static int FieldIntOrDefault(this DataRow row, string columnName)
-    {
-        return row.IsNull(columnName) || string.IsNullOrEmpty(row[columnName].ToString())
-            ? default
-            : Convert.ToInt32(row[columnName]);
-    }
-
-    public static DateTime? FieldDateTimeOrNull(this DataRow row, string columnName)
-    {
-        return row.IsNull(columnName) || string.IsNullOrEmpty(row[columnName].ToString())
-            ? default(DateTime?)
-            : Convert.ToDateTime(row[columnName], CultureInfo.InvariantCulture);
-    }
-
-    public static DateTime FieldDateTimeOrDefaultNow(this DataRow row, string columnName)
-    {
-        return row.IsNull(columnName) || string.IsNullOrEmpty(row[columnName].ToString())
-            ? DateTime.Now
-            : Convert.ToDateTime(row[columnName], CultureInfo.InvariantCulture);
+        try
+        {
+            return (T)Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
+        }
+        catch
+        {
+            return defaultValue;
+        }
     }
 }

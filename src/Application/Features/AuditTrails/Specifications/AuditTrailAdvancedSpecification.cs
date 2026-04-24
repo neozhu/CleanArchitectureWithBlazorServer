@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery;
+using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
 #nullable disable warnings

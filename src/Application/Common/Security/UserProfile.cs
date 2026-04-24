@@ -1,31 +1,50 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Security;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
-public class UserProfile
+namespace CleanArchitecture.Blazor.Application.Common.Security;
+
+/// <summary>
+/// Immutable user profile record representing user information state.
+/// </summary>
+public sealed record UserProfile(
+    string UserId,
+    string UserName,
+    string Email,
+    string? Provider = null,
+    ApplicationUserDto? Superior = null,
+    string? SuperiorId = null,
+    string? ProfilePictureDataUrl = null,
+    string? DisplayName = null,
+    string? PhoneNumber = null,
+    string? DefaultRole = null,
+    string[]? AssignedRoles = null,
+    bool IsActive = true,
+    string? TenantId = null,
+    TenantDto? Tenant = null,
+    List<TenantDto> AvailableTenants = null!,
+    string? TimeZoneId = null,
+    string? LanguageCode = null
+)
 {
-    public string? Provider { get; set; }
-    public string? SuperiorName { get; set; }
-    public string? SuperiorId { get; set; }
-    public string? ProfilePictureDataUrl { get; set; }
-    public string? DisplayName { get; set; }
-    public required string UserName { get; set; }
-    public required string Email { get; set; }
-    public string? PhoneNumber { get; set; }
-    public string? DefaultRole { get; set; }
-    public string[]? AssignedRoles { get; set; }
-    public required string UserId { get; set; } = Guid.NewGuid().ToString();
-    public bool IsActive { get; set; }
-    public string? TenantId { get; set; }
-    public string? TenantName { get; set; }
-
-    public string? TimeZoneId { get; set; }
-    public string? LanguageCode { get; set; }
+    /// <summary>
+    /// Gets the local time offset based on the user's time zone.
+    /// </summary>
     public TimeSpan LocalTimeOffset => string.IsNullOrEmpty(TimeZoneId)
-    ? TimeZoneInfo.Local.BaseUtcOffset
-    : TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId).BaseUtcOffset;
+        ? TimeZoneInfo.Local.BaseUtcOffset
+        : TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId).BaseUtcOffset;
+
+    /// <summary>
+    /// Creates an empty user profile with default values.
+    /// </summary>
+    public static UserProfile Empty => new(
+        UserId: string.Empty,
+        UserName: string.Empty,
+        Email: string.Empty
+    );
+
+    /// <summary>
+    /// Checks if the user has the specified role.
+    /// </summary>
+    public bool IsInRole(string role) => AssignedRoles?.Contains(role) ?? false;
 }
 
-[Mapper]
-public static partial class UserProfileMapper
-{
-    public static partial ChangeUserProfileModel ToChangeUserProfileModel(UserProfile entity);
-}

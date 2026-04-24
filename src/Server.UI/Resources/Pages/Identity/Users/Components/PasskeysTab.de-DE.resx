@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Manage your passkeys" xml:space="preserve">
+    <value>Verwalten Sie Ihre Passkeys</value>
+  </data>
+  <data name="You don't have any passkeys yet. Passkeys provide a secure and convenient way to sign in without passwords. Register a new passkey to get started" xml:space="preserve">
+    <value>Sie haben noch keine Passkeys. Passkeys bieten eine sichere und bequeme Möglichkeit, sich ohne Passwörter anzumelden. Registrieren Sie einen neuen Passkey, um zu beginnen</value>
+  </data>
+  <data name="Passkeys are a secure, password-free way to sign in. You can add multiple passkeys for different devices. Each passkey is unique to this account and device." xml:space="preserve">
+    <value>Passkeys sind eine sichere, passwortfreie Anmeldemethode. Sie können mehrere Passkeys für verschiedene Geräte hinzufügen. Jeder Passkey ist einzigartig für dieses Konto und Gerät.</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Created At" xml:space="preserve">
+    <value>Erstellt am</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Register New Passkey" xml:space="preserve">
+    <value>Neuen Passkey registrieren</value>
+  </data>
+  <data name="Registering..." xml:space="preserve">
+    <value>Wird registriert...</value>
+  </data>
+  <data name="Passkey module not loaded" xml:space="preserve">
+    <value>Passkey-Modul nicht geladen</value>
+  </data>
+  <data name="User not found" xml:space="preserve">
+    <value>Benutzer nicht gefunden</value>
+  </data>
+  <data name="Failed to create passkey credential" xml:space="preserve">
+    <value>Passkey-Anmeldeinformationen konnten nicht erstellt werden</value>
+  </data>
+  <data name="Passkey registered successfully" xml:space="preserve">
+    <value>Passkey erfolgreich registriert</value>
+  </data>
+  <data name="Failed to register passkey" xml:space="preserve">
+    <value>Passkey-Registrierung fehlgeschlagen</value>
+  </data>
+  <data name="Passkey registration cancelled or failed" xml:space="preserve">
+    <value>Passkey-Registrierung abgebrochen oder fehlgeschlagen</value>
+  </data>
+  <data name="An error occurred while registering passkey" xml:space="preserve">
+    <value>Bei der Registrierung des Passkeys ist ein Fehler aufgetreten</value>
+  </data>
+  <data name="Passkey removed successfully" xml:space="preserve">
+    <value>Passkey erfolgreich entfernt</value>
+  </data>
+  <data name="Failed to remove passkey" xml:space="preserve">
+    <value>Passkey konnte nicht entfernt werden</value>
+  </data>
+  <data name="Passkey not found" xml:space="preserve">
+    <value>Passkey nicht gefunden</value>
+  </data>
+  <data name="Rename Passkey" xml:space="preserve">
+    <value>Passkey umbenennen</value>
+  </data>
+  <data name="Passkey renamed successfully" xml:space="preserve">
+    <value>Passkey erfolgreich umbenannt</value>
+  </data>
+  <data name="Failed to rename passkey" xml:space="preserve">
+    <value>Passkey konnte nicht umbenannt werden</value>
+  </data>
+  <data name="Enter passkey name" xml:space="preserve">
+    <value>Passkey-Namen eingeben</value>
+  </data>
+  <data name="Name is required" xml:space="preserve">
+    <value>Name ist erforderlich</value>
+  </data>
+</root>

@@ -1,4 +1,4 @@
-﻿using FluentValidation.Internal;
+using FluentValidation.Internal;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 

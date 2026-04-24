@@ -1,0 +1,100 @@
+﻿@page "/account/forgot-password"
+@using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Server.UI.Resources.ValidationMessages
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Text
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword
+@using System.ComponentModel.DataAnnotations
+
+@inherits OwningComponentBase
+@inject IStringLocalizer<Forgot> L
+@inject ILogger<Forgot> Logger
+
+
+<PageTitle>@_pageTitle</PageTitle>
+
+<EditForm Model="_formModel" FormName="forgot-password" OnValidSubmit="HandleValidSubmitAsync" method="post">
+	<DataAnnotationsValidator />
+	<MudStack Spacing="2">
+		<MudText Typo="Typo.h4" GutterBottom="true">@L["Forgot Password?"]</MudText>
+		<MudText Typo="Typo.body1">@L["Please enter your registered email address. We will send you a password reset link if the account exists."]</MudText>
+
+		<MudTextField @bind-Value="_formModel.Email"
+					  Label="@L["E-mail"]"
+					  Variant="Variant.Outlined"
+					  InputType="InputType.Email"
+					  Placeholder="@L["Enter your email address"]"
+					  Immediate="true"
+					  Required="true"
+					  FullWidth="true"
+					  For="@(() => _formModel.Email)" />
+		<MudButton Variant="Variant.Filled"
+				   Color="Color.Primary"
+				   Size="Size.Large"
+				   ButtonType="ButtonType.Submit"
+				   FullWidth="true">
+			@L["Send E-mail"]
+		</MudButton>
+	</MudStack>
+</EditForm>
+
+@code {
+	public const string PageUrl = "/account/forgot-password";
+	private string _pageTitle = "Forgot Password";
+	private UserManager<ApplicationUser> _userManager = null!;
+	private InputModel _formModel { get; set; } = new();
+	private string? _statusMessage;
+
+	protected override Task OnInitializedAsync()
+	{
+		_pageTitle = $"{ApplicationSettings.AppName} - {L["Forgot Password"]}";
+
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+		return Task.CompletedTask;
+	}
+
+	private async Task HandleValidSubmitAsync()
+	{
+		var user = await _userManager.FindByEmailAsync(_formModel.Email);
+		if (user is null)
+		{
+			_statusMessage = L["If an account with this email exists, a password reset link will be sent."];
+			Snackbar.Add(_statusMessage, Severity.Error);
+			return;
+		}
+
+		if (!await _userManager.IsEmailConfirmedAsync(user))
+		{
+			_statusMessage = L["Your email address has not been confirmed. Please check your inbox for a confirmation email or request a new one."];
+			Snackbar.Add(_statusMessage, Severity.Error);
+			return;
+		}
+
+		var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+		code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+		var callbackUrl = Navigation.GetUriWithQueryParameters(
+			Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
+			new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
+		await Mediator.Publish(new ResetPasswordNotification(callbackUrl, user.Email!, user.UserName!));
+		Logger.LogInformation("Rest password email sent to {Email}.", _formModel.Email);
+		var url = Navigation.GetUriWithQueryParameters(
+			   Navigation.ToAbsoluteUri(ForgotPasswordConfirmation.PageUrl).AbsoluteUri,
+			   new Dictionary<string, object?> { ["ResetPasswordLink"] = callbackUrl });
+		Navigation.NavigateTo(url);
+
+	}
+
+
+	private sealed class InputModel
+	{
+        [Required(
+        ErrorMessageResourceType = typeof(ValidationMessages),
+        ErrorMessageResourceName = nameof(ValidationMessages.EmailRequired))]
+    
+        [EmailAddress(
+        ErrorMessageResourceType = typeof(ValidationMessages),
+        ErrorMessageResourceName = nameof(ValidationMessages.EmailInvalid))]
+        public string Email { get; set; } = "";
+	}
+
+}

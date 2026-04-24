@@ -1,11 +1,11 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.Delete;
 
-public class DeletePicklistSetCommand : ICacheInvalidatorRequest<Result<int>>
+public class DeletePicklistSetCommand : ICacheInvalidatorRequest<Result>
 {
     public DeletePicklistSetCommand(int[] id)
     {
@@ -17,29 +17,28 @@ public class DeletePicklistSetCommand : ICacheInvalidatorRequest<Result<int>>
     public IEnumerable<string>? Tags => PicklistSetCacheKey.Tags;
 }
 
-public class DeletePicklistSetCommandHandler : IRequestHandler<DeletePicklistSetCommand, Result<int>>
+public class DeletePicklistSetCommandHandler : IRequestHandler<DeletePicklistSetCommand, Result>
 
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
     public DeletePicklistSetCommandHandler(
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
-    public async ValueTask<Result<int>> Handle(DeletePicklistSetCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(DeletePicklistSetCommand request, CancellationToken cancellationToken)
     {
-        var items = await _context.PicklistSets.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var items = await db.PicklistSets.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
         {
-            var changeEvent = new UpdatedEvent<PicklistSet>(item);
-            item.AddDomainEvent(changeEvent);
-            _context.PicklistSets.Remove(item);
+            item.AddDomainEvent(new PicklistSetDeletedEvent(item));
         }
-
-        var result = await _context.SaveChangesAsync(cancellationToken);
-        return await Result<int>.SuccessAsync(result);
+        db.PicklistSets.RemoveRange(items);
+        await db.SaveChangesAsync(cancellationToken);
+        return await Result.SuccessAsync();
     }
 }

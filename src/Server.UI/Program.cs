@@ -1,5 +1,6 @@
-﻿using CleanArchitecture.Blazor.Application;
+using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Server.UI;
 
 
@@ -16,5 +17,4 @@ var app = builder.Build();
 app.ConfigureServer(builder.Configuration);
 
 await app.InitializeDatabaseAsync().ConfigureAwait(false);
-
 await app.RunAsync().ConfigureAwait(false);

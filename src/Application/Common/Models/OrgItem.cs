@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Models;
+namespace CleanArchitecture.Blazor.Application.Common.Models;
 
 public class OrgItem
 {
@@ -12,6 +12,8 @@ public class OrgItem
     public string? PositionName { get; set; }
     public string? ProfileUrl { get; set; }
     public string? Size { get; set; }
+    public string? Email { get; set; }
+    public string? PhoneNumber { get; set; }
     public string? Tags { get; set; }
     public int DirectSubordinates { get; set; }
     public int TotalSubordinates { get; set; }

@@ -5,7 +5,6 @@ using System.Diagnostics;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 using CleanArchitecture.Blazor.Domain.Common.Enums;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.Configuration;
 using OpenAI;
 using OpenAI.Chat;
 
@@ -17,68 +16,68 @@ public class DocumentOcrJob : IDocumentOcrJob
     private const string SystemPrompt = "You are an advanced visual analysis AI. Analyze and describe images based on visual content, providing structured output in Markdown format.";
     private const string UserPrompt = "Analyze the following image and provide a comprehensive, briefly description in Markdown format.";
 
-    private readonly IApplicationDbContext _db;
-    private readonly IConfiguration _config;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly IAISettings _aiSettings;
+    private readonly IAppCache _appCache;
     private readonly ILogger<DocumentOcrJob> _logger;
     private readonly IApplicationHubWrapper _hubNotification;
 
     public DocumentOcrJob(
         IApplicationHubWrapper hubNotification,
-        IApplicationDbContext db,
-        IConfiguration config,
+        IApplicationDbContextFactory dbContextFactory,
+        IAISettings aiSettings,
+        IAppCache appCache,
         ILogger<DocumentOcrJob> logger)
     {
         _hubNotification = hubNotification;
-        _db = db;
-        _config = config;
+        _dbContextFactory = dbContextFactory;
+        _aiSettings = aiSettings;
+        _appCache = appCache;
         _logger = logger;
     }
 
-    public void Do(int id)
+
+
+    public async Task Recognition(int id,string? userName, CancellationToken cancellationToken)
     {
-        ProcessDocumentAsync(id, CancellationToken.None).Wait();
+        await ProcessDocumentAsync(id, userName,cancellationToken);
     }
 
-    public async Task Recognition(int id, CancellationToken cancellationToken)
-    {
-        await ProcessDocumentAsync(id, cancellationToken);
-    }
-
-    private async Task ProcessDocumentAsync(int id, CancellationToken cancellationToken)
+    private async Task ProcessDocumentAsync(int id,string? userName, CancellationToken cancellationToken)
     {
         var stopwatch = Stopwatch.StartNew();
 
         try
         {
-             
+            await using var dbContext = await _dbContextFactory.CreateAsync(cancellationToken);
 
-            var document = await _db.Documents.FindAsync(new object[] { id }, cancellationToken);
+            var document = await dbContext.Documents.FindAsync(new object[] { id }, cancellationToken);
             if (document is null)
             {
-                _logger.LogWarning("Document not found. DocumentId: {DocumentId}", id);
+                _logger.LogWarning("Document not found. DocumentId: {DocumentId}, User: {@UserName}", id, userName);
                 return;
             }
 
             await _hubNotification.JobStarted(id, document.Title!);
-            InvalidateDocumentCache();
+            await InvalidateDocumentCacheAsync(cancellationToken);
 
             if (string.IsNullOrWhiteSpace(document.URL))
             {
-                await UpdateDocumentWithError(_db, document, "Document URL is missing or invalid.", cancellationToken);
+                await UpdateDocumentWithError(dbContext, document, "Document URL is missing or invalid.", cancellationToken);
                 _logger.LogWarning("Invalid document URL. DocumentId: {DocumentId}", id);
                 return;
             }
 
             var analysisResult = await AnalyzeDocumentImageAsync(document.URL, cancellationToken);
 
-            await UpdateDocumentWithResult(_db, document, analysisResult, cancellationToken);
+            await UpdateDocumentWithResult(dbContext, document, analysisResult, cancellationToken);
             await _hubNotification.JobCompleted(id, document.Title!);
-            InvalidateDocumentCache();
+            await InvalidateDocumentCacheAsync(cancellationToken);
 
             stopwatch.Stop();
             _logger.LogInformation(
-                "Document visual analysis completed. DocumentId: {DocumentId}, Title: {Title}, Duration: {Duration}ms",
-                id, document.Title, stopwatch.ElapsedMilliseconds);
+                "Document visual analysis completed. DocumentId: {DocumentId}, Title: {Title}, Duration: {Duration}ms, User: {@UserName}",
+                id, document.Title, stopwatch.ElapsedMilliseconds,userName);
         }
         catch (Exception ex)
         {
@@ -94,10 +93,8 @@ public class DocumentOcrJob : IDocumentOcrJob
     {
         try
         {
-            var apiKey = _config["AISettings:OpenAIApiKey"];
-            var model = _config["AISettings:OpenAIModel"];
-            var client = new OpenAIClient(apiKey);
-            var chatClient = client.GetChatClient(model);
+            var client = new OpenAIClient(_aiSettings.OpenAIApiKey);
+            var chatClient = client.GetChatClient(_aiSettings.OpenAIModel);
             var agent = chatClient.AsAIAgent(instructions: SystemPrompt);
 
             var message = new Microsoft.Extensions.AI.ChatMessage(ChatRole.User, [
@@ -146,9 +143,9 @@ public class DocumentOcrJob : IDocumentOcrJob
         await _hubNotification.JobCompleted(document.Id, errorMessage);
     }
 
-    private static void InvalidateDocumentCache()
+    private Task InvalidateDocumentCacheAsync(CancellationToken cancellationToken)
     {
-        DocumentCacheKey.Refresh();
+        return _appCache.RemoveByTagsAsync(DocumentCacheKey.Tags, cancellationToken);
     }
 }
 

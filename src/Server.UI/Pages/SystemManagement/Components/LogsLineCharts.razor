@@ -1,18 +1,18 @@
-﻿@using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
+﻿@using CleanArchitecture.Blazor.Application.Features.SystemLogs.DTOs
+@using CleanArchitecture.Blazor.Application.Features.SystemLogs.Queries.ChatData
 @using ApexCharts
 @implements IDisposable
 
 @inject LayoutService LayoutService
-@inject IStringLocalizer<Logs> L
+@inject IStringLocalizer<SystemLogs> L
 
-<div class="d-flex flex-grow-1 mb-2">
-    <MudPaper Class="pa-5 flex-grow-1" Elevation="3">
+<div class="d-flex flex-grow-1 mb-5">
+    <MudPaper Class="pa-5 flex-grow-1" Elevation="1">
         @if (Data.Any())
         {
-            <ApexChart @ref="Chart" Options="Options" TItem="LogTimeLineDto" Height="180"
+            <ApexChart @ref="Chart" Options="Options" TItem="SystemLogTimeLineDto" Height="180"
                        Title="@L["Collect logs by day"]">
-                <ApexPointSeries TItem="LogTimeLineDto"
+                <ApexPointSeries TItem="SystemLogTimeLineDto"
                                  Items="Data"
                                  Name="Count"
                                  XValue="@(e => e.dt.ToString("MMM-d"))"
@@ -30,9 +30,9 @@
 
 @code
 {
-    public List<LogTimeLineDto> Data { get; set; } = new();
-    private ApexChart<LogTimeLineDto> Chart { get; set; } = null!;
-    private ApexChartOptions<LogTimeLineDto> Options { get; set; } = new();
+    public List<SystemLogTimeLineDto> Data { get; set; } = new();
+    private ApexChart<SystemLogTimeLineDto> Chart { get; set; } = null!;
+    private ApexChartOptions<SystemLogTimeLineDto> Options { get; set; } = new();
 
 
 
@@ -54,7 +54,7 @@
                     Type = GradientType.Vertical,
                     ShadeIntensity = 1,
                     OpacityFrom = 1,
-                    OpacityTo = 0.7,
+                    OpacityTo = 1,
                     GradientToColors = colors,
                     Stops = new List<double> { 0, 100 }
                 }
@@ -99,30 +99,29 @@
                 }
             };
 
-        LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
+        LayoutService.MajorUpdateOccurred += LayoutServiceOnMajorUpdateOccurred;
 
-        Data = await Mediator.Send(new LogsTimeLineChatDataQuery());
+        Data = await Mediator.Send(new SystemLogsTimeLineChatDataQuery());
     }
 
-    private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
+    private async Task LayoutServiceOnMajorUpdateOccurred()
     {
-        InvokeAsync(async () =>
-        {
+       
             var isDarkMode = LayoutService.IsDarkMode;
             var colors = isDarkMode ? new List<string> { "#0277BD", "#039BE5" } : new List<string> { "#1976D2", "#90CAF9" };
             Options.Theme.Mode = isDarkMode ? Mode.Dark : Mode.Light;
             Options.Fill.Gradient.GradientToColors = colors;
 
-            await Chart.UpdateOptionsAsync(true, true, false);
-            await Chart.RenderAsync();
-            StateHasChanged();
-        });
+            // await Chart.UpdateOptionsAsync(true, true, false);
+            // await Chart.RenderAsync();
+            // StateHasChanged();
+        
     }
 
 
     public void Dispose()
     {
-        LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
+        LayoutService.MajorUpdateOccurred -= LayoutServiceOnMajorUpdateOccurred;
         GC.SuppressFinalize(this);
     }
 }

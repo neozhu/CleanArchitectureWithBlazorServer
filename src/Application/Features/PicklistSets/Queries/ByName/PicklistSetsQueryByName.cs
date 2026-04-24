@@ -1,9 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Mapster;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
-using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers;
+
 
 namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.ByName;
 
@@ -20,19 +21,25 @@ public class PicklistSetsQueryByName : ICacheableRequest<IEnumerable<PicklistSet
 
 public class PicklistSetsQueryByNameHandler : IRequestHandler<PicklistSetsQueryByName, IEnumerable<PicklistSetDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly TypeAdapterConfig _typeAdapterConfig;
     public PicklistSetsQueryByNameHandler(
-        IApplicationDbContext context)
+        IApplicationDbContextFactory dbContextFactory,
+        TypeAdapterConfig typeAdapterConfig
+    )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
+        _typeAdapterConfig = typeAdapterConfig;
     }
 
     public async ValueTask<IEnumerable<PicklistSetDto>> Handle(PicklistSetsQueryByName request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.PicklistSets.Where(x => x.Name == request.Name)
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.PicklistSets.Where(x => x.Name == request.Name)
             .OrderBy(x => x.Text)
-            .ProjectTo()
+            .ProjectToType<PicklistSetDto>(_typeAdapterConfig)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
         return data;
     }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using IMiddleware = Microsoft.AspNetCore.Http.IMiddleware;
 
