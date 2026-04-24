@@ -16,6 +16,8 @@ This repository provides a **production-grade Blazor Server solution template** 
 
 Built on **.NET 10**, the template demonstrates a **well-structured, scalable, and maintainable architecture** for developing complex business systems. It integrates **advanced code generation capabilities**, **AI-assisted development workflows**, and **specification-driven design patterns**, enabling teams to accelerate development while preserving architectural consistency and code quality.
 
+This project has officially said goodbye to **MediatR** and **AutoMapper**, replacing them with **Mediator** and **Mapster** for a simpler and more modern architecture.
+
 The solution is intended to serve both as a **reference implementation** for Blazor Clean Architecture best practices and as a **ready-to-use foundation** for enterprise-level applications that require long-term maintainability, extensibility, and high development efficiency.
 
 
@@ -28,6 +30,7 @@ The solution is intended to serve both as a **reference implementation** for Bla
 - **🌐 Multi-tenancy**: Built-in tenant isolation and management
 - **📊 Advanced Data Grid**: Sorting, filtering, pagination, and export capabilities
 - **🎨 Code Generation**: Visual Studio extension for rapid development
+- **🔄 Modern Application Pipeline**: `Mediator` and `Mapster` replace the previous `MediatR` and `AutoMapper` stack
 - **🐳 Docker Ready**: Complete containerization support
 - **📱 Progressive Web App**: PWA capabilities for mobile experience
 
@@ -59,7 +62,7 @@ Experience the application in action:
 | Layer | Technologies |
 |-------|-------------|
 | **Frontend** | Blazor Server, MudBlazor, SignalR |
-| **Backend** | .NET 10, ASP.NET Core, Mediator, FluentValidation |
+| **Backend** | .NET 10, ASP.NET Core, Mediator, Mapster, FluentValidation |
 | **Database** | Entity Framework Core, MSSQL/PostgreSQL/SQLite |
 | **Authentication** | ASP.NET Core Identity, OAuth 2.0, JWT |
 | **Caching** | FusionCache, Redis |
@@ -121,7 +124,7 @@ The project includes a comprehensive [Development Workflow](docs/) with:
 
 3. **Setup Database**
    ```bash
-   dotnet ef database update --project src/Migrators/Migrators.MSSQL
+   dotnet ef migrations add InitialCreate --project src/Migrators/Migrators.MSSQL --startup-project src/Server.UI --context ApplicationDbContext
    ```
 
 4. **Run the Application**
@@ -158,98 +161,27 @@ See [Docker Setup Documentation](#docker-setup-for-blazor-server-application) fo
 - **[Deployment Guide](docs/)**: Production deployment instructions
 - **[Contributing Guidelines](CONTRIBUTING.md)**: How to contribute to the project
 
-## 📐 Using OpenSpec for Feature Development
+## 📐 Using Superpowers for Design and Planning
 
-OpenSpec enables spec-driven, reviewable changes with clear proposals, deltas, and tasks. This repo includes guidance in `openspec/AGENTS.md` and a project context in `openspec/project.md`.
+This repository recommends using the content under `docs/superpowers/` for design notes, implementation plans, and workflow guidance when a change needs more than a quick edit.
 
-- Read the quickstart: `openspec/AGENTS.md`
-- Project conventions and patterns: `openspec/project.md` (see "New Entity/Feature Guide (Contacts Pattern)") 
+### Recommended Workflow
 
-### Workflow
+1. Explore the existing implementation first.
+   Review similar features in `src/Application/Features`, related UI pages in `src/Server.UI`, and the current setup instructions in `README.md`.
+2. Write down design or planning notes when the task is non-trivial.
+   Store them under `docs/superpowers/specs/` or `docs/superpowers/plans/`.
+3. Implement by following existing repository patterns.
+   Reuse the Contacts-style module structure, current pipeline behaviors, validation approach, and navigation conventions where applicable.
+4. Verify the change before finishing.
+   Run the relevant build and test commands, then update documentation if setup or workflow steps changed.
 
-1) Plan a change
-- Review specs and pending changes
-  - `openspec list --specs`
-  - `openspec list`
-- Pick a unique, verb-led change id (e.g., `add-customer-management`).
+### Tips
 
-2) Create the change folder and docs
-- Create: `openspec/changes/<change-id>/`
-- Add files:
-  - `proposal.md` – Why, What Changes, Impact
-  - `tasks.md` – Implementation checklist
-  - Optional `design.md` – Architecture decisions when needed
-  - Spec deltas: `openspec/changes/<change-id>/specs/<capability>/spec.md`
-- Spec delta format must include sections like:
-  - `## ADDED|MODIFIED|REMOVED Requirements`
-  - At least one `#### Scenario:` per requirement (use the exact header text)
-
-3) Validate and iterate
-- `openspec validate <change-id> --strict`
-- Fix any issues before requesting review/approval.
-
-4) Implement after approval
-- Follow the tasks in `tasks.md` sequentially and mark them complete.
-- Use the patterns in `openspec/project.md`:
-  - For data access in handlers use `IApplicationDbContextFactory` and per-operation context lifetime:
-    - `await using var db = await _dbContextFactory.CreateAsync(cancellationToken);`
-  - Follow mediator pipeline behaviors, caching tags, and specification patterns.
-  - Mirror the Contacts module for a new entity's DTOs, commands, queries, specs, security, and UI pages/components.
-
-5) Archive after deployment
-- Move `openspec/changes/<id>/` to `openspec/changes/archive/YYYY-MM-DD-<id>/` (or use the CLI archive helper if available).
-- Re-run `openspec validate --strict`.
-
-### Example change scaffold
-
-- Change id: `add-customer-management`
-- Files:
-  - `openspec/changes/add-customer-management/proposal.md`
-  - `openspec/changes/add-customer-management/tasks.md`
-  - `openspec/changes/add-customer-management/specs/customers/spec.md`
-
-`proposal.md` skeleton:
-
-```
-## Why
-Introduce Customer management to track client records.
-
-## What Changes
-- Add Customer entity, CRUD flows, and pages
-- Add permissions and navigation
-
-## Impact
-- Affected specs: customers
-- Affected code: Domain, Application (Contacts-like), Infrastructure, Server.UI
-```
-
-`tasks.md` sample:
-
-```
-## 1. Implementation
-- [ ] 1.1 Domain entity + events
-- [ ] 1.2 EF configuration + seeding
-- [ ] 1.3 Application commands/queries/specs/security/caching
-- [ ] 1.4 UI pages + dialog
-- [ ] 1.5 Tests (unit/integration)
-```
-
-Spec delta snippet:
-
-```
-## ADDED Requirements
-### Requirement: Manage Customers
-The system SHALL allow users to create, edit, view, list, and delete customers with proper authorization.
-
-#### Scenario: Create customer
-- **WHEN** a user submits a valid form
-- **THEN** the system saves the customer and returns an id
-```
-
-Tips
-- Use Contacts as the reference implementation for structure and conventions.
+- Use existing modules as the reference implementation for structure and conventions.
 - Add menu entries in `src/Server.UI/Services/Navigation/MenuService.cs`.
-- Define permissions under `Permissions.<Module>` and they'll be picked up during seeding.
+- Define permissions under `Permissions.<Module>` so they are included during seeding.
+- For data access in handlers, prefer the current per-operation context lifetime patterns already used in the repository.
 
 ## 🔧 Code Generation
 
