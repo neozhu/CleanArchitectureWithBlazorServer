@@ -1,9 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Mapster;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll;
 
@@ -26,27 +26,32 @@ public class GetAllProductsQueryHandler :
     IRequestHandler<GetProductQuery, ProductDto?>
 
 {
-    private readonly IApplicationDbContext _context;
+    private readonly TypeAdapterConfig _typeAdapterConfig;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
     public GetAllProductsQueryHandler(
-        IApplicationDbContext context
+        TypeAdapterConfig typeAdapterConfig,
+        IApplicationDbContextFactory dbContextFactory
     )
     {
-        _context = context;
+        _typeAdapterConfig = typeAdapterConfig;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async ValueTask<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products
-            .ProjectTo()
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Products
+            .ProjectToType<ProductDto>(_typeAdapterConfig)
             .ToListAsync(cancellationToken);
         return data;
     }
 
     public async ValueTask<ProductDto?> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products.Where(x => x.Id == request.Id)
-                       .ProjectTo()
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Products.Where(x => x.Id == request.Id)
+                       .ProjectToType<ProductDto>(_typeAdapterConfig)
                        .FirstOrDefaultAsync(cancellationToken);
         return data;
     }

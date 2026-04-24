@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class HostExtensions
@@ -17,4 +17,6 @@ public static class HostExtensions
             }
         }
     }
+
+   
 }

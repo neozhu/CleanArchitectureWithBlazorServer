@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Text.Json;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,8 +16,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Ignore(e => e.DomainEvents);
         builder.Property(e => e.Pictures)
             .HasConversion(
-                v => JsonSerializer.Serialize(v, DefaultJsonSerializerOptions.Options),
-                v => JsonSerializer.Deserialize<List<ProductImage>>(v, DefaultJsonSerializerOptions.Options),
+                v => JsonSerializer.Serialize(v,  JsonSerializerOptions.Web),
+                v => JsonSerializer.Deserialize<List<ProductImage>>(v, JsonSerializerOptions.Web),
                 new ValueComparer<List<ProductImage>>(
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),

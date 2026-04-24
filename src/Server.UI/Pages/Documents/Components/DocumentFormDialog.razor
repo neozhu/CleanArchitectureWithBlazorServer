@@ -13,14 +13,14 @@
                     <MudTextField Label="@L["Title"]" @bind-Value="Model.Title"
                                   For="@(() => Model.Title)"
                                   Required="true"
-                                  RequiredError="@L["Title is required!"]">
+                                  RequiredError="@L["Title is required."]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <MudSelect Label="@L["Select Document Type"]"
                                For="@(() => Model.DocumentType)"
                                Required="true"
-                               RequiredError="@L["Document type is required!"]"
+                               RequiredError="@L["Document type is required."]"
                                @bind-Value="Model.DocumentType">
                         @foreach (var doctype in Enum.GetValues<DocumentType>())
                         {
@@ -36,7 +36,7 @@
                 </MudItem>
                 <MudItem xs="12">
                     <MudTextField Label="@L["Content"]"
-                                  Lines="3" ReadOnly
+                                  Lines="8" ReadOnly
                                   For="@(() => Model.Content)"
                                   @bind-Value="Model.Content">
                     </MudTextField>
@@ -65,8 +65,8 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">@ConstantString.Ok</MudButton>
+        <MudButton OnClick="Cancel">@AppStrings.Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">@AppStrings.Ok</MudButton>
     </DialogActions>
 </MudDialog>
 

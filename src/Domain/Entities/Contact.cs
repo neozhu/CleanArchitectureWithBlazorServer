@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Domain.Common.Entities;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Domain.Entities;
 
@@ -12,5 +13,6 @@ public class Contact : BaseAuditableEntity
     public string? Email { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Country { get; set; }
-   
+    public ApplicationUser? CreatedBy { get; set; }
+    public ApplicationUser? LastModifiedBy { get; set; }
 }

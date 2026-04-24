@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -42,8 +44,27 @@ public class HubConnectionFactory : IHubConnectionFactory
         return new HubConnectionBuilder()
             .WithUrl(hubUrl, options =>
             {
-                options.Transports = HttpTransportType.WebSockets;
+                //options.Transports = HttpTransportType.WebSockets;
                 options.Cookies = container;
+                options.HttpMessageHandlerFactory = handler =>
+                {
+                    if (handler is SocketsHttpHandler sockets)
+                    {
+                        sockets.SslOptions ??= new SslClientAuthenticationOptions();
+                        sockets.SslOptions.RemoteCertificateValidationCallback = (_, cert, chain, errors) =>
+                        {
+                            return true;
+                        };
+                    }
+                    else if (handler is HttpClientHandler http)
+                    {
+                        http.ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                    }
+
+                    return handler;
+                };
+                
             })
             .WithAutomaticReconnect()
             .Build();

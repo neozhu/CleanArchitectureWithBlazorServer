@@ -1,11 +1,13 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
+using System.ComponentModel.DataAnnotations;
+
+namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
 
 public enum AuditTrailListView
 {
-    [Description("All")] All,
-    [Description("My Change Histories")] My,
-    [Description("Created Today")] TODAY,
-    [Description("View of the last 30 days")] LAST_30_DAYS
+    [Display(Name = "All", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))] All,
+    [Display(Name = "My_change_histories", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))] My,
+    [Display(Name = "Created_today", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))] TODAY,
+    [Display(Name = "Created_in_the_last_30_days", ResourceType = typeof(CleanArchitecture.Blazor.Application.Resources.Constants.AppStrings))] LAST_30_DAYS
 }
 
 public class AuditTrailAdvancedFilter : PaginationFilter

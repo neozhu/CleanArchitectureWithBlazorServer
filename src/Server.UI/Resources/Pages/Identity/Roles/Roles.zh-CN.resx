@@ -1,65 +1,65 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
-        Microsoft ResX Schema 
-        
-        Version 2.0
-        
-        The primary goals of this format is to allow a simple XML format 
-        that is mostly human readable. The generation and parsing of the 
-        various data types are done through the TypeConverter classes 
-        associated with the data types.
-        
-        Example:
-        
-        ... ado.net/XML headers & schema ...
-        <resheader name="resmimetype">text/microsoft-resx</resheader>
-        <resheader name="version">2.0</resheader>
-        <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-        <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-        <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-        <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-        <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-            <value>[base64 mime encoded serialized .NET Framework object]</value>
-        </data>
-        <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-            <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-            <comment>This is a comment</comment>
-        </data>
-                    
-        There are any number of "resheader" rows that contain simple 
-        name/value pairs.
-        
-        Each data row contains a name, and value. The row also contains a 
-        type or mimetype. Type corresponds to a .NET class that support 
-        text/value conversion through the TypeConverter architecture. 
-        Classes that don't support this are serialized and stored with the 
-        mimetype set.
-        
-        The mimetype is used for serialized objects, and tells the 
-        ResXResourceReader how to depersist the object. This is currently not 
-        extensible. For a given mimetype the value must be set accordingly:
-        
-        Note - application/x-microsoft.net.object.binary.base64 is the format 
-        that the ResXResourceWriter will generate, however the reader can 
-        read any of the formats listed below.
-        
-        mimetype: application/x-microsoft.net.object.binary.base64
-        value   : The object must be serialized with 
-                : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-                : and then encoded with base64 encoding.
-        
-        mimetype: application/x-microsoft.net.object.soap.base64
-        value   : The object must be serialized with 
-                : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-                : and then encoded with base64 encoding.
+    Microsoft ResX Schema 
     
-        mimetype: application/x-microsoft.net.object.bytearray.base64
-        value   : The object must be serialized into a byte array 
-                : using a System.ComponentModel.TypeConverter
-                : and then encoded with base64 encoding.
-        -->
-  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -112,14 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Assign changed successfully" xml:space="preserve">
     <value>分配更改成功</value>
@@ -127,8 +123,8 @@
   <data name="Assigned successfully" xml:space="preserve">
     <value>分配成功</value>
   </data>
-  <data name="Create a new role" xml:space="preserve">
-    <value>创建新角色</value>
+  <data name="Create a role" xml:space="preserve">
+    <value>创建角色</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>描述</value>
@@ -136,8 +132,20 @@
   <data name="Edit the role" xml:space="preserve">
     <value>编辑角色</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>名称</value>
+  </data>
   <data name="Roles" xml:space="preserve">
     <value>角色</value>
+  </data>
+  <data name="No Roles Found" xml:space="preserve">
+    <value>未找到角色</value>
+  </data>
+  <data name="Try adjusting your search or filter to find what you're looking for." xml:space="preserve">
+    <value>请尝试调整搜索或筛选条件以找到您需要的内容。</value>
+  </data>
+  <data name="Loading Roles..." xml:space="preserve">
+    <value>正在加载角色...</value>
   </data>
   <data name="Search by role name" xml:space="preserve">
     <value>搜索角色名称</value>
@@ -148,9 +156,6 @@
   <data name="Unassigned successfully" xml:space="preserve">
     <value>已成功取消分配</value>
   </data>
-  <data name="Name" xml:space="preserve">
-    <value>名称</value>
-  </data>
   <data name="Assigned Roles" xml:space="preserve">
     <value>分配的角色</value>
   </data>
@@ -160,83 +165,23 @@
   <data name="Selected" xml:space="preserve">
     <value>已选择</value>
   </data>
-  <data name="Assign or Unassign all" xml:space="preserve">
-    <value>全部分配或取消分配</value>
-  </data>
-  <data name="Audit Trails" xml:space="preserve">
-    <value>审计跟踪</value>
-  </data>
-  <data name="Audit Trails Permissions" xml:space="preserve">
-    <value>审计跟踪权限</value>
-  </data>
-  <data name="Authorization has been changed" xml:space="preserve">
-    <value>授权已更改</value>
-  </data>
-  <data name="Categories" xml:space="preserve">
-    <value>类别</value>
-  </data>
-  <data name="Categories Permissions" xml:space="preserve">
-    <value>类别 权限</value>
-  </data>
-  <data name="Customers" xml:space="preserve">
-    <value>顾客</value>
-  </data>
-  <data name="Customers Permissions" xml:space="preserve">
-    <value>客户权限</value>
-  </data>
-  <data name="Dashboard" xml:space="preserve">
-    <value>仪表板</value>
-  </data>
-  <data name="Dashboard Permissions" xml:space="preserve">
-    <value>仪表板权限</value>
-  </data>
-  <data name="Documents" xml:space="preserve">
-    <value>文件</value>
-  </data>
-  <data name="Documents Permissions" xml:space="preserve">
-    <value>文件权限</value>
-  </data>
-  <data name="Id" xml:space="preserve">
-    <value>ID</value>
-  </data>
-  <data name="Job" xml:space="preserve">
-    <value>工作</value>
-  </data>
-  <data name="Job Permissions" xml:space="preserve">
-    <value>工作权限</value>
-  </data>
-  <data name="Logs" xml:space="preserve">
-    <value>日志</value>
-  </data>
-  <data name="Logs Permissions" xml:space="preserve">
-    <value>日志权限</value>
-  </data>
-  <data name="Multi-Tenant" xml:space="preserve">
-    <value>多租户</value>
-  </data>
-  <data name="Multi-Tenant Permissions" xml:space="preserve">
-    <value>多租户权限</value>
-  </data>
-  <data name="Normalized Name" xml:space="preserve">
-    <value>标准化名称</value>
-  </data>
-  <data name="Permission" xml:space="preserve">
-    <value>允许</value>
-  </data>
   <data name="Permission assigned successfully" xml:space="preserve">
     <value>权限分配成功</value>
-  </data>
-  <data name="Permission Description" xml:space="preserve">
-    <value>权限说明</value>
   </data>
   <data name="Permission removed successfully" xml:space="preserve">
     <value>权限删除成功</value>
   </data>
-  <data name="Picklist" xml:space="preserve">
-    <value>选项列表</value>
+  <data name="Authorization has been changed" xml:space="preserve">
+    <value>授权已更改</value>
   </data>
-  <data name="Picklist Permissions" xml:space="preserve">
-    <value>选项列表权限</value>
+  <data name="Assign or Unassign all" xml:space="preserve">
+    <value>全部分配或取消分配</value>
+  </data>
+  <data name="Permission" xml:space="preserve">
+    <value>允许</value>
+  </data>
+  <data name="Permission Description" xml:space="preserve">
+    <value>权限说明</value>
   </data>
   <data name="Products" xml:space="preserve">
     <value>产品</value>
@@ -244,14 +189,41 @@
   <data name="Products Permissions" xml:space="preserve">
     <value>产品权限</value>
   </data>
-  <data name="Role Claims" xml:space="preserve">
-    <value>角色声明</value>
+  <data name="Categories" xml:space="preserve">
+    <value>类别</value>
   </data>
-  <data name="Role Claims Permissions" xml:space="preserve">
-    <value>角色声明权限</value>
+  <data name="Categories Permissions" xml:space="preserve">
+    <value>类别 权限</value>
   </data>
-  <data name="Roles Permissions" xml:space="preserve">
-    <value>角色权限</value>
+  <data name="Documents" xml:space="preserve">
+    <value>文件</value>
+  </data>
+  <data name="Documents Permissions" xml:space="preserve">
+    <value>文件权限</value>
+  </data>
+  <data name="Customers" xml:space="preserve">
+    <value>顾客</value>
+  </data>
+  <data name="Customers Permissions" xml:space="preserve">
+    <value>客户权限</value>
+  </data>
+  <data name="Audit Trails" xml:space="preserve">
+    <value>审计跟踪</value>
+  </data>
+  <data name="Audit Trails Permissions" xml:space="preserve">
+    <value>审计跟踪权限</value>
+  </data>
+  <data name="Logs" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="Logs Permissions" xml:space="preserve">
+    <value>日志权限</value>
+  </data>
+  <data name="Picklist Permissions" xml:space="preserve">
+    <value>选项列表权限</value>
+  </data>
+  <data name="Picklist" xml:space="preserve">
+    <value>选项列表</value>
   </data>
   <data name="Users" xml:space="preserve">
     <value>用户</value>
@@ -259,7 +231,46 @@
   <data name="Users Permissions" xml:space="preserve">
     <value>用户权限</value>
   </data>
+  <data name="Roles Permissions" xml:space="preserve">
+    <value>角色权限</value>
+  </data>
+  <data name="Multi-Tenant" xml:space="preserve">
+    <value>多租户</value>
+  </data>
+  <data name="Multi-Tenant Permissions" xml:space="preserve">
+    <value>多租户权限</value>
+  </data>
+  <data name="Role Claims" xml:space="preserve">
+    <value>角色声明</value>
+  </data>
+  <data name="Role Claims Permissions" xml:space="preserve">
+    <value>角色声明权限</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>仪表板</value>
+  </data>
+  <data name="Dashboard Permissions" xml:space="preserve">
+    <value>仪表板权限</value>
+  </data>
+  <data name="Job" xml:space="preserve">
+    <value>工作</value>
+  </data>
+  <data name="Job Permissions" xml:space="preserve">
+    <value>工作权限</value>
+  </data>
+  <data name="Normalized Name" xml:space="preserve">
+    <value>标准化名称</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>租户名称</value>
+  </data>
+  <data name="Enter role name" xml:space="preserve">
+    <value>请输入角色名称</value>
+  </data>
+  <data name="Enter description for this role" xml:space="preserve">
+    <value>请输入该角色的描述</value>
   </data>
 </root>

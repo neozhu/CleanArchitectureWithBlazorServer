@@ -1,8 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Mapster;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
-using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.Export;
 
@@ -16,17 +16,20 @@ public class ExportPicklistSetsQuery : IRequest<byte[]>
 public class ExportPicklistSetsQueryHandler :
     IRequestHandler<ExportPicklistSetsQuery, byte[]>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly TypeAdapterConfig _typeAdapterConfig;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ExportPicklistSetsQueryHandler> _localizer;
 
     public ExportPicklistSetsQueryHandler(
-        IApplicationDbContext context,
+        IApplicationDbContextFactory dbContextFactory,
+        TypeAdapterConfig typeAdapterConfig,
         IExcelService excelService,
         IStringLocalizer<ExportPicklistSetsQueryHandler> localizer
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
+        _typeAdapterConfig = typeAdapterConfig;
         _excelService = excelService;
         _localizer = localizer;
     }
@@ -34,11 +37,11 @@ public class ExportPicklistSetsQueryHandler :
 #pragma warning disable CS8604
     public async ValueTask<byte[]> Handle(ExportPicklistSetsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.PicklistSets.Where(x =>
-                x.Description.Contains(request.Keyword) || x.Value.Contains(request.Keyword) ||
-                x.Text.Contains(request.Keyword))
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.PicklistSets.Where(x =>
+                (string.IsNullOrEmpty(request.Keyword) || x.Value.Contains(request.Keyword) || x.Text.Contains(request.Keyword)))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectTo()
+            .ProjectToType<PicklistSetDto>(_typeAdapterConfig)
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,
             new Dictionary<string, Func<PicklistSetDto, object?>>

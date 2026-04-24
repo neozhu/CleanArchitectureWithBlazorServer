@@ -1,11 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.Mappers;
+
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Import;
 
@@ -31,22 +29,22 @@ public class ImportProductsCommandHandler :
     IRequestHandler<CreateProductsTemplateCommand, Result<byte[]>>,
     IRequestHandler<ImportProductsCommand, Result<int>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly IObjectMapper _objectMapper;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ImportProductsCommandHandler> _localizer;
-    private readonly ISerializer _serializer;
 
     public ImportProductsCommandHandler(
-        IApplicationDbContext context,
+        IApplicationDbContextFactory dbContextFactory,
+        IObjectMapper objectMapper,
         IExcelService excelService,
-        ISerializer serializer,
         IStringLocalizer<ImportProductsCommandHandler> localizer
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _localizer = localizer;
         _excelService = excelService;
-        _serializer = serializer;
+        _objectMapper = objectMapper;
     }
 
     public async ValueTask<Result<byte[]>> Handle(CreateProductsTemplateCommand request, CancellationToken cancellationToken)
@@ -66,6 +64,7 @@ public class ImportProductsCommandHandler :
 #nullable disable warnings
     public async ValueTask<Result<int>> Handle(ImportProductsCommand request, CancellationToken cancellationToken)
     {
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
         var result = await _excelService.ImportAsync(request.Data,
             new Dictionary<string, Func<DataRow, ProductDto, object?>>
             {
@@ -78,24 +77,24 @@ public class ImportProductsCommandHandler :
                 { _localizer["Unit"], (row, item) => item.Unit = row[_localizer["Unit"]].ToString() },
                 {
                     _localizer["Price of unit"],
-                    (row, item) => item.Price = row.FieldDecimalOrDefault(_localizer["Price of unit"])
+                    (row, item) => item.Price = row.GetValue<decimal>(_localizer["Price of unit"])
                 },
                 {
                     _localizer["Pictures"],
                     (row, item) => item.Pictures = string.IsNullOrEmpty(row[_localizer["Pictures"]].ToString())
                         ? new List<ProductImage>()
-                        : _serializer.Deserialize<List<ProductImage>>(row[_localizer["Pictures"]].ToString())
+                        : JsonSerializer.Deserialize<List<ProductImage>>(row[_localizer["Pictures"]].ToString())
                 }
             }, _localizer["Products"]);
         if (!result.Succeeded) return await Result<int>.FailureAsync(result.Errors);
         {
             foreach (var dto in result.Data!)
             {
-                var item = ProductMapper.FromDto(dto);
-                await _context.Products.AddAsync(item, cancellationToken);
+                var item = _objectMapper.Map<Product>(dto);
+                await db.Products.AddAsync(item, cancellationToken);
             }
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await db.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(result.Data.Count());
         }
     }

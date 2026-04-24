@@ -176,4 +176,13 @@
     <data name="Tenant" xml:space="preserve">
     <value>Tenant</value>
   </data>
+    <data name="No Audit Trails Found" xml:space="preserve">
+      <value>No Audit Trails Found</value>
+    </data>
+    <data name="Try adjusting your search or filter to find what you're looking for." xml:space="preserve">
+      <value>Try adjusting your search or filter to find what you're looking for.</value>
+    </data>
+    <data name="Loading Audit Trails..." xml:space="preserve">
+      <value>Loading Audit Trails...</value>
+    </data>
 </root>

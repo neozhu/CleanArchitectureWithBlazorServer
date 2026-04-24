@@ -1,7 +1,10 @@
 ﻿using System.Net.Http.Headers;
-using BlazorDownloadFile;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
+using CleanArchitecture.Blazor.Application.Common.Constants;
+using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
+using CleanArchitecture.Blazor.Server.UI.Extensions;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
+using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Services;
 using CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
@@ -10,14 +13,13 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using QuestPDF;
 using QuestPDF.Infrastructure;
-using Toolbelt.Blazor.Extensions.DependencyInjection;
-using CleanArchitecture.Blazor.Server.UI.Middlewares;
-using CleanArchitecture.Blazor.Application;
-using CleanArchitecture.Blazor.Server.UI.Extensions;
+
 
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -35,13 +37,11 @@ public static class DependencyInjection
     /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddServerUI(this IServiceCollection services, IConfiguration config)
     {
-        services.AddRazorComponents().AddInteractiveServerComponents().AddHubOptions(options=> options.MaximumReceiveMessageSize = 64 * 1024);
+        services.AddRazorComponents().AddInteractiveServerComponents().AddHubOptions(options => options.MaximumReceiveMessageSize = 10 * 1024 * 1024);
         services.AddCascadingAuthenticationState();
-        services.AddScoped<IdentityUserAccessor>();
-        services.AddScoped<IdentityRedirectManager>();
         services.AddMudServices(config =>
         {
- 
+      
             config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomCenter;
             config.SnackbarConfiguration.NewestOnTop = false;
             config.SnackbarConfiguration.ShowCloseIcon = true;
@@ -49,25 +49,22 @@ public static class DependencyInjection
             config.SnackbarConfiguration.HideTransitionDuration = 500;
             config.SnackbarConfiguration.ShowTransitionDuration = 500;
             config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
-           
-            // we're currently planning on deprecating `PreventDuplicates`, at least to the end dev. however,
-            // we may end up wanting to instead set it as internal because the docs project relies on it
-            // to ensure that the Snackbar always allows duplicates. disabling the warning for now because
-            // the project is set to treat warnings as errors.
-#pragma warning disable 0618
             config.SnackbarConfiguration.PreventDuplicates = false;
-#pragma warning restore 0618
+
         });
         services.AddMudPopoverService();
         services.AddMudBlazorSnackbar();
         services.AddMudBlazorDialog();
-        services.AddHotKeys2();
+
+        //services.AddDataProtectionKeyCheck();
 
         services.AddScoped<LocalizationCookiesMiddleware>()
             .Configure<RequestLocalizationOptions>(options =>
             {
+    
                 options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
                 options.AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+                options.DefaultRequestCulture = new RequestCulture(LocalizationConstants.DefaultLanguageCode);
                 options.FallBackToParentUICultures = true;
             })
             .AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
@@ -83,17 +80,18 @@ public static class DependencyInjection
         services.AddControllers();
 
         services.AddScoped<IApplicationHubWrapper, ServerHubWrapper>()
-            .AddSignalR(options=>options.MaximumReceiveMessageSize=64*1024);
+            .AddSignalR(options =>
+            {
+                options.MaximumReceiveMessageSize = 10 * 1024 * 1024;
+                options.AddFilter<UserContextHubFilter>();
+            });
+        
+      
+        
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
         services.AddHealthChecks();
 
-
-        services.AddHttpClient("ocr", c =>
-        {
-            c.BaseAddress = new Uri("http://10.33.1.150:8000/ocr/predict-by-file");
-            c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        });
         services.AddScoped<LocalTimeOffset>();
         services.AddScoped<IHubConnectionFactory, HubConnectionFactory>()
             .AddScoped<HubClient>();
@@ -101,8 +99,7 @@ public static class DependencyInjection
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
             .AddScoped<DialogServiceHelper>()
-            .AddScoped<PermissionHelper>()
-            .AddBlazorDownloadFile()
+            .AddScoped<BlazorDownloadFileService>()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
             .AddScoped<IMenuService, MenuService>()
             .AddScoped<InMemoryNotificationService>()
@@ -135,11 +132,13 @@ public static class DependencyInjection
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-        app.InitializeCacheFactory();
+
+        // Single global exception handler registration to activate IExceptionHandler (GlobalExceptionHandler) + ProblemDetails pipeline.
         app.UseExceptionHandler();
-        app.UseStatusCodePagesWithReExecute("/not-found",createScopeForStatusCodePages: true);
+        app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+        app.UseForwardedHeaders();
         app.MapHealthChecks("/health");
-        app.UseDataProtectionKeyCheck();
+        //app.UseDataProtectionKeyCheck();
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseAntiforgery();
@@ -159,12 +158,20 @@ public static class DependencyInjection
         });
 
         var localizationOptions = new RequestLocalizationOptions()
-            .SetDefaultCulture(LocalizationConstants.SupportedLanguages.Select(x => x.Code).First())
+            .SetDefaultCulture(LocalizationConstants.DefaultLanguageCode)
             .AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray())
             .AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+
+        // Remove AcceptLanguageHeaderRequestCultureProvider to prevent the browser's Accept-Language header from taking effect
+        var acceptLanguageProvider = localizationOptions.RequestCultureProviders
+            .OfType<AcceptLanguageHeaderRequestCultureProvider>()
+            .FirstOrDefault();
+        if (acceptLanguageProvider != null)
+        {
+            localizationOptions.RequestCultureProviders.Remove(acceptLanguageProvider);
+        }
         app.UseRequestLocalization(localizationOptions);
         app.UseMiddleware<LocalizationCookiesMiddleware>();
-        app.UseExceptionHandler();
         app.UseHangfireDashboard("/jobs", new DashboardOptions
         {
             Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
@@ -178,7 +185,6 @@ public static class DependencyInjection
 
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();
-        app.UseForwardedHeaders();
         app.UseWebSockets(new WebSocketOptions()
         { // We obviously need this
             KeepAliveInterval = TimeSpan.FromSeconds(30), // Just in case

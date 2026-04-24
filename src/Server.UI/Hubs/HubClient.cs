@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -11,8 +10,8 @@ public sealed class HubClient : IAsyncDisposable
     private bool _started;
     public HubClient(IHubConnectionFactory hubConnectionFactory)
     {
-
-        _hubConnection = hubConnectionFactory.CreateForCurrentUser(ISignalRHub.Url);
+         
+        _hubConnection  = hubConnectionFactory.CreateForCurrentUser(ISignalRHub.Url);
 
         _hubConnection.ServerTimeout = TimeSpan.FromSeconds(20);
         _hubConnection.KeepAliveInterval = TimeSpan.FromSeconds(10);
@@ -33,56 +32,62 @@ public sealed class HubClient : IAsyncDisposable
         _hubConnection.On<string, string, string>(nameof(ISignalRHub.SendPrivateMessage),
             async (from, to, message) => await OnMessageReceivedEventAsync(from, message).ConfigureAwait(false));
 
+        // Active page-component session events
+        _hubConnection.On<string, string, string>(nameof(ISignalRHub.PageComponentOpened),
+            async (pageComponent, userId, userName) => await OnPageComponentOpenedAsync(pageComponent, userId, userName).ConfigureAwait(false));
+
+        _hubConnection.On<string, string, string>(nameof(ISignalRHub.PageComponentClosed),
+            async (pageComponent, userId, userName) => await OnPageComponentClosedAsync(pageComponent, userId, userName).ConfigureAwait(false));
    
     }
 
     // Handle the result of async event invocations
-    private async Task OnLoginEventAsync(string connectionId, string userName)
+    private Task OnLoginEventAsync(string connectionId, string userName)
     {
-        if (LoginEvent != null)
-        {
-            await Task.Run(() => LoginEvent?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName))).ConfigureAwait(false);
-        }
+        LoginEvent?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName));
+        return Task.CompletedTask;
     }
 
-    private async Task OnLogoutEventAsync(string connectionId, string userName)
+    private Task OnLogoutEventAsync(string connectionId, string userName)
     {
-        if (LogoutEvent != null)
-        {
-            await Task.Run(() => LogoutEvent?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName))).ConfigureAwait(false);
-        }
+        LogoutEvent?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName));
+        return Task.CompletedTask;
     }
 
-    private async Task OnJobStartedEventAsync( int id, string message)
+    private Task OnJobStartedEventAsync(int id, string message)
     {
-        if (JobStartedEvent != null)
-        {
-            await Task.Run(() => JobStartedEvent?.Invoke(this, new JobStartedEventArgs(id, message))).ConfigureAwait(false);
-        }
+        JobStartedEvent?.Invoke(this, new JobStartedEventArgs(id, message));
+        return Task.CompletedTask;
     }
 
-    private async Task OnJobCompletedEventAsync( int id, string message)
+    private Task OnJobCompletedEventAsync(int id, string message)
     {
-        if (JobCompletedEvent != null)
-        {
-            await Task.Run(() => JobCompletedEvent?.Invoke(this, new JobCompletedEventArgs(id, message))).ConfigureAwait(false);
-        }
+        JobCompletedEvent?.Invoke(this, new JobCompletedEventArgs(id, message));
+        return Task.CompletedTask;
     }
 
-    private async Task OnNotificationReceivedEventAsync( string message)
+    private Task OnNotificationReceivedEventAsync(string message)
     {
-        if (NotificationReceivedEvent != null)
-        {
-            await Task.Run(() => NotificationReceivedEvent?.Invoke(this, new NotificationReceivedEventArgs(message))).ConfigureAwait(false);
-        }
+        NotificationReceivedEvent?.Invoke(this, new NotificationReceivedEventArgs(message));
+        return Task.CompletedTask;
     }
 
-    private async Task OnMessageReceivedEventAsync( string from,string message)
+    private Task OnMessageReceivedEventAsync(string from, string message)
     {
-        if (MessageReceivedEvent != null)
-        {
-            await Task.Run(() => MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(from, message))).ConfigureAwait(false);
-        }
+        MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(from, message));
+        return Task.CompletedTask;
+    }
+
+    private Task OnPageComponentOpenedAsync(string pageComponent, string userId, string userName)
+    {
+        PageComponentOpenedEvent?.Invoke(this, new PageComponentEventArgs(pageComponent, userId, userName));
+        return Task.CompletedTask;
+    }
+
+    private Task OnPageComponentClosedAsync(string pageComponent, string userId, string userName)
+    {
+        PageComponentClosedEvent?.Invoke(this, new PageComponentEventArgs(pageComponent, userId, userName));
+        return Task.CompletedTask;
     }
     
     public async ValueTask DisposeAsync()
@@ -104,6 +109,8 @@ public sealed class HubClient : IAsyncDisposable
     public event EventHandler<JobCompletedEventArgs>? JobCompletedEvent;
     public event EventHandler<NotificationReceivedEventArgs>? NotificationReceivedEvent;
     public event EventHandler<MessageReceivedEventArgs>? MessageReceivedEvent;
+    public event EventHandler<PageComponentEventArgs>? PageComponentOpenedEvent;
+    public event EventHandler<PageComponentEventArgs>? PageComponentClosedEvent;
 
     public async Task StartAsync(CancellationToken cancellation = default)
     {
@@ -120,6 +127,23 @@ public sealed class HubClient : IAsyncDisposable
     public async Task NotifyAsync(string message)
     {
         await _hubConnection.SendAsync(nameof(ISignalRHub.SendNotification), message).ConfigureAwait(false);
+    }
+
+    public async Task OpenPageComponentAsync(string pageComponent)
+    {
+        await _hubConnection.SendAsync("NotifyPageComponentOpen", pageComponent).ConfigureAwait(false);
+    }
+
+    public async Task ClosePageComponentAsync(string pageComponent)
+    {
+        await _hubConnection.SendAsync("NotifyPageComponentClose", pageComponent).ConfigureAwait(false);
+    }
+
+    // Snapshot online users (usernames) from hub
+    public async Task<List<CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.UserContext>> GetOnlineUsersAsync(CancellationToken cancellationToken = default)
+    {
+        var users = await _hubConnection.InvokeAsync<List<CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.UserContext>>(nameof(ISignalRHub.GetOnlineUsers), cancellationToken).ConfigureAwait(false);
+        return users ?? new List<CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.UserContext>();
     }
 }
 
@@ -174,4 +198,18 @@ public class NotificationReceivedEventArgs : EventArgs
         Message = message;
     }
     public string Message { get; set; }
+}
+
+public class PageComponentEventArgs : EventArgs
+{
+    public PageComponentEventArgs(string pageComponent, string userId, string userName)
+    {
+        PageComponent = pageComponent;
+        UserId = userId;
+        UserName = userName;
+    }
+
+    public string PageComponent { get; }
+    public string UserId { get; }
+    public string UserName { get; }
 }

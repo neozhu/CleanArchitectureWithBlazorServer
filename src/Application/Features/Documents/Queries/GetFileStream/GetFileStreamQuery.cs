@@ -18,19 +18,20 @@ public class GetFileStreamQuery : ICacheableRequest<(string, byte[])>
 
 public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (string, byte[])>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
 
     public GetFileStreamQueryHandler(
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async ValueTask<(string, byte[])> Handle(GetFileStreamQuery request, CancellationToken cancellationToken)
     {
-        var item = await _context.Documents.FindAsync(new object?[] { request.Id }, cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var item = await db.Documents.FindAsync(new object?[] { request.Id }, cancellationToken);
         if (item is null) throw new Exception($"not found document entry by Id:{request.Id}.");
         if (string.IsNullOrEmpty(item.URL)) return (string.Empty, Array.Empty<byte>());
 
@@ -46,7 +47,7 @@ public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (st
     {
         public DocumentsQuery(string userId, string tenantId, string keyword)
         {
-            Query.Where(p => (p.CreatedBy == userId && p.IsPublic == false) || p.IsPublic == true)
+            Query.Where(p => (p.CreatedById == userId && p.IsPublic == false) || p.IsPublic == true)
                 .Where(x => x.TenantId == tenantId, !string.IsNullOrEmpty(tenantId))
                 .Where(x => x.Title!.Contains(keyword) || x.Description!.Contains(keyword),
                     !string.IsNullOrEmpty(keyword));

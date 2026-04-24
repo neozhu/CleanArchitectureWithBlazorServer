@@ -1,11 +1,11 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete;
 
-public class DeleteDocumentCommand : ICacheInvalidatorRequest<Result<int>>
+public class DeleteDocumentCommand : ICacheInvalidatorRequest<Result>
 {
     public DeleteDocumentCommand(int[] id)
     {
@@ -16,28 +16,29 @@ public class DeleteDocumentCommand : ICacheInvalidatorRequest<Result<int>>
     public IEnumerable<string>? Tags => DocumentCacheKey.Tags;
 }
 
-public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentCommand, Result<int>>
+public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentCommand, Result>
 
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
     public DeleteDocumentCommandHandler(
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
-    public async ValueTask<Result<int>> Handle(DeleteDocumentCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(DeleteDocumentCommand request, CancellationToken cancellationToken)
     {
-        var items = await _context.Documents.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var items = await db.Documents.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
         {
-            item.AddDomainEvent(new DeletedEvent<Document>(item));
-            _context.Documents.Remove(item);
+            item.AddDomainEvent(new DocumentDeletedEvent(item));
+            db.Documents.Remove(item);
         }
 
-        var result = await _context.SaveChangesAsync(cancellationToken);
-        return await Result<int>.SuccessAsync(result);
+        await db.SaveChangesAsync(cancellationToken);
+        return await Result.SuccessAsync();
     }
 }

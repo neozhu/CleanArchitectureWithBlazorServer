@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Products.Specifications;
+namespace CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 #nullable disable warnings
 public class ProductAdvancedSpecification : Specification<Product>
 {
@@ -15,8 +15,8 @@ public class ProductAdvancedSpecification : Specification<Product>
             .Where(x => x.Brand == filter.Brand, !string.IsNullOrEmpty(filter.Brand))
             .Where(x => x.Price <= filter.MaxPrice, filter.MaxPrice is not null)
             .Where(x => x.Price >= filter.MinPrice, filter.MinPrice is not null)
-            .Where(x => x.CreatedBy == filter.CurrentUser.UserId, filter.ListView == ProductListView.My)
-            .Where(x => x.Created >= todayrange.Start && x.Created < todayrange.End.AddDays(1), filter.ListView == ProductListView.TODAY)
-            .Where(x => x.Created >= last30daysrange.Start, filter.ListView == ProductListView.LAST_30_DAYS);
+            .Where(x => x.CreatedById == filter.CurrentUser.UserId, filter.ListView == ProductListView.My)
+            .Where(x => x.CreatedAt >= todayrange.Start && x.CreatedAt < todayrange.End.AddDays(1), filter.ListView == ProductListView.TODAY)
+            .Where(x => x.CreatedAt >= last30daysrange.Start, filter.ListView == ProductListView.LAST_30_DAYS);
     }
 }

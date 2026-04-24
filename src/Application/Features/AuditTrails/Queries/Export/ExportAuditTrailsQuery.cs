@@ -1,8 +1,8 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Mapster;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
-using CleanArchitecture.Blazor.Application.Features.AuditTrails.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Export;
 
@@ -16,27 +16,29 @@ public class ExportAuditTrailsQuery : IRequest<byte[]>
 public class ExportAuditTrailsQueryHandler :
     IRequestHandler<ExportAuditTrailsQuery, byte[]>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly TypeAdapterConfig _typeAdapterConfig;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ExportAuditTrailsQueryHandler> _localizer;
 
     public ExportAuditTrailsQueryHandler(
-        IApplicationDbContext context,
+        IApplicationDbContextFactory dbContextFactory,
+        TypeAdapterConfig typeAdapterConfig,
         IExcelService excelService,
         IStringLocalizer<ExportAuditTrailsQueryHandler> localizer
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
+        _typeAdapterConfig = typeAdapterConfig;
         _excelService = excelService;
         _localizer = localizer;
     }
 
     public async ValueTask<byte[]> Handle(ExportAuditTrailsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.AuditTrails
-            .Where(x => x.TableName!.Contains(request.Keyword))
-            .OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectTo()
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.AuditTrails.Where(x=>x.TableName != null && x.TableName.Contains(request.Keyword ?? string.Empty))
+            .ProjectToType<AuditTrailDto>(_typeAdapterConfig)
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,
             new Dictionary<string, Func<AuditTrailDto, object?>>
@@ -45,8 +47,7 @@ public class ExportAuditTrailsQueryHandler :
                 { _localizer["Date Time"], item => item.DateTime.ToString("yyyy-MM-dd HH:mm:ss") },
                 { _localizer["Table Name"], item => item.TableName },
                 { _localizer["Audit Type"], item => item.AuditType },
-                { _localizer["Old Values"], item => item.OldValues },
-                { _localizer["New Values"], item => item.NewValues },
+                { _localizer["Changes"], item => item.Changes },
                 { _localizer["Primary Key"], item => item.PrimaryKey }
             }, _localizer["AuditTrails"]
         );

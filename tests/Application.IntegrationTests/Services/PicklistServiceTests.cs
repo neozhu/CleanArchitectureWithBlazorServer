@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Domain.Entities;
 using NUnit.Framework;
@@ -6,9 +6,10 @@ using NUnit.Framework;
 namespace CleanArchitecture.Blazor.Application.IntegrationTests.Services;
 
 using static Testing;
-
+[NonParallelizable]
 public class PicklistServiceTests : TestBase
 {
+  
     [SetUp]
     public async Task InitData()
     {
@@ -22,9 +23,10 @@ public class PicklistServiceTests : TestBase
     public async Task ShouldLoadDataSource()
     {
         var picklist = CreatePicklistService();
-        picklist.Initialize();
+        await picklist.RefreshAsync();
         var count = picklist.DataSource.Count();
-        Assert.Equals(4, count);
+        Assert.That(count,Is.EqualTo(4));
+  
     }
 
     [Test]
@@ -32,8 +34,8 @@ public class PicklistServiceTests : TestBase
     {
         await AddAsync(new PicklistSet { Name = Picklist.Brand, Text = "Text5", Value = "Value5" });
         var picklist = CreatePicklistService();
-        picklist.Refresh();
+        await picklist.RefreshAsync();
         var count = picklist.DataSource.Count();
-        Assert.Equals(5, count);
+        Assert.That(count, Is.EqualTo(5));
     }
 }

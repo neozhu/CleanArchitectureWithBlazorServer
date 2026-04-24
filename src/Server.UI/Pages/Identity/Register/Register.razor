@@ -1,0 +1,288 @@
+﻿@page "/account/register"
+@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using CleanArchitecture.Blazor.Domain.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Text
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
+@using System.ComponentModel.DataAnnotations
+@using System.Globalization
+@using CleanArchitecture.Blazor.Server.UI.Resources.ValidationMessages
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
+@using CleanArchitecture.Blazor.Server.UI.Components.Inputs.Autocomplete
+
+@inherits OwningComponentBase
+
+@inject IStringLocalizer<Register> L
+@inject ILogger<Register> Logger
+
+<PageTitle>@_pageTitle</PageTitle>
+
+
+<EditForm Model="_formModel" OnValidSubmit="HandleRegisterUserAsync" FormName="register">
+	<DataAnnotationsValidator />
+	<MudStack Spacing="2">
+		<MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
+		<MudText>
+			@L["Have an account?"] <MudLink Href="@Login.PageUrl">@L["Sign In"]</MudLink>
+		</MudText>
+
+		<TenantSelect @bind-Value="_formModel.Tenant"
+								 Label="@L["Tenant"]"
+								 Variant="Variant.Outlined"
+								 Placeholder="@L["Please select a tenant"]"
+								 Required="true"
+								 For="@(() => _formModel.Tenant)" />
+		<MudTextField @bind-Value="_formModel.UserName"
+					  Label="@L["User Name"]"
+					  Variant="Variant.Outlined"
+					  Required="true"
+					  Placeholder="@L["Enter a user name"]"
+					  For="@(() => _formModel.UserName)" />
+
+
+		<MudTextField @bind-Value="_formModel.Email"
+					  Label="@L["E-mail"]"
+					  Variant="Variant.Outlined"
+					  Required="true"
+					  Placeholder="@L["Enter your email address"]"
+					  For="@(() => _formModel.Email)" />
+
+		<MudTextField @bind-Value="_formModel.Password"
+					  Label="@L["Password"]"
+					  Variant="Variant.Outlined"
+					  Required="true"
+					  InputType="@(_isPasswordVisible ? InputType.Text : InputType.Password)"
+					  Placeholder="@L["Create a password"]"
+					  For="@(() => _formModel.Password)"
+					  Adornment="Adornment.End"
+					  AdornmentIcon="@(_isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+					  OnAdornmentClick="@(() => _isPasswordVisible = !_isPasswordVisible)" />
+		<MudTextField @bind-Value="_formModel.ConfirmPassword"
+					  Label="@L["Confirm Password"]"
+					  Variant="Variant.Outlined"
+					  Required="true"
+					  InputType="@(_isConfirmPasswordVisible ? InputType.Text : InputType.Password)"
+					  Placeholder="@L["Re-enter your password"]"
+					  For="@(() => _formModel.ConfirmPassword)"
+					  Adornment="Adornment.End"
+					  AdornmentIcon="@(_isConfirmPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+					  OnAdornmentClick="@(() => _isConfirmPasswordVisible = !_isConfirmPasswordVisible)" />
+		<TimeZoneAutocomplete @bind-Value="_formModel.TimeZoneId"
+							  T="string"
+							  Label="@L["Time Zone"]"
+							  Variant="Variant.Outlined"
+							  Required="true"
+							  For="@(() => _formModel.TimeZoneId)" />
+		<LanguageAutocomplete @bind-Value="_formModel.LanguageCode"
+							  T="string"
+							  Label="@L["Language"]"
+							  Variant="Variant.Outlined"
+							  Required="true"
+							  For="@(() => _formModel.LanguageCode)" />
+		<div Class="d-flex justify-space-between align-center mb-1">
+			<MudCheckBox @bind-Value="_formModel.AgreeToTerms"
+						 Label="@L["I agree to the terms and privacy"]"
+						 Required="true"
+						 For="@(() => _formModel.AgreeToTerms)" />
+			<div class="mud-input-helper-text mud-input-error">
+				<div class="d-flex">
+					<ValidationMessage For="() => _formModel.AgreeToTerms" class="mud-input-error" />
+				</div>
+			</div>
+		</div>
+
+		<MudButton Variant="Variant.Filled"
+				   Color="Color.Primary"
+				   Size="Size.Large"
+				   ButtonType="ButtonType.Submit"
+				   FullWidth="true">
+			<MudText>@L["Register"]</MudText>
+		</MudButton>
+	</MudStack>
+</EditForm>
+
+
+@code {
+
+	public const string PageUrl = "/account/register";
+	private string _pageTitle = "Sign Up";
+
+	[SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+	private string? _statusMessage;
+	private bool _isPasswordVisible;
+	private bool _isConfirmPasswordVisible;
+
+	private InputModel _formModel { get; set; } = new();
+	private UserManager<ApplicationUser> _userManager = null!;
+	private RoleManager<ApplicationRole> _roleManager = null!;
+	private IApplicationDbContextFactory _applicationDbContextFactory = null!;
+
+	protected override Task OnInitializedAsync()
+	{
+		_pageTitle = $"{ApplicationSettings.AppName} - {L["Sign Up"]}";
+
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+		_roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+		_applicationDbContextFactory = ScopedServices.GetRequiredService<IApplicationDbContextFactory>();
+
+		return Task.CompletedTask;
+
+	}
+
+	public async Task HandleRegisterUserAsync(EditContext editContext)
+	{
+		var user = new ApplicationUser();
+		user.TenantId = _formModel.TenantId;
+		user.LanguageCode = _formModel.LanguageCode;
+		user.TimeZoneId = _formModel.TimeZoneId;
+		user.Email = _formModel.Email;
+		user.UserName = _formModel.UserName;
+		user.CreatedAt = DateTime.UtcNow;
+		var role = await _roleManager.Roles.Where(x => x.Name == Roles.Basic).FirstOrDefaultAsync();
+		if (role is null)
+		{
+			role = new ApplicationRole
+			{
+				Name = Roles.Basic,
+				NormalizedName = Roles.Basic.ToUpperInvariant(),
+				CreatedAt = DateTime.UtcNow
+			};
+			var roleResult = await _roleManager.CreateAsync(role);
+			if (!roleResult.Succeeded)
+			{
+				_statusMessage = string.Join(", ", roleResult.Errors.Select(error => error.Description));
+				Snackbar.Add(_statusMessage, Severity.Error);
+				return;
+			}
+		}
+		var result = await _userManager.CreateAsync(user, _formModel.Password);
+		if (!result.Succeeded)
+		{
+			_statusMessage = string.Join(", ", result.Errors.Select(error => error.Description));
+			Snackbar.Add(_statusMessage, Severity.Error);
+			return;
+		}
+
+		result = await _userManager.AddToRoleAsync(user, Roles.Basic);
+		if (!result.Succeeded)
+		{
+			_statusMessage = string.Join(", ", result.Errors.Select(error => error.Description));
+			Snackbar.Add(_statusMessage, Severity.Error);
+			return;
+		}
+
+		var userId = await _userManager.GetUserIdAsync(user);
+		var dbContext =await _applicationDbContextFactory.CreateAsync();
+		dbContext.TenantUsers.Add(new TenantUser
+		{
+			TenantId = user.TenantId,
+			UserId = userId,
+		
+		});
+		await dbContext.SaveChangesAsync(CancellationToken.None);
+		Logger.LogInformation("New user account created. User ID: {UserId}, Tenant ID: {TenantId}.",
+			_formModel.UserName,
+			userId,
+			_formModel.TenantId,
+			Roles.Basic);
+		if (_userManager.Options.SignIn.RequireConfirmedEmail)
+		{
+			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+			var callbackUrl = Navigation.GetUriWithQueryParameters(
+				Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
+				new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = "/" });
+			await Mediator.Publish(new UserActivationNotification(callbackUrl, _formModel.Email, userId, _formModel.UserName));
+			var url = Navigation.GetUriWithQueryParameters(
+				Navigation.ToAbsoluteUri(RegisterConfirmation.PageUrl).AbsoluteUri,
+				new Dictionary<string, object?> { ["email"] = _formModel.Email, ["EmailConfirmationLink"] = callbackUrl });
+			Navigation.NavigateTo(url);
+		}
+		else if (_userManager.Options.SignIn.RequireConfirmedAccount)
+		{
+			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+			var callbackUrl = Navigation.GetUriWithQueryParameters(
+				Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
+				new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
+			var url = Navigation.GetUriWithQueryParameters(
+				Navigation.ToAbsoluteUri(RegisterConfirmation.PageUrl).AbsoluteUri,
+				new Dictionary<string, object?> { ["email"] = _formModel.Email, ["EmailConfirmationLink"] = callbackUrl });
+			Navigation.NavigateTo(url);
+		}
+		else
+		{
+
+			Navigation.NavigateTo(Login.PageUrl);
+		}
+	}
+
+
+
+
+
+	public sealed class InputModel
+	{
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.UserNameRequired))]
+		[StringLength(100, MinimumLength = 2,
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.UserNameStringLength))]
+		public string UserName { get; set; } = "";
+
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.EmailRequired))]
+		[EmailAddress(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.EmailInvalid))]
+		[Display(Name = "Email")]
+		public string Email { get; set; } = "";
+
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.PasswordRequired))]
+		[StringLength(50, MinimumLength = 8,
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.PasswordLength))]
+		[RegularExpression(
+			@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$",
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.PasswordComplexity))]
+		[DataType(DataType.Password)]
+		[Display(Name = "Password")]
+		public string Password { get; set; } = "";
+
+		[DataType(DataType.Password)]
+		[Display(Name = "Confirm password")]
+		[Compare("Password",
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.PasswordMismatch))]
+		public string? ConfirmPassword { get; set; } = "";
+
+		[Range(typeof(bool), "true", "true",
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.AgreeToTermsRequired))]
+		public bool AgreeToTerms { get; set; } = true;
+
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.TenantRequired))]
+		[Display(Name = "Tenant Id")]
+		public string? TenantId => Tenant?.Id;
+
+		[Display(Name = "Time Zone")]
+		public string? TimeZoneId { get; set; } = TimeZoneInfo.Local.Id;
+
+		[Display(Name = "Language")]
+		public string? LanguageCode { get; set; } = CultureInfo.CurrentCulture.Name;
+
+		[Display(Name = "Tenant")]
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.TenantRequired))]
+		public TenantDto? Tenant { get; set; } = null;
+	}
+
+}

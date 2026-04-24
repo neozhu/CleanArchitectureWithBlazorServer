@@ -1,9 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Mapster;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
-using CleanArchitecture.Blazor.Application.Features.AuditTrails.Mappers;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery;
@@ -23,21 +23,25 @@ public class AuditTrailsWithPaginationQuery : AuditTrailAdvancedFilter, ICacheab
 
 public class AuditTrailsQueryHandler : IRequestHandler<AuditTrailsWithPaginationQuery, PaginatedData<AuditTrailDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly TypeAdapterConfig _typeAdapterConfig;
 
     public AuditTrailsQueryHandler(
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory,
+        TypeAdapterConfig typeAdapterConfig
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
+        _typeAdapterConfig = typeAdapterConfig;
     }
 
     public async ValueTask<PaginatedData<AuditTrailDto>> Handle(AuditTrailsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.AuditTrails.OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber,
-                request.PageSize, AuditTrailMapper.ToDto, cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.AuditTrails.OrderBy($"{request.OrderBy} {request.SortDirection}")
+            .ProjectToPaginatedDataAsync<AuditTrail, AuditTrailDto>(request.Specification, request.PageNumber,
+                request.PageSize, _typeAdapterConfig, cancellationToken);
 
         return data;
     }

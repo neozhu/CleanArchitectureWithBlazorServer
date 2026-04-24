@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Data;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +13,7 @@ using Serilog.Sinks.MSSqlServer;
 using Serilog.Sinks.PostgreSQL;
 using Serilog.Sinks.PostgreSQL.ColumnWriters;
 using ColumnOptions = Serilog.Sinks.MSSqlServer.ColumnOptions;
+using CleanArchitecture.Blazor.Application.Common.Constants;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
@@ -23,14 +23,9 @@ public static class SerilogExtensions
     {
         Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
         builder.Host.UseSerilog((context, configuration) =>
-            configuration
-                // Configure minimum log levels
-                .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            configuration.ReadFrom.Configuration(context.Configuration)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
-                .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
-                .MinimumLevel.Override("System", LogEventLevel.Warning)
-                .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
                 .MinimumLevel.Override("MudBlazor", LogEventLevel.Information)
                 .MinimumLevel.Override("Serilog", LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore.AddOrUpdate", LogEventLevel.Error)
@@ -40,21 +35,9 @@ public static class SerilogExtensions
                 .MinimumLevel.Override("Hangfire.Server.ServerHeartbeatProcess", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", LogEventLevel.Error)
                 .MinimumLevel.Override("ZiggyCreatures.Caching.Fusion.FusionCache", LogEventLevel.Error)
-                .MinimumLevel.Override("ActualLab.CommandR.Interception.CommandServiceInterceptor", LogEventLevel.Error)
-                .MinimumLevel.Override("ActualLab.Fusion.Interception.ComputeServiceInterceptor", LogEventLevel.Error)
-                .MinimumLevel.Override("ActualLab.Fusion.Extensions.Services.InMemoryKeyValueStore", LogEventLevel.Error)
-                .MinimumLevel.Override("ActualLab.Fusion.Operations.Internal.CompletionProducer", LogEventLevel.Error)
-                .MinimumLevel.Override("ActualLab.Fusion.Internal.ComputedGraphPruner", LogEventLevel.Error)
-                .MinimumLevel.Override("CleanArchitecture.Blazor.Server.UI.Services.Fusion.UserSessionTracker", LogEventLevel.Error)
-                .MinimumLevel.Override("CleanArchitecture.Blazor.Server.UI.Services.Fusion.OnlineUserTracker", LogEventLevel.Error)
-                // Add enrichment properties
                 .Enrich.FromLogContext()
                 .Enrich.WithUtcTime()
                 .Enrich.WithUserInfo()
-                .Enrich.WithProperty("Application", "BlazorApp")
-                .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName)
-                .Enrich.WithProperty("TargetFramework", "net9")
-                // Configure output sinks
                 .WriteTo.Async(wt => wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
                 .WriteTo.Async(wt =>
                     wt.Console(
@@ -69,7 +52,6 @@ public static class SerilogExtensions
         WriteToSeq(serilogConfig, configuration);
         WriteToDatabase(serilogConfig, configuration);
     }
-
     private static void WriteToSeq(LoggerConfiguration serilogConfig, IConfiguration configuration)
     {
         var serverUrl = "https://seq.blazorserver.com";
@@ -78,8 +60,8 @@ public static class SerilogExtensions
 
         if (!string.IsNullOrEmpty(serverUrl))
         {
-            var minimumLevel = Enum.TryParse<LogEventLevel>(restrictedToMinimumLevel, true, out var level) 
-                ? level 
+            var minimumLevel = Enum.TryParse<LogEventLevel>(restrictedToMinimumLevel, true, out var level)
+                ? level
                 : LogEventLevel.Verbose;
 
             serilogConfig.WriteTo.Seq(
@@ -89,10 +71,9 @@ public static class SerilogExtensions
             );
         }
     }
-
     private static void WriteToDatabase(LoggerConfiguration serilogConfig, IConfiguration configuration)
     {
-        if (configuration.GetValue<bool>("UseInMemoryDatabase")) return;
+    // Removed legacy in-memory database skip; logging to database now always attempts based on configured provider.
 
         var dbProvider =
             configuration.GetValue<string>($"{nameof(DatabaseSettings)}:{nameof(DatabaseSettings.DBProvider)}");
@@ -120,7 +101,7 @@ public static class SerilogExtensions
 
         MSSqlServerSinkOptions sinkOpts = new()
         {
-            TableName = "Loggers",
+            TableName = "SystemLogs",
             SchemaName = "dbo",
             AutoCreateSqlDatabase = false,
             AutoCreateSqlTable = false,
@@ -174,9 +155,9 @@ public static class SerilogExtensions
     {
         if (string.IsNullOrEmpty(connectionString)) return;
 
-        const string tableName = "loggers";
-        // Used columns (Key is a column name) 
-        // Column type is writer's constructor parameter
+        const string tableName = "system_logs";
+        //Used columns (UserContextKey is a column name) 
+        //Column type is writer's constructor parameter
         IDictionary<string, ColumnWriterBase> columnOptions = new Dictionary<string, ColumnWriterBase>
         {
             { "message", new RenderedMessageColumnWriter(NpgsqlDbType.Text) },
@@ -208,7 +189,7 @@ public static class SerilogExtensions
     private static void WriteToSqLite(LoggerConfiguration serilogConfig, string dbname)
     {
         var sqlPath = Environment.CurrentDirectory + dbname;
-        const string tableName = "Loggers";
+        const string tableName = "SystemLogs";
         serilogConfig.WriteTo.Async(wt => wt.SQLite(
             sqlPath,
             tableName,
@@ -241,8 +222,8 @@ internal class UserInfoEnricher : ILogEventEnricher
     public UserInfoEnricher() : this(new HttpContextAccessor())
     {
     }
-    // Dependency injection can be used to retrieve any service required to get a user or any data.
-    // Here, I easily get data from HTTPContext
+    //Dependency injection can be used to retrieve any service required to get a user or any data.
+    //Here, I easily get data from HTTPContext
     public UserInfoEnricher(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;

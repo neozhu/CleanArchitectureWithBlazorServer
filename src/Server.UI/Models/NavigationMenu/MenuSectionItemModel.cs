@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
+namespace CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
 
 public class MenuSectionItemModel
 {

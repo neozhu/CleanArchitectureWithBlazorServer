@@ -1,0 +1,121 @@
+<!-- Outer container: horizontal layout -->
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+@using MudBlazor
+@inject IStringLocalizer<UserActionInfo> L
+
+<MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+    <MudAvatar Size="Size.Medium" Variant="Variant.Filled">
+        @if (!string.IsNullOrEmpty(User?.ProfilePictureDataUrl))
+        {
+            <MudImage Src="@User.ProfilePictureDataUrl" />
+        }
+        else
+        {
+            @(GetDisplayName()?.FirstOrDefault().ToString().ToUpper() ?? "?")
+        }
+    </MudAvatar>
+
+    <MudStack Spacing="0">
+        <MudText Typo="Typo.body1">
+            @(GetDisplayName() ?? "-")
+        </MudText>
+
+        <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+            @if (DisplayTime.HasValue)
+            {
+                <MudTooltip Text="@DisplayTime.Value.ToString("yyyy-MM-dd HH:mm:ss")" Arrow="true" Placement="Placement.Right">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Style="cursor: help;">
+                        @GetRelativeTime(DisplayTime)
+                    </MudText>
+                </MudTooltip>
+            }
+            else
+            {
+                <MudText Typo="Typo.caption" Color="Color.Secondary">-</MudText>
+            }
+        </MudStack>
+    </MudStack>
+</MudStack>
+@code {
+    [Parameter] public UserBriefDto? User { get; set; }
+    [Parameter] public DateTime? ActionTime { get; set; }
+    [Parameter] public string? TimeZoneId { get; set; }
+
+    private TimeZoneInfo _resolvedTimeZone = TimeZoneInfo.Local;
+    private DateTime? DisplayTime { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _resolvedTimeZone = ResolveTimeZone(TimeZoneId);
+        DisplayTime = ActionTime.HasValue ? ConvertUtcToTimeZone(ActionTime.Value, _resolvedTimeZone) : null;
+    }
+
+    private static DateTime ConvertUtcToTimeZone(DateTime utcTime, TimeZoneInfo timeZone)
+    {
+        var normalizedUtc = utcTime.Kind == DateTimeKind.Utc
+            ? utcTime
+            : DateTime.SpecifyKind(utcTime, DateTimeKind.Utc);
+
+        return TimeZoneInfo.ConvertTimeFromUtc(normalizedUtc, timeZone);
+    }
+
+    private static TimeZoneInfo ResolveTimeZone(string? timeZoneId)
+    {
+        if (string.IsNullOrWhiteSpace(timeZoneId))
+        {
+            return TimeZoneInfo.Local;
+        }
+
+        try
+        {
+            return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+        }
+        catch
+        {
+            return TimeZoneInfo.Local;
+        }
+    }
+
+    private string? GetDisplayName()
+    {
+        return User?.DisplayName ?? User?.UserName;
+    }
+
+    private string GetRelativeTime(DateTime? localDate)
+    {
+        if (localDate is null)
+        {
+            return "-";
+        }
+
+        var nowInZone = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _resolvedTimeZone);
+        var span = nowInZone - localDate.Value;
+
+        if (span.TotalSeconds < 0)
+        {
+            span = TimeSpan.Zero;
+        }
+
+        if (span.TotalMinutes < 1) return L["just now"];
+
+        if (span.TotalMinutes < 60)
+        {
+            var minutes = (int)span.TotalMinutes;
+            return minutes == 1 ? L["1 minute ago"] : L["{0} minutes ago", minutes];
+        }
+
+        if (span.TotalHours < 24)
+        {
+            var hours = (int)span.TotalHours;
+            return hours == 1 ? L["1 hour ago"] : L["{0} hours ago", hours];
+        }
+
+        if (span.TotalDays < 7)
+        {
+            var days = (int)span.TotalDays;
+            return days == 1 ? L["1 day ago"] : L["{0} days ago", days];
+        }
+
+        return localDate.Value.ToString("g");
+    }
+}

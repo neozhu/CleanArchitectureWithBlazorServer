@@ -1,0 +1,33 @@
+﻿
+@inject LayoutService LayoutService
+@if (LayoutService.IsDarkMode)
+{
+    <img src="/dark-brand.svg" alt="Logo" class="@Class" style="@Style" />
+}
+else
+{
+    <img src="/brand.svg" alt="Logo" class="@Class" style="@Style" />
+}
+ 
+@code
+{
+    [Parameter] public string Style { get; set; } = string.Empty;
+    [Parameter] public string Class { get; set; } = string.Empty;
+
+
+    protected override void OnInitialized()
+    {
+        LayoutService.DarkModeChanged += LayoutService_DarkModeChanged;
+    }
+    private async Task LayoutService_DarkModeChanged()
+    {
+         await   InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        LayoutService.MajorUpdateOccurred -= LayoutService_DarkModeChanged;
+        GC.SuppressFinalize(this);
+    }
+    
+    
+}

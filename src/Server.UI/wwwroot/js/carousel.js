@@ -3,11 +3,11 @@
 
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'https://cdn.jsdelivr.net/npm/swiper@11.1.5/swiper-bundle.min.css';
+    link.href = 'https://unpkg.com/swiper@11.1.5/swiper-bundle.min.css';
     document.head.appendChild(link);
 
     const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/swiper@11.1.5/swiper-bundle.min.js';
+    script.src = 'https://unpkg.com/swiper@11.1.5/swiper-bundle.min.js';
     script.onload = () => {
         var swiper = new Swiper(selector, {
             slidesPerView: 3,
@@ -25,8 +25,6 @@
  
     };
     document.body.appendChild(script);
-
-    console.log("initializeSwiper")
 };
 
  

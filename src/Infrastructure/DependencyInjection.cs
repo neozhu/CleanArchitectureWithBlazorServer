@@ -2,96 +2,58 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
-using ActualLab.Fusion;
+using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
-using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
-using CleanArchitecture.Blazor.Application.Features.Fusion;
+using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Pipeline;
-using CleanArchitecture.Blazor.Application.Pipeline.PreProcessors;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
-using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
-using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
-using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
-using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Services.OpenAI;
-using CleanArchitecture.Blazor.Infrastructure.Services.Serialization;
-using FluentEmail.MailKitSmtp;
-using Microsoft.AspNetCore.Components.Server.Circuits;
+using MaxMind.GeoIP2;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
-using Mediator;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
+
 public static class DependencyInjection
 {
     private const string IDENTITY_SETTINGS_KEY = "IdentitySettings";
     private const string APP_CONFIGURATION_SETTINGS_KEY = "AppConfigurationSettings";
     private const string DATABASE_SETTINGS_KEY = "DatabaseSettings";
     private const string SMTP_CLIENT_OPTIONS_KEY = "SmtpClientOptions";
-    private const string USE_IN_MEMORY_DATABASE_KEY = "UseInMemoryDatabase";
-    private const string IN_MEMORY_DATABASE_NAME = "BlazorDashboardDb";
+    // Removed UseInMemoryDatabase and in-memory database name constants (feature deprecated)
     private const string NPGSQL_ENABLE_LEGACY_TIMESTAMP_BEHAVIOR = "Npgsql.EnableLegacyTimestampBehavior";
     private const string POSTGRESQL_MIGRATIONS_ASSEMBLY = "CleanArchitecture.Blazor.Migrators.PostgreSQL";
     private const string MSSQL_MIGRATIONS_ASSEMBLY = "CleanArchitecture.Blazor.Migrators.MSSQL";
     private const string SQLITE_MIGRATIONS_ASSEMBLY = "CleanArchitecture.Blazor.Migrators.SqLite";
-    private const string SMTP_CLIENT_OPTIONS_DEFAULT_FROM_EMAIL = "SmtpClientOptions:DefaultFromEmail";
-    private const string EMAIL_TEMPLATES_PATH = "Resources/EmailTemplates";
-    private const string DEFAULT_FROM_EMAIL = "noreply@blazorserver.com";
-    private const string LOGIN_PATH = "/pages/authentication/login";
+    private const string LOGIN_PATH = "/account/login";
     private const int DEFAULT_LOCKOUT_TIME_SPAN_MINUTES = 5;
     private const int MAX_FAILED_ACCESS_ATTEMPTS = 5;
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddSettings(configuration)
-            .AddDatabase(configuration)
-            .AddServices()
-            .AddMessageServices(configuration);
+        
+        return services
+            .AddApplicationSettings(configuration)
+            .AddDatabaseServices(configuration)
+            .AddIdentityAndSecurity(configuration)
+            .AddBusinessServices(configuration)
+            .AddCachingServices()
+            .AddNotificationServices(configuration)
+            .AddSessionManagement();
 
-        services.AddMediator(options =>
-        {
-            options.ServiceLifetime = ServiceLifetime.Scoped;
-            options.NotificationPublisherType = typeof(ParallelNoWaitPublisher);
-            options.Assemblies =
-            [
-                typeof(CleanArchitecture.Blazor.Application.DependencyInjection),
-            ];
-            options.PipelineBehaviors =
-            [
-                typeof(DbExceptionHandler<,>),
-                typeof(GlobalExceptionHandler<,>),
-                typeof(ServerExceptionHandler<,>),
-                typeof(ValidationExceptionHandler<,>),
-                typeof(ValidationPreProcessor<,>),
-                typeof(PerformanceBehaviour<,>),
-                typeof(FusionCacheBehaviour<,>),
-                typeof(CacheInvalidationBehaviour<,>),
-            ];
-        });
-
-        services
-            .AddAuthenticationService(configuration)
-            .AddFusionCacheService()
-            .AddSessionInfoService()
-            .AddFusionService();
-
-        services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
-        services.AddScoped<IScopedMediator, ScopedMediator>();
-        return services;
     }
 
-    private static IServiceCollection AddSettings(this IServiceCollection services,
+    #region Configuration and Settings
+    private static IServiceCollection AddApplicationSettings(this IServiceCollection services,
         IConfiguration configuration)
     {
         services.Configure<IdentitySettings>(configuration.GetSection(IDENTITY_SETTINGS_KEY))
@@ -104,35 +66,40 @@ public static class DependencyInjection
 
         services.Configure<DatabaseSettings>(configuration.GetSection(DATABASE_SETTINGS_KEY))
             .AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+
+        services.Configure<MinioOptions>(configuration.GetSection(MinioOptions.Key))
+            .AddSingleton(s => s.GetRequiredService<IOptions<MinioOptions>>().Value);
+
+        services.Configure<AISettings>(configuration.GetSection(AISettings.Key))
+            .AddSingleton(s => s.GetRequiredService<IOptions<AISettings>>().Value)
+            .AddSingleton<IAISettings>(s => s.GetRequiredService<IOptions<AISettings>>().Value);
+
+       
         return services;
     }
+    #endregion
 
-    private static IServiceCollection AddDatabase(this IServiceCollection services,
+    #region Database and Persistence
+    private static IServiceCollection AddDatabaseServices(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>()
+        services.AddScoped<IDateTime, DateTimeService>()
+            .AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>()
             .AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
-        if (configuration.GetValue<bool>(USE_IN_MEMORY_DATABASE_KEY))
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseInMemoryDatabase(IN_MEMORY_DATABASE_NAME);
-                options.EnableSensitiveDataLogging();
-            });
-        else
-            services.AddDbContext<ApplicationDbContext>((p, m) =>
-            {
-                var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
-                m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
-                m.UseExceptionProcessor(databaseSettings.DBProvider);
-                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
-            });
+       
 
-        services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
-        services.AddScoped<IApplicationDbContext>(provider =>
-            provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
+        // Keep factory registration for components that require explicit context creation.
+        services.AddDbContextFactory<ApplicationDbContext>((p, m) =>
+        {
+            var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+            m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
+            m.UseExceptionProcessor(databaseSettings.DBProvider);
+            m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
+        },  ServiceLifetime.Scoped);
+
+        services.AddScoped<IApplicationDbContextFactory, ApplicationDbContextFactory>();
         services.AddScoped<ApplicationDbContextInitializer>();
-
         return services;
     }
 
@@ -146,7 +113,7 @@ public static class DependencyInjection
                 return builder.UseNpgsql(connectionString,
                         e => e.MigrationsAssembly(POSTGRESQL_MIGRATIONS_ASSEMBLY))
                     .UseSnakeCaseNamingConvention();
-                  
+
             case DbProviderKeys.SqlServer:
                 return builder.UseSqlServer(connectionString,
                     e => e.MigrationsAssembly(MSSQL_MIGRATIONS_ASSEMBLY));
@@ -162,7 +129,7 @@ public static class DependencyInjection
 
     private static DbContextOptionsBuilder UseExceptionProcessor(this DbContextOptionsBuilder builder, string dbProvider)
     {
-     
+
         switch (dbProvider.ToLowerInvariant())
         {
             case DbProviderKeys.Npgsql:
@@ -182,35 +149,65 @@ public static class DependencyInjection
                 throw new InvalidOperationException($"DB Provider {dbProvider} is not supported.");
         }
     }
+    #endregion
 
-    private static IServiceCollection AddServices(this IServiceCollection services)
+    #region Business Services
+    private static IServiceCollection AddBusinessServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<PicklistService>()
-            .AddSingleton<IPicklistService>(sp =>
-            {
-                var service = sp.GetRequiredService<PicklistService>();
-                service.Initialize();
-                return service;
-            });
+        // Auto-discover and register all IDataSourceService<T> implementations
+        services.AddDataSourceServices();
+        services.AddScoped<ITenantSwitchService, TenantSwitchService>();
 
-        services.AddSingleton<TenantService>()
-            .AddSingleton<ITenantService>(sp =>
-            {
-                var service = sp.GetRequiredService<TenantService>();
-                service.Initialize();
-                return service;
-            });
 
-        return services.AddSingleton<ISerializer, SystemTextJsonSerializer>()
+
+
+        // Configure SecurityAnalysisService with options
+        services.Configure<WebServiceClientOptions>(configuration.GetSection("MaxMind"));
+        services.AddHttpClient<WebServiceClient>();
+
+       
+        return services
+            .AddSingleton<IDocumentOcrQueue, DocumentOcrQueue>()
+            .AddHostedService<DocumentOcrBackgroundService>()
             .AddScoped<IValidationService, ValidationService>()
-            .AddScoped<IDateTime, DateTimeService>()
             .AddScoped<IExcelService, ExcelService>()
-            .AddScoped<IUploadService, UploadService>()
+            .AddScoped<IFileUploadService, MinioFileUploadService>()
             .AddScoped<IPDFService, PDFService>()
+            .AddScoped<IPermissionQueryService, PermissionQueryService>()
+            .AddScoped<PermissionAssignmentService>()
             .AddTransient<IDocumentOcrJob, DocumentOcrJob>();
     }
+    #endregion
 
-    private static IServiceCollection AddMessageServices(this IServiceCollection services,
+    /// <summary>
+    /// Scans the Infrastructure assembly for concrete implementations of IDataSourceService<T>
+    /// and registers them with scoped lifetime. Avoids duplicate registrations.
+    /// </summary>
+    /// <remarks>
+    /// Pattern: any non-abstract class implementing IDataSourceService&lt;T&gt; will be registered.
+    /// If an implementation was already registered manually, it will be skipped.
+    /// </remarks>
+    private static IServiceCollection AddDataSourceServices(this IServiceCollection services)
+    {
+        var openGeneric = typeof(IDataSourceService<>);
+        var assembly = typeof(DependencyInjection).Assembly;
+        foreach (var type in assembly.GetTypes())
+        {
+            if (!type.IsClass || type.IsAbstract) continue;
+            var implementedDataSourceInterfaces = type.GetInterfaces()
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == openGeneric);
+            foreach (var iface in implementedDataSourceInterfaces)
+            {
+                // Skip if already registered
+                if (services.Any(s => s.ServiceType == iface)) continue;
+                services.AddScoped(iface, type);
+            }
+        }
+        return services;
+    }
+
+    #region Notification Services
+    private static IServiceCollection AddNotificationServices(this IServiceCollection services,
         IConfiguration configuration)
     {
         var smtpClientOptions = new SmtpClientOptions();
@@ -220,40 +217,34 @@ public static class DependencyInjection
         services.AddSingleton(smtpClientOptions);
         services.AddScoped<IMailService, MailService>();
 
-        // configure your sender and template choices with dependency injection.
-        var defaultFromEmail = configuration.GetValue<string>(SMTP_CLIENT_OPTIONS_DEFAULT_FROM_EMAIL);
-        services.AddFluentEmail(defaultFromEmail ?? DEFAULT_FROM_EMAIL)
-            .AddRazorRenderer(Path.Combine(Directory.GetCurrentDirectory(), EMAIL_TEMPLATES_PATH))
-            .AddMailKitSender(smtpClientOptions);
-
         return services;
     }
+    #endregion
 
-    private static IServiceCollection AddAuthenticationService(this IServiceCollection services,
+    #region Identity and Security
+    private static IServiceCollection AddIdentityAndSecurity(this IServiceCollection services,
         IConfiguration configuration)
     {
 
-        services.AddScoped<IUserStore<ApplicationUser>, MultiTenantUserStore>();
-        services.AddScoped<UserManager<ApplicationUser>, MultiTenantUserManager>();
-        services.AddIdentityCore<ApplicationUser>()
+
+        services.AddIdentityCore<ApplicationUser>(options => {
+            options.SignIn.RequireConfirmedAccount = true;
+            options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
+        })
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddSignInManager()
-            .AddClaimsPrincipalFactory<MultiTenantUserClaimsPrincipalFactory>()
             .AddDefaultTokenProviders();
 
-        // Add the custom role validator MultiTenantRoleValidator to override the default validation logic.
-        // Ensures role names are unique within each tenant.
-        services.AddScoped<IRoleValidator<ApplicationRole>, MultiTenantRoleValidator>();
 
-        // Find the default RoleValidator<ApplicationRole> registration in the service collection.
-        var defaultRoleValidator = services.FirstOrDefault(descriptor => descriptor.ImplementationType == typeof(RoleValidator<ApplicationRole>));
-
-        // If the default role validator is found, remove it to ensure only MultiTenantRoleValidator is used.
-        if (defaultRoleValidator != null)
+        // Replace the default SignInManager with AuditSignInManager
+        var signInManagerDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(SignInManager<ApplicationUser>));
+        if (signInManagerDescriptor != null)
         {
-            services.Remove(defaultRoleValidator);
+            services.Remove(signInManagerDescriptor);
         }
+        services.AddScoped<SignInManager<ApplicationUser>, AuditSignInManager<ApplicationUser>>();
+
         services.Configure<IdentityOptions>(options =>
         {
             var identitySettings = configuration.GetRequiredSection(IDENTITY_SETTINGS_KEY).Get<IdentitySettings>();
@@ -278,13 +269,14 @@ public static class DependencyInjection
             // User settings
             options.User.RequireUniqueEmail = true;
             //options.Tokens.EmailConfirmationTokenProvider = "Email";
-            
+
         });
 
         services.AddScoped<IIdentityService, IdentityService>()
+            .AddScoped<IUserProfileState, UserProfileState>()
             .AddAuthorizationCore(options =>
             {
-                options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));
+                options.AddPolicy("CanPurge", policy => policy.RequireUserName(Users.Administrator));
                 // Here I stored necessary permissions/roles in a constant
                 foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c =>
                              c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
@@ -302,21 +294,17 @@ public static class DependencyInjection
             })
             .AddMicrosoftAccount(microsoftOptions =>
             {
-                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId") ?? string.Empty;
-                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret") ?? string.Empty;
+                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId") ?? "disabled";
+                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret") ?? "disabled";
                 //microsoftOptions.CallbackPath = new PathString("/pages/authentication/ExternalLogin"); # dotn't set this parameter!!
             })
             .AddGoogle(googleOptions =>
             {
-                googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId") ?? string.Empty;
-                googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret") ?? string.Empty; ;
+                googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId") ?? "disabled";
+                googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret") ?? "disabled";
             }
             )
-            //.AddFacebook(facebookOptions =>
-            //{
-            //    facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId") ?? string.Empty;
-            //    facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret") ?? string.Empty;
-            //})
+
             .AddIdentityCookies(options => { });
 
         services.ConfigureApplicationCookie(options =>
@@ -325,52 +313,61 @@ public static class DependencyInjection
             options.SlidingExpiration = true;
             options.SessionStore = new MemoryCacheTicketStore();
             options.LoginPath = LOGIN_PATH;
+            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            
         });
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
-        services.AddSingleton<UserService>()
-            .AddSingleton<IUserService>(sp =>
-            {
-                var service = sp.GetRequiredService<UserService>();
-                service.Initialize();
-                return service;
-            });
+        
 
         return services;
     }
+    #endregion
 
-    private static IServiceCollection AddFusionCacheService(this IServiceCollection services)
+    #region Caching Services
+    private static IServiceCollection AddCachingServices(this IServiceCollection services)
     {
         services.AddMemoryCache();
-        services.AddFusionCache().WithDefaultEntryOptions(new FusionCacheEntryOptions
-        {
-            // CACHE DURATION
-            Duration = TimeSpan.FromMinutes(120),
-            // FAIL-SAFE OPTIONS
-            IsFailSafeEnabled = true,
-            FailSafeMaxDuration = TimeSpan.FromHours(8),
-            FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
-            // FACTORY TIMEOUTS
-            FactorySoftTimeout = TimeSpan.FromSeconds(10),
-            FactoryHardTimeout = TimeSpan.FromSeconds(30),
-            AllowTimedOutFactoryBackgroundCompletion = true,    
-        });
+        services.AddFusionCache()
+                .WithDefaultEntryOptions(new FusionCacheEntryOptions
+                {
+                    Duration = TimeSpan.FromMinutes(30),
+
+                    IsFailSafeEnabled = true,
+                    FailSafeMaxDuration = TimeSpan.FromHours(3),
+                    FailSafeThrottleDuration = TimeSpan.FromSeconds(10),
+
+                    FactorySoftTimeout = TimeSpan.FromSeconds(2),
+                    FactoryHardTimeout = TimeSpan.FromSeconds(10),
+
+                    JitterMaxDuration = TimeSpan.FromSeconds(30),
+
+                    LockTimeout = TimeSpan.FromSeconds(3),
+
+                    EagerRefreshThreshold = 0.8f,
+                });
+        services.AddScoped<IAppCache, FusionAppCache>();
         return services;
     }
+    #endregion
 
-    private static IServiceCollection AddSessionInfoService(this IServiceCollection services)
+    #region Session Management
+    private static IServiceCollection AddSessionManagement(this IServiceCollection services)
     {
-        services.AddScoped<ICurrentUserContext, CurrentUserContext>();
-        services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
-        services.AddScoped<ICurrentUserContextSetter, CurrentUserContextSetter>();
-        services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();
+        // User context management
+        services.AddSingleton<IHubFilter, UserContextHubFilter>();
+        services.AddSingleton<IClientInfoAccessor, ClientInfoAccessor>();
+        services.AddSingleton<IUserContextAccessor, UserContextAccessor>();
+        services.AddSingleton<IUserContextLoader, UserContextLoader>();
+
+     
+     
+        services.AddScoped<IPermissionService, PermissionService>();
+
         return services;
     }
+    #endregion
 
-    private static void AddFusionService(this IServiceCollection services)
-    {
-        var fusion = services.AddFusion();
-        fusion.AddService<IUserSessionTracker, UserSessionTracker>();
-        fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
-    }
+
 }

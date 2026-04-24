@@ -1,0 +1,188 @@
+﻿@page "/account/login"
+
+@using CleanArchitecture.Blazor.Domain.Events
+@using Microsoft.AspNetCore.Authentication
+@using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendFactorCode
+@using System.ComponentModel.DataAnnotations
+@using CleanArchitecture.Blazor.Server.UI.Resources.ValidationMessages
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Register
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Forgot
+@inherits OwningComponentBase
+@inject ILogger<Login> Logger
+@inject IStringLocalizer<Login> L
+@inject IClientInfoAccessor ClientInfoAccessor
+@inject IWebHostEnvironment Environment
+
+<PageTitle>@_pageTitle</PageTitle>
+
+<div class="d-flex flex-column  gap-y-2">
+	<EditForm Model="_formModel" OnValidSubmit="HandleSubmitAsync" FormName="login">
+		<DataAnnotationsValidator />
+		<MudStack Spacing="2">
+			<MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
+			<MudText>
+				@L["Do not have an account?"] <MudLink Href="@Register.PageUrl" Target="_self">@L["Sign Up"]</MudLink>
+			</MudText>
+			<!--user name-->
+			<MudTextField @bind-Value="_formModel.UserName" Label="@L["User name"]" Variant="Variant.Outlined"
+				Placeholder="@L["Enter your user name"]" For="@(() => _formModel.UserName)" AutoFocus="true" Required="true"
+				RequiredError="@L["User name is required"]" />
+			<!--password-->
+			<MudTextField @bind-Value="_formModel.Password" Label="@L["Password"]" Variant="Variant.Outlined"
+				Placeholder="@L["Enter your password"]" For="@(() => _formModel.Password)" InputType="@_passwordInputType"
+				Required="true" RequiredError="@L["Password is required"]" Adornment="Adornment.End"
+				AdornmentIcon="@_passwordIcon" OnAdornmentClick="TogglePasswordVisibility" />
+
+
+			<div Class="d-flex justify-space-between align-center mb-1">
+				<MudCheckBox @bind-Value="_formModel.RememberMe" For="@(() => _formModel.RememberMe)" Color="Color.Primary">
+					@L["Remember me"]
+				</MudCheckBox>
+				<MudLink Href="@Forgot.PageUrl">@L["Forgot password?"]</MudLink>
+			</div>
+
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" ButtonType="ButtonType.Submit"
+				FullWidth="true">
+				<MudText>@L["Sign In"]</MudText>
+			</MudButton>
+		</MudStack>
+	</EditForm>
+
+
+	<div class="d-flex flex-column">
+
+		<ExternalLoginPicker />
+
+	</div>
+</div>
+
+@code {
+	private UserManager<ApplicationUser> _userManager = null!;
+	private IApplicationDbContextFactory _dbContextFactory = null!;
+
+	public const string PageUrl = "/account/login";
+	private string? _errorMessage;
+	[SupplyParameterFromQuery] public string? ReturnUrl { get; set; }
+	private string _pageTitle = "Sign In";
+
+	// Password visibility toggle
+	private bool _passwordVisible = false;
+	private InputType _passwordInputType = InputType.Password;
+	private string _passwordIcon = Icons.Material.Filled.VisibilityOff;
+	private IJSObjectReference? _auth;
+	private InputModel _formModel { get; set; } = new()
+	{
+		UserName = "",
+		Password = "",
+		RememberMe = false
+	};
+
+	private void TogglePasswordVisibility()
+	{
+		_passwordVisible = !_passwordVisible;
+		_passwordInputType = _passwordVisible ? InputType.Text : InputType.Password;
+		_passwordIcon = _passwordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+	}
+
+	protected override Task OnInitializedAsync()
+	{
+		_pageTitle = $"{ApplicationSettings.AppName} - {L["Sign In"]}";
+		if (Environment.IsDevelopment())
+		{
+			_formModel = new()
+			{
+				UserName = "administrator",
+				Password = "Password123!",
+				RememberMe = true
+			};
+		}
+		_userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+		_dbContextFactory = ScopedServices.GetRequiredService<IApplicationDbContextFactory>();
+		return Task.CompletedTask;
+	}
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+			_auth = await JS.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
+	}
+
+	private async Task HandleSubmitAsync()
+	{
+		// Check if the user exists
+		var user = await _userManager.FindByNameAsync(_formModel.UserName);
+		if (user == null)
+		{
+			_errorMessage = L["The specified user does not exist."];
+			Snackbar.Add(_errorMessage, Severity.Error);
+			return;
+		}
+		// Check if the user is currently locked out
+		if (await _userManager.IsLockedOutAsync(user))
+		{
+			_errorMessage = L["The account is locked due to multiple failed attempts. Please try again later."];
+			Snackbar.Add(_errorMessage, Severity.Error);
+			return;
+		}
+		if (!user.IsActive)
+		{
+			_errorMessage = L["Your account is inactive. Please contact support for assistance."];
+			Snackbar.Add(_errorMessage, Severity.Error);
+			return;
+		}
+		var isPasswordValid = await _userManager.CheckPasswordAsync(user, _formModel.Password);
+		if (isPasswordValid)
+		{
+
+			if (_auth is null) return;
+			await _auth.InvokeVoidAsync("postLogin", new
+			{
+				userName = _formModel.UserName,
+				password = _formModel.Password,
+				rememberMe = _formModel.RememberMe,
+				returnUrl = ReturnUrl
+			});
+		}
+		else
+		{
+			// Login Failed: Increment the failed access count
+			await _userManager.AccessFailedAsync(user);
+
+			// Check if the account has been locked after this failure
+			if (await _userManager.IsLockedOutAsync(user))
+			{
+				_errorMessage = L["The account has been locked due to multiple failed login attempts."];
+				Snackbar.Add(_errorMessage, Severity.Error);
+			}
+			else
+			{
+				_errorMessage = L["The username or password is incorrect. Please try again."];
+				Snackbar.Add(_errorMessage, Severity.Error);
+			}
+			
+		}
+	}
+
+	public sealed class InputModel
+	{
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.UserNameRequired))]
+		[StringLength(30,
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.UserNameLength))]
+		public string UserName { get; set; } = "";
+
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.PasswordRequired))]
+		[StringLength(30, MinimumLength = 6,
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(ValidationMessages.PasswordLength))]
+		public string Password { get; set; } = "";
+
+		public bool RememberMe { get; set; } = true;
+	}
+
+}

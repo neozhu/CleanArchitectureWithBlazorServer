@@ -1,11 +1,20 @@
-﻿html {
-    font-size: 14px; /* 默认：1rem = 14px */
+﻿:root {
+    --cell-padding: 1em;       
+    --cell-padding-x: 1em;
+    --cell-padding-y: 0.5em; 
+    
+    --nav-padding-x: 1.1em;
+    --nav-padding-y: 0.75em;
+    --fancybox-bg: rgba(24, 24, 27, 0.85);
 }
+
+
 
 .mud-main-content {
     height: 100%;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
 }
 
 .mud-chip.mud-chip-size-medium {
@@ -26,7 +35,7 @@
 
 .mud-input-control-margin-dense .mud-input > input.mud-input-root,
 .mud-input-control-margin-dense div.mud-input-slot.mud-input-root {
-    font-size: 0.90em;
+    font-size: var(--mud-typography-default-size);
 }
 
 .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
@@ -48,12 +57,19 @@
 
 .mud-table-cell {
     font-size: var(--mud-typography-default-size) !important;
+    padding: var(--cell-padding) !important;
+    font-variant-numeric: tabular-nums;
 }
 
 .mud-table-dense .mud-table-cell {
     font-size: var(--mud-typography-body2-size) !important;
+    padding: var(--cell-padding-y) var(--cell-padding-x) !important;
 }
 
+.mud-simple-table.mud-table-dense * tr td, .mud-simple-table.mud-table-dense * tr th {
+    font-size: var(--mud-typography-body2-size) !important;
+    padding: var(--cell-padding-y) var(--cell-padding-x) !important;
+}
 
 .mud-button-outlined-size-small {
     font-size: var(--mud-typography-body2-size);
@@ -61,11 +77,27 @@
 
 .mud-grid.readonly-grid > .mud-grid-item {
     border-bottom: 1px solid var(--mud-palette-table-lines);
-    padding-bottom: 2px;
+    padding-bottom: 4px;
 }
 
 .mud-nav-link {
     white-space: normal !important;
+    padding: var(--nav-padding-y) var(--nav-padding-x) !important;
+}
+
+.mud-nav-group * .mud-navmenu .mud-nav-item .mud-nav-link {
+    padding-left: calc(var(--nav-padding-x) * 2) !important;
+    padding-inline-start: calc(var(--nav-padding-x) * 2) !important;
+}
+
+.mud-nav-group * .mud-navmenu > .mud-nav-group .mud-nav-link {
+    padding-left: calc(var(--nav-padding-x) * 2) !important;
+    padding-inline-start: calc(var(--nav-padding-x) * 2) !important;
+}
+
+.mud-nav-group * .mud-navmenu > .mud-nav-group * .mud-navmenu .mud-nav-item .mud-nav-link {
+    padding-left: calc(var(--nav-padding-x) * 3) !important;
+    padding-inline-start: calc(var(--nav-padding-x) * 3) !important;
 }
 
 .user-button {
@@ -76,8 +108,10 @@
 .side-menu .mud-chip.mud-chip-size-small {
     font-size: 0.625rem;
     height: 1.125rem;
+    line-height: 1.25;
 }
 
+ 
 .mud-table.mud-data-grid .mud-toolbar {
     height: auto !important;
     padding: 1rem
@@ -91,7 +125,8 @@
 
 .mud-table.mud-data-grid .mud-table-toolbar {
     height: auto !important;
-    padding: 1rem
+    padding: 1rem;
+    min-height: 48px;
 }
 
 .mud-table.mud-data-grid .mud-table-pagination-toolbar {
@@ -99,5 +134,29 @@
     padding: 0rem !important;
 }
 
+.mud-table-cell .mud-icon-button.ma-n3 {
+    margin-left: 0 !important;
+}
 
+.mud-input {
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+}
 
+.mud-menu-item .mud-button-root:hover {
+    background-color: inherit;
+}
+
+.mud-typography-subtitle2 {
+    color: var(--mud-palette-text-secondary);
+}
+.fancybox__container {
+    z-index: 9999;
+}
+.fancybox__backdrop {
+    background-color: color-mix(in srgb, var(--mud-palette-overlay-dark) 70%, transparent) !important;
+    backdrop-filter: blur(10px) saturate(120%);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+}

@@ -1,9 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Mapster;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Tenants.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination;
 
@@ -22,21 +22,25 @@ public class TenantsWithPaginationQuery : PaginationFilter, ICacheableRequest<Pa
 public class TenantsWithPaginationQueryHandler :
     IRequestHandler<TenantsWithPaginationQuery, PaginatedData<TenantDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly TypeAdapterConfig _typeAdapterConfig;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
     public TenantsWithPaginationQueryHandler(
-        IApplicationDbContext context
+        TypeAdapterConfig typeAdapterConfig,
+        IApplicationDbContextFactory dbContextFactory
     )
     {
-        _context = context;
+        _typeAdapterConfig = typeAdapterConfig;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async ValueTask<PaginatedData<TenantDto>> Handle(TenantsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Tenants.OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber, request.PageSize,
-                TenantMapper.ToDto, cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Tenants.OrderBy($"{request.OrderBy} {request.SortDirection}")
+            .ProjectToPaginatedDataAsync<Tenant, TenantDto>(request.Specification, request.PageNumber, request.PageSize,
+                _typeAdapterConfig, cancellationToken);
         return data;
     }
 }

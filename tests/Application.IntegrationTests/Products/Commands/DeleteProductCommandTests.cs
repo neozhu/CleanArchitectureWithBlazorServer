@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
@@ -27,7 +28,14 @@ internal class DeleteProductCommandTests : TestBase
     public async Task ShouldDeleteOne()
     {
         var addCommand = new AddEditProductCommand
-            { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA", Description = "Description" };
+        {
+            Name = "Test",
+            Brand = "Brand",
+            Price = 100m,
+            Unit = "EA",
+            Description = "Description",
+            Pictures = new List<ProductImage> { new() { Name = "test.jpg", Url = "test.jpg", Size = 1 } }
+        };
         var result = await SendAsync(addCommand);
 
         await SendAsync(new DeleteProductCommand(new[] { result.Data }));

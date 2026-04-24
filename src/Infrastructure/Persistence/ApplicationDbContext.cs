@@ -20,7 +20,8 @@ public class ApplicationDbContext : IdentityDbContext<
     }
 
     public DbSet<Tenant> Tenants { get; set; }
-    public DbSet<Logger> Loggers { get; set; }
+    public DbSet<TenantUser> TenantUsers { get; set; }
+    public DbSet<SystemLog> SystemLogs { get; set; }
     public DbSet<AuditTrail> AuditTrails { get; set; }
     public DbSet<Document> Documents { get; set; }
 
@@ -34,7 +35,7 @@ public class ApplicationDbContext : IdentityDbContext<
         
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
+        builder.ApplyGlobalFilters<ISoftDelete>(s => s.DeletedAt == null);
     }
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

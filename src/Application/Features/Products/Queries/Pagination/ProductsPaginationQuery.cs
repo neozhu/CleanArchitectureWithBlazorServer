@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using Mapster;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.Mappers;
 using CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
@@ -27,20 +27,24 @@ public class ProductsWithPaginationQuery : ProductAdvancedFilter, ICacheableRequ
 public class ProductsWithPaginationQueryHandler :
     IRequestHandler<ProductsWithPaginationQuery, PaginatedData<ProductDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly TypeAdapterConfig _typeAdapterConfig;
     public ProductsWithPaginationQueryHandler(
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory,
+        TypeAdapterConfig typeAdapterConfig
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
+        _typeAdapterConfig = typeAdapterConfig;
     }
 
     public async ValueTask<PaginatedData<ProductDto>> Handle(ProductsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Products.OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber,
-                request.PageSize, ProductMapper.ToDto, cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Products.OrderBy($"{request.OrderBy} {request.SortDirection}")
+            .ProjectToPaginatedDataAsync<Product, ProductDto>(request.Specification, request.PageNumber,
+                 request.PageSize, _typeAdapterConfig, cancellationToken);
         return data;
     }
 }

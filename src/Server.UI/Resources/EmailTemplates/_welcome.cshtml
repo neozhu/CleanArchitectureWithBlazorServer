@@ -1,54 +1,66 @@
 ﻿<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            max-width: 600px;
-            margin: auto;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #007bff;
-            color: #ffffff;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-
-        p {
-            line-height: 1.6;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to {{ app_name }}</title>
 </head>
+<body style="margin:0; padding:0; background-color:#f9fafb; font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <table role="presentation" style="width:100%; border-collapse:collapse; background-color:#f9fafb;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table role="presentation" style="width:100%; max-width:560px; border-collapse:collapse; background-color:#ffffff; border:1px solid #e5e7eb; border-radius:12px;">
 
-<body>
-    <div class="container">
-        <h2>Welcome to @Model.AppName</h2>
-        <p>Dear @Model.UserName,</p>
-        <p>We're thrilled to have you on board. Thank you for choosing @Model.AppName. We're committed to providing you with the best experience possible.</p>
-        <p>To get the most out of @Model.AppName, you can log in to your account here:</p>
-        <a href="@Model.LoginUrl" class="button">Log In</a>
-        <p>We look forward to seeing you achieve great things!</p>
-        <p>Warmest welcome,</p>
-        <p>The @Model.Company Team</p>
-    </div>
+          <!-- Header -->
+          <tr>
+            <td style="padding:32px 24px; text-align:center; border-bottom:1px solid #f1f5f9;">
+              <span style="font-size:20px; font-weight:600; color:#111827; letter-spacing:-0.01em;">
+                {{ app_name }}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 32px 40px;">
+              <h1 style="font-size:24px; font-weight:600; color:#111827; text-align:center; margin:0 0 24px;">
+                Welcome to {{ app_name }}
+              </h1>
+
+              <p style="font-size:16px; color:#111827; line-height:1.6; margin:0 0 12px;">
+                Hi {{ user_name }},
+              </p>
+
+              <p style="font-size:16px; color:#374151; line-height:1.6; margin:0 0 24px;">
+                Thank you for joining {{ app_name }} — we’re excited to have you on board!  
+                You can access your account anytime by logging in below.
+              </p>
+
+              <div style="text-align:center; margin:32px 0;">
+                <a href="{{ login_url }}" style="background-color:#111827; color:#ffffff; font-size:15px; font-weight:600; text-decoration:none; padding:14px 32px; border-radius:8px; display:inline-block;">
+                  Log In
+                </a>
+              </div>
+
+              <p style="font-size:14px; color:#6b7280; line-height:1.6; text-align:center; margin:0;">
+                We’re here to make sure you have the best experience.  
+                If you ever need help, our support team is just a message away.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#f9fafb; padding:24px 32px; border-top:1px solid #e5e7eb;">
+              <p style="font-size:14px; color:#374151; margin:0;">
+                Best wishes,<br>
+                <strong style="color:#111827;">The {{ company }} Team</strong>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>

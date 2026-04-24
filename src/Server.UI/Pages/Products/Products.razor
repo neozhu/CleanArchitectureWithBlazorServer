@@ -1,11 +1,9 @@
 ﻿@page "/pages/products"
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Products.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Products.Specifications
 @using CleanArchitecture.Blazor.Domain.Common.Enums
-@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Server.UI.Pages.Products.Components
 @using CleanArchitecture.Blazor.Application.Features.Products.Caching
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
@@ -14,94 +12,110 @@
 
 @attribute [Authorize(Policy = Permissions.Products.View)]
 @inject IStringLocalizer<Products> L
-@inject IBlazorDownloadFileService BlazorDownloadFileService
+@inject BlazorDownloadFileService BlazorDownloadFileService
 
 <PageTitle>@Title</PageTitle>
 
-<AdvancedSearchProducts TRequest="Query" OnConditionChanged="ConditionChanged"></AdvancedSearchProducts>
+<!-- Advanced search component -->
+<AdvancedSearchProducts TRequest="_productsQuery" OnConditionChanged="OnConditionChanged"></AdvancedSearchProducts>
+
 <MudDataGrid ServerData="@(ServerReload)"
              FixedHeader="true"
-             FixedFooter="true"
+             FixedFooter="false"
              @bind-RowsPerPage="_defaultPageSize"
-             Height="calc(100vh - 370px)"
              Loading="@_loading"
              MultiSelection="true"
              @bind-SelectedItems="_selectedItems"
-             @bind-SelectedItem="_currentDto"
              ColumnResizeMode="ResizeMode.Column"
-             Hover="true" @ref="_table">
+             Hover="true" @ref="_productsGrid">
     <ToolBarContent>
         <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
             <MudStack Row AlignItems="AlignItems.Start">
                 <MudIcon Icon="@Icons.Material.Filled.QrCodeScanner" Size="Size.Large" />
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle2" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="ProductListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
+                    <MudText Typo="Typo.subtitle1" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
+                    <MudEnumSelect Style="min-width:120px"
+                                   TEnum="ProductListView"
+                                   ValueChanged="OnListViewChanged"
+                                   Value="_productsQuery.ListView"
+                                   Dense="true"
+                                   Label="@AppStrings.ListView">
                     </MudEnumSelect>
                 </MudStack>
             </MudStack>
-            <MudStack Spacing="0" AlignItems="AlignItems.End">
-                <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
-                    <MudButton 
-                               Disabled="@_loading"
+            <MudStack Spacing="2" AlignItems="AlignItems.End">
+               <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                    <MudButton Disabled="@_loading"
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
-                    @if (_canCreate)
+                    @if (_accessRights.Create)
                     {
-                        <MudButton  
-                                   StartIcon="@Icons.Material.Outlined.Add"
-                                   OnClick="OnCreate">
-                            @ConstantString.New
+                        <MudButton StartIcon="@Icons.Material.Outlined.Add"
+                                   OnClick="OnCreateProduct">
+                            @AppStrings.New
                         </MudButton>
                     }
-                    <MudMenu  TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
-                        @if (_canCreate)
+					@if (_accessRights.Delete)
+					{
+						<MudButton Disabled="@(!(_selectedItems.Count > 0))"
+								   StartIcon="@Icons.Material.Outlined.DeleteOutline"
+								   OnClick="OnDeleteSelectedProducts">
+							@AppStrings.Delete
+						</MudButton>
+					}
+                    <MudMenu TransformOrigin="Origin.BottomRight"
+                             AnchorOrigin="Origin.BottomRight"
+                             EndIcon="@Icons.Material.Filled.MoreVert"
+                             Label="@AppStrings.More">
+                        @if (_accessRights.Create)
                         {
-                            <MudMenuItem Disabled="@(_selectedItems.Count != 1)" OnClick="OnClone">@ConstantString.Clone</MudMenuItem>
-                        }
-                        @if (_canDelete)
-                        {
-                            <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                                         OnClick="OnDeleteChecked">
-                                @ConstantString.Delete
+                            <MudMenuItem Disabled="@(_selectedItems.Count != 1)" OnClick="OnCloneProduct">
+                                @AppStrings.Clone
                             </MudMenuItem>
                         }
-                        @if (_canExport)
+                        
+                        @if (_accessRights.Export)
                         {
-                            <MudMenuItem Disabled="@_exporting"
-                                         OnClick="OnExport">
-                                @ConstantString.Export
+                            <MudMenuItem Disabled="@_exporting" OnClick="OnExport">
+                                @AppStrings.Export
                             </MudMenuItem>
-                            <MudMenuItem Disabled="@_pdfExporting"
-                                         OnClick="OnExportPDF">
-                                @ConstantString.ExportPDF
+                            <MudMenuItem Disabled="@_pdfExporting" OnClick="OnExportPDF">
+                                @AppStrings.ExportPDF
                             </MudMenuItem>
                         }
-                        @if (_canImport)
+                        @if (_accessRights.Import)
                         {
                             <MudMenuItem>
-                                <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
+                                <MudFileUpload T="IBrowserFile"
+                                               FilesChanged="OnFileImport"
+                                               Accept=".xlsx">
                                     <CustomContent>
-                                        <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
+                                        <MudButton Class="pa-0 ma-0"
+                                                   OnClick="@context.OpenFilePickerAsync"
+                                                   Style="font-weight:400;text-transform:none;"
                                                    Variant="Variant.Text"
-                                                   Disabled="@_uploading"
-                                                   >
-                                                @ConstantString.Import
+                                                   Disabled="@_uploading">
+                                            @AppStrings.Import
                                         </MudButton>
                                     </CustomContent>
-                                    <SelectedTemplate />
+                                    <SelectedTemplate></SelectedTemplate>
                                 </MudFileUpload>
                             </MudMenuItem>
                         }
                     </MudMenu>
-                </MudToolBar>
+				</MudStack>
                 <MudStack Row Spacing="1">
-                    @if (_canSearch)
+                    @if (_accessRights.Search)
                     {
-                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        <MudTextField T="string"
+                                      ValueChanged="@(s => OnSearch(s))"
+                                      Value="@_productsQuery.Keyword"
+                                      Placeholder="@AppStrings.Search"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Search"
+                                      IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -110,109 +124,102 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn ShowInFooter="false"></SelectColumn>
-        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
+        <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Actions" Sortable="false">
             <CellTemplate>
-                @if (_canEdit && _canDelete)
+                @if (_accessRights.Edit || _accessRights.Delete)
                 {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
+                    <MudMenu Icon="@Icons.Material.Filled.Edit"
+                             Variant="Variant.Outlined"
+                             Size="Size.Small"
                              Dense="true"
-                             IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                        @if (_canEdit)
+                             IconColor="Color.Info"
+                             AnchorOrigin="Origin.CenterLeft">
+                        @if (_accessRights.Edit)
                         {
-                            <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnEditProduct(context.Item))">
+                                @AppStrings.Edit
+                            </MudMenuItem>
                         }
-                        @if (_canDelete)
+                        @if (_accessRights.Delete)
                         {
-                            <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnDeleteProduct(context.Item))">
+                                @AppStrings.Delete
+                            </MudMenuItem>
                         }
                     </MudMenu>
                 }
                 else
                 {
-                    <MudTooltip Text="@ConstantString.NoAllowed" Delay="300">
-                        <MudIconButton Variant="Variant.Filled" Disabled="true"
-                                       Icon="@Icons.Material.Filled.DoNotTouch" Size="Size.Small"
+                    <MudTooltip Text="@AppStrings.NoAllowed" Delay="300">
+                        <MudIconButton Variant="Variant.Outlined"
+                                       Disabled="true"
+                                       Icon="@Icons.Material.Filled.DoNotTouch"
+                                       Size="Size.Small"
                                        Color="Color.Surface">
                         </MudIconButton>
                     </MudTooltip>
                 }
             </CellTemplate>
         </TemplateColumn>
-
-        <PropertyColumn Property="x => x.Brand" Title="@L[_currentDto.GetMemberDescription(x => x.Brand)]">
+        <PropertyColumn Property="x => x.Brand" Title="@L[_currentDto.GetMemberDisplayName(x => x.Brand)]">
             <FooterTemplate>
-                @ConstantString.Selected: @_selectedItems.Count
+                @AppStrings.Selected: @_selectedItems.Count
             </FooterTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x => x.Name)]">
+		<PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDisplayName(x => x.Name)]">
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText>@context.Item.Name</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                        @context.Item.Description
+                    </MudText>
                 </div>
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Price" Title="@L[_currentDto.GetMemberDescription(x => x.Price)]">
+		<PropertyColumn Property="x => x.Price" Title="@L[_currentDto.GetMemberDisplayName(x => x.Price)]">
             <FooterTemplate>
-                @ConstantString.SelectedTotal: @_selectedItems.Sum(x => x.Price)
+                @AppStrings.SelectedTotal: @_selectedItems.Sum(x => x.Price)
             </FooterTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Unit" Title="@L[_currentDto.GetMemberDescription(x => x.Unit)]" />
+		<PropertyColumn Property="x => x.Unit" Title="@L[_currentDto.GetMemberDisplayName(x => x.Unit)]" />
     </Columns>
     <NoRecordsContent>
-        <MudDataGirdStatus Icon="@Icons.Material.Outlined.Inbox" Text="@ConstantString.NoRecords" />
+        <MudDataGridStatus Icon="@Icons.Material.TwoTone.Inventory2"
+                           Text="@L["No Products Found"]"
+                           SubText="@L["Try adjusting your search or filter to find what you're looking for."]" />
     </NoRecordsContent>
     <LoadingContent>
-        <MudDataGirdStatus IsLoading="true" Text="@ConstantString.Loading" />
+        <MudDataGridStatus IsLoading="true"
+                           Text="@L["Loading Products..."]" />
     </LoadingContent>
     <PagerContent>
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
 
-<style>
-    @@import url("https://cdn.jsdelivr.net/npm/@@fancyapps/ui@@5.0.36/dist/fancybox/fancybox.css");
-
-    .fancybox__container {
-        --fancybox-bg: rgba(24, 24, 27, 0.85);
-        z-index: 9999;
-    }
-</style>
+ 
 
 @code {
-
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-    [CascadingParameter] private UserProfile? UserProfile { get; set; }
+    private UserProfile UserProfile => UserProfileState.Value;
     public string? Title { get; private set; }
     private HashSet<ProductDto> _selectedItems = new();
-    private MudDataGrid<ProductDto> _table = default!;
+    private MudDataGrid<ProductDto> _productsGrid = default!;
     private ProductDto _currentDto = new();
+    private ProductsAccessRights _accessRights = new();
     private bool _loading;
     private bool _uploading;
     private bool _exporting;
     private bool _pdfExporting;
     private int _defaultPageSize = 15;
 
-    private bool _canSearch;
-    private bool _canCreate;
-    private bool _canEdit;
-    private bool _canDelete;
-    private bool _canImport;
-    private bool _canExport;
-
-    private ProductsWithPaginationQuery Query { get; } = new();
-
+    private ProductsWithPaginationQuery _productsQuery { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        Title = L[_currentDto.GetClassDescription()];
-        var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Delete)).Succeeded;
-        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Import)).Succeeded;
-        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Export)).Succeeded;
+        Title =$"{ApplicationSettings.AppName} - { L[_currentDto.GetClassDescription()]}";
+        _accessRights = await PermissionService.GetAccessRightsAsync<ProductsAccessRights>();
+
     }
 
     private async Task<GridData<ProductDto>> ServerReload(GridState<ProductDto> state, CancellationToken cancellationToken)
@@ -220,13 +227,15 @@
         try
         {
             _loading = true;
-            Query.CurrentUser = UserProfile;
-            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
-            Query.PageNumber = state.Page + 1;
-            Query.PageSize = state.PageSize;
-            var result = await Mediator.Send(Query).ConfigureAwait(false);
-
+            _productsQuery.CurrentUser = UserProfile;
+            _productsQuery.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            var sortDefinition = state.SortDefinitions.FirstOrDefault();
+            _productsQuery.SortDirection = sortDefinition == null
+                                      ? SortDirection.Descending.ToString()
+                                      : (sortDefinition.Descending ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString());
+            _productsQuery.PageNumber = state.Page + 1;
+            _productsQuery.PageSize = state.PageSize;
+            var result = await Mediator.Send(_productsQuery).ConfigureAwait(false);
             return new GridData<ProductDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -235,126 +244,135 @@
         }
     }
 
-    private void ConditionChanged(string s)
+    private void OnConditionChanged(string condition)
     {
-        InvokeAsync(_table.ReloadServerData);
+        InvokeAsync(_productsGrid.ReloadServerData);
     }
 
     private async Task OnSearch(string text)
     {
         _selectedItems = new HashSet<ProductDto>();
-        Query.Keyword = text;
-        await _table.ReloadServerData();
+        _productsQuery.Keyword = text;
+        await _productsGrid.ReloadServerData();
     }
 
-    private async Task OnChangedListView(ProductListView listview)
+    private async Task OnListViewChanged(ProductListView listview)
     {
-        Query.ListView = listview;
-        await _table.ReloadServerData();
+        _productsQuery.ListView = listview;
+        await _productsGrid.ReloadServerData();
     }
 
     private async Task OnRefresh()
     {
-        ProductCacheKey.Refresh();
+        await AppCache.RemoveByTagsAsync(ProductCacheKey.Tags);
         _selectedItems = new HashSet<ProductDto>();
-        Query.Keyword = string.Empty;
-        await _table.ReloadServerData();
+        _productsQuery.Keyword = string.Empty;
+        await _productsGrid.ReloadServerData();
     }
-    private async Task ShowEditFormDialog(string title, AddEditProductCommand command)
+
+    private async Task ShowProductEditFormDialog(string title, AddEditProductCommand command)
     {
-        var parameters = new DialogParameters<ProductFormDialog>
-        {
-            { x => x.Refresh, () => _table.ReloadServerData() },
-            { x => x.Model, command }
-        };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog =await DialogService.ShowAsync<ProductFormDialog>(title, parameters, options);
-        var state = await dialog.Result;
 
-        if (state is not null && !state.Canceled)
-        {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
-        }
+        await DialogServiceHelper.ShowDialogAsync<ProductFormDialog>(
+            title,
+            async _ =>
+            {
+                await _productsGrid.ReloadServerData();
+                _selectedItems = new();
+            },
+			p =>
+			{
+				p.Add(x => x.Refresh, () => _productsGrid.ReloadServerData());
+				p.Add(x => x._model, command);
+			},
+			options);
     }
 
-    private async Task OnCreate()
+    private async Task OnCreateProduct()
     {
         var command = new AddEditProductCommand { Pictures = new List<ProductImage>() };
-
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
+        await ShowProductEditFormDialog( L["New product"], command);
     }
 
-    private async Task OnClone()
+    private async Task OnCloneProduct()
     {
         var copy = _selectedItems.First();
-        var command = ProductMapper.CloneFromDto(copy);
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
+        var command = new AddEditProductCommand()
+        {
+            Brand = copy.Brand,
+            Name = copy.Name,
+            Description = copy.Description,
+            Price = copy.Price,
+            Unit = copy.Unit,
+            Pictures = copy.Pictures
+        };
+        await ShowProductEditFormDialog(L["Clone the product"], command);
     }
 
-    private async Task OnEdit(ProductDto dto)
+    private async Task OnEditProduct(ProductDto dto)
     {
-        var command = ProductMapper.ToEditCommand(dto);
-        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), command);
+        var command = ObjectMapper.Map<AddEditProductCommand>(dto);
+        await ShowProductEditFormDialog(L["Edit the product"], command);
     }
 
-    private async Task OnDelete(ProductDto dto)
+    private async Task OnDeleteProduct(ProductDto dto)
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Name);
+        var contentText = string.Format(AppStrings.DeleteConfirmation, dto.Name);
         var command = new DeleteProductCommand(new[] { dto.Id });
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, AppStrings.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
             {
-                await _table.ReloadServerData();
-                _selectedItems.Clear();
+                await _productsGrid.ReloadServerData();
+                _selectedItems = new();
             });
         });
     }
 
-    private async Task OnDeleteChecked()
+    private async Task OnDeleteSelectedProducts()
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
+        var contentText = string.Format(AppStrings.DeleteConfirmWithSelected, _selectedItems.Count);
         var command = new DeleteProductCommand(_selectedItems.Select(x => x.Id).ToArray());
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, AppStrings.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
             {
-                await _table.ReloadServerData();
-                _selectedItems.Clear();
+                await _productsGrid.ReloadServerData();
+                _selectedItems = new();
             });
         });
-
     }
 
     private async Task OnExport()
     {
         _exporting = true;
         var request = new ExportProductsQuery
-            {
-                Brand = Query.Brand,
-                Name = Query.Name,
-                MinPrice = Query.MinPrice,
-                MaxPrice = Query.MaxPrice,
-                Unit = Query.Unit,
-                Keyword = Query.Keyword,
-                ListView = Query.ListView,
-                OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-                SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
-                CurrentUser = UserProfile,
-                ExportType = ExportType.Excel
-            };
+        {
+            Brand = _productsQuery.Brand,
+            Name = _productsQuery.Name,
+            MinPrice = _productsQuery.MinPrice,
+            MaxPrice = _productsQuery.MaxPrice,
+            Unit = _productsQuery.Unit,
+            Keyword = _productsQuery.Keyword,
+            ListView = _productsQuery.ListView,
+            OrderBy = _productsGrid.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+            SortDirection = _productsGrid.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false
+                                ? SortDirection.Descending.ToString()
+                                : SortDirection.Ascending.ToString(),
+            CurrentUser = UserProfile,
+            ExportType = ExportType.Excel
+        };
         var result = await Mediator.Send(request);
         if (result.Succeeded)
         {
-            var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result.Data, "application/octet-stream");
-            Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.xlsx", result.Data!, "application/octet-stream");
+            Snackbar.Add($"{AppStrings.ExportSuccess}", Severity.Info);
         }
         else
         {
             Snackbar.Add($"{result.ErrorMessage}", Severity.Error);
         }
-
         _exporting = false;
     }
 
@@ -362,55 +380,60 @@
     {
         _pdfExporting = true;
         var request = new ExportProductsQuery
-            {
-                Brand = Query.Brand,
-                Name = Query.Name,
-                MinPrice = Query.MinPrice,
-                MaxPrice = Query.MaxPrice,
-                Unit = Query.Unit,
-                Keyword = Query.Keyword,
-                ListView = Query.ListView,
-                CurrentUser = UserProfile,
-                OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-                SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
-                ExportType = ExportType.PDF
-            };
+        {
+            Brand = _productsQuery.Brand,
+            Name = _productsQuery.Name,
+            MinPrice = _productsQuery.MinPrice,
+            MaxPrice = _productsQuery.MaxPrice,
+            Unit = _productsQuery.Unit,
+            Keyword = _productsQuery.Keyword,
+            ListView = _productsQuery.ListView,
+            CurrentUser = UserProfile,
+            OrderBy = _productsGrid.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+            SortDirection = _productsGrid.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false
+                                ? SortDirection.Descending.ToString()
+                                : SortDirection.Ascending.ToString(),
+            ExportType = ExportType.PDF
+        };
         var result = await Mediator.Send(request);
         if (result.Succeeded)
         {
-            var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Products"]}.pdf", result.Data, "application/octet-stream");
-            Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.pdf", result.Data!, "application/octet-stream");
+            Snackbar.Add($"{AppStrings.ExportSuccess}", Severity.Info);
         }
         else
         {
             Snackbar.Add($"{result.ErrorMessage}", Severity.Error);
         }
-
         _pdfExporting = false;
     }
 
-    private async Task OnImportData(IBrowserFile file)
+    private async Task OnFileImport(IBrowserFile file)
     {
-        _uploading = true;
-        var stream = new MemoryStream();
-        await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
-        var command = new ImportProductsCommand(file.Name, stream.ToArray());
-
-        var result = await Mediator.Send(command);
-        if (result.Succeeded)
+        try
         {
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.ImportSuccess}", Severity.Info);
-        }
-        else
-        {
-            foreach (var msg in result.Errors)
+            _uploading = true;
+            using var fileStream = file.OpenReadStream(GlobalVariables.MaxAllowedSize);
+            using var stream = new MemoryStream();
+            await fileStream.CopyToAsync(stream);
+            var command = new ImportProductsCommand(file.Name, stream.ToArray());
+            var result = await Mediator.Send(command);
+            if (result.Succeeded)
             {
-                Snackbar.Add($"{msg}", Severity.Error);
+                await _productsGrid.ReloadServerData();
+                Snackbar.Add($"{AppStrings.ImportSuccess}", Severity.Info);
+            }
+            else
+            {
+                foreach (var msg in result.Errors)
+                {
+                    Snackbar.Add($"{msg}", Severity.Error);
+                }
             }
         }
-
-        _uploading = false;
+        finally
+        {
+            _uploading = false;
+        }
     }
-
 }

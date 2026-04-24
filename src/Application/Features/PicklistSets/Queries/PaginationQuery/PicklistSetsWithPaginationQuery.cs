@@ -1,9 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Mapster;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
-using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.PaginationQuery;
@@ -22,21 +22,23 @@ public class PicklistSetsWithPaginationQuery : PicklistSetAdvancedFilter, ICache
 
 public class PicklistSetsQueryHandler : IRequestHandler<PicklistSetsWithPaginationQuery, PaginatedData<PicklistSetDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly TypeAdapterConfig _typeAdapterConfig;
 
     public PicklistSetsQueryHandler(
-        IApplicationDbContext context)
+        IApplicationDbContextFactory dbContextFactory,
+        TypeAdapterConfig typeAdapterConfig
+    )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
+        _typeAdapterConfig = typeAdapterConfig;
     }
 
-    public async ValueTask<PaginatedData<PicklistSetDto>> Handle(PicklistSetsWithPaginationQuery request,
-        CancellationToken cancellationToken)
+    public async ValueTask<PaginatedData<PicklistSetDto>> Handle(PicklistSetsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.PicklistSets.OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber,
-                request.PageSize, PicklistMapper.ToDto, cancellationToken);
-
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.PicklistSets.OrderBy($"{request.OrderBy} {request.SortDirection}")
+            .ProjectToPaginatedDataAsync<PicklistSet, PicklistSetDto>(request.Specification, request.PageNumber, request.PageSize, _typeAdapterConfig, cancellationToken);
         return data;
     }
 }

@@ -3,7 +3,6 @@
 @using System.Reflection
 @using System.Text
 @using System.ComponentModel
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper
 @using CleanArchitecture.Blazor.Server.UI.Services
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Forms
@@ -17,47 +16,59 @@
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.JSInterop
+@using Mapster
 @using MudBlazor
 @using Mediator
 @using FluentValidation;
 @using CleanArchitecture.Blazor.Domain
+@using CleanArchitecture.Blazor.Domain.Common
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
 @using CleanArchitecture.Blazor.Application.Common.Extensions
 @using CleanArchitecture.Blazor.Application.Common.Interfaces
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching
 @using CleanArchitecture.Blazor.Application.Common.Models
-@using CleanArchitecture.Blazor.Application.Common.Security
-@using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
-@using CleanArchitecture.Blazor.Infrastructure.Constants
-@using CleanArchitecture.Blazor.Infrastructure.Extensions
-@using CleanArchitecture.Blazor.Infrastructure.Configurations
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Common.Security;
+@using CleanArchitecture.Blazor.Application.Common.Constants
 @using CleanArchitecture.Blazor.Server.UI.Models
 @using CleanArchitecture.Blazor.Server.UI
-@using CleanArchitecture.Blazor.Server.UI.Shared
+@using CleanArchitecture.Blazor.Server.UI.Layouts
 @using CleanArchitecture.Blazor.Server.UI.Components
-@using CleanArchitecture.Blazor.Server.UI.Components.Forms
-@using CleanArchitecture.Blazor.Server.UI.Components.Breadcrumbs
-@using CleanArchitecture.Blazor.Server.UI.Components.LoadingButton
-@using CleanArchitecture.Blazor.Server.UI.Components.Autocompletes
+@using CleanArchitecture.Blazor.Server.UI.Components.AppShell
+@using CleanArchitecture.Blazor.Server.UI.Components.Branding
 @using CleanArchitecture.Blazor.Server.UI.Components.Dialogs
+@using CleanArchitecture.Blazor.Server.UI.Components.Errors
+@using CleanArchitecture.Blazor.Server.UI.Components.Feedback
 @using CleanArchitecture.Blazor.Server.UI.Components.Identity
-@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication
+@using CleanArchitecture.Blazor.Server.UI.Components.Inputs.Autocomplete
+@using CleanArchitecture.Blazor.Server.UI.Components.Inputs.Button
+@using CleanArchitecture.Blazor.Server.UI.Components.Inputs.Display
+@using CleanArchitecture.Blazor.Server.UI.Components.Inputs.Select
+@using CleanArchitecture.Blazor.Server.UI.Components.Inputs.Upload
 @using CleanArchitecture.Blazor.Server.UI.Components.Localization
-@using CleanArchitecture.Blazor.Server.UI.Components.OptionSelect
-@using CleanArchitecture.Blazor.Server.UI.Components.Redirections
-@using CleanArchitecture.Blazor.Server.UI.Components.Shared
-@using CleanArchitecture.Blazor.Server.UI.Components.Shared.Themes
-@using CleanArchitecture.Blazor.Server.UI.Components.Shared.Layout
+@using CleanArchitecture.Blazor.Server.UI.Components.Navigation
+@using CleanArchitecture.Blazor.Server.UI.Components.Presence
+@using CleanArchitecture.Blazor.Server.UI.Components.Routing
+@using CleanArchitecture.Blazor.Server.UI.Components.Theming
+@using CleanArchitecture.Blazor.Server.UI.Components.Time
 @using CleanArchitecture.Blazor.Server.UI.Services.Layout
 @using CleanArchitecture.Blazor.Server.UI.Extensions
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using Severity=MudBlazor.Severity
 @using Color = MudBlazor.Color
+
+@inject IUserProfileState UserProfileState
 @inject IApplicationSettings ApplicationSettings
 @inject ISnackbar Snackbar
-@inject IDialogService DialogService
-@inject IConfiguration Config
+
 @inject IAuthorizationService AuthService 
 @inject IValidationService Validator
 @inject IJSRuntime JS
 @inject IMediator Mediator
 @inject NavigationManager Navigation
 @inject DialogServiceHelper DialogServiceHelper
+@inject IAppCache AppCache
+@inject IPermissionService PermissionService
+@inject IObjectMapper ObjectMapper
+@inject TypeAdapterConfig TypeAdapterConfig

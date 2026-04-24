@@ -1,40 +1,371 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
-@inherits MudComponentBase
+@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Domain.Common.Enums
+@using System.ComponentModel.DataAnnotations
+@using CleanArchitecture.Blazor.Server.UI.Resources.ValidationMessages
 
-@inject IStringLocalizer<Users> L
+@inject IStringLocalizer<Identity.Users.Users> L
+@inject IFileUploadService UploadService
+@inherits OwningComponentBase
 
 <MudDialog>
     <DialogContent>
-        <UserForm UserProfile="@UserProfile" @ref="@_userForm" Model="Model" OnFormSubmit="OnFormSubmitHandler"></UserForm>
+        <EditForm EditContext="@_formEditContext">
+            <DataAnnotationsValidator />
+            <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden" />
+            <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden" />
+
+            <MudGrid Spacing="2">
+                <MudItem sm="12">
+                    <div class="d-flex justify-center">
+                        <MudAvatar Style="height:90px; width:90px; font-size:2rem;">
+                            @if (string.IsNullOrEmpty(Model.ProfilePictureDataUrl))
+                            {
+                                @(string.IsNullOrEmpty(Model.UserName) ? string.Empty : Model.UserName.ToUpper().First())
+                            }
+                            else
+                            {
+                                <MudImage Src="@Model.ProfilePictureDataUrl" />
+                            }
+                        </MudAvatar>
+                        <MudTooltip Text="@L["Click upload a image"]">
+                            <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="UploadProfilePhotoAsync" Style="margin-top:-10px;margin-left:-15px">
+                                <CustomContent Context="fileContext">
+                                    <MudIconButton Icon="@Icons.Material.Filled.PhotoCamera" Size="MudBlazor.Size.Small"  OnClick="@fileContext.OpenFilePickerAsync" />
+                                </CustomContent>
+                                <SelectedTemplate Context="selectedFile"></SelectedTemplate>
+                            </MudFileUpload>
+                        </MudTooltip>
+                    </div>
+                </MudItem>
+
+				<MudItem sm="6" xs="12">
+                    <TenantSelect Label="@L[Model.GetMemberDisplayName(x => x.Tenants)]"
+                                   @bind-SelectedValues="Model.Tenants"
+                                   MultiSelection="true"
+								   Placeholder="@L["Select tenants"]"
+								   HelperText="@L["Choose one or more tenants"]"
+                                   Required="true"
+                                   RequiredError="@L["tenants are required"]" />
+				</MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDisplayName(x => x.Provider)]" ReadOnly="true" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L[Model.GetMemberDisplayName(x => x.UserName)]" Required="true" RequiredError="@L["User name is required"]" Placeholder="@L["Enter a user name"]" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudCheckBox Color="Color.Primary" For="@(() => Model.IsActive)" @bind-Value="Model.IsActive" Label="@(Model.IsActive ? L["Active"] : L["Inactive"])" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L[Model.GetMemberDisplayName(x => x.DisplayName)]" Placeholder="@L["Enter a display name"]" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <PickSuperiorAutocomplete For="@(() => Model.Superior)" T="ApplicationUserDto"
+                                              OwnerName="@Model.UserName"
+                                              Clearable="true"
+                                              Label="@L[Model.GetMemberDisplayName(x => x.Superior)]"
+                                              Placeholder="@L["Search by user name or email"]"
+                                              @bind-Value="Model.Superior" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L[Model.GetMemberDisplayName(x => x.Email)]" Required="true" RequiredError="@L["Email address is required"]" Placeholder="@L["Enter the user's email address"]" InputType="InputType.Email" Validation="@(new EmailAddressAttribute() { ErrorMessage = L["Please enter a valid email address"] })" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L[Model.GetMemberDisplayName(x => x.PhoneNumber)]" Placeholder="@L["Enter a phone number"]"  />
+                </MudItem>
+                <MudItem sm="6" xs="12">
+                    <TimeZoneAutocomplete T="string" For="@(() => Model.TimeZoneId)" @bind-Value="Model.TimeZoneId" Label="@L[Model.GetMemberDisplayName(x => x.TimeZoneId)]" Placeholder="@L["Select a time zone"]" />
+                </MudItem>
+                <MudItem sm="6" xs="12">
+                    <LanguageAutocomplete T="string" For="@(() => Model.LanguageCode)" @bind-Value="Model.LanguageCode" Label="@L[Model.GetMemberDisplayName(x => x.LanguageCode)]" Placeholder="@L["Select a language"]" />
+                </MudItem>
+
+                <MudItem xs="12" sm="12">
+                    <MudText Typo="Typo.body1">@L["Assign Roles"]</MudText>
+                    <MudGrid Class="mt-1" Spacing="2">
+                        @if (_roleSelections.Any())
+                        {
+                            @foreach (var roleSelection in _roleSelections)
+                            {
+                                <MudItem xs="6" sm="6" Class="py-0 my=0">
+                                    <MudCheckBox Color="Color.Primary" T="bool" Value="@roleSelection.IsSelected" Label="@roleSelection.RoleName" ValueChanged="@(selected => roleSelection.IsSelected = selected)" />
+                                </MudItem>
+                            }
+                        }
+                        else
+                        {
+                            <MudAlert Class="flex-grow-1" Severity="Severity.Warning">@L["No roles available for this tenant"]</MudAlert>
+                        }
+                    </MudGrid>
+                </MudItem>
+
+                <MudItem sm="6" xs="12">
+                    <ReadOnlyField Value="@(Model.CreatedAt.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDisplayName(x => x.CreatedAt)]" />
+                </MudItem>
+                <MudItem sm="6" xs="12">
+                    <ReadOnlyField Value="@(Model.LastModifiedAt.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDisplayName(x => x.LastModifiedAt)]" />
+                </MudItem>
+            </MudGrid>
+        </EditForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">@ConstantString.Ok</MudButton>
+        <MudButton OnClick="CancelDialog">@AppStrings.Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="SubmitAsync">@AppStrings.Ok</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code{
-    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
-    [Parameter] public UserProfile? UserProfile { get; set; }
-    [Parameter] public ApplicationUserDto Model { get; set; } = default!;
-    
+    [CascadingParameter] private IMudDialogInstance DialogInstance { get; set; } = default!;
+    [Parameter] public UserProfile UserProfile { get; set; } = default!;
+    [Parameter] public InputModel Model { get; set; } = default!;
 
-    private UserForm? _userForm;
 
-    protected async Task Submit()
+    private EditContext _formEditContext = default!;
+    private List<RoleSelectionItem> _roleSelections = new();
+    private UserManager<ApplicationUser> _userManager = null!;
+    private RoleManager<ApplicationRole> _roleManager = null!;
+    private IApplicationDbContextFactory _dbContextFactory = null!;
+    private sealed class RoleSelectionItem
     {
-        await _userForm!.Submit();
+        public string RoleName { get; set; } = string.Empty;
+        public bool IsSelected { get; set; }
     }
 
-    private void Cancel()
+    protected override async Task OnInitializedAsync()
     {
-        MudDialog.Cancel();
+
+        _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        _dbContextFactory = ScopedServices.GetRequiredService<IApplicationDbContextFactory>();
+        _formEditContext = new EditContext(Model);
+        var roleNames = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
+        _roleSelections = roleNames
+            .Select(roleName => new RoleSelectionItem
+            {
+                RoleName = roleName!,
+                IsSelected = Model.AssignedRoles?.Contains(roleName) ?? false
+            })
+            .ToList();
     }
 
-    protected Task OnFormSubmitHandler(ApplicationUserDto model)
+
+
+
+
+    private async Task UploadProfilePhotoAsync(IBrowserFile file)
     {
-        MudDialog.Close(DialogResult.Ok(model));
-        return Task.CompletedTask;
+        await using var browserStream = file.OpenReadStream(GlobalVariables.MaxAllowedSize);
+        using var originalImageStream = new MemoryStream();
+        await browserStream.CopyToAsync(originalImageStream);
+        var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(originalImageStream, 128, 128, 80);
+        var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, resizedStream.ToArray(), overwrite: true, Model.Id);
+        var uploadResult = await UploadService.UploadAsync(uploadRequest);
+        if (uploadResult.Succeeded && uploadResult.Data is not null)
+        {
+            Model.ProfilePictureDataUrl = uploadResult.Data.Url;
+            Snackbar.Add(AppStrings.UploadSuccess, Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add(uploadResult.ErrorMessage, Severity.Error);
+        }
     }
 
+    protected async Task SubmitAsync()
+    {
+        if (_formEditContext.Validate())
+        {
+            Model.AssignedRoles = _roleSelections.Where(role => role.IsSelected).Select(role => role.RoleName).ToArray();
+            var existingUser = await _userManager.FindByIdAsync(Model.Id);
+            if (existingUser != null)
+            {
+                //update user
+                var existingRoles = await _userManager.GetRolesAsync(existingUser);
+                if (existingRoles.Any())
+                {
+                    await _userManager.RemoveFromRolesAsync(existingUser, existingRoles);
+                }
+                var dbContext = await _dbContextFactory.CreateAsync();
+                var tenantUsers = await dbContext.TenantUsers.Where(x => x.UserId == Model.Id).ToListAsync();
+                if (tenantUsers.Any())
+                {
+                    dbContext.TenantUsers.RemoveRange(tenantUsers);
+                }
+                if (Model.Tenants.Any())
+                {
+                    foreach (var tenant in Model.Tenants)
+                    {
+                        dbContext.TenantUsers.Add(new TenantUser { TenantId = tenant.Id, UserId = Model.Id });
+                    }
+                    await dbContext.SaveChangesAsync(default);
+                }
+                existingUser.Email = Model.Email;
+                existingUser.PhoneNumber = Model.PhoneNumber;
+                existingUser.ProfilePictureDataUrl = Model.ProfilePictureDataUrl;
+                existingUser.DisplayName = Model.DisplayName;
+                existingUser.Provider = Model.Provider;
+                existingUser.UserName = Model.UserName;
+                existingUser.IsActive = Model.IsActive;
+                if (string.IsNullOrEmpty(existingUser.TenantId) && Model.Tenants.Any())
+                {
+                    existingUser.TenantId = Model.Tenants.First().Id;
+                }
+                existingUser.SuperiorId = Model.Superior?.Id;
+                existingUser.LanguageCode = Model.LanguageCode;
+                existingUser.TimeZoneId = Model.TimeZoneId;
+                existingUser.LastModifiedAt = DateTime.UtcNow;
+                var updateResult = await _userManager.UpdateAsync(existingUser);
+                if (updateResult.Succeeded)
+                {
+                    if (Model.AssignedRoles is { Length: > 0 })
+                    {
+                        await _userManager.AddToRolesAsync(existingUser, Model.AssignedRoles);
+                    }
+                }
+            }
+            else
+            {
+                var newUser = new ApplicationUser
+                {
+                    Provider = Model.Provider,
+                    DisplayName = Model.DisplayName,
+                    UserName = Model.UserName,
+                    TenantId = Model.Tenants.FirstOrDefault()?.Id,
+                    Email = Model.Email,
+                    PhoneNumber = Model.PhoneNumber,
+                    SuperiorId = Model.Superior?.Id,
+                    ProfilePictureDataUrl = Model.ProfilePictureDataUrl,
+                    EmailConfirmed = false,
+                    IsActive = Model.IsActive,
+                    LanguageCode = Model.LanguageCode,
+                    TimeZoneId = Model.TimeZoneId,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                var result = await _userManager.CreateAsync(newUser);
+                if (!result.Succeeded)
+                {
+                    Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+                    return;
+                }
+                if (Model.AssignedRoles is not null && Model.AssignedRoles.Length > 0)
+                {
+                    await _userManager.AddToRolesAsync(newUser, Model.AssignedRoles);
+                }
+                if (Model.Tenants.Any())
+                {
+                    var dbContext = await _dbContextFactory.CreateAsync();
+                    foreach (var tenant in Model.Tenants)
+                    {
+                        dbContext.TenantUsers.Add(new TenantUser { TenantId = tenant.Id, UserId = newUser.Id });
+                    }
+                    await dbContext.SaveChangesAsync(default);
+                }
+            }
+
+            
+            DialogInstance.Close(DialogResult.Ok(Model));
+        }
+
+    }
+
+    private void CancelDialog()
+    {
+        DialogInstance.Cancel();
+    }
+
+     
+
+    public class InputModel
+    {
+        [Required]
+        [Display(Name = "Id")]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        [Required(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.UserNameRequired))]
+        [Display(Name = "User Name")]
+        [StringLength(30, MinimumLength = 3,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.UserNameStringLength))]
+        public string UserName { get; set; } = string.Empty;
+
+        [Display(Name = "Display Name")]
+        [MaxLength(30,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public string? DisplayName { get; set; }
+
+        [Display(Name = "Email")]
+        [Required(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.EmailRequired))]
+        [MaxLength(50,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        [EmailAddress(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.EmailInvalid))]
+        public string? Email { get; set; }
+
+        [Display(Name = "Phone Number")]
+        [MaxLength(20,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public string? PhoneNumber { get; set; }
+
+        [Display(Name = "Is Active")]
+        public bool IsActive { get; set; }
+
+        [Display(Name = "Provider")]
+        [Required(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.ProviderRequired))]
+        [MaxLength(30,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public string? Provider { get; set; }
+
+        public ApplicationUserDto? Superior { get; set; }
+
+        [Display(Name = "Time Zone")]
+        [Required(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.TimeZoneRequired))]
+        [MaxLength(64,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public string? TimeZoneId { get; set; }
+
+        [Display(Name = "Language")]
+        [Required(
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.LanguageRequired))]
+        [MaxLength(64,
+            ErrorMessageResourceType = typeof(ValidationMessages),
+            ErrorMessageResourceName = nameof(ValidationMessages.MaxLengthExceeded))]
+        public string? LanguageCode { get; set; }
+
+        [Display(Name = "Profile Photo")]
+        public string? ProfilePictureDataUrl { get; set; }
+
+        [Display(Name = "Tenants")]
+        [CustomValidation(typeof(ApplicationUserDto), nameof(ValidateTenants))]
+        public IReadOnlyCollection<TenantDto> Tenants { get; set; } = new List<TenantDto>();
+
+        [Display(Name = "Assigned Roles")]
+        public string[]? AssignedRoles { get; set; }
+
+        [Display(Name = "Last Modified At")]
+        public DateTime? LastModifiedAt { get; set; }
+
+        [Display(Name = "Created At")]
+        public DateTime? CreatedAt { get; set; }
+
+        public static ValidationResult? ValidateTenants(IReadOnlyCollection<TenantDto> tenants, ValidationContext context)
+           => tenants.Count > 0 ? ValidationResult.Success : new ValidationResult(ValidationMessages.TenantsAtLeastOne);
+    }
 }

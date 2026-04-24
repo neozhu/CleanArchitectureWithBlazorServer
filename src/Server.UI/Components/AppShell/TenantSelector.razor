@@ -1,0 +1,148 @@
+﻿@using CleanArchitecture.Blazor.Application.Common.Security
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using CleanArchitecture.Blazor.Application.Common.Interfaces
+@inject IStringLocalizer<TenantSelector> L
+@inject IUserProfileState UserProfileState
+@inject ITenantSwitchService TenantSwitchService
+@inject IPermissionService PermissionService
+@implements IDisposable
+
+
+<MudStack Class="flex-grow-1" Row="true" AlignItems="AlignItems.Center" Spacing="2" Justify="Justify.SpaceBetween">
+    
+    <Logo Class="ml-4 mr-2" Style="width:32px;height32px" />
+   
+
+    <MudMenu AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" LockScroll="true" Class="flex-grow-1"
+             Disabled="!_hasSwitchPermission">
+        <ActivatorContent>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="flex-grow-1">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.h6">
+                        @L[ApplicationSettings.AppName]
+                    </MudText>
+                    <MudText Typo="Typo.subtitle2" Class="mud-secondary-text" Style="margin-top:-4px;">
+                        @(UserProfile?.Tenant?.Name ?? "No Organization")
+                    </MudText>
+                </MudStack>
+                <MudIconButton Icon="@Icons.Material.Outlined.KeyboardDoubleArrowDown" Size="Size.Small" Class="mr-4" OnClick="@context.ToggleAsync" />
+            </MudStack>
+        </ActivatorContent>
+        <ChildContent>
+            <div style="min-width: 200px;">
+                @if (UserProfile is not null)
+                {
+                    <div class="mx-4 mt-2 mb-3">
+                        <MudText Typo="Typo.body2" Class="mud-secondary-text">
+                            @L["Switch Organization"]
+                        </MudText>
+                    </div>
+                    <MudDivider Class="my-2" />
+                }
+
+                @if (_availableTenants != null)
+                {
+                    if (_availableTenants.Count == 0)
+                    {
+                        <MudMenuItem Disabled="true">
+                            <div class="d-flex align-center">
+                                <MudText>@L["No available organization"]</MudText>
+                            </div>
+                        </MudMenuItem>
+                    }
+                    @foreach (var tenant in _availableTenants)
+                    {
+                        <MudMenuItem OnClick="() => SwitchToTenant(tenant.Id)" Disabled="@(_isSwitching)">
+                            <div class="d-flex align-center">
+                                <MudStack Spacing="0">
+                                    <MudText Typo="Typo.body1">
+                                        @tenant.Name
+                                    </MudText>
+
+                                    <MudText Typo="Typo.caption" Class="mud-secondary-text">
+                                        @tenant.Description
+                                    </MudText>
+
+                                </MudStack>
+                                @if (tenant.Id == UserProfile?.TenantId)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Check" Class="ml-2" Color="Color.Primary" />
+                                }
+                            </div>
+                        </MudMenuItem>
+                    }
+                }
+                else
+                {
+                    <MudMenuItem Disabled="true">
+                        <div class="d-flex align-center">
+                            <MudText>@L["Loading organizations..."]</MudText>
+                        </div>
+                    </MudMenuItem>
+                }
+            </div>
+        </ChildContent>
+    </MudMenu>
+</MudStack>
+
+
+@code
+{
+    private UserProfile UserProfile => UserProfileState.Value;
+    private List<TenantDto>? _availableTenants => UserProfile.AvailableTenants;
+    private bool _isSwitching;
+    private bool _hasSwitchPermission;
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserProfileState.Changed += OnUserProfileChanged;
+        _hasSwitchPermission = await PermissionService.HasPermissionAsync(Permissions.Users.SwitchTenants);
+        
+    }
+
+    public void Dispose()
+    {
+        UserProfileState.Changed -= OnUserProfileChanged;
+    }
+
+    private void OnUserProfileChanged(object? sender, UserProfile userProfile)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+     
+
+    private async Task SwitchToTenant(string tenantId)
+    {
+        if (_isSwitching || string.IsNullOrEmpty(UserProfile?.UserId)) return;
+
+        _isSwitching = true;
+        try
+        {
+            var result = await TenantSwitchService.SwitchToTenantAsync(UserProfile.UserId, tenantId);
+
+            if (result.Succeeded)
+            {
+                Snackbar.Add("Tenant switched successfully", Severity.Success);
+                if (result.Errors.Any())
+                {
+                    Snackbar.Add(result.Errors.First(), Severity.Warning);
+                }
+
+                // Refresh user state
+                await UserProfileState.RefreshAsync();
+                // Navigate to home page
+                Navigation.NavigateTo("/", true);
+            }
+            else
+            {
+                Snackbar.Add(result.Errors.FirstOrDefault() ?? "Failed to switch tenant", Severity.Error);
+            }
+        }
+        finally
+        {
+            _isSwitching = false;
+        }
+    }
+}

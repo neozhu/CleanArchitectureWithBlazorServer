@@ -8,6 +8,7 @@ using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
+using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 using Mediator;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,6 @@ using CleanArchitecture.Blazor.Infrastructure.Services;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using System.Data.Common;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 
 namespace CleanArchitecture.Blazor.Application.IntegrationTests;
 
@@ -56,26 +56,33 @@ public class Testing
         services.AddInfrastructure(_configuration)
             .AddApplication();
 
+        services.AddMediator(options =>
+        {
+            options.Assemblies = [typeof(CleanArchitecture.Blazor.Application.DependencyInjection)];
+            options.NotificationPublisherType = typeof(ChannelBasedNoWaitPublisher);
+            options.ServiceLifetime = ServiceLifetime.Scoped;
+        });
+
         //services.AddLogging();
 
         //startup.ConfigureServices(services);
 
         // 替换 IUserContextAccessor 的注册
         var userContextServiceDescriptor = services.FirstOrDefault(d =>
-            d.ServiceType == typeof(ICurrentUserAccessor));
+            d.ServiceType == typeof(IUserContextAccessor));
         if (userContextServiceDescriptor != null)
         {
             services.Remove(userContextServiceDescriptor);
         }
 
         // 使用 Moq 创建 Mock 对象并配置 Current 属性
-        services.AddSingleton<ICurrentUserAccessor>(provider =>
+        services.AddSingleton<IUserContextAccessor>(provider =>
         {
-            var mockUserContextAccessor = new Mock<ICurrentUserAccessor>();
+            var mockUserContextAccessor = new Mock<IUserContextAccessor>();
             if (!string.IsNullOrEmpty(_currentUserId))
             {
-                var userContext = new SessionInfo("admin", "admin","admin", null,"", "", UserPresence.Available);
-                mockUserContextAccessor.Setup(x => x.SessionInfo).Returns(userContext);
+                var userContext = new UserContext(_currentUserId, "admin", null, "admin@example.com");
+                mockUserContextAccessor.Setup(x => x.Current).Returns(userContext);
             }
             return mockUserContextAccessor.Object;
         });
@@ -107,7 +114,6 @@ public class Testing
     {
         using var scope = _scopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-        context.Database.EnsureDeleted();
         context.Database.Migrate();
     }
 
@@ -117,8 +123,6 @@ public class Testing
         var mediator = scope.ServiceProvider.GetService<IMediator>();
         return await mediator.Send(request);
     }
-
-    public static IServiceScope CreateScope() => _scopeFactory.CreateScope();
 
     public static async Task<string> RunAsDefaultUserAsync()
     {
@@ -153,7 +157,7 @@ public class Testing
             return _currentUserId;
         }
 
-        var errors = string.Join(Environment.NewLine, result.Errors);
+        var errors = string.Join(Environment.NewLine, result.ToApplicationResult().Errors);
         throw new Exception($"Unable to create {userName}.{Environment.NewLine}{errors}");
     }
 
@@ -203,16 +207,16 @@ public class Testing
         return await context.Set<TEntity>().CountAsync();
     }
 
-    public static IPicklistService CreatePicklistService()
+    public static IDataSourceService<PicklistSetDto> CreatePicklistService()
     {
         var scope = _scopeFactory.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<IPicklistService>();
+        return scope.ServiceProvider.GetRequiredService<IDataSourceService<PicklistSetDto>>();
     }
 
-    public static ITenantService CreateTenantsService()
+    public static IDataSourceService<TenantDto> CreateTenantsService()
     {
         var scope = _scopeFactory.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<ITenantService>();
+        return scope.ServiceProvider.GetRequiredService<IDataSourceService<TenantDto>>();
     }
 
     [OneTimeTearDown]

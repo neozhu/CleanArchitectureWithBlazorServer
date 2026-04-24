@@ -1,9 +1,7 @@
 ﻿@page "/system/picklistset"
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs
-@using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.PaginationQuery
-@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.Delete
@@ -13,121 +11,134 @@
 
 @attribute [Authorize(Policy = Permissions.PicklistSets.View)]
 @inject IStringLocalizer<PicklistSets> L
-@inject IBlazorDownloadFileService BlazorDownloadFileService
+@inject BlazorDownloadFileService BlazorDownloadFileService
 
 <PageTitle>@Title</PageTitle>
 
 <MudDataGrid @ref="_table" FixedHeader="true"
              FixedFooter="false"
              @bind-RowsPerPage="_defaultPageSize"
-             Height="calc(100vh - 300px)"
              Hover="true"
              MultiSelection="true"
              @bind-SelectedItems="_selectedItems"
-             @bind-SelectedItem="SelectedItem"
              ReadOnly="false"
              EditMode="DataGridEditMode.Cell"
              T="PicklistSetDto"
              CommittedItemChanges="@CommittedItemChanges"
-             ServerData="@(ServerReload)">
+             ServerData="ServerReload">
     <ToolBarContent>
         <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
+            <!-- Left Toolbar: Icon, Title and List View -->
             <MudStack Row AlignItems="AlignItems.Start">
                 <MudIcon Icon="@Icons.Material.Filled.ViewList" Size="Size.Large" />
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle2" Class="mb-2">@Title</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="PickListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
+                    <MudText Typo="Typo.subtitle1" Class="mb-2">@L[SelectedItem.GetClassDescription()]</MudText>
+                    <MudEnumSelect Style="min-width:120px" TEnum="PickListView" Value="_picklistQuery.ListView"
+                                   ValueChanged="OnChangedListView" Dense="true" Label="@L["List View"]">
                     </MudEnumSelect>
                 </MudStack>
             </MudStack>
-            <MudStack Spacing="0" AlignItems="AlignItems.End">
-                <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
-                    <MudButton 
-                               Disabled="@_loading"
-                               OnClick="@(() => OnRefresh())"
+            <!-- Right Toolbar: Actions and Search -->
+            <MudStack Spacing="2" AlignItems="AlignItems.End">
+                <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                    <MudButton Disabled="@_loading"
+                               OnClick="OnRefresh"
                                StartIcon="@Icons.Material.Outlined.Refresh">
-                        @ConstantString.Refresh
+                        @AppStrings.Refresh
                     </MudButton>
-                    @if (_canCreate)
+                    @if (_accessRights.Create)
                     {
-                        <MudButton 
-                        StartIcon="@Icons.Material.Outlined.Add"
-                        OnClick="OnCreate">
-                            @ConstantString.New
+                        <MudButton StartIcon="@Icons.Material.Outlined.Add"
+                                   OnClick="OnCreate">
+                            @AppStrings.New
                         </MudButton>
                     }
-                    <MudMenu  TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
-                        @if (_canDelete)
-                        {
-                            <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                            OnClick="OnDeleteChecked">
-                                @ConstantString.Delete
-                            </MudMenuItem>
-                        }
-                        @if (_canExport)
+                    @if (_accessRights.Delete)
+                    {
+                        <MudButton Disabled="@(_selectedItems.Count == 0)"
+                                   StartIcon="@Icons.Material.Outlined.DeleteOutline"
+                                   OnClick="OnDeleteChecked">
+                            @AppStrings.Delete
+                        </MudButton>
+                    }
+                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@AppStrings.More">
+                        
+                        @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_exporting"
-                            OnClick="OnExport">
-                                @ConstantString.Export
+                                         OnClick="OnExport">
+                                @AppStrings.Export
                             </MudMenuItem>
                         }
-                        @if (_canImport)
+                        @if (_accessRights.Import)
                         {
                             <MudMenuItem>
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                     <CustomContent>
-                                        <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
-                                        Variant="Variant.Text"
-                                        Disabled="@_uploading">
-                                            @ConstantString.Import
+                                        <MudButton Class="pa-0 ma-0"
+                                                   OnClick="@context.OpenFilePickerAsync"
+                                                   Style="font-weight:400;text-transform:none;"
+                                                   Variant="Variant.Text"
+                                                   Disabled="@_uploading">
+                                            @AppStrings.Import
                                         </MudButton>
                                     </CustomContent>
-                                    <SelectedTemplate />
+                                    <SelectedTemplate></SelectedTemplate>
                                 </MudFileUpload>
                             </MudMenuItem>
                         }
                     </MudMenu>
-                </MudToolBar>
+                </MudStack>
                 <MudStack Row Spacing="1">
-                    @if (_canSearch)
+                    @if (_accessRights.Search)
                     {
-                        <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true" ValueChanged="@(s => OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
-                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
-                        </MudTextField>
+                        <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true"
+                                       ValueChanged="OnPicklistSearch" Style="width:160px" FullWidth="true" />
+                        <MudTextField T="string" Value="@_picklistQuery.Keyword" ValueChanged="OnKeywordSearch" Placeholder="@AppStrings.Search"
+                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
                     }
                 </MudStack>
             </MudStack>
         </MudStack>
     </ToolBarContent>
     <Columns>
-        <PropertyColumn Property="x => x.Name" Title="@L[SelectedItem.GetMemberDescription(x => x.Name)]">
+        <PropertyColumn Property="x => x.Name" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Name)]">
             <EditTemplate>
-                <MudEnumSelect @bind-Value="@context.Item.Name" TEnum="Picklist"   Required="true">
+                <MudEnumSelect @bind-Value="@context.Item.Name" TEnum="Picklist" Placeholder="@L["Select picklist name"]" Required="true">
                 </MudEnumSelect>
             </EditTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Value" Title="@L[SelectedItem.GetMemberDescription(x => x.Value)]" />
-        <PropertyColumn Property="x => x.Text" Title="@L[SelectedItem.GetMemberDescription(x => x.Text)]" />
-        <PropertyColumn Property="x => x.Description" Title="@L[SelectedItem.GetMemberDescription(x => x.Description)]" />
-        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Delete" Sortable="false">
+        <PropertyColumn Property="x => x.Value" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Value)]" />
+        <PropertyColumn Property="x => x.Text" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Text)]" />
+        <PropertyColumn Property="x => x.Description" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Description)]" />
+        <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Delete" Sortable="false">
             <CellTemplate>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" title="@ConstantString.Delete" Disabled="@(!_canDelete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" aria-label="@AppStrings.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
             </CellTemplate>
             <EditTemplate>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" title="@ConstantString.Delete" Disabled="@(!_canDelete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" aria-label="@AppStrings.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
             </EditTemplate>
         </TemplateColumn>
     </Columns>
+    <NoRecordsContent>
+        <MudDataGridStatus Icon="@Icons.Material.TwoTone.ListAlt"
+                           Text="@L["No Picklist Items Found"]"
+                           SubText="@L["Try adjusting your search or filter to find what you're looking for."]" />
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudDataGridStatus IsLoading="true"
+                           Text="@L["Loading Picklist Items..."]" />
+    </LoadingContent>
     <PagerContent>
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
 
-
 @code {
+    #region Fields & Properties
+
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-    [CascadingParameter] private UserProfile? UserProfile { get; set; }
+    private UserProfile UserProfile => UserProfileState.Value;
     private MudDataGrid<PicklistSetDto> _table = null!;
     public string Title { get; set; } = "Picklist";
     private IList<PicklistSetDto> _keyValueList = new List<PicklistSetDto>();
@@ -139,43 +150,44 @@
     private Picklist? _searchPicklist;
     private int _defaultPageSize = 15;
 
-    private PicklistSetsWithPaginationQuery Query { get; set; } = new();
-    private bool _canCreate;
-    private bool _canSearch;
-    private bool _canEdit;
-    private bool _canDelete;
-    private bool _canImport;
-    private bool _canExport;
-    private bool Readonly => !_canCreate || !_canEdit;
+    private PicklistSetsWithPaginationQuery _picklistQuery { get; set; } = new();
+    private PicklistSetsAccessRights _accessRights = new();
+
+
     private bool _loading;
     private bool _uploading;
     private bool _exporting;
 
+    #endregion
+
+
+
     protected override async Task OnInitializedAsync()
     {
-        Title = L[SelectedItem.GetClassDescription()];
-        var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Delete)).Succeeded;
-        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Import)).Succeeded;
-        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Export)).Succeeded;
+        Title = $"{ApplicationSettings.AppName} - {L[SelectedItem.GetClassDescription()]}";
+        _accessRights = await PermissionService.GetAccessRightsAsync<PicklistSetsAccessRights>();
     }
+
+
+
+    #region Grid Data & Search
 
     private async Task<GridData<PicklistSetDto>> ServerReload(GridState<PicklistSetDto> state, CancellationToken cancellationToken)
     {
         try
         {
             _loading = true;
-            Query.CurrentUser = UserProfile;
-            Query.Keyword = _searchString;
-            Query.Picklist = _searchPicklist;
-            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
-            Query.PageNumber = state.Page + 1;
-            Query.PageSize = state.PageSize;
-            var result = await Mediator.Send(Query).ConfigureAwait(false);
+            _picklistQuery.CurrentUser = UserProfile;
+            _picklistQuery.Keyword = _searchString;
+            _picklistQuery.Picklist = _searchPicklist;
+            _picklistQuery.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            var sortDefinition = state.SortDefinitions.FirstOrDefault();
+            _picklistQuery.SortDirection = sortDefinition == null
+                                      ? SortDirection.Descending.ToString()
+                                      : (sortDefinition.Descending ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString());
+            _picklistQuery.PageNumber = state.Page + 1;
+            _picklistQuery.PageSize = state.PageSize;
+            var result = await Mediator.Send(_picklistQuery);
             return new GridData<PicklistSetDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -183,18 +195,20 @@
             _loading = false;
         }
     }
+
     private async Task OnChangedListView(PickListView listview)
     {
-        Query.ListView = listview;
+        _picklistQuery.ListView = listview;
         await _table.ReloadServerData();
     }
-    private async Task OnSearch(string text)
+
+    private async Task OnKeywordSearch(string text)
     {
         _searchString = text;
         await _table.ReloadServerData();
     }
 
-    private async Task OnSearch(Picklist? val)
+    private async Task OnPicklistSearch(Picklist? val)
     {
         _searchPicklist = val;
         await _table.ReloadServerData();
@@ -202,113 +216,132 @@
 
     private async Task OnRefresh()
     {
-        PicklistSetCacheKey.Refresh();
+        await AppCache.RemoveByTagsAsync(PicklistSetCacheKey.Tags);
         _searchString = string.Empty;
-        await _table.ReloadServerData();
+        await InvokeAsync(() => _table.ReloadServerData());
     }
- 
+
+    #endregion
+
+    #region Edit & Commit Changes
+
+     
 
     private Task<DataGridEditFormAction> CommittedItemChanges(PicklistSetDto item)
     {
         InvokeAsync(async () =>
         {
-            var command = PicklistMapper.ToEditCommand(item);
+            var command = ObjectMapper.Map<AddEditPicklistSetCommand>(item);
             var result = await Mediator.Send(command);
             if (!result.Succeeded)
             {
-                Snackbar.Add($"{result.ErrorMessage}", Severity.Error);
+                Snackbar.Add(result.ErrorMessage, Severity.Error);
             }
-
             StateHasChanged();
         });
         return Task.FromResult(DataGridEditFormAction.Close);
     }
 
+    #endregion
+
+    #region Create & Delete
+
+    private Task OnCreate()
+    {
+        var command = new AddEditPicklistSetCommand
+        {
+            Name = SelectedItem.Name,
+            Description = SelectedItem?.Description
+        };
+        return DialogServiceHelper.ShowFormDialogAsync<CreatePicklistDialog, AddEditPicklistSetCommand>(
+                L["Create a picklist"],
+                async (res) =>
+            {
+                await _table.ReloadServerData();
+                _selectedItems = new HashSet<PicklistSetDto>();
+            },
+            para =>
+            {
+                para.Add(x => x._model, command);
+            });
+         
+    }
+
     private async Task DeleteItem(PicklistSetDto item)
     {
         var command = new DeletePicklistSetCommand(new[] { item.Id });
-        var contentText = string.Format(ConstantString.DeleteConfirmation, item.Name);
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        var contentText = string.Format(AppStrings.DeleteConfirmation, item.Name);
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, AppStrings.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
-        {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
-        });
+            {
+                await _table.ReloadServerData();
+                _selectedItems = new HashSet<PicklistSetDto>();
+            });
         });
     }
 
     private async Task OnDeleteChecked()
     {
         var command = new DeletePicklistSetCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var contentText = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        var contentText = string.Format(AppStrings.DeleteConfirmation, _selectedItems.Count);
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, AppStrings.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
-        {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
-        });
-        });
-    }
-    private async Task ShowCreateDialog(AddEditPicklistSetCommand command, string title)
-    {
-        var parameters = new DialogParameters
-        {
-            { nameof(CreatePicklistDialog.Model), command }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<CreatePicklistDialog>(title, parameters, options);
-        var state = await dialog.Result;
-        if (state is not null && !state.Canceled)
-        {
-            await _table.ReloadServerData();
-        }
-    }
-    private async Task OnCreate()
-    {
-        var command = new AddEditPicklistSetCommand
             {
-                Name = SelectedItem.Name,
-                Description = SelectedItem?.Description
-            };
-        await ShowCreateDialog(command, L["Create a picklist"]);
+                await _table.ReloadServerData();
+                _selectedItems = new HashSet<PicklistSetDto>();
+            });
+        });
     }
+
+    #endregion
+
+    #region Export & Import
 
     private async Task OnExport()
     {
         _exporting = true;
-        var request = new ExportPicklistSetsQuery
-            {
-                Keyword = _searchString
-            };
-        var result = await Mediator.Send(request);
-        var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Picklist"]}.xlsx", result, "application/octet-stream");
-        Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
-        _exporting = false;
+        try
+        {
+            var request = new ExportPicklistSetsQuery { Keyword = _searchString };
+            var result = await Mediator.Send(request);
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Picklist"]}.xlsx", result, "application/octet-stream");
+            Snackbar.Add(AppStrings.ExportSuccess, Severity.Info);
+        }
+        finally
+        {
+            _exporting = false;
+        }
     }
 
     private async Task OnImportData(IBrowserFile file)
     {
         _uploading = true;
-        var stream = new MemoryStream();
-        await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
-        var command = new ImportPicklistSetsCommand(file.Name, stream.ToArray());
-        var result = await Mediator.Send(command);
-        if (result.Succeeded)
+        try
         {
-            await OnRefresh();
-            Snackbar.Add($"{ConstantString.ImportSuccess}", Severity.Info);
-        }
-        else
-        {
-            foreach (var msg in result.Errors)
+            using var stream = new MemoryStream();
+            await file.OpenReadStream(GlobalVariables.MaxAllowedSize).CopyToAsync(stream);
+            var command = new ImportPicklistSetsCommand(file.Name, stream.ToArray());
+            var result = await Mediator.Send(command);
+            if (result.Succeeded)
             {
-                Snackbar.Add($"{msg}", Severity.Error);
+                await OnRefresh();
+                Snackbar.Add(AppStrings.ImportSuccess, Severity.Info);
+            }
+            else
+            {
+                foreach (var msg in result.Errors)
+                {
+                    Snackbar.Add(msg, Severity.Error);
+                }
             }
         }
-
-        _uploading = false;
+        finally
+        {
+            _uploading = false;
+        }
     }
 
+    #endregion
 }

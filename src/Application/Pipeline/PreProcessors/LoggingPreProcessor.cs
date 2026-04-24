@@ -1,29 +1,27 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Pipeline.PreProcessors;
 
-public class LoggingPreProcessor<TRequest, TResponse> : MessagePreProcessor<TRequest, TResponse>
-    where TRequest : notnull, IMessage
+public class LoggingPreProcessor<TRequest> where TRequest : notnull
 {
-    private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly IUserContextAccessor _userContextAccessor;
     private readonly ILogger _logger;
 
-
-    public LoggingPreProcessor(ILogger<TRequest> logger, ICurrentUserAccessor currentUserAccessor)
+    public LoggingPreProcessor(ILogger<TRequest> logger, IUserContextAccessor userContextAccessor)
     {
         _logger = logger;
-        _currentUserAccessor = currentUserAccessor;
+        _userContextAccessor = userContextAccessor;
     }
 
-    protected override ValueTask Handle(TRequest request, CancellationToken cancellationToken)
+    public ValueTask Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = nameof(TRequest);
-        var userName = _currentUserAccessor.SessionInfo?.UserName;
-        _logger.LogTrace("Processing request of type {RequestName} with details {@Request} by user {UserName}",
-         requestName, request, userName);
+        var userName = _userContextAccessor.Current?.UserName;
+        _logger.LogTrace("Processing request of type {RequestName} by user {UserName}",
+         requestName, userName);
         return ValueTask.CompletedTask;
     }
 }

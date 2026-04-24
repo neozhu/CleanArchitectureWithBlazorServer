@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="AccountBruteForceFactor" xml:space="preserve">
+    <value>Account brute force detected: {0} failed login attempts within {1} minutes</value>
+  </data>
+  <data name="IpBruteForceFactor" xml:space="preserve">
+    <value>IP-based brute force detected: {0} failed attempts from IP {1} targeting {2} different accounts</value>
+  </data>
+  <data name="NewIpFactor" xml:space="preserve">
+    <value>new IP address ({0})</value>
+  </data>
+  <data name="NewRegionFactor" xml:space="preserve">
+    <value>new geographic location ({0})</value>
+  </data>
+  <data name="NewBrowserFactor" xml:space="preserve">
+    <value>new device/browser ({0})</value>
+  </data>
+  <data name="LoginFromFactors" xml:space="preserve">
+    <value>Login from {0}</value>
+  </data>
+  <data name="UnusualHoursFactor" xml:space="preserve">
+    <value>Login during unusual hours ({0} UTC)</value>
+  </data>
+
+  <data name="Advice_Critical_ImmediateAction" xml:space="preserve">
+    <value>IMMEDIATE ACTION REQUIRED: Secure your account immediately</value>
+  </data>
+  <data name="Advice_Critical_ChangePassword" xml:space="preserve">
+    <value>Change your password right now</value>
+  </data>
+  <data name="Advice_Critical_Enable2FA" xml:space="preserve">
+    <value>Enable two-factor authentication immediately</value>
+  </data>
+  <data name="Advice_Critical_ReviewDevices" xml:space="preserve">
+    <value>Review and revoke access for all devices</value>
+  </data>
+  <data name="Advice_Critical_ContactSecurity" xml:space="preserve">
+    <value>Contact security team if this activity was not authorized</value>
+  </data>
+
+  <data name="Advice_High_ReviewActivity" xml:space="preserve">
+    <value>Immediately review recent account activity</value>
+  </data>
+  <data name="Advice_High_ChangePasswordConsider" xml:space="preserve">
+    <value>Consider changing your password</value>
+  </data>
+  <data name="Advice_High_Enable2FA" xml:space="preserve">
+    <value>Enable two-factor authentication if not already active</value>
+  </data>
+  <data name="Advice_High_MonitorAccount" xml:space="preserve">
+    <value>Monitor your account closely for the next few days</value>
+  </data>
+
+  <data name="Advice_Medium_Monitor" xml:space="preserve">
+    <value>Monitor your account for unusual activity</value>
+  </data>
+  <data name="Advice_Medium_Enable2FAConsider" xml:space="preserve">
+    <value>Consider enabling two-factor authentication</value>
+  </data>
+  <data name="Advice_Medium_ReviewLoginHistory" xml:space="preserve">
+    <value>Review your recent login history</value>
+  </data>
+
+  <data name="Advice_Low_Normal" xml:space="preserve">
+    <value>Your account security appears normal</value>
+  </data>
+
+  <data name="Advice_Factor_BruteForce_ChangePassword" xml:space="preserve">
+    <value>Change your password immediately - brute force attack detected</value>
+  </data>
+  <data name="Advice_Factor_BruteForce_ReviewDevices" xml:space="preserve">
+    <value>Review and revoke access for any unrecognized devices</value>
+  </data>
+  <data name="Advice_Factor_BruteForce_StrongerPassword" xml:space="preserve">
+    <value>Consider using a more complex password or passphrase</value>
+  </data>
+
+  <data name="Advice_Factor_NewLocation_Verify" xml:space="preserve">
+    <value>Verify this login was made by you from the new location</value>
+  </data>
+  <data name="Advice_Factor_NewLocation_SecureIfUnrecognized" xml:space="preserve">
+    <value>If unrecognized, secure your account and change credentials immediately</value>
+  </data>
+
+  <data name="Advice_Factor_NewDevice_Verify" xml:space="preserve">
+    <value>Verify this login was made from your device</value>
+  </data>
+  <data name="Advice_Factor_NewDevice_PublicDevice" xml:space="preserve">
+    <value>If using a public or shared device, ensure you log out completely</value>
+  </data>
+
+  <data name="Advice_Factor_UnusualHours_Secure" xml:space="preserve">
+    <value>If this wasn't you logging in during unusual hours, secure your account immediately</value>
+  </data>
+</root>
+

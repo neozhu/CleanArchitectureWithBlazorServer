@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
 
 public enum PageStatus
 {
-    [Description("Coming Soon")] ComingSoon,
-    [Description("WIP")] Wip,
-    [Description("New")] New,
-    [Description("Completed")] Completed
+    [Display(Name ="Coming Soon")] ComingSoon,
+    [Display(Name = "WIP")] Wip,
+    [Display(Name = "New")] New,
+    [Display(Name = "Completed")] Completed
 }

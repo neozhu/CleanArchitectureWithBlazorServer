@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
+﻿using CleanArchitecture.Blazor.Application.Common.Constants;
 using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Navigation;
@@ -41,9 +41,10 @@ public class MenuService : IMenuService
                         }
                     }
                 },
-                new()
+                 new()
                 {
                     Title = "Chatbot",
+                    Roles = new[] { Roles.Admin, Roles.Users },
                     Icon = Icons.Material.Filled.ChatBubble,
                     Href ="/ai/chatbot",
                     PageStatus = PageStatus.Completed
@@ -51,7 +52,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Analytics",
-                    Roles = new[] { RoleName.Admin, RoleName.Users },
+                    Roles = new[] { Roles.Admin, Roles.Users },
                     Icon = Icons.Material.Filled.Analytics,
                     Href = "/analytics",
                     PageStatus = PageStatus.ComingSoon
@@ -59,25 +60,18 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Banking",
-                    Roles = new[] { RoleName.Admin, RoleName.Users },
+                    Roles = new[] { Roles.Admin, Roles.Users },
                     Icon = Icons.Material.Filled.Money,
                     Href = "/banking",
                     PageStatus = PageStatus.ComingSoon
-                },
-                new()
-                {
-                    Title = "Booking",
-                    Roles = new[] { RoleName.Admin, RoleName.Users },
-                    Icon = Icons.Material.Filled.CalendarToday,
-                    Href = "/booking",
-                    PageStatus = PageStatus.ComingSoon
                 }
+               
             }
         },
         new MenuSectionModel
         {
             Title = "MANAGEMENT",
-            Roles = new[] { RoleName.Admin },
+            Roles = new[] { Roles.Admin },
             SectionItems = new List<MenuSectionItemModel>
             {
                 new()
@@ -110,7 +104,13 @@ public class MenuService : IMenuService
                             Title = "Profile",
                             Href = "/user/profile",
                             PageStatus = PageStatus.Completed
-                        }
+                        },
+                        new()
+                        {
+                            Title = "Login History",
+                            Href = "/pages/identity/loginaudits",
+                            PageStatus = PageStatus.Completed
+                        },
                     }
                 },
                 new()
@@ -130,6 +130,12 @@ public class MenuService : IMenuService
                         {
                             Title = "Audit Trails",
                             Href = "/system/audittrails",
+                            PageStatus = PageStatus.Completed
+                        },
+                        new()
+                        {
+                            Title = "Email Templates",
+                            Href = "/pages/system/email-templates",
                             PageStatus = PageStatus.Completed
                         },
                         new()

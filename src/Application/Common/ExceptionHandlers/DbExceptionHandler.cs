@@ -2,87 +2,140 @@
 
 namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
-public class DbExceptionHandler<TRequest, TResponse> : MessageExceptionHandler<TRequest, TResponse>
-    where TRequest : IRequest<Result<int>>
-    where TResponse : Result<int>
+/// <summary>
+/// Handles database update exceptions and converts them into Result or Result&lt;T&gt; responses.
+/// Provides user-friendly error messages for various database constraint violations.
+/// </summary>
+public sealed class DbExceptionHandler<TRequest, TResponse, TException>
+    where TRequest : IRequest<TResponse>
+    where TResponse : IResult
+    where TException : DbUpdateException
 {
-    private readonly ILogger _logger;
-    private readonly ILoggerFactory _loggerFactory;
-
-    public DbExceptionHandler(ILoggerFactory loggerFactory)
-    {
-        
-        _loggerFactory = loggerFactory;
-        _logger = _loggerFactory.CreateLogger(nameof(DbExceptionHandler<TRequest, TResponse>));
-    }
-
-    protected override ValueTask<ExceptionHandlingResult<TResponse>> Handle(TRequest request, Exception exception,
+    // Common constraint-name prefixes to strip
+    private static readonly string[] ConstraintPrefixes = ["PK_", "FK_", "IX_", "UQ_", "UC_"];
+    public ValueTask Handle(
+        TRequest request,
+        TException exception,
+        RequestExceptionHandlerState<TResponse> state,
         CancellationToken cancellationToken)
     {
-        if (exception is not DbUpdateException dbUpdateException)
+        var errors = GetUserFriendlyErrors(exception);
+        var failureResult = CreateFailureResult(errors);
+
+        state.SetHandled(failureResult);
+        return ValueTask.CompletedTask;
+    }
+
+    private TResponse CreateFailureResult(string[] errors)
+    {
+        return ResultFailureFactory.Create<TResponse>(errors);
+    }
+
+    /// <summary>
+    /// Maps specific database exceptions to user-friendly error messages.
+    /// </summary>
+    private string[] GetUserFriendlyErrors(DbUpdateException exception) =>
+        exception switch
         {
-            return NotHandled;
+            UniqueConstraintException uniqueEx => GetUniqueConstraintErrors(uniqueEx),
+            CannotInsertNullException => ["Required fields are missing. Please fill in all mandatory information."],
+            MaxLengthExceededException => ["Input data exceeds maximum length. Please reduce the size of your entries."],
+            NumericOverflowException => ["Numeric values are outside the valid range. Please enter appropriate numbers."],
+            ReferenceConstraintException referenceEx => GetReferenceConstraintErrors(referenceEx),
+            _ => GetGenericDatabaseErrors(exception)
+        };
+
+    /// <summary>
+    /// Gets user-friendly error messages for unique constraint violations.
+    /// </summary>
+    private static string[] GetUniqueConstraintErrors(UniqueConstraintException exception)
+    {
+        var tableName = GetTableName(exception.SchemaQualifiedTableName);
+        var propertiesStr = GetConstraintProperties(exception.ConstraintProperties);
+
+        var message = !string.IsNullOrWhiteSpace(propertiesStr) && propertiesStr != "specified properties"
+            ? $"A record with the same {propertiesStr} already exists. Each {propertiesStr} must be unique."
+            : "A duplicate record was found. Please ensure all values are unique.";
+
+        return [message];
+    }
+
+    /// <summary>
+    /// Gets user-friendly error messages for reference constraint violations.
+    /// </summary>
+    private static string[] GetReferenceConstraintErrors(ReferenceConstraintException exception)
+    {
+        return ["Cannot complete this operation because the record has dependent data. Please remove related records first."];
+    }
+
+    /// <summary>
+    /// Gets generic error messages for unhandled database exceptions.
+    /// </summary>
+    private string[] GetGenericDatabaseErrors(DbUpdateException exception)
+    {
+        return ["A database error occurred. Please try again or contact support if the issue persists."];
+    }
+
+    #region Helper Methods
+
+    /// <summary>
+    /// Extracts and formats the table name from a schema-qualified table name.
+    /// </summary>
+    /// <param name="schemaQualifiedTableName">The schema-qualified table name.</param>
+    /// <returns>A formatted table name.</returns>
+    private static string GetTableName(string? schemaQualifiedTableName)
+    {
+        if (string.IsNullOrWhiteSpace(schemaQualifiedTableName))
+            return "table";
+
+        // Extract table name from schema.table format
+        var parts = schemaQualifiedTableName.Split('.');
+        var tableName = parts.Length > 1 ? parts[^1] : schemaQualifiedTableName;
+        
+        // Remove brackets and quotes if present
+        tableName = tableName.Trim('[', ']', '"', '\'');
+        
+        return string.IsNullOrWhiteSpace(tableName) ? "table" : tableName;
+    }
+
+    /// <summary>
+    /// Formats constraint properties into a readable string.
+    /// </summary>
+    /// <param name="constraintProperties">The constraint properties.</param>
+    /// <returns>A formatted string of properties.</returns>
+    private static string GetConstraintProperties(IReadOnlyList<string>? constraintProperties)
+    {
+        if (constraintProperties is null or { Count: 0 })
+            return "specified properties";
+
+        return constraintProperties.Count == 1 
+            ? constraintProperties[0] 
+            : string.Join(", ", constraintProperties);
+    }
+
+    /// <summary>
+    /// Extracts and formats the constraint name.
+    /// </summary>
+    /// <param name="constraintName">The constraint name.</param>
+    /// <returns>A formatted constraint name.</returns>
+    private static string GetConstraintName(string? constraintName)
+    {
+        if (string.IsNullOrWhiteSpace(constraintName))
+            return string.Empty;
+
+        // Remove common prefixes from constraint names
+        var clean = constraintName.AsSpan();
+        foreach (var prefix in ConstraintPrefixes)
+        {
+            if (clean.StartsWith(prefix))
+            {
+                clean = clean[prefix.Length..];
+                break;
+            }
         }
 
-        return Handled((TResponse)Result<int>.Failure(GetErrors(dbUpdateException)));
+        return clean.IsEmpty ? string.Empty : clean.ToString();
     }
 
-    private  string[] GetErrors(DbUpdateException exception)
-    {
-
-
-        return exception switch
-        {
-            UniqueConstraintException e => GetUniqueConstraintExceptionErrors(e),
-            CannotInsertNullException e => GetCannotInsertNullExceptionErrors(e),
-            MaxLengthExceededException e => GetMaxLengthExceededExceptionErrors(e),
-            NumericOverflowException e => GetNumericOverflowExceptionErrors(e),
-            ReferenceConstraintException e => GetReferenceConstraintExceptionErrors(e),
-            _ => new[] { exception.GetBaseException().Message }
-        };
-    }
-    private  string[] GetUniqueConstraintExceptionErrors(UniqueConstraintException exception)
-    {
-        var tableName = string.IsNullOrWhiteSpace(exception.SchemaQualifiedTableName) ? "unknown table" : exception.SchemaQualifiedTableName;
-        var properties = exception.ConstraintProperties != null && exception.ConstraintProperties.Any()
-            ? string.Join(", ", exception.ConstraintProperties)
-            : "unknown properties";
-
-        return new[]
-        {
-            $"A unique constraint violation occurred on constraint in table '{tableName}'. " +
-            $"'{properties}'. Please ensure the values are unique."
-        };
-    }
-    private  string[] GetCannotInsertNullExceptionErrors(CannotInsertNullException exception)
-    {
-        return new[]
-        {
-            "Some required information is missing. Please make sure all required fields are filled out."
-        };
-    }
-    private  string[] GetMaxLengthExceededExceptionErrors(MaxLengthExceededException exception)
-    {
-        return new[]
-        {
-            "Some input is too long. Please shorten the data entered in the fields."
-        };
-    }
-    private  string[] GetNumericOverflowExceptionErrors(NumericOverflowException exception)
-    {
-        return new[]
-        {
-           "A number you entered is too large or too small. Please enter a number within the allowed range."
-        };
-    }
-    private  string[] GetReferenceConstraintExceptionErrors(ReferenceConstraintException exception)
-    {
-        var tableName = string.IsNullOrWhiteSpace(exception.SchemaQualifiedTableName) ? "unknown table" : exception.SchemaQualifiedTableName;
-        return new[]
-        {
-            $"The operation failed because this record is linked to other records in {tableName}. " +
-            $"Please remove any related records first"
-        };
-    }
-
+    #endregion
 }

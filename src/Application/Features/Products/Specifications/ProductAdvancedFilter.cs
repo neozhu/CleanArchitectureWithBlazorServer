@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Products.Specifications;
+namespace CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 
 public class ProductAdvancedFilter : PaginationFilter
 {

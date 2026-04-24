@@ -136,13 +136,13 @@
   <data name="Tenant Id" xml:space="preserve">
     <value>Mieter-ID</value>
   </data>
-  <data name="Tenant id is required!" xml:space="preserve">
+  <data name="Tenant id is required." xml:space="preserve">
     <value>Mieterausweis erforderlich!</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>Name des Mieters</value>
   </data>
-  <data name="Tenant name is required!" xml:space="preserve">
+  <data name="Tenant name is required." xml:space="preserve">
     <value>Name des Mieters ist erforderlich!</value>
   </data>
   <data name="Tenants" xml:space="preserve">
@@ -150,5 +150,29 @@
   </data>
   <data name="Description" xml:space="preserve">
     <value>Beschreibung</value>
+  </data>
+  <data name="No available tenants" xml:space="preserve">
+    <value>Keine verfügbaren Mandanten</value>
+  </data>
+  <data name="Auto-generated tenant id" xml:space="preserve">
+    <value>Automatisch generierte Mandanten-ID</value>
+  </data>
+  <data name="This identifier cannot be changed" xml:space="preserve">
+    <value>Dieser Bezeichner kann nicht geändert werden</value>
+  </data>
+  <data name="Enter tenant name" xml:space="preserve">
+    <value>Bitte geben Sie den Mandantennamen ein</value>
+  </data>
+  <data name="Enter tenant description" xml:space="preserve">
+    <value>Bitte geben Sie eine Mandantenbeschreibung ein</value>
+  </data>
+  <data name="No Tenants Found" xml:space="preserve">
+    <value>Keine Mandanten gefunden</value>
+  </data>
+  <data name="Try adjusting your search or filter to find what you're looking for." xml:space="preserve">
+    <value>Passen Sie Ihre Suche oder Filter an, um die gewünschten Ergebnisse zu finden.</value>
+  </data>
+  <data name="Loading Tenants..." xml:space="preserve">
+    <value>Mandanten werden geladen...</value>
   </data>
 </root>
