@@ -19,15 +19,15 @@
        
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.23" />
         <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
         <PackageReference Include="MudBlazor" Version="9.4.0" />
         <PackageReference Include="Blazor-ApexCharts" Version="6.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.7">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

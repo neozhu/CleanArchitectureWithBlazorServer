@@ -19,7 +19,7 @@
         
         <PackageReference Include="FluentValidation" Version="12.1.1" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.7" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.8" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     </ItemGroup>
     <ItemGroup>
