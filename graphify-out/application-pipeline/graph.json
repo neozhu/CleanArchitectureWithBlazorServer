@@ -1,0 +1,1281 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "CacheInvalidationBehaviour.cs",
+      "file_type": "code",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L1",
+      "id": "cacheinvalidationbehaviour_cs",
+      "community": 1,
+      "norm_label": "cacheinvalidationbehaviour.cs"
+    },
+    {
+      "label": "CacheInvalidationBehaviour",
+      "file_type": "code",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L6",
+      "id": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour",
+      "community": 1,
+      "norm_label": "cacheinvalidationbehaviour"
+    },
+    {
+      "label": "IPipelineBehavior",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "ipipelinebehavior",
+      "community": 0,
+      "norm_label": "ipipelinebehavior"
+    },
+    {
+      "label": "TRequest",
+      "file_type": "code",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L6",
+      "id": "cacheinvalidationbehaviour_cs_trequest",
+      "community": 1,
+      "norm_label": "trequest"
+    },
+    {
+      "label": "TResponse",
+      "file_type": "code",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L6",
+      "id": "cacheinvalidationbehaviour_cs_tresponse",
+      "community": 1,
+      "norm_label": "tresponse"
+    },
+    {
+      "label": "IAppCache",
+      "file_type": "code",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L9",
+      "id": "cacheinvalidationbehaviour_cs_iappcache",
+      "community": 1,
+      "norm_label": "iappcache"
+    },
+    {
+      "label": "ILogger",
+      "file_type": "code",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L10",
+      "id": "cacheinvalidationbehaviour_cs_ilogger",
+      "community": 1,
+      "norm_label": "ilogger"
+    },
+    {
+      "label": ".Handle()",
+      "file_type": "code",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L21",
+      "id": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour_handle",
+      "community": 1,
+      "norm_label": ".handle()"
+    },
+    {
+      "label": "MessageHandlerDelegate",
+      "file_type": "code",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L21",
+      "id": "cacheinvalidationbehaviour_cs_messagehandlerdelegate",
+      "community": 1,
+      "norm_label": "messagehandlerdelegate"
+    },
+    {
+      "label": "CancellationToken",
+      "file_type": "code",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L21",
+      "id": "cacheinvalidationbehaviour_cs_cancellationtoken",
+      "community": 1,
+      "norm_label": "cancellationtoken"
+    },
+    {
+      "label": "ValueTask",
+      "file_type": "code",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L21",
+      "id": "cacheinvalidationbehaviour_cs_valuetask",
+      "community": 1,
+      "norm_label": "valuetask"
+    },
+    {
+      "label": "FusionCacheBehaviour.cs",
+      "file_type": "code",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L1",
+      "id": "fusioncachebehaviour_cs",
+      "community": 0,
+      "norm_label": "fusioncachebehaviour.cs"
+    },
+    {
+      "label": "FusionCacheBehaviour",
+      "file_type": "code",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L6",
+      "id": "pipeline_fusioncachebehaviour_fusioncachebehaviour",
+      "community": 0,
+      "norm_label": "fusioncachebehaviour"
+    },
+    {
+      "label": "TRequest",
+      "file_type": "code",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L6",
+      "id": "fusioncachebehaviour_cs_trequest",
+      "community": 0,
+      "norm_label": "trequest"
+    },
+    {
+      "label": "TResponse",
+      "file_type": "code",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L6",
+      "id": "fusioncachebehaviour_cs_tresponse",
+      "community": 0,
+      "norm_label": "tresponse"
+    },
+    {
+      "label": "IAppCache",
+      "file_type": "code",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L9",
+      "id": "fusioncachebehaviour_cs_iappcache",
+      "community": 0,
+      "norm_label": "iappcache"
+    },
+    {
+      "label": "ILogger",
+      "file_type": "code",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L10",
+      "id": "fusioncachebehaviour_cs_ilogger",
+      "community": 0,
+      "norm_label": "ilogger"
+    },
+    {
+      "label": ".Handle()",
+      "file_type": "code",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L21",
+      "id": "pipeline_fusioncachebehaviour_fusioncachebehaviour_handle",
+      "community": 0,
+      "norm_label": ".handle()"
+    },
+    {
+      "label": "MessageHandlerDelegate",
+      "file_type": "code",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L21",
+      "id": "fusioncachebehaviour_cs_messagehandlerdelegate",
+      "community": 0,
+      "norm_label": "messagehandlerdelegate"
+    },
+    {
+      "label": "CancellationToken",
+      "file_type": "code",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L21",
+      "id": "fusioncachebehaviour_cs_cancellationtoken",
+      "community": 0,
+      "norm_label": "cancellationtoken"
+    },
+    {
+      "label": "ValueTask",
+      "file_type": "code",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L21",
+      "id": "fusioncachebehaviour_cs_valuetask",
+      "community": 0,
+      "norm_label": "valuetask"
+    },
+    {
+      "label": "PerformanceBehaviour.cs",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L1",
+      "id": "performancebehaviour_cs",
+      "community": 6,
+      "norm_label": "performancebehaviour.cs"
+    },
+    {
+      "label": "PerformanceBehaviour",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L12",
+      "id": "pipeline_performancebehaviour_performancebehaviour",
+      "community": 2,
+      "norm_label": "performancebehaviour"
+    },
+    {
+      "label": "TRequest",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L12",
+      "id": "performancebehaviour_cs_trequest",
+      "community": 2,
+      "norm_label": "trequest"
+    },
+    {
+      "label": "TResponse",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L12",
+      "id": "performancebehaviour_cs_tresponse",
+      "community": 2,
+      "norm_label": "tresponse"
+    },
+    {
+      "label": "IUserContextAccessor",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L15",
+      "id": "performancebehaviour_cs_iusercontextaccessor",
+      "community": 2,
+      "norm_label": "iusercontextaccessor"
+    },
+    {
+      "label": "ILogger",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L16",
+      "id": "performancebehaviour_cs_ilogger",
+      "community": 2,
+      "norm_label": "ilogger"
+    },
+    {
+      "label": ".Handle()",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L33",
+      "id": "pipeline_performancebehaviour_performancebehaviour_handle",
+      "community": 2,
+      "norm_label": ".handle()"
+    },
+    {
+      "label": "MessageHandlerDelegate",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L33",
+      "id": "performancebehaviour_cs_messagehandlerdelegate",
+      "community": 2,
+      "norm_label": "messagehandlerdelegate"
+    },
+    {
+      "label": "CancellationToken",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L33",
+      "id": "performancebehaviour_cs_cancellationtoken",
+      "community": 2,
+      "norm_label": "cancellationtoken"
+    },
+    {
+      "label": "ValueTask",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L33",
+      "id": "performancebehaviour_cs_valuetask",
+      "community": 2,
+      "norm_label": "valuetask"
+    },
+    {
+      "label": "RequestCounter",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L71",
+      "id": "pipeline_performancebehaviour_requestcounter",
+      "community": 6,
+      "norm_label": "requestcounter"
+    },
+    {
+      "label": "int",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L73",
+      "id": "int",
+      "community": 6,
+      "norm_label": "int"
+    },
+    {
+      "label": "DateTime",
+      "file_type": "code",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L74",
+      "id": "datetime",
+      "community": 6,
+      "norm_label": "datetime"
+    },
+    {
+      "label": "ResultExceptionBehavior.cs",
+      "file_type": "code",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L1",
+      "id": "resultexceptionbehavior_cs",
+      "community": 3,
+      "norm_label": "resultexceptionbehavior.cs"
+    },
+    {
+      "label": "ResultExceptionBehavior",
+      "file_type": "code",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L3",
+      "id": "pipeline_resultexceptionbehavior_resultexceptionbehavior",
+      "community": 3,
+      "norm_label": "resultexceptionbehavior"
+    },
+    {
+      "label": "TRequest",
+      "file_type": "code",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L3",
+      "id": "resultexceptionbehavior_cs_trequest",
+      "community": 3,
+      "norm_label": "trequest"
+    },
+    {
+      "label": "TResponse",
+      "file_type": "code",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L3",
+      "id": "resultexceptionbehavior_cs_tresponse",
+      "community": 3,
+      "norm_label": "tresponse"
+    },
+    {
+      "label": "ILogger",
+      "file_type": "code",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L7",
+      "id": "resultexceptionbehavior_cs_ilogger",
+      "community": 3,
+      "norm_label": "ilogger"
+    },
+    {
+      "label": ".Handle()",
+      "file_type": "code",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L14",
+      "id": "pipeline_resultexceptionbehavior_resultexceptionbehavior_handle",
+      "community": 3,
+      "norm_label": ".handle()"
+    },
+    {
+      "label": "MessageHandlerDelegate",
+      "file_type": "code",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L14",
+      "id": "resultexceptionbehavior_cs_messagehandlerdelegate",
+      "community": 3,
+      "norm_label": "messagehandlerdelegate"
+    },
+    {
+      "label": "CancellationToken",
+      "file_type": "code",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L14",
+      "id": "resultexceptionbehavior_cs_cancellationtoken",
+      "community": 3,
+      "norm_label": "cancellationtoken"
+    },
+    {
+      "label": "ValueTask",
+      "file_type": "code",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L14",
+      "id": "resultexceptionbehavior_cs_valuetask",
+      "community": 3,
+      "norm_label": "valuetask"
+    },
+    {
+      "label": "ValidationBehavior.cs",
+      "file_type": "code",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L1",
+      "id": "validationbehavior_cs",
+      "community": 4,
+      "norm_label": "validationbehavior.cs"
+    },
+    {
+      "label": "ValidationBehavior",
+      "file_type": "code",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L3",
+      "id": "pipeline_validationbehavior_validationbehavior",
+      "community": 4,
+      "norm_label": "validationbehavior"
+    },
+    {
+      "label": "TRequest",
+      "file_type": "code",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L3",
+      "id": "validationbehavior_cs_trequest",
+      "community": 4,
+      "norm_label": "trequest"
+    },
+    {
+      "label": "TResponse",
+      "file_type": "code",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L3",
+      "id": "validationbehavior_cs_tresponse",
+      "community": 4,
+      "norm_label": "tresponse"
+    },
+    {
+      "label": "IReadOnlyCollection",
+      "file_type": "code",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L6",
+      "id": "ireadonlycollection",
+      "community": 4,
+      "norm_label": "ireadonlycollection"
+    },
+    {
+      "label": ".Handle()",
+      "file_type": "code",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L14",
+      "id": "pipeline_validationbehavior_validationbehavior_handle",
+      "community": 4,
+      "norm_label": ".handle()"
+    },
+    {
+      "label": "MessageHandlerDelegate",
+      "file_type": "code",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L14",
+      "id": "validationbehavior_cs_messagehandlerdelegate",
+      "community": 4,
+      "norm_label": "messagehandlerdelegate"
+    },
+    {
+      "label": "CancellationToken",
+      "file_type": "code",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L14",
+      "id": "validationbehavior_cs_cancellationtoken",
+      "community": 4,
+      "norm_label": "cancellationtoken"
+    },
+    {
+      "label": "ValueTask",
+      "file_type": "code",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L14",
+      "id": "validationbehavior_cs_valuetask",
+      "community": 4,
+      "norm_label": "valuetask"
+    },
+    {
+      "label": "LoggingPreProcessor.cs",
+      "file_type": "code",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L1",
+      "id": "preprocessors_loggingpreprocessor_cs",
+      "community": 5,
+      "norm_label": "loggingpreprocessor.cs"
+    },
+    {
+      "label": "LoggingPreProcessor",
+      "file_type": "code",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L8",
+      "id": "preprocessors_loggingpreprocessor_loggingpreprocessor",
+      "community": 5,
+      "norm_label": "loggingpreprocessor"
+    },
+    {
+      "label": "IUserContextAccessor",
+      "file_type": "code",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L10",
+      "id": "preprocessors_loggingpreprocessor_cs_iusercontextaccessor",
+      "community": 5,
+      "norm_label": "iusercontextaccessor"
+    },
+    {
+      "label": "ILogger",
+      "file_type": "code",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L11",
+      "id": "preprocessors_loggingpreprocessor_cs_ilogger",
+      "community": 5,
+      "norm_label": "ilogger"
+    },
+    {
+      "label": ".Process()",
+      "file_type": "code",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L19",
+      "id": "preprocessors_loggingpreprocessor_loggingpreprocessor_process",
+      "community": 5,
+      "norm_label": ".process()"
+    },
+    {
+      "label": "TRequest",
+      "file_type": "code",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L19",
+      "id": "preprocessors_loggingpreprocessor_cs_trequest",
+      "community": 5,
+      "norm_label": "trequest"
+    },
+    {
+      "label": "CancellationToken",
+      "file_type": "code",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L19",
+      "id": "preprocessors_loggingpreprocessor_cs_cancellationtoken",
+      "community": 5,
+      "norm_label": "cancellationtoken"
+    },
+    {
+      "label": "ValueTask",
+      "file_type": "code",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L19",
+      "id": "preprocessors_loggingpreprocessor_cs_valuetask",
+      "community": 5,
+      "norm_label": "valuetask"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "cacheinvalidationbehaviour_cs",
+      "target": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L9",
+      "weight": 1.0,
+      "context": "field",
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour",
+      "target": "cacheinvalidationbehaviour_cs_iappcache",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "context": "field",
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour",
+      "target": "cacheinvalidationbehaviour_cs_ilogger",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour",
+      "target": "cacheinvalidationbehaviour_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour",
+      "target": "cacheinvalidationbehaviour_cs_tresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour",
+      "target": "ipipelinebehavior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour",
+      "target": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour_handle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour",
+      "target": "ipipelinebehavior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "pipeline_performancebehaviour_performancebehaviour",
+      "target": "ipipelinebehavior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "pipeline_resultexceptionbehavior_resultexceptionbehavior",
+      "target": "ipipelinebehavior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "pipeline_validationbehavior_validationbehavior",
+      "target": "ipipelinebehavior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour_handle",
+      "target": "cacheinvalidationbehaviour_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour_handle",
+      "target": "cacheinvalidationbehaviour_cs_tresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour_handle",
+      "target": "cacheinvalidationbehaviour_cs_cancellationtoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour_handle",
+      "target": "cacheinvalidationbehaviour_cs_messagehandlerdelegate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "CacheInvalidationBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "pipeline_cacheinvalidationbehaviour_cacheinvalidationbehaviour_handle",
+      "target": "cacheinvalidationbehaviour_cs_valuetask",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "fusioncachebehaviour_cs",
+      "target": "pipeline_fusioncachebehaviour_fusioncachebehaviour",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L9",
+      "weight": 1.0,
+      "context": "field",
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour",
+      "target": "fusioncachebehaviour_cs_iappcache",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "context": "field",
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour",
+      "target": "fusioncachebehaviour_cs_ilogger",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour",
+      "target": "fusioncachebehaviour_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour",
+      "target": "fusioncachebehaviour_cs_tresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour",
+      "target": "pipeline_fusioncachebehaviour_fusioncachebehaviour_handle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour_handle",
+      "target": "fusioncachebehaviour_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour_handle",
+      "target": "fusioncachebehaviour_cs_tresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour_handle",
+      "target": "fusioncachebehaviour_cs_cancellationtoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour_handle",
+      "target": "fusioncachebehaviour_cs_messagehandlerdelegate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "FusionCacheBehaviour.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "pipeline_fusioncachebehaviour_fusioncachebehaviour_handle",
+      "target": "fusioncachebehaviour_cs_valuetask",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "performancebehaviour_cs",
+      "target": "pipeline_performancebehaviour_performancebehaviour",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "performancebehaviour_cs",
+      "target": "pipeline_performancebehaviour_requestcounter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L16",
+      "weight": 1.0,
+      "context": "field",
+      "source": "pipeline_performancebehaviour_performancebehaviour",
+      "target": "performancebehaviour_cs_ilogger",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "context": "field",
+      "source": "pipeline_performancebehaviour_performancebehaviour",
+      "target": "performancebehaviour_cs_iusercontextaccessor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_performancebehaviour_performancebehaviour",
+      "target": "performancebehaviour_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_performancebehaviour_performancebehaviour",
+      "target": "performancebehaviour_cs_tresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "pipeline_performancebehaviour_performancebehaviour",
+      "target": "pipeline_performancebehaviour_performancebehaviour_handle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_performancebehaviour_performancebehaviour_handle",
+      "target": "performancebehaviour_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_performancebehaviour_performancebehaviour_handle",
+      "target": "performancebehaviour_cs_tresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "pipeline_performancebehaviour_performancebehaviour_handle",
+      "target": "performancebehaviour_cs_cancellationtoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "pipeline_performancebehaviour_performancebehaviour_handle",
+      "target": "performancebehaviour_cs_messagehandlerdelegate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "pipeline_performancebehaviour_performancebehaviour_handle",
+      "target": "performancebehaviour_cs_valuetask",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L74",
+      "weight": 1.0,
+      "context": "field",
+      "source": "pipeline_performancebehaviour_requestcounter",
+      "target": "datetime",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PerformanceBehaviour.cs",
+      "source_location": "L73",
+      "weight": 1.0,
+      "context": "field",
+      "source": "pipeline_performancebehaviour_requestcounter",
+      "target": "int",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "resultexceptionbehavior_cs",
+      "target": "pipeline_resultexceptionbehavior_resultexceptionbehavior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "pipeline_resultexceptionbehavior_resultexceptionbehavior",
+      "target": "pipeline_resultexceptionbehavior_resultexceptionbehavior_handle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "context": "field",
+      "source": "pipeline_resultexceptionbehavior_resultexceptionbehavior",
+      "target": "resultexceptionbehavior_cs_ilogger",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_resultexceptionbehavior_resultexceptionbehavior",
+      "target": "resultexceptionbehavior_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_resultexceptionbehavior_resultexceptionbehavior",
+      "target": "resultexceptionbehavior_cs_tresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_resultexceptionbehavior_resultexceptionbehavior_handle",
+      "target": "resultexceptionbehavior_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_resultexceptionbehavior_resultexceptionbehavior_handle",
+      "target": "resultexceptionbehavior_cs_tresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "pipeline_resultexceptionbehavior_resultexceptionbehavior_handle",
+      "target": "resultexceptionbehavior_cs_cancellationtoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "pipeline_resultexceptionbehavior_resultexceptionbehavior_handle",
+      "target": "resultexceptionbehavior_cs_messagehandlerdelegate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ResultExceptionBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "pipeline_resultexceptionbehavior_resultexceptionbehavior_handle",
+      "target": "resultexceptionbehavior_cs_valuetask",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "validationbehavior_cs",
+      "target": "pipeline_validationbehavior_validationbehavior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "context": "field",
+      "source": "pipeline_validationbehavior_validationbehavior",
+      "target": "ireadonlycollection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "pipeline_validationbehavior_validationbehavior",
+      "target": "pipeline_validationbehavior_validationbehavior_handle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_validationbehavior_validationbehavior",
+      "target": "validationbehavior_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_validationbehavior_validationbehavior",
+      "target": "validationbehavior_cs_tresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_validationbehavior_validationbehavior_handle",
+      "target": "validationbehavior_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "pipeline_validationbehavior_validationbehavior_handle",
+      "target": "validationbehavior_cs_tresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "pipeline_validationbehavior_validationbehavior_handle",
+      "target": "validationbehavior_cs_cancellationtoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "pipeline_validationbehavior_validationbehavior_handle",
+      "target": "validationbehavior_cs_messagehandlerdelegate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "ValidationBehavior.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "pipeline_validationbehavior_validationbehavior_handle",
+      "target": "validationbehavior_cs_valuetask",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "preprocessors_loggingpreprocessor_cs",
+      "target": "preprocessors_loggingpreprocessor_loggingpreprocessor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "context": "field",
+      "source": "preprocessors_loggingpreprocessor_loggingpreprocessor",
+      "target": "preprocessors_loggingpreprocessor_cs_ilogger",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "context": "field",
+      "source": "preprocessors_loggingpreprocessor_loggingpreprocessor",
+      "target": "preprocessors_loggingpreprocessor_cs_iusercontextaccessor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "preprocessors_loggingpreprocessor_loggingpreprocessor",
+      "target": "preprocessors_loggingpreprocessor_loggingpreprocessor_process",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "preprocessors_loggingpreprocessor_loggingpreprocessor_process",
+      "target": "preprocessors_loggingpreprocessor_cs_cancellationtoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "preprocessors_loggingpreprocessor_loggingpreprocessor_process",
+      "target": "preprocessors_loggingpreprocessor_cs_trequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "PreProcessors/LoggingPreProcessor.cs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "preprocessors_loggingpreprocessor_loggingpreprocessor_process",
+      "target": "preprocessors_loggingpreprocessor_cs_valuetask",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "4c1d7590ca5d746435b9856e70aff47a4126ee75"
+}

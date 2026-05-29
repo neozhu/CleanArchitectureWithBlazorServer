@@ -1,0 +1,517 @@
+{
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Domain.csproj": {
+    "mtime": 1778713543.163428,
+    "ast_hash": "28e0d7277b27091df5a6f1843ddf830e",
+    "semantic_hash": "28e0d7277b27091df5a6f1843ddf830e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\_Imports.cs": {
+    "mtime": 1777002077.444941,
+    "ast_hash": "60320a169e28c88d51461dcb47352628",
+    "semantic_hash": "60320a169e28c88d51461dcb47352628"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\DomainEvent.cs": {
+    "mtime": 1777002077.4209719,
+    "ast_hash": "0e2f8ac1757a76f3f99351ef95c650f6",
+    "semantic_hash": "0e2f8ac1757a76f3f99351ef95c650f6"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\UploadedFileInfo.cs": {
+    "mtime": 1777002077.428063,
+    "ast_hash": "1e1cb154e2da11d6e37f65772a7ee35e",
+    "semantic_hash": "1e1cb154e2da11d6e37f65772a7ee35e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\BaseAuditableEntity.cs": {
+    "mtime": 1777002077.4219704,
+    "ast_hash": "da96c13e5d740bbe1f92cb67ccae33aa",
+    "semantic_hash": "da96c13e5d740bbe1f92cb67ccae33aa"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\BaseAuditableSoftDeleteEntity.cs": {
+    "mtime": 1777002077.4219704,
+    "ast_hash": "de8b7ba45fcb28083ee7b0f9b7ce354f",
+    "semantic_hash": "de8b7ba45fcb28083ee7b0f9b7ce354f"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\BaseEntity.cs": {
+    "mtime": 1777002077.422989,
+    "ast_hash": "801b5ef1715ecdff7b77954bd0ae0abe",
+    "semantic_hash": "801b5ef1715ecdff7b77954bd0ae0abe"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\IAuditTrial.cs": {
+    "mtime": 1777002077.422989,
+    "ast_hash": "439256e0ff1349ecd44e70de68be0233",
+    "semantic_hash": "439256e0ff1349ecd44e70de68be0233"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\IEntity.cs": {
+    "mtime": 1777002077.4239883,
+    "ast_hash": "71fc886b76ba0efc62d028cdf0b55e3b",
+    "semantic_hash": "71fc886b76ba0efc62d028cdf0b55e3b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\IMustHaveTenant.cs": {
+    "mtime": 1777002077.4239883,
+    "ast_hash": "7fe0862efc0fa8f9ded8f842dcefa9a3",
+    "semantic_hash": "7fe0862efc0fa8f9ded8f842dcefa9a3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\ISoftDelete.cs": {
+    "mtime": 1777002077.4249878,
+    "ast_hash": "1bd4eb2f2d3daddccb7563e2f32dd5d1",
+    "semantic_hash": "1bd4eb2f2d3daddccb7563e2f32dd5d1"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Enums\\ExportType.cs": {
+    "mtime": 1777002077.4249878,
+    "ast_hash": "2ab6da6d48eacebfe6e7bf80a9e082f7",
+    "semantic_hash": "2ab6da6d48eacebfe6e7bf80a9e082f7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Enums\\JobStatus.cs": {
+    "mtime": 1777002077.425987,
+    "ast_hash": "8a53b99847d17f81010ab2c69544654b",
+    "semantic_hash": "8a53b99847d17f81010ab2c69544654b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Enums\\PartnerType.cs": {
+    "mtime": 1777002077.425987,
+    "ast_hash": "d20a5df4b62990e4992076b2220256ac",
+    "semantic_hash": "d20a5df4b62990e4992076b2220256ac"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Enums\\TrackingState.cs": {
+    "mtime": 1777002077.4269876,
+    "ast_hash": "df05763625a5fa46f7a35962f1370501",
+    "semantic_hash": "df05763625a5fa46f7a35962f1370501"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Enums\\UploadType.cs": {
+    "mtime": 1777002077.4269876,
+    "ast_hash": "06ea52b08896c21c0e0a2acf8de4ec3b",
+    "semantic_hash": "06ea52b08896c21c0e0a2acf8de4ec3b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\AuditTrail.cs": {
+    "mtime": 1777002077.429597,
+    "ast_hash": "ba6ab7943203fd175c2ab64d305f3d9b",
+    "semantic_hash": "ba6ab7943203fd175c2ab64d305f3d9b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\Contact.cs": {
+    "mtime": 1777002077.429597,
+    "ast_hash": "e425da773373919cf6a6d67b0c4aa7dc",
+    "semantic_hash": "e425da773373919cf6a6d67b0c4aa7dc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\Document.cs": {
+    "mtime": 1777002077.4306028,
+    "ast_hash": "84fbd90ba6ec87ff74a8db68ef98a917",
+    "semantic_hash": "84fbd90ba6ec87ff74a8db68ef98a917"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\PicklistSet.cs": {
+    "mtime": 1777002077.4306028,
+    "ast_hash": "c601876a1445219165dd7cdaffce7171",
+    "semantic_hash": "c601876a1445219165dd7cdaffce7171"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\Product.cs": {
+    "mtime": 1777002077.4306028,
+    "ast_hash": "d5b8205bd16728d804947190ceede581",
+    "semantic_hash": "d5b8205bd16728d804947190ceede581"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\SystemLog.cs": {
+    "mtime": 1777002077.4321086,
+    "ast_hash": "2502f4d24d7cf73609542988178f7636",
+    "semantic_hash": "2502f4d24d7cf73609542988178f7636"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\Tenant.cs": {
+    "mtime": 1777002077.4321086,
+    "ast_hash": "6234b68f995860261f03a44582b3f5ca",
+    "semantic_hash": "6234b68f995860261f03a44582b3f5ca"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\TenantUser.cs": {
+    "mtime": 1777002077.4331145,
+    "ast_hash": "490b6d38ef4bc75825e84a68b3af068b",
+    "semantic_hash": "490b6d38ef4bc75825e84a68b3af068b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Enums\\SecurityRiskLevel.cs": {
+    "mtime": 1777002077.4341145,
+    "ast_hash": "0ead354f4e17441f735b21c49b96b4fd",
+    "semantic_hash": "0ead354f4e17441f735b21c49b96b4fd"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Enums\\SecurityThreatType.cs": {
+    "mtime": 1777002077.4341145,
+    "ast_hash": "53bf4cb32f62690447441e4f88420ddc",
+    "semantic_hash": "53bf4cb32f62690447441e4f88420ddc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\AuditTrailsReadyEvent.cs": {
+    "mtime": 1777002077.4341145,
+    "ast_hash": "429afb4df519c81541eae28e7afec791",
+    "semantic_hash": "429afb4df519c81541eae28e7afec791"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ContactCreatedEvent.cs": {
+    "mtime": 1777002077.4351149,
+    "ast_hash": "19968b847a989e202a44a4e3dd2c2d9b",
+    "semantic_hash": "19968b847a989e202a44a4e3dd2c2d9b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ContactDeletedEvent.cs": {
+    "mtime": 1777002077.4361162,
+    "ast_hash": "e8d5de4e2bcb6c17b83c18fdde513c7f",
+    "semantic_hash": "e8d5de4e2bcb6c17b83c18fdde513c7f"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ContactUpdatedEvent.cs": {
+    "mtime": 1777002077.4361162,
+    "ast_hash": "c6232437ae3129d53fe5812b818c3a19",
+    "semantic_hash": "c6232437ae3129d53fe5812b818c3a19"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\DocumentCreatedEvent.cs": {
+    "mtime": 1777002077.4371154,
+    "ast_hash": "22c5d5f61f6aa5f7c169880a20908853",
+    "semantic_hash": "22c5d5f61f6aa5f7c169880a20908853"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\DocumentDeletedEvent.cs": {
+    "mtime": 1777002077.4371154,
+    "ast_hash": "a6ad4d1e0380a9342752a2353c84f75a",
+    "semantic_hash": "a6ad4d1e0380a9342752a2353c84f75a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\PicklistSetCreatedEvent.cs": {
+    "mtime": 1777002077.4371154,
+    "ast_hash": "daa8eb34d61cb66f115f54bb9bd5eb15",
+    "semantic_hash": "daa8eb34d61cb66f115f54bb9bd5eb15"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\PicklistSetDeletedEvent.cs": {
+    "mtime": 1777002077.4381373,
+    "ast_hash": "a52087a81efa3f75e4cda07221b62f2b",
+    "semantic_hash": "a52087a81efa3f75e4cda07221b62f2b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\PicklistSetUpdatedEvent.cs": {
+    "mtime": 1777002077.4381373,
+    "ast_hash": "cc6ba8460b6fbfd3ab6270b06e3203f4",
+    "semantic_hash": "cc6ba8460b6fbfd3ab6270b06e3203f4"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ProductCreatedEvent.cs": {
+    "mtime": 1777002077.4391387,
+    "ast_hash": "cf96b090e83d9f25831ff7bc5520185b",
+    "semantic_hash": "cf96b090e83d9f25831ff7bc5520185b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ProductDeletedEvent.cs": {
+    "mtime": 1777002077.4391387,
+    "ast_hash": "efd7b3d28859600350dc51d56ad968c4",
+    "semantic_hash": "efd7b3d28859600350dc51d56ad968c4"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ProductUpdatedEvent.cs": {
+    "mtime": 1777002077.4391387,
+    "ast_hash": "85e1088554468e2e86909085b1ab5b93",
+    "semantic_hash": "85e1088554468e2e86909085b1ab5b93"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationRole.cs": {
+    "mtime": 1777002077.4403398,
+    "ast_hash": "ff567ad285596d7704f00ad03e62d343",
+    "semantic_hash": "ff567ad285596d7704f00ad03e62d343"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationRoleClaim.cs": {
+    "mtime": 1777002077.4413419,
+    "ast_hash": "f2ba4d27d1d2070ae7cca0099d3c9109",
+    "semantic_hash": "f2ba4d27d1d2070ae7cca0099d3c9109"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationUser.cs": {
+    "mtime": 1777002077.4413419,
+    "ast_hash": "68b5785334ceff5c667db58fc45250d6",
+    "semantic_hash": "68b5785334ceff5c667db58fc45250d6"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationUserClaim.cs": {
+    "mtime": 1777002077.4423385,
+    "ast_hash": "4fa66dd95189e355a80d9788780eeeb2",
+    "semantic_hash": "4fa66dd95189e355a80d9788780eeeb2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationUserLogin.cs": {
+    "mtime": 1777002077.4423385,
+    "ast_hash": "60689b06376e5599f14613710b7f662d",
+    "semantic_hash": "60689b06376e5599f14613710b7f662d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationUserRole.cs": {
+    "mtime": 1777002077.443389,
+    "ast_hash": "ed72e048468730ab88aa45c70485e789",
+    "semantic_hash": "ed72e048468730ab88aa45c70485e789"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationUserToken.cs": {
+    "mtime": 1777002077.443389,
+    "ast_hash": "c083b603c8f627410d07dd4a6349acdf",
+    "semantic_hash": "c083b603c8f627410d07dd4a6349acdf"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\DependencyInjection.cs": {
+    "mtime": 1777002077.4484594,
+    "ast_hash": "8698812a8e50284a82ee6311dd42f21b",
+    "semantic_hash": "8698812a8e50284a82ee6311dd42f21b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Infrastructure.csproj": {
+    "mtime": 1778713543.1407776,
+    "ast_hash": "9073085025ab6bab4ef32f5cfae7b369",
+    "semantic_hash": "9073085025ab6bab4ef32f5cfae7b369"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\_Imports.cs": {
+    "mtime": 1777002077.4767313,
+    "ast_hash": "e6e380218c4e5b3bee743fb9080e5b61",
+    "semantic_hash": "e6e380218c4e5b3bee743fb9080e5b61"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\AISettings.cs": {
+    "mtime": 1777002077.444941,
+    "ast_hash": "fa756aebb8560417b443125c837c6f94",
+    "semantic_hash": "fa756aebb8560417b443125c837c6f94"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\AppConfigurationSettings.cs": {
+    "mtime": 1777002077.4459472,
+    "ast_hash": "b7f7721b3dcd9b8a1265d8b182c6c5d2",
+    "semantic_hash": "b7f7721b3dcd9b8a1265d8b182c6c5d2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\DatabaseSettings.cs": {
+    "mtime": 1777002077.4459472,
+    "ast_hash": "7685ec99972498c2b45f5decb64a16b0",
+    "semantic_hash": "7685ec99972498c2b45f5decb64a16b0"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\IdentitySettings.cs": {
+    "mtime": 1777002077.4459472,
+    "ast_hash": "7574d02c02b7c7ae8d9a1c8da3ecdab7",
+    "semantic_hash": "7574d02c02b7c7ae8d9a1c8da3ecdab7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\MinioOptions.cs": {
+    "mtime": 1777002077.4474537,
+    "ast_hash": "4147c4cae3947a7ccd93088a7016f482",
+    "semantic_hash": "4147c4cae3947a7ccd93088a7016f482"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\SmtpClientOptions.cs": {
+    "mtime": 1777002077.4474537,
+    "ast_hash": "2348cc400b5d686baac4b8f8abc6f7e5",
+    "semantic_hash": "2348cc400b5d686baac4b8f8abc6f7e5"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Extensions\\HostExtensions.cs": {
+    "mtime": 1777002077.4494603,
+    "ast_hash": "31c3eef71a7b3550a103f57c2722503e",
+    "semantic_hash": "31c3eef71a7b3550a103f57c2722503e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Extensions\\HttpContextExtensions.cs": {
+    "mtime": 1777002077.4494603,
+    "ast_hash": "a809424e6671f7a18aae9be9b94e057c",
+    "semantic_hash": "a809424e6671f7a18aae9be9b94e057c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Extensions\\SerilogExtensions.cs": {
+    "mtime": 1777002077.4504604,
+    "ast_hash": "0902a1e76a4cc6776188d3a9efd2450e",
+    "semantic_hash": "0902a1e76a4cc6776188d3a9efd2450e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\ApplicationDbContext.cs": {
+    "mtime": 1777002077.4519658,
+    "ast_hash": "a47fabde5419b1333a397d59c93ddb71",
+    "semantic_hash": "a47fabde5419b1333a397d59c93ddb71"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\ApplicationDbContextFactory.cs": {
+    "mtime": 1777002077.4519658,
+    "ast_hash": "b62dd7966da7b28ee0e644c70d409806",
+    "semantic_hash": "b62dd7966da7b28ee0e644c70d409806"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\ApplicationDbContextInitializer.cs": {
+    "mtime": 1777002077.452971,
+    "ast_hash": "382b26ca004cd74371818934f18d452b",
+    "semantic_hash": "382b26ca004cd74371818934f18d452b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\AuditTrailConfiguration.cs": {
+    "mtime": 1777002077.453971,
+    "ast_hash": "651e5b41cf6a32a63ab1f7f7e8b09484",
+    "semantic_hash": "651e5b41cf6a32a63ab1f7f7e8b09484"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\ContactConfiguration.cs": {
+    "mtime": 1777002077.453971,
+    "ast_hash": "89625d124946baae8a2c14421ba4cf8b",
+    "semantic_hash": "89625d124946baae8a2c14421ba4cf8b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\DataProtectionKeyConfiguration.cs": {
+    "mtime": 1777002077.4549713,
+    "ast_hash": "353c0311001a034dfb944bcd3f357d61",
+    "semantic_hash": "353c0311001a034dfb944bcd3f357d61"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\DocumentConfiguration.cs": {
+    "mtime": 1777002077.4549713,
+    "ast_hash": "2ccb3af3fe54311c54fd49af6e5c1999",
+    "semantic_hash": "2ccb3af3fe54311c54fd49af6e5c1999"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\IdentityUserConfiguration.cs": {
+    "mtime": 1777002077.4559712,
+    "ast_hash": "b9e8863291f76182107d695f52165cd4",
+    "semantic_hash": "b9e8863291f76182107d695f52165cd4"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\PicklistSetConfiguration.cs": {
+    "mtime": 1777002077.4569714,
+    "ast_hash": "38f5916d92af24e0ecd10bee7d3f574e",
+    "semantic_hash": "38f5916d92af24e0ecd10bee7d3f574e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\ProductConfiguration.cs": {
+    "mtime": 1777002077.4569714,
+    "ast_hash": "968daa80f29f92b354cccad0e3104ba7",
+    "semantic_hash": "968daa80f29f92b354cccad0e3104ba7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\SystemLogConfiguration.cs": {
+    "mtime": 1777002077.457971,
+    "ast_hash": "f649a8800e53a05ecbdd07875a74623b",
+    "semantic_hash": "f649a8800e53a05ecbdd07875a74623b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\TenantConfiguration.cs": {
+    "mtime": 1777002077.457971,
+    "ast_hash": "f5e228ff74e32a6c4a25564d29f80349",
+    "semantic_hash": "f5e228ff74e32a6c4a25564d29f80349"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\TenantUserConfiguration.cs": {
+    "mtime": 1777002077.4590104,
+    "ast_hash": "3f63593f84e06f66df098abf71c9b5c2",
+    "semantic_hash": "3f63593f84e06f66df098abf71c9b5c2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Conversions\\ValueConversionExtensions.cs": {
+    "mtime": 1777002077.4590104,
+    "ast_hash": "143cb8ea160461d1398b928bd0d6ed0e",
+    "semantic_hash": "143cb8ea160461d1398b928bd0d6ed0e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Extensions\\ModelBuilderExtensions.cs": {
+    "mtime": 1777002077.4600105,
+    "ast_hash": "98f05923f72645cc2fe812bfc4ff0618",
+    "semantic_hash": "98f05923f72645cc2fe812bfc4ff0618"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Interceptors\\AuditableEntityInterceptor.cs": {
+    "mtime": 1777002077.4605515,
+    "ast_hash": "bf392ef09fbab2e1c598da84825e04bf",
+    "semantic_hash": "bf392ef09fbab2e1c598da84825e04bf"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Interceptors\\DispatchDomainEventsInterceptor.cs": {
+    "mtime": 1777002077.4605515,
+    "ast_hash": "6bedae91de97d9efaffd9bc23c368ccf",
+    "semantic_hash": "6bedae91de97d9efaffd9bc23c368ccf"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\BrowserFileUploadService.cs": {
+    "mtime": 1777002077.4640682,
+    "ast_hash": "749b070ba40199cf7e052d1ddb4aab2e",
+    "semantic_hash": "749b070ba40199cf7e052d1ddb4aab2e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\DataSourceServiceBase.cs": {
+    "mtime": 1777002077.4650679,
+    "ast_hash": "2d663c0de43f385cad371de3ee2ce10f",
+    "semantic_hash": "2d663c0de43f385cad371de3ee2ce10f"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\DateTimeService.cs": {
+    "mtime": 1777002077.4650679,
+    "ast_hash": "9d65197bce33d5459564e442b75e0df4",
+    "semantic_hash": "9d65197bce33d5459564e442b75e0df4"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\ExcelService.cs": {
+    "mtime": 1773536795.682545,
+    "ast_hash": "d80134a63d53f103975b6eefe14313ab",
+    "semantic_hash": "d80134a63d53f103975b6eefe14313ab"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\InMemoryTicketStore.cs": {
+    "mtime": 1777002077.4711125,
+    "ast_hash": "57ee7de737a0d6a11705cf5e4e94bcbc",
+    "semantic_hash": "57ee7de737a0d6a11705cf5e4e94bcbc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\MailService.cs": {
+    "mtime": 1777002077.4721124,
+    "ast_hash": "ba648a24d4d09905f74932fcdacce1ff",
+    "semantic_hash": "ba648a24d4d09905f74932fcdacce1ff"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\MinioFileUploadService.cs": {
+    "mtime": 1777002077.4721124,
+    "ast_hash": "61628919930b8ca83aa9540caecf5ae9",
+    "semantic_hash": "61628919930b8ca83aa9540caecf5ae9"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\PDFService.cs": {
+    "mtime": 1773537291.0597339,
+    "ast_hash": "40443f55b2aaf10ba91aa5009d6a94d8",
+    "semantic_hash": "40443f55b2aaf10ba91aa5009d6a94d8"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\PermissionService.cs": {
+    "mtime": 1777002077.4757254,
+    "ast_hash": "b3a733afcaf16e56ba44da14b1ab7e15",
+    "semantic_hash": "b3a733afcaf16e56ba44da14b1ab7e15"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\PicklistDataSourceService.cs": {
+    "mtime": 1777002077.4757254,
+    "ast_hash": "2a781d9ed53753944c8dde870fa0f5ca",
+    "semantic_hash": "2a781d9ed53753944c8dde870fa0f5ca"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\TenantSwitchService.cs": {
+    "mtime": 1777002077.4757254,
+    "ast_hash": "355ad15d20bf4d12aba437dee3764f32",
+    "semantic_hash": "355ad15d20bf4d12aba437dee3764f32"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\ValidationService.cs": {
+    "mtime": 1777002077.4767313,
+    "ast_hash": "0f3e292a5914a67d420961ff3e2eaeb3",
+    "semantic_hash": "0f3e292a5914a67d420961ff3e2eaeb3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Caching\\FusionAppCache.cs": {
+    "mtime": 1777002077.4640682,
+    "ast_hash": "c2fdaa6e87e8800de67339123e0d8323",
+    "semantic_hash": "c2fdaa6e87e8800de67339123e0d8323"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\AuditSignInManager.cs": {
+    "mtime": 1777002077.4660678,
+    "ast_hash": "aa556b17fb7120f35aeefaa5f2db62e3",
+    "semantic_hash": "aa556b17fb7120f35aeefaa5f2db62e3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\ClientInfoAccessor.cs": {
+    "mtime": 1777002077.4660678,
+    "ast_hash": "b509daf037eb7bc4c87684aa2dd818fd",
+    "semantic_hash": "b509daf037eb7bc4c87684aa2dd818fd"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\IdentityService.cs": {
+    "mtime": 1777002077.467069,
+    "ast_hash": "2204669ed608b31d18e06de3069527db",
+    "semantic_hash": "2204669ed608b31d18e06de3069527db"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\IUserContextLoader.cs": {
+    "mtime": 1777002077.467069,
+    "ast_hash": "a41a45feb56ce73744b8aa6258f678f2",
+    "semantic_hash": "a41a45feb56ce73744b8aa6258f678f2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\PermissionAssignmentService.cs": {
+    "mtime": 1777002077.468071,
+    "ast_hash": "548f0aaf146560fb6f93b259a15bf744",
+    "semantic_hash": "548f0aaf146560fb6f93b259a15bf744"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\PermissionQueryService.cs": {
+    "mtime": 1777002077.468071,
+    "ast_hash": "1b87707d3d4fe62fa85eeac8afd63ce7",
+    "semantic_hash": "1b87707d3d4fe62fa85eeac8afd63ce7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\RoleDataSourceService.cs": {
+    "mtime": 1777002077.468071,
+    "ast_hash": "aaf2ed9bc85fd6fed7e0367603af7a36",
+    "semantic_hash": "aaf2ed9bc85fd6fed7e0367603af7a36"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\UserContextAccessor.cs": {
+    "mtime": 1777002077.4691148,
+    "ast_hash": "81c5a9c9df785500ffae204cf7bfc8b6",
+    "semantic_hash": "81c5a9c9df785500ffae204cf7bfc8b6"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\UserContextHubFilter.cs": {
+    "mtime": 1777002077.4691148,
+    "ast_hash": "dbea1cb9bb1f342be45d50699b5e5722",
+    "semantic_hash": "dbea1cb9bb1f342be45d50699b5e5722"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\UserContextLoader.cs": {
+    "mtime": 1777002077.4701126,
+    "ast_hash": "4fabeaf502401b47d7f666dbb82a167c",
+    "semantic_hash": "4fabeaf502401b47d7f666dbb82a167c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\UserDataSourceService.cs": {
+    "mtime": 1777002077.4701126,
+    "ast_hash": "003aef70da3243aa0a7a926278be6310",
+    "semantic_hash": "003aef70da3243aa0a7a926278be6310"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\UserProfileState.cs": {
+    "mtime": 1777002077.4711125,
+    "ast_hash": "9026e7a3c81ed0d9e911b58a317a60e5",
+    "semantic_hash": "9026e7a3c81ed0d9e911b58a317a60e5"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\MultiTenant\\TenantDataSourceService.cs": {
+    "mtime": 1777002077.4731739,
+    "ast_hash": "7162fdfa6d87f6a736b847bbc954b273",
+    "semantic_hash": "7162fdfa6d87f6a736b847bbc954b273"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\OpenAI\\DocumentOcrBackgroundService.cs": {
+    "mtime": 1777002077.4731739,
+    "ast_hash": "d07580cc606767e688a8c9c2589c9608",
+    "semantic_hash": "d07580cc606767e688a8c9c2589c9608"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\OpenAI\\DocumentOcrJob.cs": {
+    "mtime": 1777002077.4741735,
+    "ast_hash": "aedf1d59725a80065bad2ff224d6f69c",
+    "semantic_hash": "aedf1d59725a80065bad2ff224d6f69c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\OpenAI\\DocumentOcrQueue.cs": {
+    "mtime": 1777002077.4751732,
+    "ast_hash": "6812422fdce3a0b64434d69f0ad10e0a",
+    "semantic_hash": "6812422fdce3a0b64434d69f0ad10e0a"
+  }
+}

@@ -360,3 +360,6 @@ MigrationBackup/
 **/Files/
 .worktrees/
 src/Server.UI/appsettings.development.json
+
+# Graphify generated output when run from subdirectories
+src/**/graphify-out/

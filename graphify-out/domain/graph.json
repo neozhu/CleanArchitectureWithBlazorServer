@@ -1,0 +1,2004 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "Domain.csproj",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "domain_csproj",
+      "community": 1,
+      "norm_label": "domain.csproj"
+    },
+    {
+      "label": "net10.0",
+      "file_type": "concept",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "framework_net10_0",
+      "community": 1,
+      "norm_label": "net10.0"
+    },
+    {
+      "label": "Mediator.Abstractions (3.0.2)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_mediator_abstractions",
+      "community": 1,
+      "norm_label": "mediator.abstractions (3.0.2)"
+    },
+    {
+      "label": "Microsoft.EntityFrameworkCore (10.0.8)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_microsoft_entityframeworkcore",
+      "community": 1,
+      "norm_label": "microsoft.entityframeworkcore (10.0.8)"
+    },
+    {
+      "label": "Microsoft.AspNetCore.Identity.EntityFrameworkCore (10.0.8)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_microsoft_aspnetcore_identity_entityframeworkcore",
+      "community": 1,
+      "norm_label": "microsoft.aspnetcore.identity.entityframeworkcore (10.0.8)"
+    },
+    {
+      "label": "EntityFrameworkCore.Exceptions.PostgreSQL (10.0.0)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_entityframeworkcore_exceptions_postgresql",
+      "community": 1,
+      "norm_label": "entityframeworkcore.exceptions.postgresql (10.0.0)"
+    },
+    {
+      "label": "EntityFrameworkCore.Exceptions.Sqlite (10.0.0)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_entityframeworkcore_exceptions_sqlite",
+      "community": 1,
+      "norm_label": "entityframeworkcore.exceptions.sqlite (10.0.0)"
+    },
+    {
+      "label": "EntityFrameworkCore.Exceptions.SqlServer (10.0.0)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_entityframeworkcore_exceptions_sqlserver",
+      "community": 1,
+      "norm_label": "entityframeworkcore.exceptions.sqlserver (10.0.0)"
+    },
+    {
+      "label": "Microsoft.AspNetCore.DataProtection.EntityFrameworkCore (10.0.8)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_microsoft_aspnetcore_dataprotection_entityframeworkcore",
+      "community": 1,
+      "norm_label": "microsoft.aspnetcore.dataprotection.entityframeworkcore (10.0.8)"
+    },
+    {
+      "label": "Npgsql.EntityFrameworkCore.PostgreSQL (10.0.1)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_npgsql_entityframeworkcore_postgresql",
+      "community": 1,
+      "norm_label": "npgsql.entityframeworkcore.postgresql (10.0.1)"
+    },
+    {
+      "label": "Microsoft.EntityFrameworkCore.Sqlite (10.0.8)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_microsoft_entityframeworkcore_sqlite",
+      "community": 1,
+      "norm_label": "microsoft.entityframeworkcore.sqlite (10.0.8)"
+    },
+    {
+      "label": "Microsoft.EntityFrameworkCore.SqlServer (10.0.8)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_microsoft_entityframeworkcore_sqlserver",
+      "community": 1,
+      "norm_label": "microsoft.entityframeworkcore.sqlserver (10.0.8)"
+    },
+    {
+      "label": "EFCore.NamingConventions (10.0.1)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_efcore_namingconventions",
+      "community": 1,
+      "norm_label": "efcore.namingconventions (10.0.1)"
+    },
+    {
+      "label": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore (10.0.8)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_microsoft_aspnetcore_diagnostics_entityframeworkcore",
+      "community": 1,
+      "norm_label": "microsoft.aspnetcore.diagnostics.entityframeworkcore (10.0.8)"
+    },
+    {
+      "label": "Microsoft.EntityFrameworkCore.InMemory (10.0.8)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_microsoft_entityframeworkcore_inmemory",
+      "community": 1,
+      "norm_label": "microsoft.entityframeworkcore.inmemory (10.0.8)"
+    },
+    {
+      "label": "Microsoft.Extensions.Identity.Core (10.0.8)",
+      "file_type": "code",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "nuget_microsoft_extensions_identity_core",
+      "community": 1,
+      "norm_label": "microsoft.extensions.identity.core (10.0.8)"
+    },
+    {
+      "label": "Microsoft.NET.Sdk",
+      "file_type": "concept",
+      "source_file": "Domain.csproj",
+      "source_location": null,
+      "id": "sdk_microsoft_net_sdk",
+      "community": 1,
+      "norm_label": "microsoft.net.sdk"
+    },
+    {
+      "label": "_Imports.cs",
+      "file_type": "code",
+      "source_file": "_Imports.cs",
+      "source_location": "L1",
+      "id": "imports_cs",
+      "community": 15,
+      "norm_label": "_imports.cs"
+    },
+    {
+      "label": "DomainEvent.cs",
+      "file_type": "code",
+      "source_file": "Common/DomainEvent.cs",
+      "source_location": "L1",
+      "id": "common_domainevent_cs",
+      "community": 7,
+      "norm_label": "domainevent.cs"
+    },
+    {
+      "label": "DomainEvent",
+      "file_type": "code",
+      "source_file": "Common/DomainEvent.cs",
+      "source_location": "L8",
+      "id": "common_domainevent_domainevent",
+      "community": 7,
+      "norm_label": "domainevent"
+    },
+    {
+      "label": "INotification",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "inotification",
+      "community": 7,
+      "norm_label": "inotification"
+    },
+    {
+      "label": "UploadedFileInfo.cs",
+      "file_type": "code",
+      "source_file": "Common/UploadedFileInfo.cs",
+      "source_location": "L1",
+      "id": "common_uploadedfileinfo_cs",
+      "community": 5,
+      "norm_label": "uploadedfileinfo.cs"
+    },
+    {
+      "label": "UploadedFileInfo",
+      "file_type": "code",
+      "source_file": "Common/UploadedFileInfo.cs",
+      "source_location": "L6",
+      "id": "common_uploadedfileinfo_uploadedfileinfo",
+      "community": 5,
+      "norm_label": "uploadedfileinfo"
+    },
+    {
+      "label": "BaseAuditableEntity.cs",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseAuditableEntity.cs",
+      "source_location": "L1",
+      "id": "common_entities_baseauditableentity_cs",
+      "community": 2,
+      "norm_label": "baseauditableentity.cs"
+    },
+    {
+      "label": "BaseAuditableEntity",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseAuditableEntity.cs",
+      "source_location": "L6",
+      "id": "entities_baseauditableentity_baseauditableentity",
+      "community": 2,
+      "norm_label": "baseauditableentity"
+    },
+    {
+      "label": "IAuditableEntity",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseAuditableEntity.cs",
+      "source_location": "L17",
+      "id": "entities_baseauditableentity_iauditableentity",
+      "community": 2,
+      "norm_label": "iauditableentity"
+    },
+    {
+      "label": "BaseAuditableSoftDeleteEntity.cs",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseAuditableSoftDeleteEntity.cs",
+      "source_location": "L1",
+      "id": "common_entities_baseauditablesoftdeleteentity_cs",
+      "community": 6,
+      "norm_label": "baseauditablesoftdeleteentity.cs"
+    },
+    {
+      "label": "BaseAuditableSoftDeleteEntity",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseAuditableSoftDeleteEntity.cs",
+      "source_location": "L6",
+      "id": "entities_baseauditablesoftdeleteentity_baseauditablesoftdeleteentity",
+      "community": 6,
+      "norm_label": "baseauditablesoftdeleteentity"
+    },
+    {
+      "label": "BaseEntity.cs",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L1",
+      "id": "common_entities_baseentity_cs",
+      "community": 4,
+      "norm_label": "baseentity.cs"
+    },
+    {
+      "label": "BaseEntity",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L8",
+      "id": "entities_baseentity_baseentity",
+      "community": 4,
+      "norm_label": "baseentity"
+    },
+    {
+      "label": "List",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L10",
+      "id": "list",
+      "community": 4,
+      "norm_label": "list"
+    },
+    {
+      "label": ".AddDomainEvent()",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L16",
+      "id": "entities_baseentity_baseentity_adddomainevent",
+      "community": 4,
+      "norm_label": ".adddomainevent()"
+    },
+    {
+      "label": "DomainEvent",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L16",
+      "id": "common_entities_baseentity_cs_domainevent",
+      "community": 4,
+      "norm_label": "domainevent"
+    },
+    {
+      "label": ".RemoveDomainEvent()",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L21",
+      "id": "entities_baseentity_baseentity_removedomainevent",
+      "community": 4,
+      "norm_label": ".removedomainevent()"
+    },
+    {
+      "label": ".ClearDomainEvents()",
+      "file_type": "code",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L26",
+      "id": "entities_baseentity_baseentity_cleardomainevents",
+      "community": 4,
+      "norm_label": ".cleardomainevents()"
+    },
+    {
+      "label": "IAuditTrial.cs",
+      "file_type": "code",
+      "source_file": "Common/Entities/IAuditTrial.cs",
+      "source_location": "L1",
+      "id": "common_entities_iaudittrial_cs",
+      "community": 2,
+      "norm_label": "iaudittrial.cs"
+    },
+    {
+      "label": "IAuditTrial",
+      "file_type": "code",
+      "source_file": "Common/Entities/IAuditTrial.cs",
+      "source_location": "L6",
+      "id": "entities_iaudittrial_iaudittrial",
+      "community": 2,
+      "norm_label": "iaudittrial"
+    },
+    {
+      "label": "IEntity.cs",
+      "file_type": "code",
+      "source_file": "Common/Entities/IEntity.cs",
+      "source_location": "L1",
+      "id": "common_entities_ientity_cs",
+      "community": 3,
+      "norm_label": "ientity.cs"
+    },
+    {
+      "label": "IEntity",
+      "file_type": "code",
+      "source_file": "Common/Entities/IEntity.cs",
+      "source_location": "L6",
+      "id": "entities_ientity_ientity",
+      "community": 3,
+      "norm_label": "ientity"
+    },
+    {
+      "label": "IMustHaveTenant.cs",
+      "file_type": "code",
+      "source_file": "Common/Entities/IMustHaveTenant.cs",
+      "source_location": "L1",
+      "id": "common_entities_imusthavetenant_cs",
+      "community": 2,
+      "norm_label": "imusthavetenant.cs"
+    },
+    {
+      "label": "IMustHaveTenant",
+      "file_type": "code",
+      "source_file": "Common/Entities/IMustHaveTenant.cs",
+      "source_location": "L3",
+      "id": "entities_imusthavetenant_imusthavetenant",
+      "community": 2,
+      "norm_label": "imusthavetenant"
+    },
+    {
+      "label": "IMayHaveTenant",
+      "file_type": "code",
+      "source_file": "Common/Entities/IMustHaveTenant.cs",
+      "source_location": "L8",
+      "id": "entities_imusthavetenant_imayhavetenant",
+      "community": 2,
+      "norm_label": "imayhavetenant"
+    },
+    {
+      "label": "ISoftDelete.cs",
+      "file_type": "code",
+      "source_file": "Common/Entities/ISoftDelete.cs",
+      "source_location": "L1",
+      "id": "common_entities_isoftdelete_cs",
+      "community": 6,
+      "norm_label": "isoftdelete.cs"
+    },
+    {
+      "label": "ISoftDelete",
+      "file_type": "code",
+      "source_file": "Common/Entities/ISoftDelete.cs",
+      "source_location": "L6",
+      "id": "entities_isoftdelete_isoftdelete",
+      "community": 6,
+      "norm_label": "isoftdelete"
+    },
+    {
+      "label": "ExportType.cs",
+      "file_type": "code",
+      "source_file": "Common/Enums/ExportType.cs",
+      "source_location": "L1",
+      "id": "common_enums_exporttype_cs",
+      "community": 16,
+      "norm_label": "exporttype.cs"
+    },
+    {
+      "label": "JobStatus.cs",
+      "file_type": "code",
+      "source_file": "Common/Enums/JobStatus.cs",
+      "source_location": "L1",
+      "id": "common_enums_jobstatus_cs",
+      "community": 17,
+      "norm_label": "jobstatus.cs"
+    },
+    {
+      "label": "PartnerType.cs",
+      "file_type": "code",
+      "source_file": "Common/Enums/PartnerType.cs",
+      "source_location": "L1",
+      "id": "common_enums_partnertype_cs",
+      "community": 18,
+      "norm_label": "partnertype.cs"
+    },
+    {
+      "label": "TrackingState.cs",
+      "file_type": "code",
+      "source_file": "Common/Enums/TrackingState.cs",
+      "source_location": "L1",
+      "id": "common_enums_trackingstate_cs",
+      "community": 19,
+      "norm_label": "trackingstate.cs"
+    },
+    {
+      "label": "UploadType.cs",
+      "file_type": "code",
+      "source_file": "Common/Enums/UploadType.cs",
+      "source_location": "L1",
+      "id": "common_enums_uploadtype_cs",
+      "community": 20,
+      "norm_label": "uploadtype.cs"
+    },
+    {
+      "label": "AuditTrail.cs",
+      "file_type": "code",
+      "source_file": "Entities/AuditTrail.cs",
+      "source_location": "L1",
+      "id": "entities_audittrail_cs",
+      "community": 3,
+      "norm_label": "audittrail.cs"
+    },
+    {
+      "label": "AuditTrail",
+      "file_type": "code",
+      "source_file": "Entities/AuditTrail.cs",
+      "source_location": "L10",
+      "id": "entities_audittrail_audittrail",
+      "community": 3,
+      "norm_label": "audittrail"
+    },
+    {
+      "label": "AuditChange",
+      "file_type": "code",
+      "source_file": "Entities/AuditTrail.cs",
+      "source_location": "L32",
+      "id": "entities_audittrail_auditchange",
+      "community": 3,
+      "norm_label": "auditchange"
+    },
+    {
+      "label": "Contact.cs",
+      "file_type": "code",
+      "source_file": "Entities/Contact.cs",
+      "source_location": "L1",
+      "id": "entities_contact_cs",
+      "community": 2,
+      "norm_label": "contact.cs"
+    },
+    {
+      "label": "Contact",
+      "file_type": "code",
+      "source_file": "Entities/Contact.cs",
+      "source_location": "L9",
+      "id": "entities_contact_contact",
+      "community": 2,
+      "norm_label": "contact"
+    },
+    {
+      "label": "Document.cs",
+      "file_type": "code",
+      "source_file": "Entities/Document.cs",
+      "source_location": "L1",
+      "id": "entities_document_cs",
+      "community": 2,
+      "norm_label": "document.cs"
+    },
+    {
+      "label": "Document",
+      "file_type": "code",
+      "source_file": "Entities/Document.cs",
+      "source_location": "L11",
+      "id": "entities_document_document",
+      "community": 2,
+      "norm_label": "document"
+    },
+    {
+      "label": "PicklistSet.cs",
+      "file_type": "code",
+      "source_file": "Entities/PicklistSet.cs",
+      "source_location": "L1",
+      "id": "entities_picklistset_cs",
+      "community": 2,
+      "norm_label": "picklistset.cs"
+    },
+    {
+      "label": "PicklistSet",
+      "file_type": "code",
+      "source_file": "Entities/PicklistSet.cs",
+      "source_location": "L10",
+      "id": "entities_picklistset_picklistset",
+      "community": 2,
+      "norm_label": "picklistset"
+    },
+    {
+      "label": "Product.cs",
+      "file_type": "code",
+      "source_file": "Entities/Product.cs",
+      "source_location": "L1",
+      "id": "entities_product_cs",
+      "community": 5,
+      "norm_label": "product.cs"
+    },
+    {
+      "label": "Product",
+      "file_type": "code",
+      "source_file": "Entities/Product.cs",
+      "source_location": "L9",
+      "id": "entities_product_product",
+      "community": 5,
+      "norm_label": "product"
+    },
+    {
+      "label": "ProductImage",
+      "file_type": "code",
+      "source_file": "Entities/Product.cs",
+      "source_location": "L19",
+      "id": "entities_product_productimage",
+      "community": 5,
+      "norm_label": "productimage"
+    },
+    {
+      "label": "SystemLog.cs",
+      "file_type": "code",
+      "source_file": "Entities/SystemLog.cs",
+      "source_location": "L1",
+      "id": "entities_systemlog_cs",
+      "community": 3,
+      "norm_label": "systemlog.cs"
+    },
+    {
+      "label": "SystemLog",
+      "file_type": "code",
+      "source_file": "Entities/SystemLog.cs",
+      "source_location": "L12",
+      "id": "entities_systemlog_systemlog",
+      "community": 3,
+      "norm_label": "systemlog"
+    },
+    {
+      "label": "Tenant.cs",
+      "file_type": "code",
+      "source_file": "Entities/Tenant.cs",
+      "source_location": "L1",
+      "id": "entities_tenant_cs",
+      "community": 3,
+      "norm_label": "tenant.cs"
+    },
+    {
+      "label": "Tenant",
+      "file_type": "code",
+      "source_file": "Entities/Tenant.cs",
+      "source_location": "L5",
+      "id": "entities_tenant_tenant",
+      "community": 3,
+      "norm_label": "tenant"
+    },
+    {
+      "label": "TenantUser.cs",
+      "file_type": "code",
+      "source_file": "Entities/TenantUser.cs",
+      "source_location": "L1",
+      "id": "entities_tenantuser_cs",
+      "community": 3,
+      "norm_label": "tenantuser.cs"
+    },
+    {
+      "label": "TenantUser",
+      "file_type": "code",
+      "source_file": "Entities/TenantUser.cs",
+      "source_location": "L11",
+      "id": "entities_tenantuser_tenantuser",
+      "community": 3,
+      "norm_label": "tenantuser"
+    },
+    {
+      "label": "SecurityRiskLevel.cs",
+      "file_type": "code",
+      "source_file": "Enums/SecurityRiskLevel.cs",
+      "source_location": "L1",
+      "id": "enums_securityrisklevel_cs",
+      "community": 21,
+      "norm_label": "securityrisklevel.cs"
+    },
+    {
+      "label": "SecurityThreatType.cs",
+      "file_type": "code",
+      "source_file": "Enums/SecurityThreatType.cs",
+      "source_location": "L1",
+      "id": "enums_securitythreattype_cs",
+      "community": 22,
+      "norm_label": "securitythreattype.cs"
+    },
+    {
+      "label": "AuditTrailsReadyEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/AuditTrailsReadyEvent.cs",
+      "source_location": "L1",
+      "id": "events_audittrailsreadyevent_cs",
+      "community": 23,
+      "norm_label": "audittrailsreadyevent.cs"
+    },
+    {
+      "label": "ContactCreatedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/ContactCreatedEvent.cs",
+      "source_location": "L1",
+      "id": "events_contactcreatedevent_cs",
+      "community": 0,
+      "norm_label": "contactcreatedevent.cs"
+    },
+    {
+      "label": "ContactCreatedEvent",
+      "file_type": "code",
+      "source_file": "Events/ContactCreatedEvent.cs",
+      "source_location": "L13",
+      "id": "events_contactcreatedevent_contactcreatedevent",
+      "community": 0,
+      "norm_label": "contactcreatedevent"
+    },
+    {
+      "label": "DomainEvent",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "domainevent",
+      "community": 0,
+      "norm_label": "domainevent"
+    },
+    {
+      "label": "ContactDeletedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/ContactDeletedEvent.cs",
+      "source_location": "L1",
+      "id": "events_contactdeletedevent_cs",
+      "community": 0,
+      "norm_label": "contactdeletedevent.cs"
+    },
+    {
+      "label": "ContactDeletedEvent",
+      "file_type": "code",
+      "source_file": "Events/ContactDeletedEvent.cs",
+      "source_location": "L13",
+      "id": "events_contactdeletedevent_contactdeletedevent",
+      "community": 0,
+      "norm_label": "contactdeletedevent"
+    },
+    {
+      "label": "ContactUpdatedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/ContactUpdatedEvent.cs",
+      "source_location": "L1",
+      "id": "events_contactupdatedevent_cs",
+      "community": 0,
+      "norm_label": "contactupdatedevent.cs"
+    },
+    {
+      "label": "ContactUpdatedEvent",
+      "file_type": "code",
+      "source_file": "Events/ContactUpdatedEvent.cs",
+      "source_location": "L14",
+      "id": "events_contactupdatedevent_contactupdatedevent",
+      "community": 0,
+      "norm_label": "contactupdatedevent"
+    },
+    {
+      "label": "DocumentCreatedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/DocumentCreatedEvent.cs",
+      "source_location": "L1",
+      "id": "events_documentcreatedevent_cs",
+      "community": 0,
+      "norm_label": "documentcreatedevent.cs"
+    },
+    {
+      "label": "DocumentCreatedEvent",
+      "file_type": "code",
+      "source_file": "Events/DocumentCreatedEvent.cs",
+      "source_location": "L5",
+      "id": "events_documentcreatedevent_documentcreatedevent",
+      "community": 0,
+      "norm_label": "documentcreatedevent"
+    },
+    {
+      "label": "DocumentDeletedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/DocumentDeletedEvent.cs",
+      "source_location": "L1",
+      "id": "events_documentdeletedevent_cs",
+      "community": 0,
+      "norm_label": "documentdeletedevent.cs"
+    },
+    {
+      "label": "DocumentDeletedEvent",
+      "file_type": "code",
+      "source_file": "Events/DocumentDeletedEvent.cs",
+      "source_location": "L5",
+      "id": "events_documentdeletedevent_documentdeletedevent",
+      "community": 0,
+      "norm_label": "documentdeletedevent"
+    },
+    {
+      "label": "PicklistSetCreatedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/PicklistSetCreatedEvent.cs",
+      "source_location": "L1",
+      "id": "events_picklistsetcreatedevent_cs",
+      "community": 0,
+      "norm_label": "picklistsetcreatedevent.cs"
+    },
+    {
+      "label": "PicklistSetCreatedEvent",
+      "file_type": "code",
+      "source_file": "Events/PicklistSetCreatedEvent.cs",
+      "source_location": "L5",
+      "id": "events_picklistsetcreatedevent_picklistsetcreatedevent",
+      "community": 0,
+      "norm_label": "picklistsetcreatedevent"
+    },
+    {
+      "label": "PicklistSetDeletedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/PicklistSetDeletedEvent.cs",
+      "source_location": "L1",
+      "id": "events_picklistsetdeletedevent_cs",
+      "community": 0,
+      "norm_label": "picklistsetdeletedevent.cs"
+    },
+    {
+      "label": "PicklistSetDeletedEvent",
+      "file_type": "code",
+      "source_file": "Events/PicklistSetDeletedEvent.cs",
+      "source_location": "L5",
+      "id": "events_picklistsetdeletedevent_picklistsetdeletedevent",
+      "community": 0,
+      "norm_label": "picklistsetdeletedevent"
+    },
+    {
+      "label": "PicklistSetUpdatedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/PicklistSetUpdatedEvent.cs",
+      "source_location": "L1",
+      "id": "events_picklistsetupdatedevent_cs",
+      "community": 0,
+      "norm_label": "picklistsetupdatedevent.cs"
+    },
+    {
+      "label": "PicklistSetUpdatedEvent",
+      "file_type": "code",
+      "source_file": "Events/PicklistSetUpdatedEvent.cs",
+      "source_location": "L5",
+      "id": "events_picklistsetupdatedevent_picklistsetupdatedevent",
+      "community": 0,
+      "norm_label": "picklistsetupdatedevent"
+    },
+    {
+      "label": "ProductCreatedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/ProductCreatedEvent.cs",
+      "source_location": "L1",
+      "id": "events_productcreatedevent_cs",
+      "community": 0,
+      "norm_label": "productcreatedevent.cs"
+    },
+    {
+      "label": "ProductCreatedEvent",
+      "file_type": "code",
+      "source_file": "Events/ProductCreatedEvent.cs",
+      "source_location": "L5",
+      "id": "events_productcreatedevent_productcreatedevent",
+      "community": 0,
+      "norm_label": "productcreatedevent"
+    },
+    {
+      "label": "ProductDeletedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/ProductDeletedEvent.cs",
+      "source_location": "L1",
+      "id": "events_productdeletedevent_cs",
+      "community": 0,
+      "norm_label": "productdeletedevent.cs"
+    },
+    {
+      "label": "ProductDeletedEvent",
+      "file_type": "code",
+      "source_file": "Events/ProductDeletedEvent.cs",
+      "source_location": "L5",
+      "id": "events_productdeletedevent_productdeletedevent",
+      "community": 0,
+      "norm_label": "productdeletedevent"
+    },
+    {
+      "label": "ProductUpdatedEvent.cs",
+      "file_type": "code",
+      "source_file": "Events/ProductUpdatedEvent.cs",
+      "source_location": "L1",
+      "id": "events_productupdatedevent_cs",
+      "community": 0,
+      "norm_label": "productupdatedevent.cs"
+    },
+    {
+      "label": "ProductUpdatedEvent",
+      "file_type": "code",
+      "source_file": "Events/ProductUpdatedEvent.cs",
+      "source_location": "L5",
+      "id": "events_productupdatedevent_productupdatedevent",
+      "community": 0,
+      "norm_label": "productupdatedevent"
+    },
+    {
+      "label": "ApplicationRole.cs",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationRole.cs",
+      "source_location": "L1",
+      "id": "identity_applicationrole_cs",
+      "community": 11,
+      "norm_label": "applicationrole.cs"
+    },
+    {
+      "label": "ApplicationRole",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationRole.cs",
+      "source_location": "L8",
+      "id": "identity_applicationrole_applicationrole",
+      "community": 11,
+      "norm_label": "applicationrole"
+    },
+    {
+      "label": "IdentityRole",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "identityrole",
+      "community": 11,
+      "norm_label": "identityrole"
+    },
+    {
+      "label": "ApplicationRoleClaim.cs",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationRoleClaim.cs",
+      "source_location": "L1",
+      "id": "identity_applicationroleclaim_cs",
+      "community": 8,
+      "norm_label": "applicationroleclaim.cs"
+    },
+    {
+      "label": "ApplicationRoleClaim",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationRoleClaim.cs",
+      "source_location": "L3",
+      "id": "identity_applicationroleclaim_applicationroleclaim",
+      "community": 8,
+      "norm_label": "applicationroleclaim"
+    },
+    {
+      "label": "IdentityRoleClaim",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "identityroleclaim",
+      "community": 8,
+      "norm_label": "identityroleclaim"
+    },
+    {
+      "label": "ApplicationUser.cs",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationUser.cs",
+      "source_location": "L1",
+      "id": "identity_applicationuser_cs",
+      "community": 9,
+      "norm_label": "applicationuser.cs"
+    },
+    {
+      "label": "ApplicationUser",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationUser.cs",
+      "source_location": "L6",
+      "id": "identity_applicationuser_applicationuser",
+      "community": 9,
+      "norm_label": "applicationuser"
+    },
+    {
+      "label": "IdentityUser",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "identityuser",
+      "community": 9,
+      "norm_label": "identityuser"
+    },
+    {
+      "label": "ApplicationUserClaim.cs",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationUserClaim.cs",
+      "source_location": "L1",
+      "id": "identity_applicationuserclaim_cs",
+      "community": 12,
+      "norm_label": "applicationuserclaim.cs"
+    },
+    {
+      "label": "ApplicationUserClaim",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationUserClaim.cs",
+      "source_location": "L6",
+      "id": "identity_applicationuserclaim_applicationuserclaim",
+      "community": 12,
+      "norm_label": "applicationuserclaim"
+    },
+    {
+      "label": "IdentityUserClaim",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "identityuserclaim",
+      "community": 12,
+      "norm_label": "identityuserclaim"
+    },
+    {
+      "label": "ApplicationUserLogin.cs",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationUserLogin.cs",
+      "source_location": "L1",
+      "id": "identity_applicationuserlogin_cs",
+      "community": 10,
+      "norm_label": "applicationuserlogin.cs"
+    },
+    {
+      "label": "ApplicationUserLogin",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationUserLogin.cs",
+      "source_location": "L6",
+      "id": "identity_applicationuserlogin_applicationuserlogin",
+      "community": 10,
+      "norm_label": "applicationuserlogin"
+    },
+    {
+      "label": "IdentityUserLogin",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "identityuserlogin",
+      "community": 10,
+      "norm_label": "identityuserlogin"
+    },
+    {
+      "label": "ApplicationUserRole.cs",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationUserRole.cs",
+      "source_location": "L1",
+      "id": "identity_applicationuserrole_cs",
+      "community": 13,
+      "norm_label": "applicationuserrole.cs"
+    },
+    {
+      "label": "ApplicationUserRole",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationUserRole.cs",
+      "source_location": "L6",
+      "id": "identity_applicationuserrole_applicationuserrole",
+      "community": 13,
+      "norm_label": "applicationuserrole"
+    },
+    {
+      "label": "IdentityUserRole",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "identityuserrole",
+      "community": 13,
+      "norm_label": "identityuserrole"
+    },
+    {
+      "label": "ApplicationUserToken.cs",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationUserToken.cs",
+      "source_location": "L1",
+      "id": "identity_applicationusertoken_cs",
+      "community": 14,
+      "norm_label": "applicationusertoken.cs"
+    },
+    {
+      "label": "ApplicationUserToken",
+      "file_type": "code",
+      "source_file": "Identity/ApplicationUserToken.cs",
+      "source_location": "L6",
+      "id": "identity_applicationusertoken_applicationusertoken",
+      "community": 14,
+      "norm_label": "applicationusertoken"
+    },
+    {
+      "label": "IdentityUserToken",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "identityusertoken",
+      "community": 14,
+      "norm_label": "identityusertoken"
+    }
+  ],
+  "links": [
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "framework_net10_0",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_efcore_namingconventions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_entityframeworkcore_exceptions_postgresql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_entityframeworkcore_exceptions_sqlite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_entityframeworkcore_exceptions_sqlserver",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_mediator_abstractions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_microsoft_aspnetcore_dataprotection_entityframeworkcore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_microsoft_aspnetcore_diagnostics_entityframeworkcore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_microsoft_aspnetcore_identity_entityframeworkcore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_microsoft_entityframeworkcore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_microsoft_entityframeworkcore_inmemory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_microsoft_entityframeworkcore_sqlite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_microsoft_entityframeworkcore_sqlserver",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_microsoft_extensions_identity_core",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "nuget_npgsql_entityframeworkcore_postgresql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Domain.csproj",
+      "weight": 1.0,
+      "source": "domain_csproj",
+      "target": "sdk_microsoft_net_sdk",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/DomainEvent.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "common_domainevent_cs",
+      "target": "common_domainevent_domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/DomainEvent.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "common_domainevent_domainevent",
+      "target": "inotification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/UploadedFileInfo.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "common_uploadedfileinfo_cs",
+      "target": "common_uploadedfileinfo_uploadedfileinfo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Product.cs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "entities_product_productimage",
+      "target": "common_uploadedfileinfo_uploadedfileinfo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseAuditableEntity.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "common_entities_baseauditableentity_cs",
+      "target": "entities_baseauditableentity_baseauditableentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseAuditableEntity.cs",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "common_entities_baseauditableentity_cs",
+      "target": "entities_baseauditableentity_iauditableentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseAuditableEntity.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "entities_baseauditableentity_baseauditableentity",
+      "target": "entities_baseauditableentity_iauditableentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseAuditableEntity.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "entities_baseauditableentity_baseauditableentity",
+      "target": "entities_baseentity_baseentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseAuditableSoftDeleteEntity.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "entities_baseauditablesoftdeleteentity_baseauditablesoftdeleteentity",
+      "target": "entities_baseauditableentity_baseauditableentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Contact.cs",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "entities_contact_contact",
+      "target": "entities_baseauditableentity_baseauditableentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Document.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "entities_document_document",
+      "target": "entities_baseauditableentity_baseauditableentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/PicklistSet.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "entities_picklistset_picklistset",
+      "target": "entities_baseauditableentity_baseauditableentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Product.cs",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "entities_product_product",
+      "target": "entities_baseauditableentity_baseauditableentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseAuditableSoftDeleteEntity.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "common_entities_baseauditablesoftdeleteentity_cs",
+      "target": "entities_baseauditablesoftdeleteentity_baseauditablesoftdeleteentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseAuditableSoftDeleteEntity.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "entities_baseauditablesoftdeleteentity_baseauditablesoftdeleteentity",
+      "target": "entities_isoftdelete_isoftdelete",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "common_entities_baseentity_cs",
+      "target": "entities_baseentity_baseentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "entities_baseentity_baseentity",
+      "target": "entities_baseentity_baseentity_adddomainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "entities_baseentity_baseentity",
+      "target": "entities_baseentity_baseentity_cleardomainevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "entities_baseentity_baseentity",
+      "target": "entities_baseentity_baseentity_removedomainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "entities_baseentity_baseentity",
+      "target": "entities_ientity_ientity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "context": "field",
+      "source": "entities_baseentity_baseentity",
+      "target": "list",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L16",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "entities_baseentity_baseentity_adddomainevent",
+      "target": "common_entities_baseentity_cs_domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/BaseEntity.cs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "entities_baseentity_baseentity_removedomainevent",
+      "target": "common_entities_baseentity_cs_domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/IAuditTrial.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "common_entities_iaudittrial_cs",
+      "target": "entities_iaudittrial_iaudittrial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Document.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "entities_document_document",
+      "target": "entities_iaudittrial_iaudittrial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/PicklistSet.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "entities_picklistset_picklistset",
+      "target": "entities_iaudittrial_iaudittrial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/IEntity.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "common_entities_ientity_cs",
+      "target": "entities_ientity_ientity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/AuditTrail.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "entities_audittrail_audittrail",
+      "target": "entities_ientity_ientity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/IEntity.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "entities_ientity_ientity",
+      "target": "entities_ientity_ientity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/SystemLog.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "entities_systemlog_systemlog",
+      "target": "entities_ientity_ientity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Tenant.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "entities_tenant_tenant",
+      "target": "entities_ientity_ientity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/TenantUser.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "entities_tenantuser_tenantuser",
+      "target": "entities_ientity_ientity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/IMustHaveTenant.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "common_entities_imusthavetenant_cs",
+      "target": "entities_imusthavetenant_imayhavetenant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/IMustHaveTenant.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "common_entities_imusthavetenant_cs",
+      "target": "entities_imusthavetenant_imusthavetenant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Document.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "entities_document_document",
+      "target": "entities_imusthavetenant_imayhavetenant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Common/Entities/ISoftDelete.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "common_entities_isoftdelete_cs",
+      "target": "entities_isoftdelete_isoftdelete",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/AuditTrail.cs",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "entities_audittrail_cs",
+      "target": "entities_audittrail_auditchange",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/AuditTrail.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "entities_audittrail_cs",
+      "target": "entities_audittrail_audittrail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Contact.cs",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "entities_contact_cs",
+      "target": "entities_contact_contact",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Document.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "entities_document_cs",
+      "target": "entities_document_document",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/PicklistSet.cs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "entities_picklistset_cs",
+      "target": "entities_picklistset_picklistset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Product.cs",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "entities_product_cs",
+      "target": "entities_product_product",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Product.cs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "entities_product_cs",
+      "target": "entities_product_productimage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/SystemLog.cs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "entities_systemlog_cs",
+      "target": "entities_systemlog_systemlog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/Tenant.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "entities_tenant_cs",
+      "target": "entities_tenant_tenant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Entities/TenantUser.cs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "entities_tenantuser_cs",
+      "target": "entities_tenantuser_tenantuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ContactCreatedEvent.cs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "events_contactcreatedevent_cs",
+      "target": "events_contactcreatedevent_contactcreatedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ContactCreatedEvent.cs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "events_contactcreatedevent_contactcreatedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ContactDeletedEvent.cs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "events_contactdeletedevent_contactdeletedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ContactUpdatedEvent.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "events_contactupdatedevent_contactupdatedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/DocumentCreatedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_documentcreatedevent_documentcreatedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/DocumentDeletedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_documentdeletedevent_documentdeletedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/PicklistSetCreatedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_picklistsetcreatedevent_picklistsetcreatedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/PicklistSetDeletedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_picklistsetdeletedevent_picklistsetdeletedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/PicklistSetUpdatedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_picklistsetupdatedevent_picklistsetupdatedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ProductCreatedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_productcreatedevent_productcreatedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ProductDeletedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_productdeletedevent_productdeletedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ProductUpdatedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_productupdatedevent_productupdatedevent",
+      "target": "domainevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ContactDeletedEvent.cs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "events_contactdeletedevent_cs",
+      "target": "events_contactdeletedevent_contactdeletedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ContactUpdatedEvent.cs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "events_contactupdatedevent_cs",
+      "target": "events_contactupdatedevent_contactupdatedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/DocumentCreatedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_documentcreatedevent_cs",
+      "target": "events_documentcreatedevent_documentcreatedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/DocumentDeletedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_documentdeletedevent_cs",
+      "target": "events_documentdeletedevent_documentdeletedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/PicklistSetCreatedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_picklistsetcreatedevent_cs",
+      "target": "events_picklistsetcreatedevent_picklistsetcreatedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/PicklistSetDeletedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_picklistsetdeletedevent_cs",
+      "target": "events_picklistsetdeletedevent_picklistsetdeletedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/PicklistSetUpdatedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_picklistsetupdatedevent_cs",
+      "target": "events_picklistsetupdatedevent_picklistsetupdatedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ProductCreatedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_productcreatedevent_cs",
+      "target": "events_productcreatedevent_productcreatedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ProductDeletedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_productdeletedevent_cs",
+      "target": "events_productdeletedevent_productdeletedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Events/ProductUpdatedEvent.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "events_productupdatedevent_cs",
+      "target": "events_productupdatedevent_productupdatedevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationRole.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "identity_applicationrole_cs",
+      "target": "identity_applicationrole_applicationrole",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationRole.cs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "identity_applicationrole_applicationrole",
+      "target": "identityrole",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationRoleClaim.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "identity_applicationroleclaim_cs",
+      "target": "identity_applicationroleclaim_applicationroleclaim",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationRoleClaim.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "identity_applicationroleclaim_applicationroleclaim",
+      "target": "identityroleclaim",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationUser.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "identity_applicationuser_cs",
+      "target": "identity_applicationuser_applicationuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationUser.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "identity_applicationuser_applicationuser",
+      "target": "identityuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationUserClaim.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "identity_applicationuserclaim_cs",
+      "target": "identity_applicationuserclaim_applicationuserclaim",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationUserClaim.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "identity_applicationuserclaim_applicationuserclaim",
+      "target": "identityuserclaim",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationUserLogin.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "identity_applicationuserlogin_cs",
+      "target": "identity_applicationuserlogin_applicationuserlogin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationUserLogin.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "identity_applicationuserlogin_applicationuserlogin",
+      "target": "identityuserlogin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationUserRole.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "identity_applicationuserrole_cs",
+      "target": "identity_applicationuserrole_applicationuserrole",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationUserRole.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "identity_applicationuserrole_applicationuserrole",
+      "target": "identityuserrole",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationUserToken.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "identity_applicationusertoken_cs",
+      "target": "identity_applicationusertoken_applicationusertoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "Identity/ApplicationUserToken.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "identity_applicationusertoken_applicationusertoken",
+      "target": "identityusertoken",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "4c1d7590ca5d746435b9856e70aff47a4126ee75"
+}

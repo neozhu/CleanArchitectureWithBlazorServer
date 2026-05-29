@@ -91,6 +91,47 @@ Experience the application in action:
 - **Infrastructure**: External concerns (database, email, file system)
 - **Server.UI**: Blazor components and user interface
 
+## 🕸️ Codebase Knowledge Graph with Graphify
+
+This repository includes generated Graphify outputs under `graphify-out/` to help navigate the codebase as a persistent knowledge graph.
+
+Use the graph when you want to answer architecture questions, inspect coupling, trace relationships between files, or find the most connected abstractions before changing code.
+
+### Generated Graphs
+
+The main graph files are:
+
+- `graphify-out/graph.html` - interactive browser graph
+- `graphify-out/GRAPH_REPORT.md` - architecture-oriented report with god nodes, communities, and surprising connections
+- `graphify-out/graph.json` - raw graph data for GraphRAG-style queries
+
+Scoped graph archives are also kept for the major areas of the solution:
+
+- `graphify-out/domain/`
+- `graphify-out/application-common/`
+- `graphify-out/application-features/`
+- `graphify-out/application-pipeline/`
+- `graphify-out/infrastructure/`
+- `graphify-out/server-ui/`
+
+The `Server.UI` graph excludes resource files under `src/Server.UI/Resources` and runtime logs so the graph stays focused on source, components, pages, services, layouts, and configuration.
+
+### Useful Commands
+
+```bash
+graphify query "how does authentication work" --budget 2000
+graphify query "what are the most coupled abstractions" --budget 2000
+graphify query "how does caching flow through the app" --budget 2000
+graphify path "Server.UI" "ApplicationDbContext"
+graphify explain "UserProfileState"
+```
+
+### Maintenance Notes
+
+- Keep the canonical generated output in the repository-level `graphify-out/` folder.
+- Do not keep generated graph folders inside `src/**`; `.gitignore` excludes `src/**/graphify-out/` to avoid polluting searches, builds, and future graph indexing.
+- After meaningful architecture changes, refresh the relevant graph with `graphify update .` or rerun Graphify for the affected subfolder.
+
  
 ### 📋 Development Workflow
 

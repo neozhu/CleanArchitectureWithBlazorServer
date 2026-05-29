@@ -1,0 +1,2302 @@
+{
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Domain.csproj": {
+    "mtime": 1778713543.163428,
+    "ast_hash": "28e0d7277b27091df5a6f1843ddf830e",
+    "semantic_hash": "28e0d7277b27091df5a6f1843ddf830e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\_Imports.cs": {
+    "mtime": 1777002077.444941,
+    "ast_hash": "60320a169e28c88d51461dcb47352628",
+    "semantic_hash": "60320a169e28c88d51461dcb47352628"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\DomainEvent.cs": {
+    "mtime": 1777002077.4209719,
+    "ast_hash": "0e2f8ac1757a76f3f99351ef95c650f6",
+    "semantic_hash": "0e2f8ac1757a76f3f99351ef95c650f6"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\UploadedFileInfo.cs": {
+    "mtime": 1777002077.428063,
+    "ast_hash": "1e1cb154e2da11d6e37f65772a7ee35e",
+    "semantic_hash": "1e1cb154e2da11d6e37f65772a7ee35e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\BaseAuditableEntity.cs": {
+    "mtime": 1777002077.4219704,
+    "ast_hash": "da96c13e5d740bbe1f92cb67ccae33aa",
+    "semantic_hash": "da96c13e5d740bbe1f92cb67ccae33aa"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\BaseAuditableSoftDeleteEntity.cs": {
+    "mtime": 1777002077.4219704,
+    "ast_hash": "de8b7ba45fcb28083ee7b0f9b7ce354f",
+    "semantic_hash": "de8b7ba45fcb28083ee7b0f9b7ce354f"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\BaseEntity.cs": {
+    "mtime": 1777002077.422989,
+    "ast_hash": "801b5ef1715ecdff7b77954bd0ae0abe",
+    "semantic_hash": "801b5ef1715ecdff7b77954bd0ae0abe"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\IAuditTrial.cs": {
+    "mtime": 1777002077.422989,
+    "ast_hash": "439256e0ff1349ecd44e70de68be0233",
+    "semantic_hash": "439256e0ff1349ecd44e70de68be0233"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\IEntity.cs": {
+    "mtime": 1777002077.4239883,
+    "ast_hash": "71fc886b76ba0efc62d028cdf0b55e3b",
+    "semantic_hash": "71fc886b76ba0efc62d028cdf0b55e3b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\IMustHaveTenant.cs": {
+    "mtime": 1777002077.4239883,
+    "ast_hash": "7fe0862efc0fa8f9ded8f842dcefa9a3",
+    "semantic_hash": "7fe0862efc0fa8f9ded8f842dcefa9a3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Entities\\ISoftDelete.cs": {
+    "mtime": 1777002077.4249878,
+    "ast_hash": "1bd4eb2f2d3daddccb7563e2f32dd5d1",
+    "semantic_hash": "1bd4eb2f2d3daddccb7563e2f32dd5d1"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Enums\\ExportType.cs": {
+    "mtime": 1777002077.4249878,
+    "ast_hash": "2ab6da6d48eacebfe6e7bf80a9e082f7",
+    "semantic_hash": "2ab6da6d48eacebfe6e7bf80a9e082f7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Enums\\JobStatus.cs": {
+    "mtime": 1777002077.425987,
+    "ast_hash": "8a53b99847d17f81010ab2c69544654b",
+    "semantic_hash": "8a53b99847d17f81010ab2c69544654b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Enums\\PartnerType.cs": {
+    "mtime": 1777002077.425987,
+    "ast_hash": "d20a5df4b62990e4992076b2220256ac",
+    "semantic_hash": "d20a5df4b62990e4992076b2220256ac"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Enums\\TrackingState.cs": {
+    "mtime": 1777002077.4269876,
+    "ast_hash": "df05763625a5fa46f7a35962f1370501",
+    "semantic_hash": "df05763625a5fa46f7a35962f1370501"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Common\\Enums\\UploadType.cs": {
+    "mtime": 1777002077.4269876,
+    "ast_hash": "06ea52b08896c21c0e0a2acf8de4ec3b",
+    "semantic_hash": "06ea52b08896c21c0e0a2acf8de4ec3b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\AuditTrail.cs": {
+    "mtime": 1777002077.429597,
+    "ast_hash": "ba6ab7943203fd175c2ab64d305f3d9b",
+    "semantic_hash": "ba6ab7943203fd175c2ab64d305f3d9b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\Contact.cs": {
+    "mtime": 1777002077.429597,
+    "ast_hash": "e425da773373919cf6a6d67b0c4aa7dc",
+    "semantic_hash": "e425da773373919cf6a6d67b0c4aa7dc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\Document.cs": {
+    "mtime": 1777002077.4306028,
+    "ast_hash": "84fbd90ba6ec87ff74a8db68ef98a917",
+    "semantic_hash": "84fbd90ba6ec87ff74a8db68ef98a917"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\PicklistSet.cs": {
+    "mtime": 1777002077.4306028,
+    "ast_hash": "c601876a1445219165dd7cdaffce7171",
+    "semantic_hash": "c601876a1445219165dd7cdaffce7171"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\Product.cs": {
+    "mtime": 1777002077.4306028,
+    "ast_hash": "d5b8205bd16728d804947190ceede581",
+    "semantic_hash": "d5b8205bd16728d804947190ceede581"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\SystemLog.cs": {
+    "mtime": 1777002077.4321086,
+    "ast_hash": "2502f4d24d7cf73609542988178f7636",
+    "semantic_hash": "2502f4d24d7cf73609542988178f7636"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\Tenant.cs": {
+    "mtime": 1777002077.4321086,
+    "ast_hash": "6234b68f995860261f03a44582b3f5ca",
+    "semantic_hash": "6234b68f995860261f03a44582b3f5ca"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Entities\\TenantUser.cs": {
+    "mtime": 1777002077.4331145,
+    "ast_hash": "490b6d38ef4bc75825e84a68b3af068b",
+    "semantic_hash": "490b6d38ef4bc75825e84a68b3af068b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Enums\\SecurityRiskLevel.cs": {
+    "mtime": 1777002077.4341145,
+    "ast_hash": "0ead354f4e17441f735b21c49b96b4fd",
+    "semantic_hash": "0ead354f4e17441f735b21c49b96b4fd"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Enums\\SecurityThreatType.cs": {
+    "mtime": 1777002077.4341145,
+    "ast_hash": "53bf4cb32f62690447441e4f88420ddc",
+    "semantic_hash": "53bf4cb32f62690447441e4f88420ddc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\AuditTrailsReadyEvent.cs": {
+    "mtime": 1777002077.4341145,
+    "ast_hash": "429afb4df519c81541eae28e7afec791",
+    "semantic_hash": "429afb4df519c81541eae28e7afec791"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ContactCreatedEvent.cs": {
+    "mtime": 1777002077.4351149,
+    "ast_hash": "19968b847a989e202a44a4e3dd2c2d9b",
+    "semantic_hash": "19968b847a989e202a44a4e3dd2c2d9b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ContactDeletedEvent.cs": {
+    "mtime": 1777002077.4361162,
+    "ast_hash": "e8d5de4e2bcb6c17b83c18fdde513c7f",
+    "semantic_hash": "e8d5de4e2bcb6c17b83c18fdde513c7f"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ContactUpdatedEvent.cs": {
+    "mtime": 1777002077.4361162,
+    "ast_hash": "c6232437ae3129d53fe5812b818c3a19",
+    "semantic_hash": "c6232437ae3129d53fe5812b818c3a19"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\DocumentCreatedEvent.cs": {
+    "mtime": 1777002077.4371154,
+    "ast_hash": "22c5d5f61f6aa5f7c169880a20908853",
+    "semantic_hash": "22c5d5f61f6aa5f7c169880a20908853"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\DocumentDeletedEvent.cs": {
+    "mtime": 1777002077.4371154,
+    "ast_hash": "a6ad4d1e0380a9342752a2353c84f75a",
+    "semantic_hash": "a6ad4d1e0380a9342752a2353c84f75a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\PicklistSetCreatedEvent.cs": {
+    "mtime": 1777002077.4371154,
+    "ast_hash": "daa8eb34d61cb66f115f54bb9bd5eb15",
+    "semantic_hash": "daa8eb34d61cb66f115f54bb9bd5eb15"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\PicklistSetDeletedEvent.cs": {
+    "mtime": 1777002077.4381373,
+    "ast_hash": "a52087a81efa3f75e4cda07221b62f2b",
+    "semantic_hash": "a52087a81efa3f75e4cda07221b62f2b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\PicklistSetUpdatedEvent.cs": {
+    "mtime": 1777002077.4381373,
+    "ast_hash": "cc6ba8460b6fbfd3ab6270b06e3203f4",
+    "semantic_hash": "cc6ba8460b6fbfd3ab6270b06e3203f4"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ProductCreatedEvent.cs": {
+    "mtime": 1777002077.4391387,
+    "ast_hash": "cf96b090e83d9f25831ff7bc5520185b",
+    "semantic_hash": "cf96b090e83d9f25831ff7bc5520185b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ProductDeletedEvent.cs": {
+    "mtime": 1777002077.4391387,
+    "ast_hash": "efd7b3d28859600350dc51d56ad968c4",
+    "semantic_hash": "efd7b3d28859600350dc51d56ad968c4"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Events\\ProductUpdatedEvent.cs": {
+    "mtime": 1777002077.4391387,
+    "ast_hash": "85e1088554468e2e86909085b1ab5b93",
+    "semantic_hash": "85e1088554468e2e86909085b1ab5b93"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationRole.cs": {
+    "mtime": 1777002077.4403398,
+    "ast_hash": "ff567ad285596d7704f00ad03e62d343",
+    "semantic_hash": "ff567ad285596d7704f00ad03e62d343"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationRoleClaim.cs": {
+    "mtime": 1777002077.4413419,
+    "ast_hash": "f2ba4d27d1d2070ae7cca0099d3c9109",
+    "semantic_hash": "f2ba4d27d1d2070ae7cca0099d3c9109"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationUser.cs": {
+    "mtime": 1777002077.4413419,
+    "ast_hash": "68b5785334ceff5c667db58fc45250d6",
+    "semantic_hash": "68b5785334ceff5c667db58fc45250d6"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationUserClaim.cs": {
+    "mtime": 1777002077.4423385,
+    "ast_hash": "4fa66dd95189e355a80d9788780eeeb2",
+    "semantic_hash": "4fa66dd95189e355a80d9788780eeeb2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationUserLogin.cs": {
+    "mtime": 1777002077.4423385,
+    "ast_hash": "60689b06376e5599f14613710b7f662d",
+    "semantic_hash": "60689b06376e5599f14613710b7f662d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationUserRole.cs": {
+    "mtime": 1777002077.443389,
+    "ast_hash": "ed72e048468730ab88aa45c70485e789",
+    "semantic_hash": "ed72e048468730ab88aa45c70485e789"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Identity\\ApplicationUserToken.cs": {
+    "mtime": 1777002077.443389,
+    "ast_hash": "c083b603c8f627410d07dd4a6349acdf",
+    "semantic_hash": "c083b603c8f627410d07dd4a6349acdf"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\DependencyInjection.cs": {
+    "mtime": 1777002077.4484594,
+    "ast_hash": "8698812a8e50284a82ee6311dd42f21b",
+    "semantic_hash": "8698812a8e50284a82ee6311dd42f21b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Infrastructure.csproj": {
+    "mtime": 1778713543.1407776,
+    "ast_hash": "9073085025ab6bab4ef32f5cfae7b369",
+    "semantic_hash": "9073085025ab6bab4ef32f5cfae7b369"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\_Imports.cs": {
+    "mtime": 1777002077.4767313,
+    "ast_hash": "e6e380218c4e5b3bee743fb9080e5b61",
+    "semantic_hash": "e6e380218c4e5b3bee743fb9080e5b61"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\AISettings.cs": {
+    "mtime": 1777002077.444941,
+    "ast_hash": "fa756aebb8560417b443125c837c6f94",
+    "semantic_hash": "fa756aebb8560417b443125c837c6f94"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\AppConfigurationSettings.cs": {
+    "mtime": 1777002077.4459472,
+    "ast_hash": "b7f7721b3dcd9b8a1265d8b182c6c5d2",
+    "semantic_hash": "b7f7721b3dcd9b8a1265d8b182c6c5d2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\DatabaseSettings.cs": {
+    "mtime": 1777002077.4459472,
+    "ast_hash": "7685ec99972498c2b45f5decb64a16b0",
+    "semantic_hash": "7685ec99972498c2b45f5decb64a16b0"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\IdentitySettings.cs": {
+    "mtime": 1777002077.4459472,
+    "ast_hash": "7574d02c02b7c7ae8d9a1c8da3ecdab7",
+    "semantic_hash": "7574d02c02b7c7ae8d9a1c8da3ecdab7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\MinioOptions.cs": {
+    "mtime": 1777002077.4474537,
+    "ast_hash": "4147c4cae3947a7ccd93088a7016f482",
+    "semantic_hash": "4147c4cae3947a7ccd93088a7016f482"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Configurations\\SmtpClientOptions.cs": {
+    "mtime": 1777002077.4474537,
+    "ast_hash": "2348cc400b5d686baac4b8f8abc6f7e5",
+    "semantic_hash": "2348cc400b5d686baac4b8f8abc6f7e5"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Extensions\\HostExtensions.cs": {
+    "mtime": 1777002077.4494603,
+    "ast_hash": "31c3eef71a7b3550a103f57c2722503e",
+    "semantic_hash": "31c3eef71a7b3550a103f57c2722503e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Extensions\\HttpContextExtensions.cs": {
+    "mtime": 1777002077.4494603,
+    "ast_hash": "a809424e6671f7a18aae9be9b94e057c",
+    "semantic_hash": "a809424e6671f7a18aae9be9b94e057c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Extensions\\SerilogExtensions.cs": {
+    "mtime": 1777002077.4504604,
+    "ast_hash": "0902a1e76a4cc6776188d3a9efd2450e",
+    "semantic_hash": "0902a1e76a4cc6776188d3a9efd2450e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\ApplicationDbContext.cs": {
+    "mtime": 1777002077.4519658,
+    "ast_hash": "a47fabde5419b1333a397d59c93ddb71",
+    "semantic_hash": "a47fabde5419b1333a397d59c93ddb71"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\ApplicationDbContextFactory.cs": {
+    "mtime": 1777002077.4519658,
+    "ast_hash": "b62dd7966da7b28ee0e644c70d409806",
+    "semantic_hash": "b62dd7966da7b28ee0e644c70d409806"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\ApplicationDbContextInitializer.cs": {
+    "mtime": 1777002077.452971,
+    "ast_hash": "382b26ca004cd74371818934f18d452b",
+    "semantic_hash": "382b26ca004cd74371818934f18d452b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\AuditTrailConfiguration.cs": {
+    "mtime": 1777002077.453971,
+    "ast_hash": "651e5b41cf6a32a63ab1f7f7e8b09484",
+    "semantic_hash": "651e5b41cf6a32a63ab1f7f7e8b09484"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\ContactConfiguration.cs": {
+    "mtime": 1777002077.453971,
+    "ast_hash": "89625d124946baae8a2c14421ba4cf8b",
+    "semantic_hash": "89625d124946baae8a2c14421ba4cf8b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\DataProtectionKeyConfiguration.cs": {
+    "mtime": 1777002077.4549713,
+    "ast_hash": "353c0311001a034dfb944bcd3f357d61",
+    "semantic_hash": "353c0311001a034dfb944bcd3f357d61"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\DocumentConfiguration.cs": {
+    "mtime": 1777002077.4549713,
+    "ast_hash": "2ccb3af3fe54311c54fd49af6e5c1999",
+    "semantic_hash": "2ccb3af3fe54311c54fd49af6e5c1999"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\IdentityUserConfiguration.cs": {
+    "mtime": 1777002077.4559712,
+    "ast_hash": "b9e8863291f76182107d695f52165cd4",
+    "semantic_hash": "b9e8863291f76182107d695f52165cd4"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\PicklistSetConfiguration.cs": {
+    "mtime": 1777002077.4569714,
+    "ast_hash": "38f5916d92af24e0ecd10bee7d3f574e",
+    "semantic_hash": "38f5916d92af24e0ecd10bee7d3f574e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\ProductConfiguration.cs": {
+    "mtime": 1777002077.4569714,
+    "ast_hash": "968daa80f29f92b354cccad0e3104ba7",
+    "semantic_hash": "968daa80f29f92b354cccad0e3104ba7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\SystemLogConfiguration.cs": {
+    "mtime": 1777002077.457971,
+    "ast_hash": "f649a8800e53a05ecbdd07875a74623b",
+    "semantic_hash": "f649a8800e53a05ecbdd07875a74623b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\TenantConfiguration.cs": {
+    "mtime": 1777002077.457971,
+    "ast_hash": "f5e228ff74e32a6c4a25564d29f80349",
+    "semantic_hash": "f5e228ff74e32a6c4a25564d29f80349"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Configurations\\TenantUserConfiguration.cs": {
+    "mtime": 1777002077.4590104,
+    "ast_hash": "3f63593f84e06f66df098abf71c9b5c2",
+    "semantic_hash": "3f63593f84e06f66df098abf71c9b5c2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Conversions\\ValueConversionExtensions.cs": {
+    "mtime": 1777002077.4590104,
+    "ast_hash": "143cb8ea160461d1398b928bd0d6ed0e",
+    "semantic_hash": "143cb8ea160461d1398b928bd0d6ed0e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Extensions\\ModelBuilderExtensions.cs": {
+    "mtime": 1777002077.4600105,
+    "ast_hash": "98f05923f72645cc2fe812bfc4ff0618",
+    "semantic_hash": "98f05923f72645cc2fe812bfc4ff0618"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Interceptors\\AuditableEntityInterceptor.cs": {
+    "mtime": 1777002077.4605515,
+    "ast_hash": "bf392ef09fbab2e1c598da84825e04bf",
+    "semantic_hash": "bf392ef09fbab2e1c598da84825e04bf"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Persistence\\Interceptors\\DispatchDomainEventsInterceptor.cs": {
+    "mtime": 1777002077.4605515,
+    "ast_hash": "6bedae91de97d9efaffd9bc23c368ccf",
+    "semantic_hash": "6bedae91de97d9efaffd9bc23c368ccf"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\BrowserFileUploadService.cs": {
+    "mtime": 1777002077.4640682,
+    "ast_hash": "749b070ba40199cf7e052d1ddb4aab2e",
+    "semantic_hash": "749b070ba40199cf7e052d1ddb4aab2e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\DataSourceServiceBase.cs": {
+    "mtime": 1777002077.4650679,
+    "ast_hash": "2d663c0de43f385cad371de3ee2ce10f",
+    "semantic_hash": "2d663c0de43f385cad371de3ee2ce10f"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\DateTimeService.cs": {
+    "mtime": 1777002077.4650679,
+    "ast_hash": "9d65197bce33d5459564e442b75e0df4",
+    "semantic_hash": "9d65197bce33d5459564e442b75e0df4"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\ExcelService.cs": {
+    "mtime": 1773536795.682545,
+    "ast_hash": "d80134a63d53f103975b6eefe14313ab",
+    "semantic_hash": "d80134a63d53f103975b6eefe14313ab"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\InMemoryTicketStore.cs": {
+    "mtime": 1777002077.4711125,
+    "ast_hash": "57ee7de737a0d6a11705cf5e4e94bcbc",
+    "semantic_hash": "57ee7de737a0d6a11705cf5e4e94bcbc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\MailService.cs": {
+    "mtime": 1777002077.4721124,
+    "ast_hash": "ba648a24d4d09905f74932fcdacce1ff",
+    "semantic_hash": "ba648a24d4d09905f74932fcdacce1ff"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\MinioFileUploadService.cs": {
+    "mtime": 1777002077.4721124,
+    "ast_hash": "61628919930b8ca83aa9540caecf5ae9",
+    "semantic_hash": "61628919930b8ca83aa9540caecf5ae9"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\PDFService.cs": {
+    "mtime": 1773537291.0597339,
+    "ast_hash": "40443f55b2aaf10ba91aa5009d6a94d8",
+    "semantic_hash": "40443f55b2aaf10ba91aa5009d6a94d8"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\PermissionService.cs": {
+    "mtime": 1777002077.4757254,
+    "ast_hash": "b3a733afcaf16e56ba44da14b1ab7e15",
+    "semantic_hash": "b3a733afcaf16e56ba44da14b1ab7e15"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\PicklistDataSourceService.cs": {
+    "mtime": 1777002077.4757254,
+    "ast_hash": "2a781d9ed53753944c8dde870fa0f5ca",
+    "semantic_hash": "2a781d9ed53753944c8dde870fa0f5ca"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\TenantSwitchService.cs": {
+    "mtime": 1777002077.4757254,
+    "ast_hash": "355ad15d20bf4d12aba437dee3764f32",
+    "semantic_hash": "355ad15d20bf4d12aba437dee3764f32"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\ValidationService.cs": {
+    "mtime": 1777002077.4767313,
+    "ast_hash": "0f3e292a5914a67d420961ff3e2eaeb3",
+    "semantic_hash": "0f3e292a5914a67d420961ff3e2eaeb3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Caching\\FusionAppCache.cs": {
+    "mtime": 1777002077.4640682,
+    "ast_hash": "c2fdaa6e87e8800de67339123e0d8323",
+    "semantic_hash": "c2fdaa6e87e8800de67339123e0d8323"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\AuditSignInManager.cs": {
+    "mtime": 1777002077.4660678,
+    "ast_hash": "aa556b17fb7120f35aeefaa5f2db62e3",
+    "semantic_hash": "aa556b17fb7120f35aeefaa5f2db62e3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\ClientInfoAccessor.cs": {
+    "mtime": 1777002077.4660678,
+    "ast_hash": "b509daf037eb7bc4c87684aa2dd818fd",
+    "semantic_hash": "b509daf037eb7bc4c87684aa2dd818fd"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\IdentityService.cs": {
+    "mtime": 1777002077.467069,
+    "ast_hash": "2204669ed608b31d18e06de3069527db",
+    "semantic_hash": "2204669ed608b31d18e06de3069527db"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\IUserContextLoader.cs": {
+    "mtime": 1777002077.467069,
+    "ast_hash": "a41a45feb56ce73744b8aa6258f678f2",
+    "semantic_hash": "a41a45feb56ce73744b8aa6258f678f2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\PermissionAssignmentService.cs": {
+    "mtime": 1777002077.468071,
+    "ast_hash": "548f0aaf146560fb6f93b259a15bf744",
+    "semantic_hash": "548f0aaf146560fb6f93b259a15bf744"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\PermissionQueryService.cs": {
+    "mtime": 1777002077.468071,
+    "ast_hash": "1b87707d3d4fe62fa85eeac8afd63ce7",
+    "semantic_hash": "1b87707d3d4fe62fa85eeac8afd63ce7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\RoleDataSourceService.cs": {
+    "mtime": 1777002077.468071,
+    "ast_hash": "aaf2ed9bc85fd6fed7e0367603af7a36",
+    "semantic_hash": "aaf2ed9bc85fd6fed7e0367603af7a36"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\UserContextAccessor.cs": {
+    "mtime": 1777002077.4691148,
+    "ast_hash": "81c5a9c9df785500ffae204cf7bfc8b6",
+    "semantic_hash": "81c5a9c9df785500ffae204cf7bfc8b6"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\UserContextHubFilter.cs": {
+    "mtime": 1777002077.4691148,
+    "ast_hash": "dbea1cb9bb1f342be45d50699b5e5722",
+    "semantic_hash": "dbea1cb9bb1f342be45d50699b5e5722"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\UserContextLoader.cs": {
+    "mtime": 1777002077.4701126,
+    "ast_hash": "4fabeaf502401b47d7f666dbb82a167c",
+    "semantic_hash": "4fabeaf502401b47d7f666dbb82a167c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\UserDataSourceService.cs": {
+    "mtime": 1777002077.4701126,
+    "ast_hash": "003aef70da3243aa0a7a926278be6310",
+    "semantic_hash": "003aef70da3243aa0a7a926278be6310"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\Identity\\UserProfileState.cs": {
+    "mtime": 1777002077.4711125,
+    "ast_hash": "9026e7a3c81ed0d9e911b58a317a60e5",
+    "semantic_hash": "9026e7a3c81ed0d9e911b58a317a60e5"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\MultiTenant\\TenantDataSourceService.cs": {
+    "mtime": 1777002077.4731739,
+    "ast_hash": "7162fdfa6d87f6a736b847bbc954b273",
+    "semantic_hash": "7162fdfa6d87f6a736b847bbc954b273"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\OpenAI\\DocumentOcrBackgroundService.cs": {
+    "mtime": 1777002077.4731739,
+    "ast_hash": "d07580cc606767e688a8c9c2589c9608",
+    "semantic_hash": "d07580cc606767e688a8c9c2589c9608"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\OpenAI\\DocumentOcrJob.cs": {
+    "mtime": 1777002077.4741735,
+    "ast_hash": "aedf1d59725a80065bad2ff224d6f69c",
+    "semantic_hash": "aedf1d59725a80065bad2ff224d6f69c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Services\\OpenAI\\DocumentOcrQueue.cs": {
+    "mtime": 1777002077.4751732,
+    "ast_hash": "6812422fdce3a0b64434d69f0ad10e0a",
+    "semantic_hash": "6812422fdce3a0b64434d69f0ad10e0a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\AuditTrails\\Caching\\AuditTrailsCacheKey.cs": {
+    "mtime": 1777002077.3054814,
+    "ast_hash": "7db805beea80f537b120a2f35fdea623",
+    "semantic_hash": "7db805beea80f537b120a2f35fdea623"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\AuditTrails\\DTOs\\AuditTrailDto.cs": {
+    "mtime": 1777002077.3064823,
+    "ast_hash": "ef8501601bfd672e08f73b5b598f4aa2",
+    "semantic_hash": "ef8501601bfd672e08f73b5b598f4aa2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\AuditTrails\\EventHandlers\\AuditTrailsReadyEventHandler.cs": {
+    "mtime": 1777002077.3064823,
+    "ast_hash": "7da75404a241a883899d7095e6d9b435",
+    "semantic_hash": "7da75404a241a883899d7095e6d9b435"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\AuditTrails\\Queries\\Export\\ExportAuditTrailsQuery.cs": {
+    "mtime": 1777002077.3074818,
+    "ast_hash": "69fe5c06ae7c7bdba1c60009646e946a",
+    "semantic_hash": "69fe5c06ae7c7bdba1c60009646e946a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\AuditTrails\\Queries\\PaginationQuery\\AuditTrailsWithPaginationQuery.cs": {
+    "mtime": 1777002077.3084831,
+    "ast_hash": "4611ac548e7aaf52d81f00c9cb746b52",
+    "semantic_hash": "4611ac548e7aaf52d81f00c9cb746b52"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\AuditTrails\\Security\\AuditTrailsPermissions.cs": {
+    "mtime": 1777002077.3084831,
+    "ast_hash": "58664467ad82f6ed2e487f1fadc95a1a",
+    "semantic_hash": "58664467ad82f6ed2e487f1fadc95a1a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\AuditTrails\\Specifications\\AuditTrailAdvancedFilter.cs": {
+    "mtime": 1777002077.3094819,
+    "ast_hash": "4788039523ba665317ce00bc100fe81c",
+    "semantic_hash": "4788039523ba665317ce00bc100fe81c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\AuditTrails\\Specifications\\AuditTrailAdvancedSpecification.cs": {
+    "mtime": 1777002077.310482,
+    "ast_hash": "7d2b88bcd51ef6e6799664aa890764c6",
+    "semantic_hash": "7d2b88bcd51ef6e6799664aa890764c6"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Caching\\ContactCacheKey.cs": {
+    "mtime": 1777002077.310482,
+    "ast_hash": "a86a931079dbf3f85d741670f3c46bde",
+    "semantic_hash": "a86a931079dbf3f85d741670f3c46bde"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Commands\\AddEdit\\AddEditContactCommand.cs": {
+    "mtime": 1777002077.3119864,
+    "ast_hash": "bf03c71fd7cee812937683529e92a81d",
+    "semantic_hash": "bf03c71fd7cee812937683529e92a81d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Commands\\AddEdit\\AddEditContactCommandValidator.cs": {
+    "mtime": 1777002077.3119864,
+    "ast_hash": "71ac195beeeed96e200975fd208335b1",
+    "semantic_hash": "71ac195beeeed96e200975fd208335b1"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Commands\\Create\\CreateContactCommand.cs": {
+    "mtime": 1777002077.3129947,
+    "ast_hash": "23006a2f34845f0b50de7abbc78a787e",
+    "semantic_hash": "23006a2f34845f0b50de7abbc78a787e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Commands\\Create\\CreateContactCommandValidator.cs": {
+    "mtime": 1777002077.3139944,
+    "ast_hash": "5dd3de233bbebdca5545a358cdce26a9",
+    "semantic_hash": "5dd3de233bbebdca5545a358cdce26a9"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Commands\\Delete\\DeleteContactCommand.cs": {
+    "mtime": 1777002077.3139944,
+    "ast_hash": "a29d19f12ab0740d0d2f86ee0933718e",
+    "semantic_hash": "a29d19f12ab0740d0d2f86ee0933718e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Commands\\Delete\\DeleteContactCommandValidator.cs": {
+    "mtime": 1777002077.3150246,
+    "ast_hash": "0de6da9e20160373a93173006825f0f9",
+    "semantic_hash": "0de6da9e20160373a93173006825f0f9"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Commands\\Import\\ImportContactsCommand.cs": {
+    "mtime": 1777002077.3160245,
+    "ast_hash": "c6e8669e61c8a7a3600ea38514f09ed7",
+    "semantic_hash": "c6e8669e61c8a7a3600ea38514f09ed7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Commands\\Import\\ImportContactsCommandValidator.cs": {
+    "mtime": 1777002077.3160245,
+    "ast_hash": "31623c0de76548357ce030854619ea60",
+    "semantic_hash": "31623c0de76548357ce030854619ea60"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Commands\\Update\\UpdateContactCommand.cs": {
+    "mtime": 1777002077.3170247,
+    "ast_hash": "e6425a439ec82082ad87d0acd1fb32e1",
+    "semantic_hash": "e6425a439ec82082ad87d0acd1fb32e1"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Commands\\Update\\UpdateContactCommandValidator.cs": {
+    "mtime": 1777002077.3170247,
+    "ast_hash": "fff35f4bbc77a15ab46594025428ea9a",
+    "semantic_hash": "fff35f4bbc77a15ab46594025428ea9a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\DTOs\\ContactDto.cs": {
+    "mtime": 1777002077.3180263,
+    "ast_hash": "8420c8817cac9bb59e6bd3fe0bb0f0e7",
+    "semantic_hash": "8420c8817cac9bb59e6bd3fe0bb0f0e7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\EventHandlers\\ContactCreatedEventHandler.cs": {
+    "mtime": 1777002077.319025,
+    "ast_hash": "a5bdcbbee0b1256cd93b5b0767f50848",
+    "semantic_hash": "a5bdcbbee0b1256cd93b5b0767f50848"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\EventHandlers\\ContactDeletedEventHandler.cs": {
+    "mtime": 1777002077.319598,
+    "ast_hash": "2b2d0ad8444f43f4109fed4e8d958890",
+    "semantic_hash": "2b2d0ad8444f43f4109fed4e8d958890"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\EventHandlers\\ContactUpdatedEventHandler.cs": {
+    "mtime": 1777002077.3206046,
+    "ast_hash": "3e3ff89bedbb2010313d9e473f4e83a5",
+    "semantic_hash": "3e3ff89bedbb2010313d9e473f4e83a5"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Queries\\Export\\ExportContactsQuery.cs": {
+    "mtime": 1777002077.3206046,
+    "ast_hash": "f2e111d6f1429aa75999fe358371e7a6",
+    "semantic_hash": "f2e111d6f1429aa75999fe358371e7a6"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Queries\\GetAll\\GetAllContactsQuery.cs": {
+    "mtime": 1777002077.32211,
+    "ast_hash": "1d71ae6ed6c52523d9af649c3aa223e8",
+    "semantic_hash": "1d71ae6ed6c52523d9af649c3aa223e8"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Queries\\GetById\\GetContactByIdQuery.cs": {
+    "mtime": 1777002077.32211,
+    "ast_hash": "02bd24b0bc5cb47761133dd0edd6832a",
+    "semantic_hash": "02bd24b0bc5cb47761133dd0edd6832a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Queries\\Pagination\\ContactsPaginationQuery.cs": {
+    "mtime": 1777002077.3231187,
+    "ast_hash": "e6292bd0d392604bf75445d71ef1d593",
+    "semantic_hash": "e6292bd0d392604bf75445d71ef1d593"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Security\\ContactsPermissions.cs": {
+    "mtime": 1777002077.3231187,
+    "ast_hash": "307b56d64ca285b84a44b3c715efd161",
+    "semantic_hash": "307b56d64ca285b84a44b3c715efd161"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Specifications\\ContactAdvancedFilter.cs": {
+    "mtime": 1777002077.3241167,
+    "ast_hash": "4e2daf488d83a1e7595635a142b5f081",
+    "semantic_hash": "4e2daf488d83a1e7595635a142b5f081"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Specifications\\ContactAdvancedSpecification.cs": {
+    "mtime": 1777002077.3241167,
+    "ast_hash": "285710833e5feec28287df5573fabccb",
+    "semantic_hash": "285710833e5feec28287df5573fabccb"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Contacts\\Specifications\\ContactByIdSpecification.cs": {
+    "mtime": 1777002077.3254735,
+    "ast_hash": "43fe2d05d833bd2fef2e55fce03ee014",
+    "semantic_hash": "43fe2d05d833bd2fef2e55fce03ee014"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Caching\\DocumentCacheKey.cs": {
+    "mtime": 1777002077.3264728,
+    "ast_hash": "a2ebd9f54dbe292db77d85c77f99fd30",
+    "semantic_hash": "a2ebd9f54dbe292db77d85c77f99fd30"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Commands\\AddEdit\\AddEditDocumentCommand.cs": {
+    "mtime": 1777002077.3264728,
+    "ast_hash": "432c51729f5a3950824fb5662f4cf7bc",
+    "semantic_hash": "432c51729f5a3950824fb5662f4cf7bc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Commands\\AddEdit\\AddEditDocumentCommandValidator.cs": {
+    "mtime": 1777002077.3274722,
+    "ast_hash": "4c5a9727ae76bee0e75e8b1ee5357580",
+    "semantic_hash": "4c5a9727ae76bee0e75e8b1ee5357580"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Commands\\Delete\\DeleteDocumentCommand.cs": {
+    "mtime": 1777002077.328473,
+    "ast_hash": "ebdceaa448b09e1ebcb136934997447c",
+    "semantic_hash": "ebdceaa448b09e1ebcb136934997447c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Commands\\Delete\\DeleteDocumentCommandValidator.cs": {
+    "mtime": 1777002077.328473,
+    "ast_hash": "e4b74c324a1b7146da846f151c9f4829",
+    "semantic_hash": "e4b74c324a1b7146da846f151c9f4829"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Commands\\Upload\\UploadDocumentCommand.cs": {
+    "mtime": 1777002077.3294733,
+    "ast_hash": "4e4c1eed58451c74ad6a1a95cfae74e3",
+    "semantic_hash": "4e4c1eed58451c74ad6a1a95cfae74e3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Commands\\Upload\\UploadDocumentCommandValidator.cs": {
+    "mtime": 1777002077.330473,
+    "ast_hash": "679da621f1ad2e341ab7d93855469044",
+    "semantic_hash": "679da621f1ad2e341ab7d93855469044"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\DTOs\\DocumentDto.cs": {
+    "mtime": 1777002077.330473,
+    "ast_hash": "6f20802ba3f1690cfc94831a0bca4241",
+    "semantic_hash": "6f20802ba3f1690cfc94831a0bca4241"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\EventHandlers\\DocumentCreatedEventHandler.cs": {
+    "mtime": 1777002077.331978,
+    "ast_hash": "39ab54866d3302f91d080c72f7302dcc",
+    "semantic_hash": "39ab54866d3302f91d080c72f7302dcc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\EventHandlers\\DocumentDeletedEventHandler.cs": {
+    "mtime": 1777002077.331978,
+    "ast_hash": "0b79c4b9526706c42c035a6d4a89015e",
+    "semantic_hash": "0b79c4b9526706c42c035a6d4a89015e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Queries\\Export\\ExportDocumentsQuery.cs": {
+    "mtime": 1777002077.3329835,
+    "ast_hash": "bc949ea893a9384070c31f083ccefd26",
+    "semantic_hash": "bc949ea893a9384070c31f083ccefd26"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Queries\\GetAll\\GetAllDocumentsQuery.cs": {
+    "mtime": 1777002077.3329835,
+    "ast_hash": "bc949ea893a9384070c31f083ccefd26",
+    "semantic_hash": "bc949ea893a9384070c31f083ccefd26"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Queries\\GetFileStream\\GetFileStreamQuery.cs": {
+    "mtime": 1777002077.3344893,
+    "ast_hash": "79237855043288415fcfff86cf9edb7c",
+    "semantic_hash": "79237855043288415fcfff86cf9edb7c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Queries\\PaginationQuery\\DocumentsWithPaginationQuery.cs": {
+    "mtime": 1777002077.3355742,
+    "ast_hash": "f60e6d1ec00a74beb99bc8c3e8382a53",
+    "semantic_hash": "f60e6d1ec00a74beb99bc8c3e8382a53"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Security\\DocumentsPermissions.cs": {
+    "mtime": 1777002077.3355742,
+    "ast_hash": "f00b5b5b6ec09b3f6ca540241b039122",
+    "semantic_hash": "f00b5b5b6ec09b3f6ca540241b039122"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Specifications\\AdvancedDocumentsFilter.cs": {
+    "mtime": 1777002077.33658,
+    "ast_hash": "026717e0e30d6c42f35494736704b1b0",
+    "semantic_hash": "026717e0e30d6c42f35494736704b1b0"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Documents\\Specifications\\AdvancedDocumentsSpecification.cs": {
+    "mtime": 1777002077.337582,
+    "ast_hash": "2bea4cfa3ad1875dd46e5e718f4ae96f",
+    "semantic_hash": "2bea4cfa3ad1875dd46e5e718f4ae96f"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Identity\\DTOs\\ApplicationRoleDto.cs": {
+    "mtime": 1777002077.338584,
+    "ast_hash": "8cd7c0a83d9079fe2d7123fa10657165",
+    "semantic_hash": "8cd7c0a83d9079fe2d7123fa10657165"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Identity\\DTOs\\ApplicationUserDto.cs": {
+    "mtime": 1777002077.3395805,
+    "ast_hash": "b378c1108b2cce4a287ae508bae0230d",
+    "semantic_hash": "b378c1108b2cce4a287ae508bae0230d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Identity\\DTOs\\UserBriefDto.cs": {
+    "mtime": 1777002077.3395805,
+    "ast_hash": "2cb4083c0e43bf51d72108205eeaeca2",
+    "semantic_hash": "2cb4083c0e43bf51d72108205eeaeca2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Identity\\Notifications\\ResetPassword\\ResetPasswordCommand.cs": {
+    "mtime": 1777002077.3405814,
+    "ast_hash": "7cb9ec68da147235f175b16b8d1638f5",
+    "semantic_hash": "7cb9ec68da147235f175b16b8d1638f5"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Identity\\Notifications\\SendFactorCode\\SendFactorCodeCommand.cs": {
+    "mtime": 1777002077.3405814,
+    "ast_hash": "c6796b4f78cc42e47881366f886e91c5",
+    "semantic_hash": "c6796b4f78cc42e47881366f886e91c5"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Identity\\Notifications\\SendWelcome\\SendWelcomeCommand.cs": {
+    "mtime": 1777002077.342087,
+    "ast_hash": "0b7911bba9a67716dbca96e154c202dd",
+    "semantic_hash": "0b7911bba9a67716dbca96e154c202dd"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Identity\\Notifications\\UserActivation\\UserActivationCommand.cs": {
+    "mtime": 1777002077.3430943,
+    "ast_hash": "da16b3517c85ffe27c2887f79e8e496a",
+    "semantic_hash": "da16b3517c85ffe27c2887f79e8e496a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Caching\\PicklistSetCacheKey.cs": {
+    "mtime": 1777002077.3430943,
+    "ast_hash": "d88504a54830ed9d1094f9c710374771",
+    "semantic_hash": "d88504a54830ed9d1094f9c710374771"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Commands\\AddEdit\\AddEditPicklistSetCommand.cs": {
+    "mtime": 1777002077.344599,
+    "ast_hash": "55d493c687cc9b6ccd0dad0560b71633",
+    "semantic_hash": "55d493c687cc9b6ccd0dad0560b71633"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Commands\\AddEdit\\AddEditPicklistSetCommandValidator.cs": {
+    "mtime": 1777002077.3456056,
+    "ast_hash": "f2ed997833734986da84f7ff08491bda",
+    "semantic_hash": "f2ed997833734986da84f7ff08491bda"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Commands\\Delete\\DeletePicklistSetCommand.cs": {
+    "mtime": 1777002077.3456056,
+    "ast_hash": "37fa12d95f3cc6c05a103a60253833f3",
+    "semantic_hash": "37fa12d95f3cc6c05a103a60253833f3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Commands\\Delete\\DeletePicklistSetCommandValidator.cs": {
+    "mtime": 1777002077.3466053,
+    "ast_hash": "ef03f8cbe5e533414442b8c9432bef4d",
+    "semantic_hash": "ef03f8cbe5e533414442b8c9432bef4d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Commands\\Import\\ImportPicklistSetsCommand.cs": {
+    "mtime": 1777002077.3476052,
+    "ast_hash": "435fa951c55036b87c36c8485fc9c9e7",
+    "semantic_hash": "435fa951c55036b87c36c8485fc9c9e7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Commands\\Import\\ImportPicklistSetsCommandValidator.cs": {
+    "mtime": 1777002077.3476052,
+    "ast_hash": "465d0c943a7af062d51606793e2df3f5",
+    "semantic_hash": "465d0c943a7af062d51606793e2df3f5"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\DTOs\\PicklistSetDto.cs": {
+    "mtime": 1777002077.348604,
+    "ast_hash": "3268a4340e7b421f5f465a362ef44433",
+    "semantic_hash": "3268a4340e7b421f5f465a362ef44433"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\EventHandlers\\PicklistSetChangedEventHandler.cs": {
+    "mtime": 1777002077.349606,
+    "ast_hash": "4766d1470151f55181b5beff1839dc61",
+    "semantic_hash": "4766d1470151f55181b5beff1839dc61"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Queries\\ByName\\PicklistSetsQueryByName.cs": {
+    "mtime": 1777002077.3506045,
+    "ast_hash": "e3e7a1ce7b0d2472eb6096c2acb3108d",
+    "semantic_hash": "e3e7a1ce7b0d2472eb6096c2acb3108d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Queries\\Export\\ExportPicklistSetsQuery.cs": {
+    "mtime": 1777002077.3511488,
+    "ast_hash": "788bbf34f2fb6313891eac4949f252c1",
+    "semantic_hash": "788bbf34f2fb6313891eac4949f252c1"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Queries\\GetAll\\GetAllPicklistSetsQuery.cs": {
+    "mtime": 1777002077.3521547,
+    "ast_hash": "db546e1fe30905959f931201d0c6771d",
+    "semantic_hash": "db546e1fe30905959f931201d0c6771d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Queries\\PaginationQuery\\PicklistSetsWithPaginationQuery.cs": {
+    "mtime": 1777002077.3521547,
+    "ast_hash": "c6787914fe8e96178c2ffcf25bc62941",
+    "semantic_hash": "c6787914fe8e96178c2ffcf25bc62941"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Security\\PicklistSetsPermissions.cs": {
+    "mtime": 1777002077.353248,
+    "ast_hash": "0f4e8214f5220d430196ad22eac3e2fc",
+    "semantic_hash": "0f4e8214f5220d430196ad22eac3e2fc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Specifications\\PicklistSetAdvancedFilter.cs": {
+    "mtime": 1777002077.353248,
+    "ast_hash": "bf306b8995b356c21dde0f705a4d7f44",
+    "semantic_hash": "bf306b8995b356c21dde0f705a4d7f44"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\PicklistSets\\Specifications\\PicklistSetAdvancedSpecification.cs": {
+    "mtime": 1777002077.3547542,
+    "ast_hash": "b96cbd7372f2edaaa9256d99be6aa3e0",
+    "semantic_hash": "b96cbd7372f2edaaa9256d99be6aa3e0"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Caching\\ProductCacheKey.cs": {
+    "mtime": 1777002077.3557615,
+    "ast_hash": "506ee240efa563ca10a10fabfac370e4",
+    "semantic_hash": "506ee240efa563ca10a10fabfac370e4"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Commands\\AddEdit\\AddEditProductCommand.cs": {
+    "mtime": 1777002077.3557615,
+    "ast_hash": "c903a0b95a9d102ba42f84e82a9adcc1",
+    "semantic_hash": "c903a0b95a9d102ba42f84e82a9adcc1"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Commands\\AddEdit\\AddEditProductCommandValidator.cs": {
+    "mtime": 1777002077.3567624,
+    "ast_hash": "e86f0b6b8bdf43439c333d89a6282169",
+    "semantic_hash": "e86f0b6b8bdf43439c333d89a6282169"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Commands\\Delete\\DeleteProductCommand.cs": {
+    "mtime": 1777002077.3567624,
+    "ast_hash": "c747a825cbd6ad11db92f01855e3d407",
+    "semantic_hash": "c747a825cbd6ad11db92f01855e3d407"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Commands\\Delete\\DeleteProductCommandValidator.cs": {
+    "mtime": 1777002077.3577614,
+    "ast_hash": "c586cf45543341998b2fb25be49ead72",
+    "semantic_hash": "c586cf45543341998b2fb25be49ead72"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Commands\\Import\\ImportProductsCommand.cs": {
+    "mtime": 1777002077.3587604,
+    "ast_hash": "0d9cb85e1f32d9971a305fb476729691",
+    "semantic_hash": "0d9cb85e1f32d9971a305fb476729691"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Commands\\Import\\ImportProductsCommandValidator.cs": {
+    "mtime": 1777002077.3587604,
+    "ast_hash": "e5e0090dbe372bb8ef80cb214142fca0",
+    "semantic_hash": "e5e0090dbe372bb8ef80cb214142fca0"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\DTOs\\ProductDto.cs": {
+    "mtime": 1777002077.3597612,
+    "ast_hash": "82c116aec9eec99e78d881666262346c",
+    "semantic_hash": "82c116aec9eec99e78d881666262346c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\EventHandlers\\ProductCreatedEventHandler.cs": {
+    "mtime": 1777002077.360764,
+    "ast_hash": "bb5d0ba49738d0b902a04cd37973766e",
+    "semantic_hash": "bb5d0ba49738d0b902a04cd37973766e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\EventHandlers\\ProductDeletedEventHandler.cs": {
+    "mtime": 1777002077.360764,
+    "ast_hash": "0966cf0befcbfe93d1e8dafed1cbfd05",
+    "semantic_hash": "0966cf0befcbfe93d1e8dafed1cbfd05"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\EventHandlers\\ProductUpdatedEventHandler.cs": {
+    "mtime": 1777002077.3622696,
+    "ast_hash": "d9fe6b2a46e4d4c5459ec1ca1fba83b8",
+    "semantic_hash": "d9fe6b2a46e4d4c5459ec1ca1fba83b8"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Queries\\Export\\ExportProductsQuery.cs": {
+    "mtime": 1777002077.363276,
+    "ast_hash": "4ba768623b18b6329b2df03de61351fd",
+    "semantic_hash": "4ba768623b18b6329b2df03de61351fd"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Queries\\GetAll\\GetAllProductsQuery.cs": {
+    "mtime": 1777002077.3642797,
+    "ast_hash": "d9e339736fa3b0e7d6d5a8a6ec534442",
+    "semantic_hash": "d9e339736fa3b0e7d6d5a8a6ec534442"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Queries\\GetById\\GetProductByIdQuery.cs": {
+    "mtime": 1777002077.366399,
+    "ast_hash": "bc949ea893a9384070c31f083ccefd26",
+    "semantic_hash": "bc949ea893a9384070c31f083ccefd26"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Queries\\Pagination\\ProductsPaginationQuery.cs": {
+    "mtime": 1777002077.3679712,
+    "ast_hash": "8b482da3ed7099ba66ccbeaf968fe0bf",
+    "semantic_hash": "8b482da3ed7099ba66ccbeaf968fe0bf"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Security\\ProductsPermissions.cs": {
+    "mtime": 1777002077.368972,
+    "ast_hash": "72d06e182a1a29f1975c00c8c1657536",
+    "semantic_hash": "72d06e182a1a29f1975c00c8c1657536"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Specifications\\ProductAdvancedFilter.cs": {
+    "mtime": 1777002077.3699703,
+    "ast_hash": "1ee75de0a63b0122dfcb6a8efdbcaa93",
+    "semantic_hash": "1ee75de0a63b0122dfcb6a8efdbcaa93"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Specifications\\ProductAdvancedSpecification.cs": {
+    "mtime": 1777002077.3709712,
+    "ast_hash": "dbdc1bab5b81666f18a303fc5749e0f3",
+    "semantic_hash": "dbdc1bab5b81666f18a303fc5749e0f3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Products\\Specifications\\ProductListView.cs": {
+    "mtime": 1777002077.3719711,
+    "ast_hash": "3bd425cd7c3baa12921e88ce2515ba25",
+    "semantic_hash": "3bd425cd7c3baa12921e88ce2515ba25"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\SystemLogs\\Caching\\LogCacheKey.cs": {
+    "mtime": 1777002077.373103,
+    "ast_hash": "11810c6495a61d9558e591a0de1a8341",
+    "semantic_hash": "11810c6495a61d9558e591a0de1a8341"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\SystemLogs\\Commands\\Clear\\ClearSystemLogsCommand.cs": {
+    "mtime": 1777002077.374102,
+    "ast_hash": "9f94a2605f311f6c3c9bba663a1ba35e",
+    "semantic_hash": "9f94a2605f311f6c3c9bba663a1ba35e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\SystemLogs\\DTOs\\SystemLogDto.cs": {
+    "mtime": 1777002077.375607,
+    "ast_hash": "f7344cc184949f927fdfb88bd1ac8185",
+    "semantic_hash": "f7344cc184949f927fdfb88bd1ac8185"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\SystemLogs\\DTOs\\SystemLogTimeLineDto.cs": {
+    "mtime": 1777002077.3766139,
+    "ast_hash": "c8c94e11427a847527026161f26e952f",
+    "semantic_hash": "c8c94e11427a847527026161f26e952f"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\SystemLogs\\Queries\\ChatData\\SystemLogsChatDataQuery.cs": {
+    "mtime": 1777002077.3776133,
+    "ast_hash": "6d815bcf4590b4826e772674a390ab95",
+    "semantic_hash": "6d815bcf4590b4826e772674a390ab95"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\SystemLogs\\Queries\\Export\\ExportSystemLogsQuery.cs": {
+    "mtime": 1777002077.3786137,
+    "ast_hash": "edcadbdcd09efc6f6cfda5af0b8edd62",
+    "semantic_hash": "edcadbdcd09efc6f6cfda5af0b8edd62"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\SystemLogs\\Queries\\PaginationQuery\\SystemLogsWithPaginationQuery.cs": {
+    "mtime": 1777002077.3796132,
+    "ast_hash": "1fd564de4c46dca23dfe6f4a4864f25c",
+    "semantic_hash": "1fd564de4c46dca23dfe6f4a4864f25c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\SystemLogs\\Security\\LogsPermissions.cs": {
+    "mtime": 1777002077.380613,
+    "ast_hash": "529c78e948568a943fed4cdf492759c4",
+    "semantic_hash": "529c78e948568a943fed4cdf492759c4"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\SystemLogs\\Specifications\\SystemLogAdvancedFilter.cs": {
+    "mtime": 1777002077.3821182,
+    "ast_hash": "763eed23075f5162b9d393948f7ee21e",
+    "semantic_hash": "763eed23075f5162b9d393948f7ee21e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\SystemLogs\\Specifications\\SystemLogAdvancedSpecification.cs": {
+    "mtime": 1777002077.3826957,
+    "ast_hash": "f67cc8fb62ff54698f477e6b8fe50c05",
+    "semantic_hash": "f67cc8fb62ff54698f477e6b8fe50c05"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Tenants\\Caching\\TenantCacheKey.cs": {
+    "mtime": 1777002077.3837016,
+    "ast_hash": "6c87dd63ec8650e0d79d15eaf1ec8ad1",
+    "semantic_hash": "6c87dd63ec8650e0d79d15eaf1ec8ad1"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Tenants\\Commands\\AddEdit\\AddEditTenantCommand.cs": {
+    "mtime": 1777002077.3847027,
+    "ast_hash": "dd66165bb6b6f0f7d153b1ba16486133",
+    "semantic_hash": "dd66165bb6b6f0f7d153b1ba16486133"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Tenants\\Commands\\AddEdit\\AddEditTenantCommandValidator.cs": {
+    "mtime": 1777002077.385702,
+    "ast_hash": "f8b97e6639888d45ed60ba077baf95fe",
+    "semantic_hash": "f8b97e6639888d45ed60ba077baf95fe"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Tenants\\Commands\\Delete\\DeleteTenantCommand.cs": {
+    "mtime": 1777002077.386206,
+    "ast_hash": "c779ea4bf44c97b729a232be97492dd8",
+    "semantic_hash": "c779ea4bf44c97b729a232be97492dd8"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Tenants\\Commands\\Delete\\DeleteTenantCommandValidator.cs": {
+    "mtime": 1777002077.386206,
+    "ast_hash": "499fb06d98d5a244b67a44aa4379091d",
+    "semantic_hash": "499fb06d98d5a244b67a44aa4379091d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Tenants\\DTOs\\TenantDto.cs": {
+    "mtime": 1777002077.3877099,
+    "ast_hash": "68836e339908c6440d82b6eceb2f5adb",
+    "semantic_hash": "68836e339908c6440d82b6eceb2f5adb"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Tenants\\Queries\\GetAll\\GetAllTenantsQuery.cs": {
+    "mtime": 1777002077.3887162,
+    "ast_hash": "a571baeeb836d9a4a70a41e6a252d59d",
+    "semantic_hash": "a571baeeb836d9a4a70a41e6a252d59d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Tenants\\Queries\\Pagination\\TenantsPaginationQuery.cs": {
+    "mtime": 1777002077.3897147,
+    "ast_hash": "b8df2561f8c0f97cfa0d4ce429c312eb",
+    "semantic_hash": "b8df2561f8c0f97cfa0d4ce429c312eb"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Features\\Tenants\\Security\\TenantsPermissions.cs": {
+    "mtime": 1777002077.3897147,
+    "ast_hash": "c38a3d36ea9d19d21ddbafc48f0a5c22",
+    "semantic_hash": "c38a3d36ea9d19d21ddbafc48f0a5c22"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Constants\\ApplicationClaimTypes.cs": {
+    "mtime": 1777002077.2646751,
+    "ast_hash": "413f7b845a7504321845a45627aa8569",
+    "semantic_hash": "413f7b845a7504321845a45627aa8569"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Constants\\AppStrings.cs": {
+    "mtime": 1777002077.2636697,
+    "ast_hash": "d51e854596a445daf745027f6dcd501b",
+    "semantic_hash": "d51e854596a445daf745027f6dcd501b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Constants\\DbProviderKeys.cs": {
+    "mtime": 1777002077.2646751,
+    "ast_hash": "9233a0713d258f4e36159fa4acb24ecb",
+    "semantic_hash": "9233a0713d258f4e36159fa4acb24ecb"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Constants\\GlobalVariables.cs": {
+    "mtime": 1777002077.2656753,
+    "ast_hash": "398fd34a9f2b7b9dc70ee63fc11935f8",
+    "semantic_hash": "398fd34a9f2b7b9dc70ee63fc11935f8"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Constants\\LocalizationConstants.cs": {
+    "mtime": 1777002077.2656753,
+    "ast_hash": "8a28c6c1a3acadc6d31be273697ddbd2",
+    "semantic_hash": "8a28c6c1a3acadc6d31be273697ddbd2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Constants\\Roles.cs": {
+    "mtime": 1777002077.2666748,
+    "ast_hash": "ea871294a25cb77730f9e137ac0f5058",
+    "semantic_hash": "ea871294a25cb77730f9e137ac0f5058"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Constants\\UserCacheKeys.cs": {
+    "mtime": 1777002077.2666748,
+    "ast_hash": "1ea8e6571c169e6444996507c2dd2ae9",
+    "semantic_hash": "1ea8e6571c169e6444996507c2dd2ae9"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Constants\\Users.cs": {
+    "mtime": 1777002077.2676754,
+    "ast_hash": "5765f0d9bd2149a01c161e3217a2d8e6",
+    "semantic_hash": "5765f0d9bd2149a01c161e3217a2d8e6"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\ExceptionHandlers\\DbExceptionHandler.cs": {
+    "mtime": 1777002077.2676754,
+    "ast_hash": "c70bf98145ac3187156184167a05c41c",
+    "semantic_hash": "c70bf98145ac3187156184167a05c41c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\ExceptionHandlers\\FallbackExceptionHandler.cs": {
+    "mtime": 1777002077.268676,
+    "ast_hash": "499e35406cc189bac1980705d53ee630",
+    "semantic_hash": "499e35406cc189bac1980705d53ee630"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\ExceptionHandlers\\NotFoundException.cs": {
+    "mtime": 1777002077.268676,
+    "ast_hash": "efa4b7ca5b6929e44f1fe03315927998",
+    "semantic_hash": "efa4b7ca5b6929e44f1fe03315927998"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\ExceptionHandlers\\NotFoundExceptionHandler.cs": {
+    "mtime": 1777002077.269675,
+    "ast_hash": "e4e395d6636a2116402a4dcff6981173",
+    "semantic_hash": "e4e395d6636a2116402a4dcff6981173"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\ExceptionHandlers\\RequestExceptionHandlerState.cs": {
+    "mtime": 1777002077.269675,
+    "ast_hash": "085f2d17d9ab59f486307f5f110354df",
+    "semantic_hash": "085f2d17d9ab59f486307f5f110354df"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\ExceptionHandlers\\ResultFailureFactory.cs": {
+    "mtime": 1777002077.2706747,
+    "ast_hash": "760be54aa811ceea4c94e596245eb91d",
+    "semantic_hash": "760be54aa811ceea4c94e596245eb91d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\ExceptionHandlers\\ValidationExceptionHandler.cs": {
+    "mtime": 1777002077.2706747,
+    "ast_hash": "a3f63dde8bde6d87f3ac9b219ecc1e90",
+    "semantic_hash": "a3f63dde8bde6d87f3ac9b219ecc1e90"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Extensions\\DataRowExtensions.cs": {
+    "mtime": 1777002077.2721796,
+    "ast_hash": "5ce348594fe859035b2b11cbb73f9b00",
+    "semantic_hash": "5ce348594fe859035b2b11cbb73f9b00"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Extensions\\DateTimeExtensions.cs": {
+    "mtime": 1777002077.2727523,
+    "ast_hash": "5a497f280fc0c15e85e22d2ea7478418",
+    "semantic_hash": "5a497f280fc0c15e85e22d2ea7478418"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Extensions\\DescriptionAttributeExtensions.cs": {
+    "mtime": 1777002077.27329,
+    "ast_hash": "d80d0482847eea2f3459f107a1c75f80",
+    "semantic_hash": "d80d0482847eea2f3459f107a1c75f80"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Extensions\\EnumExtensions.cs": {
+    "mtime": 1777002077.27329,
+    "ast_hash": "d3fcc400939950eeb5aaccbb949bf79a",
+    "semantic_hash": "d3fcc400939950eeb5aaccbb949bf79a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Extensions\\IdentityResultExtensions.cs": {
+    "mtime": 1777002077.274295,
+    "ast_hash": "2a7fe465328a74d84b189d56244037aa",
+    "semantic_hash": "2a7fe465328a74d84b189d56244037aa"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Extensions\\QueryableExtensions.cs": {
+    "mtime": 1777002077.274295,
+    "ast_hash": "d2cf345567eac7d6036f428a712b6bb3",
+    "semantic_hash": "d2cf345567eac7d6036f428a712b6bb3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Extensions\\SpecificationBuilderExtensions.cs": {
+    "mtime": 1777002077.2752955,
+    "ast_hash": "dfce02c2f4873d247429af209de839b0",
+    "semantic_hash": "dfce02c2f4873d247429af209de839b0"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Extensions\\ValidationExtensions.cs": {
+    "mtime": 1777002077.2762957,
+    "ast_hash": "f519a43e231a57b0f68072e2d2c12708",
+    "semantic_hash": "f519a43e231a57b0f68072e2d2c12708"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IAISettings.cs": {
+    "mtime": 1777002077.278297,
+    "ast_hash": "4970834c2b6aa5a55c901c9dd574a4ed",
+    "semantic_hash": "4970834c2b6aa5a55c901c9dd574a4ed"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IApplicationDbContext.cs": {
+    "mtime": 1777002077.2792952,
+    "ast_hash": "f4e93451f9de0c250c38279162da91c1",
+    "semantic_hash": "f4e93451f9de0c250c38279162da91c1"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IApplicationDbContextFactory.cs": {
+    "mtime": 1777002077.2792952,
+    "ast_hash": "6439806d062323aeae7e769c6b7f3fea",
+    "semantic_hash": "6439806d062323aeae7e769c6b7f3fea"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IApplicationHubWrapper.cs": {
+    "mtime": 1777002077.2802954,
+    "ast_hash": "a0c5134fc9798a1db6248040fe34b4ce",
+    "semantic_hash": "a0c5134fc9798a1db6248040fe34b4ce"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IApplicationSettings.cs": {
+    "mtime": 1777002077.2802954,
+    "ast_hash": "a11174d877808840cfab39a5356dce36",
+    "semantic_hash": "a11174d877808840cfab39a5356dce36"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IDataSourceService.cs": {
+    "mtime": 1777002077.2812955,
+    "ast_hash": "54ea4022ea4422b5521dbda68d26c66b",
+    "semantic_hash": "54ea4022ea4422b5521dbda68d26c66b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IDateTime.cs": {
+    "mtime": 1777002077.2812955,
+    "ast_hash": "60cbb78d97ae167570bc833a951f0941",
+    "semantic_hash": "60cbb78d97ae167570bc833a951f0941"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IDocumentOcrJob.cs": {
+    "mtime": 1777002077.282803,
+    "ast_hash": "9a22c7780f3c31cd8f7a26063f59e31b",
+    "semantic_hash": "9a22c7780f3c31cd8f7a26063f59e31b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IDocumentOcrQueue.cs": {
+    "mtime": 1777002077.282803,
+    "ast_hash": "586858497138c9bcbdf6888aab44efea",
+    "semantic_hash": "586858497138c9bcbdf6888aab44efea"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IExcelService.cs": {
+    "mtime": 1777002077.28381,
+    "ast_hash": "4dbc0aae85268090a78f8780616f33d7",
+    "semantic_hash": "4dbc0aae85268090a78f8780616f33d7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IFileUploadService.cs": {
+    "mtime": 1777002077.28381,
+    "ast_hash": "b0286df201114f9d51752f51b88ab85c",
+    "semantic_hash": "b0286df201114f9d51752f51b88ab85c"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IMailService.cs": {
+    "mtime": 1777002077.2848158,
+    "ast_hash": "efb00f7819862993c001e2cf5600cab9",
+    "semantic_hash": "efb00f7819862993c001e2cf5600cab9"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IObjectMapper.cs": {
+    "mtime": 1777002077.2848158,
+    "ast_hash": "d11a76be30eade2549d36e78ba8e943d",
+    "semantic_hash": "d11a76be30eade2549d36e78ba8e943d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IPDFService.cs": {
+    "mtime": 1777002077.2858164,
+    "ast_hash": "964cc603cc79045ca9beed3652ce205d",
+    "semantic_hash": "964cc603cc79045ca9beed3652ce205d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IPermissionQueryService.cs": {
+    "mtime": 1777002077.2858164,
+    "ast_hash": "5f6f3967fdc9d5f1813a4605a9d9fe82",
+    "semantic_hash": "5f6f3967fdc9d5f1813a4605a9d9fe82"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IPermissionService.cs": {
+    "mtime": 1777002077.2868156,
+    "ast_hash": "b161ced1c476c782eabc9e30952f2e91",
+    "semantic_hash": "b161ced1c476c782eabc9e30952f2e91"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IResult.cs": {
+    "mtime": 1777002077.2868156,
+    "ast_hash": "6d884523b4858f20f5864444a67fa140",
+    "semantic_hash": "6d884523b4858f20f5864444a67fa140"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\ITenantSwitchService.cs": {
+    "mtime": 1777002077.2878149,
+    "ast_hash": "8a1a1d497017270b994c0d812eafaf53",
+    "semantic_hash": "8a1a1d497017270b994c0d812eafaf53"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\IValidationService.cs": {
+    "mtime": 1777002077.2883208,
+    "ast_hash": "42d7fbfd5697107766324ad500ec3ace",
+    "semantic_hash": "42d7fbfd5697107766324ad500ec3ace"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\Caching\\IAppCache.cs": {
+    "mtime": 1777002077.2762957,
+    "ast_hash": "981e11b7b36a6bf84ce739266cee0073",
+    "semantic_hash": "981e11b7b36a6bf84ce739266cee0073"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\Caching\\ICacheableRequest.cs": {
+    "mtime": 1777002077.2772958,
+    "ast_hash": "6d12af046b42984f1f8d81f9eb663ad3",
+    "semantic_hash": "6d12af046b42984f1f8d81f9eb663ad3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\Caching\\ICacheInvalidatorRequest.cs": {
+    "mtime": 1777002077.2772958,
+    "ast_hash": "7eda2f706253a9fc6c7963914ccb669f",
+    "semantic_hash": "7eda2f706253a9fc6c7963914ccb669f"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\Identity\\IClientInfoAccessor.cs": {
+    "mtime": 1777002077.2893276,
+    "ast_hash": "4f945de46cec9d516d4e2cde1f45f3de",
+    "semantic_hash": "4f945de46cec9d516d4e2cde1f45f3de"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\Identity\\IIdentityService.cs": {
+    "mtime": 1777002077.2893276,
+    "ast_hash": "e860e39e44c7131f35739772b1e7120e",
+    "semantic_hash": "e860e39e44c7131f35739772b1e7120e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\Identity\\IIdentitySettings.cs": {
+    "mtime": 1777002077.2903266,
+    "ast_hash": "8913daa80912d2b5a4d990c499e57d65",
+    "semantic_hash": "8913daa80912d2b5a4d990c499e57d65"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\Identity\\IUserContextAccessor.cs": {
+    "mtime": 1777002077.2903266,
+    "ast_hash": "ce7a85a1b91009b4f13534f066d82bcc",
+    "semantic_hash": "ce7a85a1b91009b4f13534f066d82bcc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\Identity\\IUserProfileState.cs": {
+    "mtime": 1777002077.2913265,
+    "ast_hash": "cb1724efe97d5328cba2879386f720ba",
+    "semantic_hash": "cb1724efe97d5328cba2879386f720ba"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Interfaces\\Identity\\UserContext.cs": {
+    "mtime": 1777002077.292326,
+    "ast_hash": "772c2fe7d456c7baba8fc81b775aea5d",
+    "semantic_hash": "772c2fe7d456c7baba8fc81b775aea5d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Mappings\\MapsterConfiguration.cs": {
+    "mtime": 1777002077.2928295,
+    "ast_hash": "4116ebc5fe7759b31bd631527b47faca",
+    "semantic_hash": "4116ebc5fe7759b31bd631527b47faca"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Mappings\\MapsterObjectMapper.cs": {
+    "mtime": 1777002077.2933328,
+    "ast_hash": "64660e5c211844c6dcd604de5d2e3af2",
+    "semantic_hash": "64660e5c211844c6dcd604de5d2e3af2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Models\\ClientInfo.cs": {
+    "mtime": 1777002077.2933328,
+    "ast_hash": "d5acf43e92d91d92018e9681cf827211",
+    "semantic_hash": "d5acf43e92d91d92018e9681cf827211"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Models\\DocumentOcrRequest.cs": {
+    "mtime": 1777002077.294339,
+    "ast_hash": "7ff96504e483f3122b497b57070c265a",
+    "semantic_hash": "7ff96504e483f3122b497b57070c265a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Models\\OrgItem.cs": {
+    "mtime": 1777002077.294339,
+    "ast_hash": "1ba24719cfead03777c82e745f92b27e",
+    "semantic_hash": "1ba24719cfead03777c82e745f92b27e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Models\\PaginatedData.cs": {
+    "mtime": 1777002077.2953389,
+    "ast_hash": "e3c0f83667a3c7a62798ea6ab9cdf2b7",
+    "semantic_hash": "e3c0f83667a3c7a62798ea6ab9cdf2b7"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Models\\PaginationFilter.cs": {
+    "mtime": 1777002077.2963386,
+    "ast_hash": "64fa72ec6fba1e3d85c35667b31a9176",
+    "semantic_hash": "64fa72ec6fba1e3d85c35667b31a9176"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Models\\PaginationRequest.cs": {
+    "mtime": 1777002077.2963386,
+    "ast_hash": "9f8a97883bf741f5eda3276ecbff61a9",
+    "semantic_hash": "9f8a97883bf741f5eda3276ecbff61a9"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Models\\Result.cs": {
+    "mtime": 1777002077.2973397,
+    "ast_hash": "07e589cac7d83b763b4c8cf08b6f9c4b",
+    "semantic_hash": "07e589cac7d83b763b4c8cf08b6f9c4b"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Models\\UploadRequest.cs": {
+    "mtime": 1777002077.2973397,
+    "ast_hash": "aa5a24c38579f0c665c6d7594a0b7c6e",
+    "semantic_hash": "aa5a24c38579f0c665c6d7594a0b7c6e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\PublishStrategies\\ChannelBasedNoWaitPublisher.cs": {
+    "mtime": 1777002077.2983387,
+    "ast_hash": "9028d161c4879fef64a7a0f6eb28a37a",
+    "semantic_hash": "9028d161c4879fef64a7a0f6eb28a37a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\PublishStrategies\\ParallelNoWaitPublisher.cs": {
+    "mtime": 1777002077.2993388,
+    "ast_hash": "a624cf88b36f478efb666fb1793732bc",
+    "semantic_hash": "a624cf88b36f478efb666fb1793732bc"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Security\\ModuleInfo.cs": {
+    "mtime": 1777002077.2993388,
+    "ast_hash": "59c2d63ed69c30575e7fa2758200f3b5",
+    "semantic_hash": "59c2d63ed69c30575e7fa2758200f3b5"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Security\\Permissions.cs": {
+    "mtime": 1777002077.3003385,
+    "ast_hash": "8b8e788928020d619e58fa951bcdfae3",
+    "semantic_hash": "8b8e788928020d619e58fa951bcdfae3"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Security\\PermissionsModel.cs": {
+    "mtime": 1777002077.3023381,
+    "ast_hash": "3aa0a2f1fa4037701178c66976b89789",
+    "semantic_hash": "3aa0a2f1fa4037701178c66976b89789"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Security\\RequestAuthorizeAttribute.cs": {
+    "mtime": 1777002077.3023381,
+    "ast_hash": "b049b9a938f401444324189c51e5dd18",
+    "semantic_hash": "b049b9a938f401444324189c51e5dd18"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Security\\UserProfile.cs": {
+    "mtime": 1777002077.3039048,
+    "ast_hash": "b0f5acb58aee996828bee86ad80360a6",
+    "semantic_hash": "b0f5acb58aee996828bee86ad80360a6"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Security\\Permissions\\Dashboards.cs": {
+    "mtime": 1777002077.3003385,
+    "ast_hash": "2a90bbb082a2f0b2d9e24052c7cfc389",
+    "semantic_hash": "2a90bbb082a2f0b2d9e24052c7cfc389"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Security\\Permissions\\Roles.cs": {
+    "mtime": 1777002077.3013413,
+    "ast_hash": "077ef33ecdd2214e61f63c6bf5e85d12",
+    "semantic_hash": "077ef33ecdd2214e61f63c6bf5e85d12"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Common\\Security\\Permissions\\Users.cs": {
+    "mtime": 1777002077.3013413,
+    "ast_hash": "ac10c4fed14eef7a1ed4260c4dff1554",
+    "semantic_hash": "ac10c4fed14eef7a1ed4260c4dff1554"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Pipeline\\CacheInvalidationBehaviour.cs": {
+    "mtime": 1777002077.3907156,
+    "ast_hash": "7f292a22d0c4eb916693c24510f88db5",
+    "semantic_hash": "7f292a22d0c4eb916693c24510f88db5"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Pipeline\\FusionCacheBehaviour.cs": {
+    "mtime": 1777002077.3907156,
+    "ast_hash": "8d085439e401e846d3c1eeb5cc98794d",
+    "semantic_hash": "8d085439e401e846d3c1eeb5cc98794d"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Pipeline\\PerformanceBehaviour.cs": {
+    "mtime": 1777002077.3932292,
+    "ast_hash": "e2ed758dab646243d396033940cc782a",
+    "semantic_hash": "e2ed758dab646243d396033940cc782a"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Pipeline\\ResultExceptionBehavior.cs": {
+    "mtime": 1777002077.3942282,
+    "ast_hash": "b3c9c43827ca42c7203cf6e5ee9b3b47",
+    "semantic_hash": "b3c9c43827ca42c7203cf6e5ee9b3b47"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Pipeline\\ValidationBehavior.cs": {
+    "mtime": 1777002077.3952298,
+    "ast_hash": "c7d4af69bf68118a0ecd7b4954b8397e",
+    "semantic_hash": "c7d4af69bf68118a0ecd7b4954b8397e"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Pipeline\\PreProcessors\\LoggingPreProcessor.cs": {
+    "mtime": 1777002077.3942282,
+    "ast_hash": "2a02a06953081d5fc3e46e7e13daf4a8",
+    "semantic_hash": "2a02a06953081d5fc3e46e7e13daf4a8"
+  },
+  "src\\Server.UI\\App.razor": {
+    "mtime": 1777002077.4852836,
+    "ast_hash": "eab9463409c6d127fdfeb6a087f58eb3",
+    "semantic_hash": "eab9463409c6d127fdfeb6a087f58eb3"
+  },
+  "src\\Server.UI\\appsettings.development.json": {
+    "mtime": 1776987790.5071912,
+    "ast_hash": "8e48f22eb99806d292cb0a694f6914f3",
+    "semantic_hash": "8e48f22eb99806d292cb0a694f6914f3"
+  },
+  "src\\Server.UI\\appsettings.json": {
+    "mtime": 1777002077.6829717,
+    "ast_hash": "17ea3a8ba9948f6404dbbd322e0db843",
+    "semantic_hash": "17ea3a8ba9948f6404dbbd322e0db843"
+  },
+  "src\\Server.UI\\DependencyInjection.cs": {
+    "mtime": 1777002077.5095694,
+    "ast_hash": "986e1f883d9c623499b0207320482101",
+    "semantic_hash": "986e1f883d9c623499b0207320482101"
+  },
+  "src\\Server.UI\\Program.cs": {
+    "mtime": 1777002077.5545,
+    "ast_hash": "fd868e835681a56f14bab6d70f54d206",
+    "semantic_hash": "fd868e835681a56f14bab6d70f54d206"
+  },
+  "src\\Server.UI\\Routes.razor": {
+    "mtime": 1777002077.6653564,
+    "ast_hash": "ed47bf32d317c025729e8949dbff1652",
+    "semantic_hash": "ed47bf32d317c025729e8949dbff1652"
+  },
+  "src\\Server.UI\\Server.UI.csproj": {
+    "mtime": 1778714415.0763085,
+    "ast_hash": "3ed4a49ca93e4a9ff3803cfdd165d884",
+    "semantic_hash": "3ed4a49ca93e4a9ff3803cfdd165d884"
+  },
+  "src\\Server.UI\\_Imports.cs": {
+    "mtime": 1777002077.6814606,
+    "ast_hash": "fad18d279dd6b2538d27d4fc90b10daa",
+    "semantic_hash": "fad18d279dd6b2538d27d4fc90b10daa"
+  },
+  "src\\Server.UI\\_Imports.razor": {
+    "mtime": 1777002077.681966,
+    "ast_hash": "d2bbbc486fecc6578f88d7453f7b480d",
+    "semantic_hash": "d2bbbc486fecc6578f88d7453f7b480d"
+  },
+  "src\\Server.UI\\Extensions\\ClaimsPrincipalExtensions.cs": {
+    "mtime": 1777002077.5095694,
+    "ast_hash": "8b6c68f1e1e56afd04b6f0f6c5dd9fc6",
+    "semantic_hash": "8b6c68f1e1e56afd04b6f0f6c5dd9fc6"
+  },
+  "src\\Server.UI\\Extensions\\DataGridExtensions.cs": {
+    "mtime": 1777002077.5105717,
+    "ast_hash": "eb60a73e0f576b665975f20ddb26f717",
+    "semantic_hash": "eb60a73e0f576b665975f20ddb26f717"
+  },
+  "src\\Server.UI\\Extensions\\NumericExtensions.cs": {
+    "mtime": 1777002077.5105717,
+    "ast_hash": "8bdd59292c0e0ca17962a18df4579154",
+    "semantic_hash": "8bdd59292c0e0ca17962a18df4579154"
+  },
+  "src\\Server.UI\\Extensions\\StaleCookieMiddlewareExtensions.cs": {
+    "mtime": 1771119410.270348,
+    "ast_hash": "69272d385124139fb44127c18b3c90d8",
+    "semantic_hash": "69272d385124139fb44127c18b3c90d8"
+  },
+  "src\\Server.UI\\Hubs\\HubClient.cs": {
+    "mtime": 1777002077.5120761,
+    "ast_hash": "c2b23e24092a5b0cde1548914f03d96e",
+    "semantic_hash": "c2b23e24092a5b0cde1548914f03d96e"
+  },
+  "src\\Server.UI\\Hubs\\IHubConnectionFactory.cs": {
+    "mtime": 1777002077.5130813,
+    "ast_hash": "4bfb1aa0e95bdec37c572abee77a3cf8",
+    "semantic_hash": "4bfb1aa0e95bdec37c572abee77a3cf8"
+  },
+  "src\\Server.UI\\Hubs\\ISignalRHub.cs": {
+    "mtime": 1777002077.5130813,
+    "ast_hash": "edbf15a65152de7152f62e976cc84afd",
+    "semantic_hash": "edbf15a65152de7152f62e976cc84afd"
+  },
+  "src\\Server.UI\\Hubs\\ServerHub.cs": {
+    "mtime": 1777002077.5140824,
+    "ast_hash": "12de38a0a37f449ebc92497b858200eb",
+    "semantic_hash": "12de38a0a37f449ebc92497b858200eb"
+  },
+  "src\\Server.UI\\Hubs\\ServerHubWrapper.cs": {
+    "mtime": 1777002077.5140824,
+    "ast_hash": "bedc64d07f07011409de468efd726843",
+    "semantic_hash": "bedc64d07f07011409de468efd726843"
+  },
+  "src\\Server.UI\\Layouts\\AppLayout.razor": {
+    "mtime": 1777002077.5150833,
+    "ast_hash": "333ee2dc48fc584720aef8a1057db41e",
+    "semantic_hash": "333ee2dc48fc584720aef8a1057db41e"
+  },
+  "src\\Server.UI\\Layouts\\AuthLayout.razor": {
+    "mtime": 1777002077.5160828,
+    "ast_hash": "a60659a8fe42bd6865da7a3d0fb26610",
+    "semantic_hash": "a60659a8fe42bd6865da7a3d0fb26610"
+  },
+  "src\\Server.UI\\Layouts\\MainLayout.razor": {
+    "mtime": 1777002077.5160828,
+    "ast_hash": "cf7f9c76044d512f5a7626759df620f7",
+    "semantic_hash": "cf7f9c76044d512f5a7626759df620f7"
+  },
+  "src\\Server.UI\\Layouts\\PublicLayout.razor": {
+    "mtime": 1777002077.5170822,
+    "ast_hash": "2d08be29394a75479cba28bf33eb6d77",
+    "semantic_hash": "2d08be29394a75479cba28bf33eb6d77"
+  },
+  "src\\Server.UI\\Middlewares\\GlobalExceptionHandler.cs": {
+    "mtime": 1777002077.5170822,
+    "ast_hash": "ce402ed113ead863e3b333b1ea1ff3c2",
+    "semantic_hash": "ce402ed113ead863e3b333b1ea1ff3c2"
+  },
+  "src\\Server.UI\\Middlewares\\HangfireDashboardAuthorizationFilter.cs": {
+    "mtime": 1777002077.5185876,
+    "ast_hash": "0439a9653c36003752961fd3b07eef22",
+    "semantic_hash": "0439a9653c36003752961fd3b07eef22"
+  },
+  "src\\Server.UI\\Middlewares\\LocalizationCookiesMiddleware.cs": {
+    "mtime": 1777002077.5185876,
+    "ast_hash": "4533b3d40e6242d136ebbd54033fec2a",
+    "semantic_hash": "4533b3d40e6242d136ebbd54033fec2a"
+  },
+  "src\\Server.UI\\Middlewares\\StaleCookieMiddleware.cs": {
+    "mtime": 1771119409.9807892,
+    "ast_hash": "e600520bf832a519a0d9d9b628356895",
+    "semantic_hash": "e600520bf832a519a0d9d9b628356895"
+  },
+  "src\\Server.UI\\Models\\SharedResource.cs": {
+    "mtime": 1777002077.522664,
+    "ast_hash": "f0a838054ecddf8285153a866b56e4ca",
+    "semantic_hash": "f0a838054ecddf8285153a866b56e4ca"
+  },
+  "src\\Server.UI\\Pages\\Error.razor": {
+    "mtime": 1777002077.5297058,
+    "ast_hash": "2e54a257ab8f554386131d05a068dc57",
+    "semantic_hash": "2e54a257ab8f554386131d05a068dc57"
+  },
+  "src\\Server.UI\\Pages\\NotFound.razor": {
+    "mtime": 1777002077.545342,
+    "ast_hash": "8893ddfd9f8a1dd5bf449439c2acf624",
+    "semantic_hash": "8893ddfd9f8a1dd5bf449439c2acf624"
+  },
+  "src\\Server.UI\\Pages\\_Imports.razor": {
+    "mtime": 1777002077.5534935,
+    "ast_hash": "98740a179845de058c0e15899fced4c8",
+    "semantic_hash": "98740a179845de058c0e15899fced4c8"
+  },
+  "src\\Server.UI\\Properties\\launchSettings.json": {
+    "mtime": 1762728825.1512103,
+    "ast_hash": "d78574e2e9c340df7fb1da6929543a5b",
+    "semantic_hash": "d78574e2e9c340df7fb1da6929543a5b"
+  },
+  "src\\Server.UI\\Services\\DialogServiceHelper.cs": {
+    "mtime": 1777002077.6678689,
+    "ast_hash": "21595d40dd4cfe2d63b3ce23a278d5ca",
+    "semantic_hash": "21595d40dd4cfe2d63b3ce23a278d5ca"
+  },
+  "src\\Server.UI\\Services\\IdentityComponentsEndpointRouteBuilderExtensions.cs": {
+    "mtime": 1777002077.6688683,
+    "ast_hash": "782a14864da2cdd3b4a354b42172f4d5",
+    "semantic_hash": "782a14864da2cdd3b4a354b42172f4d5"
+  },
+  "src\\Server.UI\\Services\\IdentityRevalidatingAuthenticationStateProvider.cs": {
+    "mtime": 1777002077.6688683,
+    "ast_hash": "c9f858b843d6e7d0c1b81e5999219741",
+    "semantic_hash": "c9f858b843d6e7d0c1b81e5999219741"
+  },
+  "src\\Server.UI\\Services\\ImageProcessor.cs": {
+    "mtime": 1777002077.6698668,
+    "ast_hash": "8417a0d679cc79f9fc3de1c216560c42",
+    "semantic_hash": "8417a0d679cc79f9fc3de1c216560c42"
+  },
+  "src\\Server.UI\\Themes\\Theme.cs": {
+    "mtime": 1777002077.680461,
+    "ast_hash": "f38c4146bee76edc404c0cd2c0427b6a",
+    "semantic_hash": "f38c4146bee76edc404c0cd2c0427b6a"
+  },
+  "src\\Server.UI\\wwwroot\\sitemap.xml": {
+    "mtime": 1777002077.6970847,
+    "ast_hash": "2bb0869ac93adc4bb4d97ac6f17ecb0f",
+    "semantic_hash": "2bb0869ac93adc4bb4d97ac6f17ecb0f"
+  },
+  "src\\Server.UI\\Components\\AppShell\\HeaderMenu.razor": {
+    "mtime": 1777002077.4862819,
+    "ast_hash": "fb0ef99ce8f0e4467c3d8c40299071a2",
+    "semantic_hash": "fb0ef99ce8f0e4467c3d8c40299071a2"
+  },
+  "src\\Server.UI\\Components\\AppShell\\NavigationMenu.razor": {
+    "mtime": 1777002077.4862819,
+    "ast_hash": "3a8f07c10b7c11fb8ed81c7f345a2718",
+    "semantic_hash": "3a8f07c10b7c11fb8ed81c7f345a2718"
+  },
+  "src\\Server.UI\\Components\\AppShell\\NotificationMenu.razor": {
+    "mtime": 1777002077.487786,
+    "ast_hash": "b6bc1c07edecdc2c433cbaf84ef0fe8f",
+    "semantic_hash": "b6bc1c07edecdc2c433cbaf84ef0fe8f"
+  },
+  "src\\Server.UI\\Components\\AppShell\\SearchDialog.razor": {
+    "mtime": 1777002077.487786,
+    "ast_hash": "965a93976afe0d7866ad6ead08a5cd13",
+    "semantic_hash": "965a93976afe0d7866ad6ead08a5cd13"
+  },
+  "src\\Server.UI\\Components\\AppShell\\TenantSelector.razor": {
+    "mtime": 1777002077.4883008,
+    "ast_hash": "2df3f4fd2c327fca79563512a2b0150d",
+    "semantic_hash": "2df3f4fd2c327fca79563512a2b0150d"
+  },
+  "src\\Server.UI\\Components\\AppShell\\UserInfoCard.razor": {
+    "mtime": 1777002077.4893072,
+    "ast_hash": "7396fe3ff7c39203af5394bd15e4cf32",
+    "semantic_hash": "7396fe3ff7c39203af5394bd15e4cf32"
+  },
+  "src\\Server.UI\\Components\\Branding\\Logo.razor": {
+    "mtime": 1777002077.4893072,
+    "ast_hash": "996ee88f16fa3f450c5b57eee03e5402",
+    "semantic_hash": "996ee88f16fa3f450c5b57eee03e5402"
+  },
+  "src\\Server.UI\\Components\\Dialogs\\ConfirmationDialog.razor": {
+    "mtime": 1777002077.4903073,
+    "ast_hash": "90f2138378830761638f55917edf87cf",
+    "semantic_hash": "90f2138378830761638f55917edf87cf"
+  },
+  "src\\Server.UI\\Components\\Dialogs\\DeleteConfirmation.razor": {
+    "mtime": 1777002077.4908535,
+    "ast_hash": "bcd0d83b9e2ca06816e12578b258459e",
+    "semantic_hash": "bcd0d83b9e2ca06816e12578b258459e"
+  },
+  "src\\Server.UI\\Components\\Errors\\CustomError.razor": {
+    "mtime": 1777002077.4908535,
+    "ast_hash": "ab37daef41812a212c37f7f0a776024f",
+    "semantic_hash": "ab37daef41812a212c37f7f0a776024f"
+  },
+  "src\\Server.UI\\Components\\Errors\\ErrorPageComponent.razor": {
+    "mtime": 1777002077.4923694,
+    "ast_hash": "e623ba9c98439654d8f51e36ab484a37",
+    "semantic_hash": "e623ba9c98439654d8f51e36ab484a37"
+  },
+  "src\\Server.UI\\Components\\Feedback\\MudDataGridStatus.razor": {
+    "mtime": 1777002077.4933753,
+    "ast_hash": "acb6bac779600de52b5bd6d7b5a143bb",
+    "semantic_hash": "acb6bac779600de52b5bd6d7b5a143bb"
+  },
+  "src\\Server.UI\\Components\\Feedback\\ReconnectModal.razor": {
+    "mtime": 1777002077.4933753,
+    "ast_hash": "efd7f8cd301a61447d95cea5b342d654",
+    "semantic_hash": "efd7f8cd301a61447d95cea5b342d654"
+  },
+  "src\\Server.UI\\Components\\Feedback\\StatusMessage.razor": {
+    "mtime": 1777002077.4943788,
+    "ast_hash": "d54b46a48fbc925c0a5a1baf137b8081",
+    "semantic_hash": "d54b46a48fbc925c0a5a1baf137b8081"
+  },
+  "src\\Server.UI\\Components\\Identity\\UserActionInfo.razor": {
+    "mtime": 1777002077.4943788,
+    "ast_hash": "f56bb294c94594bd6dc66dbf6ca79115",
+    "semantic_hash": "f56bb294c94594bd6dc66dbf6ca79115"
+  },
+  "src\\Server.UI\\Components\\Identity\\UserInfoColumn.razor": {
+    "mtime": 1777002077.4953756,
+    "ast_hash": "99d5d0bd9f14c177a474fe90881d33e5",
+    "semantic_hash": "99d5d0bd9f14c177a474fe90881d33e5"
+  },
+  "src\\Server.UI\\Components\\Identity\\UserLoginState.razor": {
+    "mtime": 1777002077.4953756,
+    "ast_hash": "3c9f73204811935814ac3e70404857e3",
+    "semantic_hash": "3c9f73204811935814ac3e70404857e3"
+  },
+  "src\\Server.UI\\Components\\Localization\\LanguageSelector.razor": {
+    "mtime": 1777002077.5039296,
+    "ast_hash": "20a1653334bb3a4af559d917a3331300",
+    "semantic_hash": "20a1653334bb3a4af559d917a3331300"
+  },
+  "src\\Server.UI\\Components\\Navigation\\Breadcrumbs.razor": {
+    "mtime": 1777002077.50493,
+    "ast_hash": "e4edaed19bcb45900a9c8e07b49abd60",
+    "semantic_hash": "e4edaed19bcb45900a9c8e07b49abd60"
+  },
+  "src\\Server.UI\\Components\\Presence\\ActiveUserSession.razor": {
+    "mtime": 1777002077.50493,
+    "ast_hash": "b44249d6c4555c9fad80e486bb12d48e",
+    "semantic_hash": "b44249d6c4555c9fad80e486bb12d48e"
+  },
+  "src\\Server.UI\\Components\\Presence\\OnlineUsersTracker.razor": {
+    "mtime": 1777002077.5059323,
+    "ast_hash": "24978e3e5af888574f68d55159a28679",
+    "semantic_hash": "24978e3e5af888574f68d55159a28679"
+  },
+  "src\\Server.UI\\Components\\Routing\\RedirectToHome.razor": {
+    "mtime": 1777002077.5064886,
+    "ast_hash": "1c749082c918d00c785ae99515b679f2",
+    "semantic_hash": "1c749082c918d00c785ae99515b679f2"
+  },
+  "src\\Server.UI\\Components\\Routing\\RedirectToLogin.razor": {
+    "mtime": 1777002077.5064886,
+    "ast_hash": "65dc51d6561839268ea323440fc2e380",
+    "semantic_hash": "65dc51d6561839268ea323440fc2e380"
+  },
+  "src\\Server.UI\\Components\\Theming\\PrimaryColorPicker.razor": {
+    "mtime": 1777002077.5074964,
+    "ast_hash": "62710f26ae9729ea0a6a7319aa8db05d",
+    "semantic_hash": "62710f26ae9729ea0a6a7319aa8db05d"
+  },
+  "src\\Server.UI\\Components\\Theming\\ThemesButton.razor": {
+    "mtime": 1777002077.5074964,
+    "ast_hash": "b200f1e255767725f56409af407b2d95",
+    "semantic_hash": "b200f1e255767725f56409af407b2d95"
+  },
+  "src\\Server.UI\\Components\\Theming\\ThemesMenu.razor": {
+    "mtime": 1777002077.5084972,
+    "ast_hash": "b916cb1f7d5a6d0c06606574e8b65d24",
+    "semantic_hash": "b916cb1f7d5a6d0c06606574e8b65d24"
+  },
+  "src\\Server.UI\\Components\\Time\\UtcToLocal.razor": {
+    "mtime": 1777002077.5084972,
+    "ast_hash": "6bae9dd980d0c5595f051abc31d3a1ad",
+    "semantic_hash": "6bae9dd980d0c5595f051abc31d3a1ad"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Autocomplete\\LanguageAutocomplete.cs": {
+    "mtime": 1777002077.4963758,
+    "ast_hash": "dbc334ff29f911fcfb0359ad4365f4b7",
+    "semantic_hash": "dbc334ff29f911fcfb0359ad4365f4b7"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Autocomplete\\PicklistAutocomplete.razor.cs": {
+    "mtime": 1777002077.4973748,
+    "ast_hash": "997fe345baec1ee7901803a0fb6c0092",
+    "semantic_hash": "997fe345baec1ee7901803a0fb6c0092"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Autocomplete\\PickSuperiorAutocomplete.razor.cs": {
+    "mtime": 1777002077.4963758,
+    "ast_hash": "a22de624d099819c30a331799d4e59dc",
+    "semantic_hash": "a22de624d099819c30a331799d4e59dc"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Autocomplete\\PickUserAutocomplete.razor.cs": {
+    "mtime": 1777002077.4973748,
+    "ast_hash": "b890d7921f7a7ccd3c7a532510dc8387",
+    "semantic_hash": "b890d7921f7a7ccd3c7a532510dc8387"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Autocomplete\\TimeZoneAutocomplete.cs": {
+    "mtime": 1777002077.4983768,
+    "ast_hash": "86f6949ef2c4673bcc8f31552c2a929b",
+    "semantic_hash": "86f6949ef2c4673bcc8f31552c2a929b"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Button\\MudLoadingButton.razor": {
+    "mtime": 1777002077.4983768,
+    "ast_hash": "ed853739d0e6a86d976bc8dacfb23c06",
+    "semantic_hash": "ed853739d0e6a86d976bc8dacfb23c06"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Display\\ReadOnlyField.razor": {
+    "mtime": 1777002077.4994175,
+    "ast_hash": "dc542d1dad9710f3c6987ef45b9e22a0",
+    "semantic_hash": "dc542d1dad9710f3c6987ef45b9e22a0"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Select\\MudDateTimeField.razor": {
+    "mtime": 1777002077.5004184,
+    "ast_hash": "806e853c330e4bd31c208a0209afaae8",
+    "semantic_hash": "806e853c330e4bd31c208a0209afaae8"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Select\\MudEnumSelect.razor.cs": {
+    "mtime": 1777002077.5004184,
+    "ast_hash": "f69e8433cfda7d6a2b123104a9415d69",
+    "semantic_hash": "f69e8433cfda7d6a2b123104a9415d69"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Select\\TenantSelect.razor": {
+    "mtime": 1777002077.5004184,
+    "ast_hash": "602cc1623df89f69841ea68bfdc5e551",
+    "semantic_hash": "602cc1623df89f69841ea68bfdc5e551"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Upload\\FileSizeFormatter.razor": {
+    "mtime": 1777002077.5019238,
+    "ast_hash": "2f8048a4dff5b8d74cd5cbdbcae75498",
+    "semantic_hash": "2f8048a4dff5b8d74cd5cbdbcae75498"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Upload\\FileUploadZone.razor": {
+    "mtime": 1777002077.5029302,
+    "ast_hash": "468e9e80ea108db47fc47eb2137ea10a",
+    "semantic_hash": "468e9e80ea108db47fc47eb2137ea10a"
+  },
+  "src\\Server.UI\\Components\\Inputs\\Upload\\Thumbnail.razor": {
+    "mtime": 1777002077.5029302,
+    "ast_hash": "0c02612da58e5ae86682cd9b4f4cab06",
+    "semantic_hash": "0c02612da58e5ae86682cd9b4f4cab06"
+  },
+  "src\\Server.UI\\Models\\NavigationMenu\\MenuSectionItemModel.cs": {
+    "mtime": 1777002077.5195937,
+    "ast_hash": "7950c705c523ccc3b05b8a5d693d0b91",
+    "semantic_hash": "7950c705c523ccc3b05b8a5d693d0b91"
+  },
+  "src\\Server.UI\\Models\\NavigationMenu\\MenuSectionModel.cs": {
+    "mtime": 1777002077.5195937,
+    "ast_hash": "327847976086cfbfd1ce98f633ae31b6",
+    "semantic_hash": "327847976086cfbfd1ce98f633ae31b6"
+  },
+  "src\\Server.UI\\Models\\NavigationMenu\\MenuSectionSubItemModel.cs": {
+    "mtime": 1777002077.5205927,
+    "ast_hash": "887c92a6d485cdfcc1290eee36176145",
+    "semantic_hash": "887c92a6d485cdfcc1290eee36176145"
+  },
+  "src\\Server.UI\\Models\\NavigationMenu\\PageStatus.cs": {
+    "mtime": 1777002077.5205927,
+    "ast_hash": "81c1cece1e391b6cf5084b3dc473fe01",
+    "semantic_hash": "81c1cece1e391b6cf5084b3dc473fe01"
+  },
+  "src\\Server.UI\\Models\\Notification\\NotificationModel.cs": {
+    "mtime": 1777002077.5205927,
+    "ast_hash": "9c6d6f72c945035504e996ea0f9b7f62",
+    "semantic_hash": "9c6d6f72c945035504e996ea0f9b7f62"
+  },
+  "src\\Server.UI\\Models\\Notification\\NotificationTypes.cs": {
+    "mtime": 1777002077.5220983,
+    "ast_hash": "4f3cdd8ef42a2fe4787dbede12385dfe",
+    "semantic_hash": "4f3cdd8ef42a2fe4787dbede12385dfe"
+  },
+  "src\\Server.UI\\Pages\\AI\\Chatbot.razor": {
+    "mtime": 1777002077.5231907,
+    "ast_hash": "d6cf0ba602f912ec1e70d122be9d309d",
+    "semantic_hash": "d6cf0ba602f912ec1e70d122be9d309d"
+  },
+  "src\\Server.UI\\Pages\\Contacts\\Contacts.razor": {
+    "mtime": 1777002077.5241966,
+    "ast_hash": "c85ae3b9a7d5d9c0d9ad100987483bc0",
+    "semantic_hash": "c85ae3b9a7d5d9c0d9ad100987483bc0"
+  },
+  "src\\Server.UI\\Pages\\Contacts\\CreateContact.razor": {
+    "mtime": 1777002077.5251985,
+    "ast_hash": "82103c8fe875e7d0593dc4aa686a7743",
+    "semantic_hash": "82103c8fe875e7d0593dc4aa686a7743"
+  },
+  "src\\Server.UI\\Pages\\Contacts\\EditContact.razor": {
+    "mtime": 1777002077.5261989,
+    "ast_hash": "8de3db4305fd394000fd32ae7c50e2cc",
+    "semantic_hash": "8de3db4305fd394000fd32ae7c50e2cc"
+  },
+  "src\\Server.UI\\Pages\\Contacts\\ViewContact.razor": {
+    "mtime": 1777002077.5261989,
+    "ast_hash": "7b2ebde9540e3efe7ee3da0a5cd58078",
+    "semantic_hash": "7b2ebde9540e3efe7ee3da0a5cd58078"
+  },
+  "src\\Server.UI\\Pages\\Dashboard\\Dashboard.razor": {
+    "mtime": 1766825170.4996884,
+    "ast_hash": "2369051e74758a8aab50464cfd4e8a21",
+    "semantic_hash": "2369051e74758a8aab50464cfd4e8a21"
+  },
+  "src\\Server.UI\\Pages\\Documents\\Documents.razor": {
+    "mtime": 1777002077.5286994,
+    "ast_hash": "eeaedfa6af864e6628822f6e1a2a9be8",
+    "semantic_hash": "eeaedfa6af864e6628822f6e1a2a9be8"
+  },
+  "src\\Server.UI\\Pages\\Documents\\Documents.razor.js": {
+    "mtime": 1762728825.1374977,
+    "ast_hash": "6b64c64795eef59f3311a463e5e4f45e",
+    "semantic_hash": "6b64c64795eef59f3311a463e5e4f45e"
+  },
+  "src\\Server.UI\\Pages\\PicklistSets\\PicklistSets.razor": {
+    "mtime": 1777002077.546343,
+    "ast_hash": "c8ec4b6aba4760a017823e47e659f459",
+    "semantic_hash": "c8ec4b6aba4760a017823e47e659f459"
+  },
+  "src\\Server.UI\\Pages\\Products\\Products.razor": {
+    "mtime": 1777002077.5493412,
+    "ast_hash": "4fd9366f712b492a33a5ca731bdbc32f",
+    "semantic_hash": "4fd9366f712b492a33a5ca731bdbc32f"
+  },
+  "src\\Server.UI\\Pages\\Public\\Index.razor": {
+    "mtime": 1777002077.5493412,
+    "ast_hash": "20918125edb2be5d23d2fae05b1fb40d",
+    "semantic_hash": "20918125edb2be5d23d2fae05b1fb40d"
+  },
+  "src\\Server.UI\\Pages\\Public\\_Imports.razor": {
+    "mtime": 1777002077.5504403,
+    "ast_hash": "82cd1c5490dd6357ef64b2903aaaf6d1",
+    "semantic_hash": "82cd1c5490dd6357ef64b2903aaaf6d1"
+  },
+  "src\\Server.UI\\Pages\\SystemManagement\\AuditTrails.razor": {
+    "mtime": 1777002077.5504403,
+    "ast_hash": "5f0252c5a09ff4785c9bc7ac6c105fe5",
+    "semantic_hash": "5f0252c5a09ff4785c9bc7ac6c105fe5"
+  },
+  "src\\Server.UI\\Pages\\SystemManagement\\SystemLogs.razor": {
+    "mtime": 1777002077.5519454,
+    "ast_hash": "d79e5fc86ce7d1150a0e0b84714f62f2",
+    "semantic_hash": "d79e5fc86ce7d1150a0e0b84714f62f2"
+  },
+  "src\\Server.UI\\Pages\\Tenants\\TenantFormDialog.razor": {
+    "mtime": 1777002077.5529516,
+    "ast_hash": "d3ebf6b38d2616d412686ff6d6d2e2b8",
+    "semantic_hash": "d3ebf6b38d2616d412686ff6d6d2e2b8"
+  },
+  "src\\Server.UI\\Pages\\Tenants\\Tenants.razor": {
+    "mtime": 1777002077.5534935,
+    "ast_hash": "f7fe0a47dc3544f241e8decc91eda9ae",
+    "semantic_hash": "f7fe0a47dc3544f241e8decc91eda9ae"
+  },
+  "src\\Server.UI\\Pages\\Contacts\\Components\\ContactFormDialog.razor": {
+    "mtime": 1777002077.5241966,
+    "ast_hash": "2a9eb64460b9ea3d751ab4807e730c8f",
+    "semantic_hash": "2a9eb64460b9ea3d751ab4807e730c8f"
+  },
+  "src\\Server.UI\\Pages\\Dashboard\\Components\\Carousel.razor": {
+    "mtime": 1777002077.5271955,
+    "ast_hash": "18eaee5298b7c84654dd33d4877fd1a8",
+    "semantic_hash": "18eaee5298b7c84654dd33d4877fd1a8"
+  },
+  "src\\Server.UI\\Pages\\Documents\\Components\\DocumentFormDialog.razor": {
+    "mtime": 1777002077.5271955,
+    "ast_hash": "c11f38555f6b1f5840859fc3a6354ba6",
+    "semantic_hash": "c11f38555f6b1f5840859fc3a6354ba6"
+  },
+  "src\\Server.UI\\Pages\\Documents\\Components\\UploadFilesFormDialog.razor": {
+    "mtime": 1777002077.5286994,
+    "ast_hash": "1e94589c9d828eb63613b462b41bf673",
+    "semantic_hash": "1e94589c9d828eb63613b462b41bf673"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Forgot\\Forgot.razor": {
+    "mtime": 1777002077.5307066,
+    "ast_hash": "93b69cbc2e7711cb8873bda198c28d1d",
+    "semantic_hash": "93b69cbc2e7711cb8873bda198c28d1d"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Forgot\\ForgotPasswordConfirmation.razor": {
+    "mtime": 1777002077.5307066,
+    "ast_hash": "b94b3b6a8ca9d2b6749e3c81fe6fa20b",
+    "semantic_hash": "b94b3b6a8ca9d2b6749e3c81fe6fa20b"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Forgot\\ResetPassword.razor": {
+    "mtime": 1777002077.5307066,
+    "ast_hash": "d46192614b376b379b0dc3c310e98d0b",
+    "semantic_hash": "d46192614b376b379b0dc3c310e98d0b"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Forgot\\ResetPasswordConfirmation.razor": {
+    "mtime": 1777002077.5322113,
+    "ast_hash": "2df4358b5abacbf42b208ed948c0d147",
+    "semantic_hash": "2df4358b5abacbf42b208ed948c0d147"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Forgot\\_Imports.razor": {
+    "mtime": 1777002077.5322113,
+    "ast_hash": "005cf83ca0626f6f44a9bd03cefa592c",
+    "semantic_hash": "005cf83ca0626f6f44a9bd03cefa592c"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Login\\ExternalLoginPicker.razor": {
+    "mtime": 1777002077.5332174,
+    "ast_hash": "3a29045a036bcea84857220d83bc2bc3",
+    "semantic_hash": "3a29045a036bcea84857220d83bc2bc3"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Login\\InvalidUser.razor": {
+    "mtime": 1777002077.5332174,
+    "ast_hash": "f5dcc4a930184e9da78e8facbc5be27e",
+    "semantic_hash": "f5dcc4a930184e9da78e8facbc5be27e"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Login\\LinkExternalLogin.razor": {
+    "mtime": 1777002077.5342197,
+    "ast_hash": "8f1196ec7e153b14fc94b1245fdf7130",
+    "semantic_hash": "8f1196ec7e153b14fc94b1245fdf7130"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Login\\Lockout.razor": {
+    "mtime": 1777002077.5342197,
+    "ast_hash": "cb444d6cd879088e8bcad19da0e45be2",
+    "semantic_hash": "cb444d6cd879088e8bcad19da0e45be2"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Login\\Login.razor": {
+    "mtime": 1777002077.5342197,
+    "ast_hash": "482bb969b30bbe83fe3146356aef8d08",
+    "semantic_hash": "482bb969b30bbe83fe3146356aef8d08"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Login\\LoginWith2fa.razor": {
+    "mtime": 1777002077.5342197,
+    "ast_hash": "db53b739d50597ed132390573d380490",
+    "semantic_hash": "db53b739d50597ed132390573d380490"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Login\\LoginWithRecoveryCode.razor": {
+    "mtime": 1777002077.535726,
+    "ast_hash": "b1dee6ff1d91f1bad82a5e33853c3c44",
+    "semantic_hash": "b1dee6ff1d91f1bad82a5e33853c3c44"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Login\\_Imports.razor": {
+    "mtime": 1777002077.535726,
+    "ast_hash": "005cf83ca0626f6f44a9bd03cefa592c",
+    "semantic_hash": "005cf83ca0626f6f44a9bd03cefa592c"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Register\\ConfirmEmail.razor": {
+    "mtime": 1777002077.536733,
+    "ast_hash": "ef05c8fc9dcc87790d31486076fbcc20",
+    "semantic_hash": "ef05c8fc9dcc87790d31486076fbcc20"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Register\\Register.razor": {
+    "mtime": 1777002077.536733,
+    "ast_hash": "a8802fd72d0280e6e598bedcfdbec443",
+    "semantic_hash": "a8802fd72d0280e6e598bedcfdbec443"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Register\\RegisterConfirmation.razor": {
+    "mtime": 1777002077.5383115,
+    "ast_hash": "68472ce67e4e3b72bc285dbaed9b2bf5",
+    "semantic_hash": "68472ce67e4e3b72bc285dbaed9b2bf5"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Register\\_Imports.razor": {
+    "mtime": 1777002077.5383115,
+    "ast_hash": "005cf83ca0626f6f44a9bd03cefa592c",
+    "semantic_hash": "005cf83ca0626f6f44a9bd03cefa592c"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Roles\\Roles.razor": {
+    "mtime": 1777002077.5408309,
+    "ast_hash": "9c2c0b5f40cafd2b05c2d38d37a1c71f",
+    "semantic_hash": "9c2c0b5f40cafd2b05c2d38d37a1c71f"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Users\\Profile.razor": {
+    "mtime": 1777002077.5443416,
+    "ast_hash": "e5521df932f40e74850c0031d107126c",
+    "semantic_hash": "e5521df932f40e74850c0031d107126c"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Users\\Users.razor": {
+    "mtime": 1777002077.5443416,
+    "ast_hash": "932f40de56b500240509bc8f47aaafd0",
+    "semantic_hash": "932f40de56b500240509bc8f47aaafd0"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Roles\\Components\\PermissionsDrawer.razor": {
+    "mtime": 1777002077.5388243,
+    "ast_hash": "4a485fa0bd4e4501b6ff0caafefee776",
+    "semantic_hash": "4a485fa0bd4e4501b6ff0caafefee776"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Roles\\Components\\RoleFormDialog.razor": {
+    "mtime": 1777002077.5398307,
+    "ast_hash": "a9279205656439ad0f70f9b40e4a5805",
+    "semantic_hash": "a9279205656439ad0f70f9b40e4a5805"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Users\\Components\\ChangePasswordTab.razor": {
+    "mtime": 1777002077.5408309,
+    "ast_hash": "6304cd058ff2b1a3752b905002aac58e",
+    "semantic_hash": "6304cd058ff2b1a3752b905002aac58e"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Users\\Components\\OrgChartTab.razor": {
+    "mtime": 1777002077.5408309,
+    "ast_hash": "099069f5c66a03b6737d9adb73bbffdc",
+    "semantic_hash": "099069f5c66a03b6737d9adb73bbffdc"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Users\\Components\\ProfileInformationTab.razor": {
+    "mtime": 1777002077.542335,
+    "ast_hash": "5357f875fc94c4c3096e19e0fd8f9caf",
+    "semantic_hash": "5357f875fc94c4c3096e19e0fd8f9caf"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Users\\Components\\ResetPasswordDialog.razor": {
+    "mtime": 1777002077.542335,
+    "ast_hash": "535ced0a8a1abdbafb0c1e2ad85a1b04",
+    "semantic_hash": "535ced0a8a1abdbafb0c1e2ad85a1b04"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Users\\Components\\UserFormDialog.razor": {
+    "mtime": 1777002077.5433412,
+    "ast_hash": "c5e5d9d822963dec682ef772c77dcd2a",
+    "semantic_hash": "c5e5d9d822963dec682ef772c77dcd2a"
+  },
+  "src\\Server.UI\\Pages\\Identity\\Users\\Components\\_Imports.razor": {
+    "mtime": 1777002077.5433412,
+    "ast_hash": "bff218b6c7b55ce37cc1248c15f7dfc1",
+    "semantic_hash": "bff218b6c7b55ce37cc1248c15f7dfc1"
+  },
+  "src\\Server.UI\\Pages\\PicklistSets\\Components\\CreatePicklistDialog.razor": {
+    "mtime": 1777002077.546343,
+    "ast_hash": "1ee8e63a364cfc4d3c1efe2314941f76",
+    "semantic_hash": "1ee8e63a364cfc4d3c1efe2314941f76"
+  },
+  "src\\Server.UI\\Pages\\Products\\Components\\AdvancedSearchProducts.razor": {
+    "mtime": 1777002077.5473413,
+    "ast_hash": "429f45fb81f4fb38be622131346ab20a",
+    "semantic_hash": "429f45fb81f4fb38be622131346ab20a"
+  },
+  "src\\Server.UI\\Pages\\Products\\Components\\FileDownloadButton.razor": {
+    "mtime": 1777002077.5483425,
+    "ast_hash": "393bcf65ab0ac4efe911134d11350279",
+    "semantic_hash": "393bcf65ab0ac4efe911134d11350279"
+  },
+  "src\\Server.UI\\Pages\\Products\\Components\\ProductFormDialog.razor": {
+    "mtime": 1777002077.5483425,
+    "ast_hash": "9ee74c7862763f4b8deaa382d60aa255",
+    "semantic_hash": "9ee74c7862763f4b8deaa382d60aa255"
+  },
+  "src\\Server.UI\\Pages\\SystemManagement\\Components\\LogsLineCharts.razor": {
+    "mtime": 1777002077.5519454,
+    "ast_hash": "d048e8ddb6b0a644e1ebd5c6bd1dfb84",
+    "semantic_hash": "d048e8ddb6b0a644e1ebd5c6bd1dfb84"
+  },
+  "src\\Server.UI\\Services\\AI\\LocalStorageChatHistoryProvider.cs": {
+    "mtime": 1772108071.8484414,
+    "ast_hash": "d6e5ff8830a33684c2c782af19bb23ad",
+    "semantic_hash": "d6e5ff8830a33684c2c782af19bb23ad"
+  },
+  "src\\Server.UI\\Services\\AI\\ProjectIntroductionContextProvider.cs": {
+    "mtime": 1772269442.8004534,
+    "ast_hash": "676ae5799f35d536d852dac3246bb3ce",
+    "semantic_hash": "676ae5799f35d536d852dac3246bb3ce"
+  },
+  "src\\Server.UI\\Services\\JsInterop\\BlazorDownloadFileService.cs": {
+    "mtime": 1777002077.6698668,
+    "ast_hash": "c1093c3946a8018b81b7eec2f89bebe6",
+    "semantic_hash": "c1093c3946a8018b81b7eec2f89bebe6"
+  },
+  "src\\Server.UI\\Services\\JsInterop\\Fancybox.cs": {
+    "mtime": 1777002077.6698668,
+    "ast_hash": "14930f9f3ff2eed6d6557a2068ca0fef",
+    "semantic_hash": "14930f9f3ff2eed6d6557a2068ca0fef"
+  },
+  "src\\Server.UI\\Services\\JsInterop\\GenerateQrCode.cs": {
+    "mtime": 1777002077.6698668,
+    "ast_hash": "ae88fa4b912c1588d2d0c93a8e61d74f",
+    "semantic_hash": "ae88fa4b912c1588d2d0c93a8e61d74f"
+  },
+  "src\\Server.UI\\Services\\JsInterop\\HistoryGo.cs": {
+    "mtime": 1777002077.671372,
+    "ast_hash": "efbab9d476f9cb027e23207ac41658d6",
+    "semantic_hash": "efbab9d476f9cb027e23207ac41658d6"
+  },
+  "src\\Server.UI\\Services\\JsInterop\\InputClear.cs": {
+    "mtime": 1777002077.671372,
+    "ast_hash": "b7591896a1131f83b914efa28ce18574",
+    "semantic_hash": "b7591896a1131f83b914efa28ce18574"
+  },
+  "src\\Server.UI\\Services\\JsInterop\\JSInteropConstants.cs": {
+    "mtime": 1777002077.672377,
+    "ast_hash": "b99285e0232d15559f84d947d6549a1d",
+    "semantic_hash": "b99285e0232d15559f84d947d6549a1d"
+  },
+  "src\\Server.UI\\Services\\JsInterop\\LocalTimezoneOffset.cs": {
+    "mtime": 1777002077.672377,
+    "ast_hash": "c9b30e8084782d9a9c742e3cf2f88a53",
+    "semantic_hash": "c9b30e8084782d9a9c742e3cf2f88a53"
+  },
+  "src\\Server.UI\\Services\\JsInterop\\OpenSeadragon.cs": {
+    "mtime": 1777002077.6734612,
+    "ast_hash": "c35060f8fe1953c6b8e070deae7d0c26",
+    "semantic_hash": "c35060f8fe1953c6b8e070deae7d0c26"
+  },
+  "src\\Server.UI\\Services\\JsInterop\\OrgChart.cs": {
+    "mtime": 1777002077.6744604,
+    "ast_hash": "f7a8d6b0fc43534f4c48f79d1f0920d0",
+    "semantic_hash": "f7a8d6b0fc43534f4c48f79d1f0920d0"
+  },
+  "src\\Server.UI\\Services\\JsInterop\\Swiper.cs": {
+    "mtime": 1777002077.6744604,
+    "ast_hash": "9151d67a1b0778fc52ca0d00818fb9cd",
+    "semantic_hash": "9151d67a1b0778fc52ca0d00818fb9cd"
+  },
+  "src\\Server.UI\\Services\\Layout\\LayoutService.cs": {
+    "mtime": 1777002077.67546,
+    "ast_hash": "240bef292e4074362cab6bcd82cea664",
+    "semantic_hash": "240bef292e4074362cab6bcd82cea664"
+  },
+  "src\\Server.UI\\Services\\Navigation\\IMenuService.cs": {
+    "mtime": 1777002077.67546,
+    "ast_hash": "f8480de6a57f23fc3578e87a4d233ef8",
+    "semantic_hash": "f8480de6a57f23fc3578e87a4d233ef8"
+  },
+  "src\\Server.UI\\Services\\Navigation\\MenuService.cs": {
+    "mtime": 1777002077.6764598,
+    "ast_hash": "995eebdba3b281949b43db40c6acc2d9",
+    "semantic_hash": "995eebdba3b281949b43db40c6acc2d9"
+  },
+  "src\\Server.UI\\Services\\Notifications\\InMemoryNotificationService.cs": {
+    "mtime": 1777002077.6774607,
+    "ast_hash": "424bdaeb4c97f7216d5cb18d7f00a2c3",
+    "semantic_hash": "424bdaeb4c97f7216d5cb18d7f00a2c3"
+  },
+  "src\\Server.UI\\Services\\Notifications\\INotificationService.cs": {
+    "mtime": 1777002077.6774607,
+    "ast_hash": "e027a1b735a6c820e44d0992512bf8e3",
+    "semantic_hash": "e027a1b735a6c820e44d0992512bf8e3"
+  },
+  "src\\Server.UI\\Services\\Notifications\\NotificationMessages.cs": {
+    "mtime": 1777002077.6784608,
+    "ast_hash": "a8c88ecad3949126fdda3464e7a084ec",
+    "semantic_hash": "a8c88ecad3949126fdda3464e7a084ec"
+  },
+  "src\\Server.UI\\Services\\UserPreferences\\UserPreference.cs": {
+    "mtime": 1777002077.6794615,
+    "ast_hash": "7573a42cddad2b8f015795f54934d256",
+    "semantic_hash": "7573a42cddad2b8f015795f54934d256"
+  },
+  "src\\Server.UI\\Services\\UserPreferences\\UserPreferencesService.cs": {
+    "mtime": 1777002077.6794615,
+    "ast_hash": "a547cf29976647aad2cc7eaeac1dc782",
+    "semantic_hash": "a547cf29976647aad2cc7eaeac1dc782"
+  },
+  "src\\Server.UI\\wwwroot\\css\\app.css": {
+    "mtime": 1777002077.6849728,
+    "ast_hash": "a6f45bdf749f6f8dd3bd26f11e5737ff",
+    "semantic_hash": "a6f45bdf749f6f8dd3bd26f11e5737ff"
+  },
+  "src\\Server.UI\\wwwroot\\js\\appInterop.js": {
+    "mtime": 1762728825.2110732,
+    "ast_hash": "2b331530b3ec274cb2e35a487e2cbf71",
+    "semantic_hash": "2b331530b3ec274cb2e35a487e2cbf71"
+  },
+  "src\\Server.UI\\wwwroot\\js\\auth.js": {
+    "mtime": 1777002077.6915617,
+    "ast_hash": "c4f0cb5033dce6d957004529063fbcad",
+    "semantic_hash": "c4f0cb5033dce6d957004529063fbcad"
+  },
+  "src\\Server.UI\\wwwroot\\js\\boot.js": {
+    "mtime": 1762728825.2130773,
+    "ast_hash": "21c32bbe4b767a476685a4ca550cdc62",
+    "semantic_hash": "21c32bbe4b767a476685a4ca550cdc62"
+  },
+  "src\\Server.UI\\wwwroot\\js\\carousel.js": {
+    "mtime": 1777002077.6920788,
+    "ast_hash": "c524cac9e8be6ad18790093fac385e53",
+    "semantic_hash": "c524cac9e8be6ad18790093fac385e53"
+  },
+  "src\\Server.UI\\wwwroot\\js\\clearinput.js": {
+    "mtime": 1762728825.2130773,
+    "ast_hash": "0c3f049cc452f125c499f7ee6cabc779",
+    "semantic_hash": "0c3f049cc452f125c499f7ee6cabc779"
+  },
+  "src\\Server.UI\\wwwroot\\js\\downloadFile.js": {
+    "mtime": 1777002077.6920788,
+    "ast_hash": "3911ca7cda4a0e967169dfcb1061c5f4",
+    "semantic_hash": "3911ca7cda4a0e967169dfcb1061c5f4"
+  },
+  "src\\Server.UI\\wwwroot\\js\\fancybox.js": {
+    "mtime": 1777002077.6930838,
+    "ast_hash": "6d138a9fdb392903f2b5911ff1e6ecea",
+    "semantic_hash": "6d138a9fdb392903f2b5911ff1e6ecea"
+  },
+  "src\\Server.UI\\wwwroot\\js\\generateQrCode.js": {
+    "mtime": 1777002077.6940846,
+    "ast_hash": "652c5d28dafeadae9a9f6fd41bc41de3",
+    "semantic_hash": "652c5d28dafeadae9a9f6fd41bc41de3"
+  },
+  "src\\Server.UI\\wwwroot\\js\\gettimezoneoffset.js": {
+    "mtime": 1762728825.2130773,
+    "ast_hash": "0970ca745a5e0c769ad10459ce2a707b",
+    "semantic_hash": "0970ca745a5e0c769ad10459ce2a707b"
+  },
+  "src\\Server.UI\\wwwroot\\js\\historygo.js": {
+    "mtime": 1762728825.2130773,
+    "ast_hash": "3dd4b24c7fab5e8dc80a61e721ac8210",
+    "semantic_hash": "3dd4b24c7fab5e8dc80a61e721ac8210"
+  },
+  "src\\Server.UI\\wwwroot\\js\\openseadragon.js": {
+    "mtime": 1777002077.6940846,
+    "ast_hash": "af16afcdd63389fab666d646aebea23f",
+    "semantic_hash": "af16afcdd63389fab666d646aebea23f"
+  },
+  "src\\Server.UI\\wwwroot\\js\\orgchart.js": {
+    "mtime": 1777002077.6950858,
+    "ast_hash": "a4f9feaaf57c06a23afd944ae1eff8ae",
+    "semantic_hash": "a4f9feaaf57c06a23afd944ae1eff8ae"
+  },
+  "src\\Server.UI\\wwwroot\\js\\passkeys.js": {
+    "mtime": 1777002077.6950858,
+    "ast_hash": "cdfbfab48df47737be167c6bde579946",
+    "semantic_hash": "cdfbfab48df47737be167c6bde579946"
+  },
+  "src\\Server.UI\\wwwroot\\js\\theme.js": {
+    "mtime": 1777002077.6960847,
+    "ast_hash": "224fa26a879e25de24c29c965efdbed2",
+    "semantic_hash": "224fa26a879e25de24c29c965efdbed2"
+  }
+}
