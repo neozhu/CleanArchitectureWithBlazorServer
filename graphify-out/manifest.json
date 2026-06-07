@@ -1,8 +1,8 @@
 {
   "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\Domain.csproj": {
-    "mtime": 1778713543.163428,
-    "ast_hash": "28e0d7277b27091df5a6f1843ddf830e",
-    "semantic_hash": "28e0d7277b27091df5a6f1843ddf830e"
+    "mtime": 1780032302.5001643,
+    "ast_hash": "826a1f1fcdee9dd1ae9946aa6d0b0b65",
+    "semantic_hash": ""
   },
   "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Domain\\_Imports.cs": {
     "mtime": 1777002077.444941,
@@ -230,9 +230,9 @@
     "semantic_hash": "8698812a8e50284a82ee6311dd42f21b"
   },
   "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\Infrastructure.csproj": {
-    "mtime": 1778713543.1407776,
-    "ast_hash": "9073085025ab6bab4ef32f5cfae7b369",
-    "semantic_hash": "9073085025ab6bab4ef32f5cfae7b369"
+    "mtime": 1780798259.8790245,
+    "ast_hash": "bbc0b91c97bd9bafde0fe2922e10744d",
+    "semantic_hash": ""
   },
   "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Infrastructure\\_Imports.cs": {
     "mtime": 1777002077.4767313,
@@ -2298,5 +2298,1400 @@
     "mtime": 1777002077.6960847,
     "ast_hash": "224fa26a879e25de24c29c965efdbed2",
     "semantic_hash": "224fa26a879e25de24c29c965efdbed2"
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\launchSettings.json": {
+    "mtime": 1684312903.499356,
+    "ast_hash": "49a455b0ed5538fa8849849c0118610c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\.codex\\hooks.json": {
+    "mtime": 1780023263.2158191,
+    "ast_hash": "d4d3a8e4c4024c97d2d1212cc2f754a6",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\.template.config\\template.json": {
+    "mtime": 1755257231.6929104,
+    "ast_hash": "9bfd15c2c11c83a04642946ff941e130",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Application.csproj": {
+    "mtime": 1778713543.1836226,
+    "ast_hash": "23805ca68aa8909744b7b3441a34a430",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\DependencyInjection.cs": {
+    "mtime": 1777002077.3044755,
+    "ast_hash": "9e062771ef848ec6cb65365f74c577eb",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\_Imports.cs": {
+    "mtime": 1777002077.4209719,
+    "ast_hash": "33e6ef40ab50080db92cbdd4bf68759f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Resources\\Constants\\AppStrings.Designer.cs": {
+    "mtime": 1777002077.3952298,
+    "ast_hash": "a36737815ecc1a961f907ebce3cf5b50",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Resources\\Features\\Documents\\Queries\\Export\\ExportDocumentsQueryHandler.Designer.cs": {
+    "mtime": 1777002077.404809,
+    "ast_hash": "68c4f0f9c1737bff4db60485f355ee2c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Resources\\Features\\DocumentTypes\\Commands\\Import\\ImportDocumentTypesCommandHandler.Designer.cs": {
+    "mtime": 1777002077.4038076,
+    "ast_hash": "91683eeed1feee4981393161b3764e16",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Resources\\Features\\DocumentTypes\\Queries\\Export\\ExportDocumentTypesQueryHandler.Designer.cs": {
+    "mtime": 1777002077.404809,
+    "ast_hash": "63282a3b60221d043c9a205c72c33e2c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Resources\\Features\\Identity\\DTOs\\ApplicationUserDtoValidator.Designer.cs": {
+    "mtime": 1777002077.406314,
+    "ast_hash": "914f6e2b19745aac3af55e762316113c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Resources\\Features\\KeyValues\\Commands\\Import\\ImportKeyValuesCommandHandler.Designer.cs": {
+    "mtime": 1777002077.4113202,
+    "ast_hash": "38e1fd7c2bf7a52f22c2fa191357fb9e",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Resources\\Features\\KeyValues\\Queries\\Export\\ExportKeyValuesQueryHandler.Designer.cs": {
+    "mtime": 1777002077.4123232,
+    "ast_hash": "5f11e771998a17ff5fb4ca34871ff588",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Resources\\Features\\Loggers\\Queries\\Export\\ExportLogsQueryHandler.Designer.cs": {
+    "mtime": 1777002077.4133878,
+    "ast_hash": "25e23075f52580c367f9e23a94fe085f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Resources\\Features\\Products\\Commands\\Import\\ImportProductsCommandHandler.Designer.cs": {
+    "mtime": 1777002077.4149456,
+    "ast_hash": "0c15724c6d34b2d987f862a39b1574d2",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Application\\Resources\\Features\\Products\\Queries\\Export\\ExportProductsQueryHandler.Designer.cs": {
+    "mtime": 1777002077.4164534,
+    "ast_hash": "29bb8a87346e216facbf25133978de9a",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.MSSQL\\Migrators.MSSQL.csproj": {
+    "mtime": 1778713543.0605655,
+    "ast_hash": "64fe41c6b5a26e6920ab86af7faf31ae",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.MSSQL\\Migrations\\20260423233248_InitialCreate.cs": {
+    "mtime": 1777002077.4782367,
+    "ast_hash": "f61d079b2f4dd1fc3ec95f227782a845",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.MSSQL\\Migrations\\20260423233248_InitialCreate.Designer.cs": {
+    "mtime": 1777002077.4782367,
+    "ast_hash": "a8ba83b5f0519d481059f744e6be78ea",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.MSSQL\\Migrations\\ApplicationDbContextModelSnapshot.cs": {
+    "mtime": 1777002077.4792423,
+    "ast_hash": "10aa1cb795c01cdf38172417f2100587",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.PostgreSQL\\Migrators.PostgreSQL.csproj": {
+    "mtime": 1778713543.038673,
+    "ast_hash": "a3b5c6a04b4ac0ff95eee91388df2668",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.PostgreSQL\\Migrations\\20260423234252_InitialCreate.cs": {
+    "mtime": 1777002077.4812431,
+    "ast_hash": "3a2b99a6ca4851675a93ceff416ef2a8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.PostgreSQL\\Migrations\\20260423234252_InitialCreate.Designer.cs": {
+    "mtime": 1777002077.4802449,
+    "ast_hash": "59a2779485ec3ac42e11e56a6152baaa",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.PostgreSQL\\Migrations\\ApplicationDbContextModelSnapshot.cs": {
+    "mtime": 1777002077.4822428,
+    "ast_hash": "69aa16513fd2ee719f5d6238e302ce76",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.SqLite\\Migrators.SqLite.csproj": {
+    "mtime": 1778713543.0168028,
+    "ast_hash": "401a333871595f7eb231d89d2d99d9c0",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.SqLite\\Migrations\\20260423234124_InitialCreate.cs": {
+    "mtime": 1777002077.4832833,
+    "ast_hash": "6d1c5874b24596c847b0189db8f23325",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.SqLite\\Migrations\\20260423234124_InitialCreate.Designer.cs": {
+    "mtime": 1777002077.4832833,
+    "ast_hash": "80c0d0cbc82b064025fd9befe123f8ae",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Migrators\\Migrators.SqLite\\Migrations\\ApplicationDbContextModelSnapshot.cs": {
+    "mtime": 1777002077.484284,
+    "ast_hash": "3e9da9c205813a34bbd85ffa75751fd7",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\App.razor": {
+    "mtime": 1777002077.4852836,
+    "ast_hash": "eab9463409c6d127fdfeb6a087f58eb3",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\appsettings.json": {
+    "mtime": 1777002077.6829717,
+    "ast_hash": "17ea3a8ba9948f6404dbbd322e0db843",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\DependencyInjection.cs": {
+    "mtime": 1777002077.5095694,
+    "ast_hash": "986e1f883d9c623499b0207320482101",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Program.cs": {
+    "mtime": 1777002077.5545,
+    "ast_hash": "fd868e835681a56f14bab6d70f54d206",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Routes.razor": {
+    "mtime": 1777002077.6653564,
+    "ast_hash": "ed47bf32d317c025729e8949dbff1652",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Server.UI.csproj": {
+    "mtime": 1780032302.4290774,
+    "ast_hash": "fbba41b20b7f88bb58b29b01c17d0c40",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\_Imports.cs": {
+    "mtime": 1777002077.6814606,
+    "ast_hash": "fad18d279dd6b2538d27d4fc90b10daa",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\_Imports.razor": {
+    "mtime": 1777002077.681966,
+    "ast_hash": "d2bbbc486fecc6578f88d7453f7b480d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\AppShell\\HeaderMenu.razor": {
+    "mtime": 1777002077.4862819,
+    "ast_hash": "fb0ef99ce8f0e4467c3d8c40299071a2",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\AppShell\\NavigationMenu.razor": {
+    "mtime": 1777002077.4862819,
+    "ast_hash": "3a8f07c10b7c11fb8ed81c7f345a2718",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\AppShell\\NotificationMenu.razor": {
+    "mtime": 1777002077.487786,
+    "ast_hash": "b6bc1c07edecdc2c433cbaf84ef0fe8f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\AppShell\\SearchDialog.razor": {
+    "mtime": 1777002077.487786,
+    "ast_hash": "965a93976afe0d7866ad6ead08a5cd13",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\AppShell\\TenantSelector.razor": {
+    "mtime": 1777002077.4883008,
+    "ast_hash": "2df3f4fd2c327fca79563512a2b0150d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\AppShell\\UserInfoCard.razor": {
+    "mtime": 1777002077.4893072,
+    "ast_hash": "7396fe3ff7c39203af5394bd15e4cf32",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Branding\\Logo.razor": {
+    "mtime": 1777002077.4893072,
+    "ast_hash": "996ee88f16fa3f450c5b57eee03e5402",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Dialogs\\ConfirmationDialog.razor": {
+    "mtime": 1777002077.4903073,
+    "ast_hash": "90f2138378830761638f55917edf87cf",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Dialogs\\DeleteConfirmation.razor": {
+    "mtime": 1777002077.4908535,
+    "ast_hash": "bcd0d83b9e2ca06816e12578b258459e",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Errors\\CustomError.razor": {
+    "mtime": 1777002077.4908535,
+    "ast_hash": "ab37daef41812a212c37f7f0a776024f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Errors\\ErrorPageComponent.razor": {
+    "mtime": 1777002077.4923694,
+    "ast_hash": "e623ba9c98439654d8f51e36ab484a37",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Feedback\\MudDataGridStatus.razor": {
+    "mtime": 1777002077.4933753,
+    "ast_hash": "acb6bac779600de52b5bd6d7b5a143bb",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Feedback\\ReconnectModal.razor": {
+    "mtime": 1777002077.4933753,
+    "ast_hash": "efd7f8cd301a61447d95cea5b342d654",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Feedback\\StatusMessage.razor": {
+    "mtime": 1777002077.4943788,
+    "ast_hash": "d54b46a48fbc925c0a5a1baf137b8081",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Identity\\UserActionInfo.razor": {
+    "mtime": 1777002077.4943788,
+    "ast_hash": "f56bb294c94594bd6dc66dbf6ca79115",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Identity\\UserInfoColumn.razor": {
+    "mtime": 1777002077.4953756,
+    "ast_hash": "99d5d0bd9f14c177a474fe90881d33e5",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Identity\\UserLoginState.razor": {
+    "mtime": 1777002077.4953756,
+    "ast_hash": "3c9f73204811935814ac3e70404857e3",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Autocomplete\\LanguageAutocomplete.cs": {
+    "mtime": 1777002077.4963758,
+    "ast_hash": "dbc334ff29f911fcfb0359ad4365f4b7",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Autocomplete\\PicklistAutocomplete.razor.cs": {
+    "mtime": 1777002077.4973748,
+    "ast_hash": "997fe345baec1ee7901803a0fb6c0092",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Autocomplete\\PickSuperiorAutocomplete.razor.cs": {
+    "mtime": 1777002077.4963758,
+    "ast_hash": "a22de624d099819c30a331799d4e59dc",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Autocomplete\\PickUserAutocomplete.razor.cs": {
+    "mtime": 1777002077.4973748,
+    "ast_hash": "b890d7921f7a7ccd3c7a532510dc8387",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Autocomplete\\TimeZoneAutocomplete.cs": {
+    "mtime": 1777002077.4983768,
+    "ast_hash": "86f6949ef2c4673bcc8f31552c2a929b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Button\\MudLoadingButton.razor": {
+    "mtime": 1777002077.4983768,
+    "ast_hash": "ed853739d0e6a86d976bc8dacfb23c06",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Display\\ReadOnlyField.razor": {
+    "mtime": 1777002077.4994175,
+    "ast_hash": "dc542d1dad9710f3c6987ef45b9e22a0",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Select\\MudDateTimeField.razor": {
+    "mtime": 1777002077.5004184,
+    "ast_hash": "806e853c330e4bd31c208a0209afaae8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Select\\MudEnumSelect.razor.cs": {
+    "mtime": 1777002077.5004184,
+    "ast_hash": "f69e8433cfda7d6a2b123104a9415d69",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Select\\TenantSelect.razor": {
+    "mtime": 1777002077.5004184,
+    "ast_hash": "602cc1623df89f69841ea68bfdc5e551",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Upload\\FileSizeFormatter.razor": {
+    "mtime": 1777002077.5019238,
+    "ast_hash": "2f8048a4dff5b8d74cd5cbdbcae75498",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Upload\\FileUploadZone.razor": {
+    "mtime": 1777002077.5029302,
+    "ast_hash": "468e9e80ea108db47fc47eb2137ea10a",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Inputs\\Upload\\Thumbnail.razor": {
+    "mtime": 1777002077.5029302,
+    "ast_hash": "0c02612da58e5ae86682cd9b4f4cab06",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Localization\\LanguageSelector.razor": {
+    "mtime": 1777002077.5039296,
+    "ast_hash": "20a1653334bb3a4af559d917a3331300",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Navigation\\Breadcrumbs.razor": {
+    "mtime": 1777002077.50493,
+    "ast_hash": "e4edaed19bcb45900a9c8e07b49abd60",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Presence\\ActiveUserSession.razor": {
+    "mtime": 1777002077.50493,
+    "ast_hash": "b44249d6c4555c9fad80e486bb12d48e",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Presence\\OnlineUsersTracker.razor": {
+    "mtime": 1777002077.5059323,
+    "ast_hash": "24978e3e5af888574f68d55159a28679",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Routing\\RedirectToHome.razor": {
+    "mtime": 1777002077.5064886,
+    "ast_hash": "1c749082c918d00c785ae99515b679f2",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Routing\\RedirectToLogin.razor": {
+    "mtime": 1777002077.5064886,
+    "ast_hash": "65dc51d6561839268ea323440fc2e380",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Theming\\PrimaryColorPicker.razor": {
+    "mtime": 1777002077.5074964,
+    "ast_hash": "62710f26ae9729ea0a6a7319aa8db05d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Theming\\ThemesButton.razor": {
+    "mtime": 1777002077.5074964,
+    "ast_hash": "b200f1e255767725f56409af407b2d95",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Theming\\ThemesMenu.razor": {
+    "mtime": 1777002077.5084972,
+    "ast_hash": "b916cb1f7d5a6d0c06606574e8b65d24",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Components\\Time\\UtcToLocal.razor": {
+    "mtime": 1777002077.5084972,
+    "ast_hash": "6bae9dd980d0c5595f051abc31d3a1ad",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Extensions\\ClaimsPrincipalExtensions.cs": {
+    "mtime": 1777002077.5095694,
+    "ast_hash": "8b6c68f1e1e56afd04b6f0f6c5dd9fc6",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Extensions\\DataGridExtensions.cs": {
+    "mtime": 1777002077.5105717,
+    "ast_hash": "eb60a73e0f576b665975f20ddb26f717",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Extensions\\NumericExtensions.cs": {
+    "mtime": 1777002077.5105717,
+    "ast_hash": "8bdd59292c0e0ca17962a18df4579154",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Extensions\\StaleCookieMiddlewareExtensions.cs": {
+    "mtime": 1771119410.270348,
+    "ast_hash": "69272d385124139fb44127c18b3c90d8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Hubs\\HubClient.cs": {
+    "mtime": 1777002077.5120761,
+    "ast_hash": "c2b23e24092a5b0cde1548914f03d96e",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Hubs\\IHubConnectionFactory.cs": {
+    "mtime": 1777002077.5130813,
+    "ast_hash": "4bfb1aa0e95bdec37c572abee77a3cf8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Hubs\\ISignalRHub.cs": {
+    "mtime": 1777002077.5130813,
+    "ast_hash": "edbf15a65152de7152f62e976cc84afd",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Hubs\\ServerHub.cs": {
+    "mtime": 1777002077.5140824,
+    "ast_hash": "12de38a0a37f449ebc92497b858200eb",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Hubs\\ServerHubWrapper.cs": {
+    "mtime": 1777002077.5140824,
+    "ast_hash": "bedc64d07f07011409de468efd726843",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Layouts\\AppLayout.razor": {
+    "mtime": 1777002077.5150833,
+    "ast_hash": "333ee2dc48fc584720aef8a1057db41e",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Layouts\\AuthLayout.razor": {
+    "mtime": 1777002077.5160828,
+    "ast_hash": "a60659a8fe42bd6865da7a3d0fb26610",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Layouts\\MainLayout.razor": {
+    "mtime": 1777002077.5160828,
+    "ast_hash": "cf7f9c76044d512f5a7626759df620f7",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Layouts\\PublicLayout.razor": {
+    "mtime": 1777002077.5170822,
+    "ast_hash": "2d08be29394a75479cba28bf33eb6d77",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Middlewares\\GlobalExceptionHandler.cs": {
+    "mtime": 1777002077.5170822,
+    "ast_hash": "ce402ed113ead863e3b333b1ea1ff3c2",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Middlewares\\HangfireDashboardAuthorizationFilter.cs": {
+    "mtime": 1777002077.5185876,
+    "ast_hash": "0439a9653c36003752961fd3b07eef22",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Middlewares\\LocalizationCookiesMiddleware.cs": {
+    "mtime": 1777002077.5185876,
+    "ast_hash": "4533b3d40e6242d136ebbd54033fec2a",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Middlewares\\StaleCookieMiddleware.cs": {
+    "mtime": 1771119409.9807892,
+    "ast_hash": "e600520bf832a519a0d9d9b628356895",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Models\\SharedResource.cs": {
+    "mtime": 1777002077.522664,
+    "ast_hash": "f0a838054ecddf8285153a866b56e4ca",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Models\\NavigationMenu\\MenuSectionItemModel.cs": {
+    "mtime": 1777002077.5195937,
+    "ast_hash": "7950c705c523ccc3b05b8a5d693d0b91",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Models\\NavigationMenu\\MenuSectionModel.cs": {
+    "mtime": 1777002077.5195937,
+    "ast_hash": "327847976086cfbfd1ce98f633ae31b6",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Models\\NavigationMenu\\MenuSectionSubItemModel.cs": {
+    "mtime": 1777002077.5205927,
+    "ast_hash": "887c92a6d485cdfcc1290eee36176145",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Models\\NavigationMenu\\PageStatus.cs": {
+    "mtime": 1777002077.5205927,
+    "ast_hash": "81c1cece1e391b6cf5084b3dc473fe01",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Models\\Notification\\NotificationModel.cs": {
+    "mtime": 1777002077.5205927,
+    "ast_hash": "9c6d6f72c945035504e996ea0f9b7f62",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Models\\Notification\\NotificationTypes.cs": {
+    "mtime": 1777002077.5220983,
+    "ast_hash": "4f3cdd8ef42a2fe4787dbede12385dfe",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Error.razor": {
+    "mtime": 1777002077.5297058,
+    "ast_hash": "2e54a257ab8f554386131d05a068dc57",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\NotFound.razor": {
+    "mtime": 1777002077.545342,
+    "ast_hash": "8893ddfd9f8a1dd5bf449439c2acf624",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\_Imports.razor": {
+    "mtime": 1777002077.5534935,
+    "ast_hash": "98740a179845de058c0e15899fced4c8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\AI\\Chatbot.razor": {
+    "mtime": 1777002077.5231907,
+    "ast_hash": "d6cf0ba602f912ec1e70d122be9d309d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Contacts\\Contacts.razor": {
+    "mtime": 1777002077.5241966,
+    "ast_hash": "c85ae3b9a7d5d9c0d9ad100987483bc0",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Contacts\\CreateContact.razor": {
+    "mtime": 1777002077.5251985,
+    "ast_hash": "82103c8fe875e7d0593dc4aa686a7743",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Contacts\\EditContact.razor": {
+    "mtime": 1777002077.5261989,
+    "ast_hash": "8de3db4305fd394000fd32ae7c50e2cc",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Contacts\\ViewContact.razor": {
+    "mtime": 1777002077.5261989,
+    "ast_hash": "7b2ebde9540e3efe7ee3da0a5cd58078",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Contacts\\Components\\ContactFormDialog.razor": {
+    "mtime": 1777002077.5241966,
+    "ast_hash": "2a9eb64460b9ea3d751ab4807e730c8f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Dashboard\\Dashboard.razor": {
+    "mtime": 1766825170.4996884,
+    "ast_hash": "2369051e74758a8aab50464cfd4e8a21",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Dashboard\\Components\\Carousel.razor": {
+    "mtime": 1777002077.5271955,
+    "ast_hash": "18eaee5298b7c84654dd33d4877fd1a8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Documents\\Documents.razor": {
+    "mtime": 1777002077.5286994,
+    "ast_hash": "eeaedfa6af864e6628822f6e1a2a9be8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Documents\\Documents.razor.js": {
+    "mtime": 1762728825.1374977,
+    "ast_hash": "6b64c64795eef59f3311a463e5e4f45e",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Documents\\Components\\DocumentFormDialog.razor": {
+    "mtime": 1777002077.5271955,
+    "ast_hash": "c11f38555f6b1f5840859fc3a6354ba6",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Documents\\Components\\UploadFilesFormDialog.razor": {
+    "mtime": 1777002077.5286994,
+    "ast_hash": "1e94589c9d828eb63613b462b41bf673",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Forgot\\Forgot.razor": {
+    "mtime": 1777002077.5307066,
+    "ast_hash": "93b69cbc2e7711cb8873bda198c28d1d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Forgot\\ForgotPasswordConfirmation.razor": {
+    "mtime": 1777002077.5307066,
+    "ast_hash": "b94b3b6a8ca9d2b6749e3c81fe6fa20b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Forgot\\ResetPassword.razor": {
+    "mtime": 1777002077.5307066,
+    "ast_hash": "d46192614b376b379b0dc3c310e98d0b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Forgot\\ResetPasswordConfirmation.razor": {
+    "mtime": 1777002077.5322113,
+    "ast_hash": "2df4358b5abacbf42b208ed948c0d147",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Forgot\\_Imports.razor": {
+    "mtime": 1777002077.5322113,
+    "ast_hash": "005cf83ca0626f6f44a9bd03cefa592c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Login\\ExternalLoginPicker.razor": {
+    "mtime": 1777002077.5332174,
+    "ast_hash": "3a29045a036bcea84857220d83bc2bc3",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Login\\InvalidUser.razor": {
+    "mtime": 1777002077.5332174,
+    "ast_hash": "f5dcc4a930184e9da78e8facbc5be27e",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Login\\LinkExternalLogin.razor": {
+    "mtime": 1777002077.5342197,
+    "ast_hash": "8f1196ec7e153b14fc94b1245fdf7130",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Login\\Lockout.razor": {
+    "mtime": 1777002077.5342197,
+    "ast_hash": "cb444d6cd879088e8bcad19da0e45be2",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Login\\Login.razor": {
+    "mtime": 1777002077.5342197,
+    "ast_hash": "482bb969b30bbe83fe3146356aef8d08",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Login\\LoginWith2fa.razor": {
+    "mtime": 1777002077.5342197,
+    "ast_hash": "db53b739d50597ed132390573d380490",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Login\\LoginWithRecoveryCode.razor": {
+    "mtime": 1777002077.535726,
+    "ast_hash": "b1dee6ff1d91f1bad82a5e33853c3c44",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Login\\_Imports.razor": {
+    "mtime": 1777002077.535726,
+    "ast_hash": "005cf83ca0626f6f44a9bd03cefa592c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Register\\ConfirmEmail.razor": {
+    "mtime": 1777002077.536733,
+    "ast_hash": "ef05c8fc9dcc87790d31486076fbcc20",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Register\\Register.razor": {
+    "mtime": 1777002077.536733,
+    "ast_hash": "a8802fd72d0280e6e598bedcfdbec443",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Register\\RegisterConfirmation.razor": {
+    "mtime": 1777002077.5383115,
+    "ast_hash": "68472ce67e4e3b72bc285dbaed9b2bf5",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Register\\_Imports.razor": {
+    "mtime": 1777002077.5383115,
+    "ast_hash": "005cf83ca0626f6f44a9bd03cefa592c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Roles\\Roles.razor": {
+    "mtime": 1777002077.5408309,
+    "ast_hash": "9c2c0b5f40cafd2b05c2d38d37a1c71f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Roles\\Components\\PermissionsDrawer.razor": {
+    "mtime": 1777002077.5388243,
+    "ast_hash": "4a485fa0bd4e4501b6ff0caafefee776",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Roles\\Components\\RoleFormDialog.razor": {
+    "mtime": 1777002077.5398307,
+    "ast_hash": "a9279205656439ad0f70f9b40e4a5805",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Users\\Profile.razor": {
+    "mtime": 1777002077.5443416,
+    "ast_hash": "e5521df932f40e74850c0031d107126c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Users\\Users.razor": {
+    "mtime": 1777002077.5443416,
+    "ast_hash": "932f40de56b500240509bc8f47aaafd0",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Users\\Components\\ChangePasswordTab.razor": {
+    "mtime": 1777002077.5408309,
+    "ast_hash": "6304cd058ff2b1a3752b905002aac58e",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Users\\Components\\OrgChartTab.razor": {
+    "mtime": 1777002077.5408309,
+    "ast_hash": "099069f5c66a03b6737d9adb73bbffdc",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Users\\Components\\ProfileInformationTab.razor": {
+    "mtime": 1777002077.542335,
+    "ast_hash": "5357f875fc94c4c3096e19e0fd8f9caf",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Users\\Components\\ResetPasswordDialog.razor": {
+    "mtime": 1777002077.542335,
+    "ast_hash": "535ced0a8a1abdbafb0c1e2ad85a1b04",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Users\\Components\\UserFormDialog.razor": {
+    "mtime": 1777002077.5433412,
+    "ast_hash": "c5e5d9d822963dec682ef772c77dcd2a",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Identity\\Users\\Components\\_Imports.razor": {
+    "mtime": 1777002077.5433412,
+    "ast_hash": "bff218b6c7b55ce37cc1248c15f7dfc1",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\PicklistSets\\PicklistSets.razor": {
+    "mtime": 1777002077.546343,
+    "ast_hash": "c8ec4b6aba4760a017823e47e659f459",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\PicklistSets\\Components\\CreatePicklistDialog.razor": {
+    "mtime": 1777002077.546343,
+    "ast_hash": "1ee8e63a364cfc4d3c1efe2314941f76",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Products\\Products.razor": {
+    "mtime": 1777002077.5493412,
+    "ast_hash": "4fd9366f712b492a33a5ca731bdbc32f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Products\\Components\\AdvancedSearchProducts.razor": {
+    "mtime": 1777002077.5473413,
+    "ast_hash": "429f45fb81f4fb38be622131346ab20a",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Products\\Components\\FileDownloadButton.razor": {
+    "mtime": 1777002077.5483425,
+    "ast_hash": "393bcf65ab0ac4efe911134d11350279",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Products\\Components\\ProductFormDialog.razor": {
+    "mtime": 1777002077.5483425,
+    "ast_hash": "9ee74c7862763f4b8deaa382d60aa255",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Public\\Index.razor": {
+    "mtime": 1777002077.5493412,
+    "ast_hash": "20918125edb2be5d23d2fae05b1fb40d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Public\\_Imports.razor": {
+    "mtime": 1777002077.5504403,
+    "ast_hash": "82cd1c5490dd6357ef64b2903aaaf6d1",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\SystemManagement\\AuditTrails.razor": {
+    "mtime": 1777002077.5504403,
+    "ast_hash": "5f0252c5a09ff4785c9bc7ac6c105fe5",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\SystemManagement\\SystemLogs.razor": {
+    "mtime": 1777002077.5519454,
+    "ast_hash": "d79e5fc86ce7d1150a0e0b84714f62f2",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\SystemManagement\\Components\\LogsLineCharts.razor": {
+    "mtime": 1777002077.5519454,
+    "ast_hash": "d048e8ddb6b0a644e1ebd5c6bd1dfb84",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Tenants\\TenantFormDialog.razor": {
+    "mtime": 1777002077.5529516,
+    "ast_hash": "d3ebf6b38d2616d412686ff6d6d2e2b8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Pages\\Tenants\\Tenants.razor": {
+    "mtime": 1777002077.5534935,
+    "ast_hash": "f7fe0a47dc3544f241e8decc91eda9ae",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Properties\\launchSettings.json": {
+    "mtime": 1762728825.1512103,
+    "ast_hash": "d78574e2e9c340df7fb1da6929543a5b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Resources\\EmailTemplates\\_authenticatorcode.cshtml": {
+    "mtime": 1777002077.5877786,
+    "ast_hash": "8d299ff3c382fc04f8ae7068e6fa9551",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Resources\\EmailTemplates\\_recoverypassword.cshtml": {
+    "mtime": 1777002077.5877786,
+    "ast_hash": "3e24b60155dfef1c27707c79532d1fcc",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Resources\\EmailTemplates\\_useractivation.cshtml": {
+    "mtime": 1777002077.588848,
+    "ast_hash": "58451a097a51dd45264e2206832a2655",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Resources\\EmailTemplates\\_welcome.cshtml": {
+    "mtime": 1777002077.58985,
+    "ast_hash": "ecf575d2d294ce80452da5c5f67e0cd7",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Resources\\ValidationMessages\\ValidationMessages.Designer.cs": {
+    "mtime": 1777002077.6633606,
+    "ast_hash": "3e4bf83de6e9933b97c214bba289565b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\DialogServiceHelper.cs": {
+    "mtime": 1777002077.6678689,
+    "ast_hash": "21595d40dd4cfe2d63b3ce23a278d5ca",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\IdentityComponentsEndpointRouteBuilderExtensions.cs": {
+    "mtime": 1777002077.6688683,
+    "ast_hash": "782a14864da2cdd3b4a354b42172f4d5",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\IdentityRevalidatingAuthenticationStateProvider.cs": {
+    "mtime": 1777002077.6688683,
+    "ast_hash": "c9f858b843d6e7d0c1b81e5999219741",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\ImageProcessor.cs": {
+    "mtime": 1777002077.6698668,
+    "ast_hash": "8417a0d679cc79f9fc3de1c216560c42",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\AI\\LocalStorageChatHistoryProvider.cs": {
+    "mtime": 1772108071.8484414,
+    "ast_hash": "d6e5ff8830a33684c2c782af19bb23ad",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\AI\\ProjectIntroductionContextProvider.cs": {
+    "mtime": 1772269442.8004534,
+    "ast_hash": "676ae5799f35d536d852dac3246bb3ce",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\JsInterop\\BlazorDownloadFileService.cs": {
+    "mtime": 1777002077.6698668,
+    "ast_hash": "c1093c3946a8018b81b7eec2f89bebe6",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\JsInterop\\Fancybox.cs": {
+    "mtime": 1777002077.6698668,
+    "ast_hash": "14930f9f3ff2eed6d6557a2068ca0fef",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\JsInterop\\GenerateQrCode.cs": {
+    "mtime": 1777002077.6698668,
+    "ast_hash": "ae88fa4b912c1588d2d0c93a8e61d74f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\JsInterop\\HistoryGo.cs": {
+    "mtime": 1777002077.671372,
+    "ast_hash": "efbab9d476f9cb027e23207ac41658d6",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\JsInterop\\InputClear.cs": {
+    "mtime": 1777002077.671372,
+    "ast_hash": "b7591896a1131f83b914efa28ce18574",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\JsInterop\\JSInteropConstants.cs": {
+    "mtime": 1777002077.672377,
+    "ast_hash": "b99285e0232d15559f84d947d6549a1d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\JsInterop\\LocalTimezoneOffset.cs": {
+    "mtime": 1777002077.672377,
+    "ast_hash": "c9b30e8084782d9a9c742e3cf2f88a53",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\JsInterop\\OpenSeadragon.cs": {
+    "mtime": 1777002077.6734612,
+    "ast_hash": "c35060f8fe1953c6b8e070deae7d0c26",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\JsInterop\\OrgChart.cs": {
+    "mtime": 1777002077.6744604,
+    "ast_hash": "f7a8d6b0fc43534f4c48f79d1f0920d0",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\JsInterop\\Swiper.cs": {
+    "mtime": 1777002077.6744604,
+    "ast_hash": "9151d67a1b0778fc52ca0d00818fb9cd",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\Layout\\LayoutService.cs": {
+    "mtime": 1777002077.67546,
+    "ast_hash": "240bef292e4074362cab6bcd82cea664",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\Navigation\\IMenuService.cs": {
+    "mtime": 1777002077.67546,
+    "ast_hash": "f8480de6a57f23fc3578e87a4d233ef8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\Navigation\\MenuService.cs": {
+    "mtime": 1777002077.6764598,
+    "ast_hash": "995eebdba3b281949b43db40c6acc2d9",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\Notifications\\InMemoryNotificationService.cs": {
+    "mtime": 1777002077.6774607,
+    "ast_hash": "424bdaeb4c97f7216d5cb18d7f00a2c3",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\Notifications\\INotificationService.cs": {
+    "mtime": 1777002077.6774607,
+    "ast_hash": "e027a1b735a6c820e44d0992512bf8e3",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\Notifications\\NotificationMessages.cs": {
+    "mtime": 1777002077.6784608,
+    "ast_hash": "a8c88ecad3949126fdda3464e7a084ec",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\UserPreferences\\UserPreference.cs": {
+    "mtime": 1777002077.6794615,
+    "ast_hash": "7573a42cddad2b8f015795f54934d256",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Services\\UserPreferences\\UserPreferencesService.cs": {
+    "mtime": 1777002077.6794615,
+    "ast_hash": "a547cf29976647aad2cc7eaeac1dc782",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\Themes\\Theme.cs": {
+    "mtime": 1777002077.680461,
+    "ast_hash": "f38c4146bee76edc404c0cd2c0427b6a",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\appInterop.js": {
+    "mtime": 1762728825.2110732,
+    "ast_hash": "2b331530b3ec274cb2e35a487e2cbf71",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\auth.js": {
+    "mtime": 1777002077.6915617,
+    "ast_hash": "c4f0cb5033dce6d957004529063fbcad",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\boot.js": {
+    "mtime": 1762728825.2130773,
+    "ast_hash": "21c32bbe4b767a476685a4ca550cdc62",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\carousel.js": {
+    "mtime": 1777002077.6920788,
+    "ast_hash": "c524cac9e8be6ad18790093fac385e53",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\clearinput.js": {
+    "mtime": 1762728825.2130773,
+    "ast_hash": "0c3f049cc452f125c499f7ee6cabc779",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\downloadFile.js": {
+    "mtime": 1777002077.6920788,
+    "ast_hash": "3911ca7cda4a0e967169dfcb1061c5f4",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\fancybox.js": {
+    "mtime": 1777002077.6930838,
+    "ast_hash": "6d138a9fdb392903f2b5911ff1e6ecea",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\generateQrCode.js": {
+    "mtime": 1777002077.6940846,
+    "ast_hash": "652c5d28dafeadae9a9f6fd41bc41de3",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\gettimezoneoffset.js": {
+    "mtime": 1762728825.2130773,
+    "ast_hash": "0970ca745a5e0c769ad10459ce2a707b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\historygo.js": {
+    "mtime": 1762728825.2130773,
+    "ast_hash": "3dd4b24c7fab5e8dc80a61e721ac8210",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\openseadragon.js": {
+    "mtime": 1777002077.6940846,
+    "ast_hash": "af16afcdd63389fab666d646aebea23f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\orgchart.js": {
+    "mtime": 1777002077.6950858,
+    "ast_hash": "a4f9feaaf57c06a23afd944ae1eff8ae",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\passkeys.js": {
+    "mtime": 1777002077.6950858,
+    "ast_hash": "cdfbfab48df47737be167c6bde579946",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\js\\theme.js": {
+    "mtime": 1777002077.6960847,
+    "ast_hash": "224fa26a879e25de24c29c965efdbed2",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\Application.IntegrationTests.csproj": {
+    "mtime": 1780032302.4014568,
+    "ast_hash": "26abd6b182e441c4c97d23e82086ad8f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\appsettings.json": {
+    "mtime": 1777002077.7045972,
+    "ast_hash": "dff5e01c2d3504beef8738d84649c583",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\AssemblyInfo.cs": {
+    "mtime": 1777002077.698085,
+    "ast_hash": "57096881f6e00ea6fcb46fb370515fd4",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\TestBase.cs": {
+    "mtime": 1762728825.2152746,
+    "ast_hash": "f5f97950e919b0e714efba1b92fa5ce1",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\Testing.cs": {
+    "mtime": 1777002077.7035973,
+    "ast_hash": "2079eae668871b20f8d92de002d756f5",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\Picklist\\Commands\\AddEditPicklistCommandTests.cs": {
+    "mtime": 1777002077.699086,
+    "ast_hash": "7c4cb97782f324ce2675db2e188e1587",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\Picklist\\Commands\\DeletePicklistTests.cs": {
+    "mtime": 1777002077.699086,
+    "ast_hash": "750de2c133afba37deeaa8a06e8f79cd",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\Products\\Commands\\AddEditProductCommandTests.cs": {
+    "mtime": 1777002077.7000847,
+    "ast_hash": "843fabb5808272d17326aff6ca45f117",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\Products\\Commands\\DeleteProductCommandTests.cs": {
+    "mtime": 1777002077.7010844,
+    "ast_hash": "d5a9cb3700405cdd9fb33b0f520022e0",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\Products\\Queries\\GetAllProductsQueryTests.cs": {
+    "mtime": 1777002077.7010844,
+    "ast_hash": "2ce9c9686a4d9df654528bf533aef1e9",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\Products\\Queries\\ProductsPaginationQueryTests.cs": {
+    "mtime": 1777002077.7020848,
+    "ast_hash": "d97974c595053a5e04180faeec7640bd",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\Services\\PicklistServiceTests.cs": {
+    "mtime": 1777002077.70259,
+    "ast_hash": "7f81dc46ec5032e7318d1ae255f7eee8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.IntegrationTests\\Services\\TenantsServiceTests.cs": {
+    "mtime": 1777002077.70259,
+    "ast_hash": "6947923b96fe95c1f4cdb865869eddc2",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Application.UnitTests.csproj": {
+    "mtime": 1780032302.3712122,
+    "ast_hash": "501649a405a2a7bce7dba9047f496753",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Common\\Behaviours\\RequestLoggerTests.cs": {
+    "mtime": 1777002077.7055962,
+    "ast_hash": "bd160b57cf0f85c666ff6d4cfb837a57",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Common\\ExceptionHandlers\\DbExceptionHandlerTests.cs": {
+    "mtime": 1777002077.706596,
+    "ast_hash": "5bdb6250a834615135c8ba2d8303861f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Common\\Exceptions\\ValidationExceptionTests.cs": {
+    "mtime": 1777002077.706596,
+    "ast_hash": "3d38c13504c1471c241d98dd5ab61a41",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Common\\Interceptors\\SaveChangesInterceptorRegressionTests.cs": {
+    "mtime": 1777002077.7075963,
+    "ast_hash": "7c8ddc7220a6a34fe73486b00391b1c0",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Common\\Mappings\\ApplicationUserProjectionTests.cs": {
+    "mtime": 1777002077.7075963,
+    "ast_hash": "08d3675168143cbe4a57d5b5b8ef504b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Common\\Mappings\\MappingTests.cs": {
+    "mtime": 1777002077.7085958,
+    "ast_hash": "383df65ec4b5d8544ecc291e78ed1928",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Common\\PublishStrategies\\ChannelBasedNoWaitPublisherTests.cs": {
+    "mtime": 1777002077.7085958,
+    "ast_hash": "5bcc57c8a4bf2b0b24d8f3b166fa258c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Features\\Contacts\\EventHandlers\\ContactUpdatedEventHandlerMediatorSmokeTests.cs": {
+    "mtime": 1777002077.7095957,
+    "ast_hash": "a6c99ea215edb18428af31ccaf92bc6a",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Features\\Documents\\EventHandlers\\DocumentCreatedEventHandlerTests.cs": {
+    "mtime": 1777002077.710598,
+    "ast_hash": "8ac393c664d520875666923793ec213f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Features\\Documents\\Services\\DocumentOcrBackgroundServiceTests.cs": {
+    "mtime": 1777002077.710598,
+    "ast_hash": "c928d05d53ee4cf575c77eaafe7ba625",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Features\\Notifications\\RemainingNotificationMediatorSmokeTests.cs": {
+    "mtime": 1777002077.7121027,
+    "ast_hash": "044b4df5c7af2c56d0d1831978a25ef1",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Application.UnitTests\\Identity\\Roles\\RoleImportPlanTests.cs": {
+    "mtime": 1777002077.7126226,
+    "ast_hash": "269e460212cf2a321a611aab8f33f332",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Domain.UnitTests\\Domain.UnitTests.csproj": {
+    "mtime": 1780032302.3346417,
+    "ast_hash": "185ea494142933df15da4316cdb04192",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Infrastructure.UnitTests\\Infrastructure.UnitTests.csproj": {
+    "mtime": 1777002077.713629,
+    "ast_hash": "1f9dc12260d1769a3266be8f58a81eee",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Infrastructure.UnitTests\\MailServiceTests.cs": {
+    "mtime": 1777002077.7146282,
+    "ast_hash": "89124603557b4b3a8d903bcb8ece7e3b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Infrastructure.UnitTests\\Services\\MailServiceTests.cs": {
+    "mtime": 1777002077.715629,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Infrastructure.UnitTests\\Services\\SecurityAnalysisHeuristicsTests.cs": {
+    "mtime": 1777002077.715629,
+    "ast_hash": "5746ad4bbe18a47f4f979d7231d92c4d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\tests\\Infrastructure.UnitTests\\Services\\Identity\\LoginAuditPostProcessorTests.cs": {
+    "mtime": 1777002077.7146282,
+    "ast_hash": "8948994a28c601fdebe958b5ac2cb858",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\AGENTS.md": {
+    "mtime": 1780797955.699346,
+    "ast_hash": "32355ff810cc4472e6c4ba85a217325d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\docker-compose.override.yml": {
+    "mtime": 1777002077.2621605,
+    "ast_hash": "0d00b0444e62a31df43ff20ef725e92d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\docker-compose.yml": {
+    "mtime": 1777002077.2626648,
+    "ast_hash": "25d335373846acc819263c7ca4da97e5",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\README.md": {
+    "mtime": 1780798122.129452,
+    "ast_hash": "22c8270ad526b97bcb93b5cc06e0bef6",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\.agents\\skills\\graphify\\SKILL.md": {
+    "mtime": 1780023263.2093098,
+    "ast_hash": "8a98d44ea5c92ab83d0c18efb43b57de",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\.github\\workflows\\codeql-analysis.yml": {
+    "mtime": 1773137867.04411,
+    "ast_hash": "7df956474e1d2baa1be271b817b428bf",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\.github\\workflows\\docker-image.yml": {
+    "mtime": 1762818035.8675332,
+    "ast_hash": "ce65daee0c688b87ced768b4c3f9a220",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\.github\\workflows\\dotnet.yml": {
+    "mtime": 1770856770.7436469,
+    "ast_hash": "f3ef688c78782c86501c435a7fd3b62d",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\.github\\workflows\\package.yml": {
+    "mtime": 1762818035.8721042,
+    "ast_hash": "710a08c28d883ef2797ba10a532c2ef4",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\.github\\workflows\\sonar.yml": {
+    "mtime": 1773138822.580225,
+    "ast_hash": "dec3be2c137dbe21de35579b4cf1ecc2",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\docs\\Serilog-Configuration-Migration.md": {
+    "mtime": 1762818725.1613915,
+    "ast_hash": "b9689108c1db5e59bffb945084c6017c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\docs\\superpowers\\plans\\2026-03-29-migrate-mediatr-to-mediator.md": {
+    "mtime": 1774783435.6272864,
+    "ast_hash": "17cf422cbe1200eea26acba6d71926f3",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\docs\\superpowers\\specs\\2026-03-29-migrate-mediatr-to-mediator-design.md": {
+    "mtime": 1774783435.6272864,
+    "ast_hash": "78c06408de85b3fea2a8cdb9ce575c57",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\docs\\superpowers\\specs\\2026-04-24-agent-md-design.md": {
+    "mtime": 1777002077.2626648,
+    "ast_hash": "e6c2a2e7d4f56d018cfbe70db71fd8c5",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\robots.txt": {
+    "mtime": 1777002077.6960847,
+    "ast_hash": "1767b560a048c46bab05e67efbb458d2",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\.template.config\\icon.png": {
+    "mtime": 1755257231.6929104,
+    "ast_hash": "0fb65ea7af63dd9922aeaf9130efa5c4",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\094346.png": {
+    "mtime": 1762728824.9414363,
+    "ast_hash": "473c186783d3a291f985e8e91a49c9ca",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\094553.png": {
+    "mtime": 1762728824.943441,
+    "ast_hash": "e1b8b916a45a64f7180c76660028d4ae",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\095312.png": {
+    "mtime": 1762728824.943441,
+    "ast_hash": "40772a0b763d39f639e7a28ca70ee4eb",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\2022-02-11_19-34-31.png": {
+    "mtime": 1762728824.945446,
+    "ast_hash": "8a1f43276467fae0341f206e0338a0b3",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\2022-02-11_19-44-40.png": {
+    "mtime": 1762728824.945446,
+    "ast_hash": "e4e23c4caf81d71046cc5c6e70f82811",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\2022-02-11_19-44-59.png": {
+    "mtime": 1762728824.945446,
+    "ast_hash": "247bef0da2076ff7fedcf2ee2988a0e1",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\2022-02-11_19-45-22.png": {
+    "mtime": 1762728824.9481628,
+    "ast_hash": "3974a64051457deeff4f85f292d477c6",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\aceparking.png": {
+    "mtime": 1762818035.877717,
+    "ast_hash": "460e6fd79bb6c736960a88c307db4bfc",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\blazorstudio.png": {
+    "mtime": 1762732962.345011,
+    "ast_hash": "4f0112765c42fd3d8b7f8453572c4842",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\create.png": {
+    "mtime": 1762728824.9501672,
+    "ast_hash": "880ca9c03ddbbc156cb40a95d2bd5975",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\deliver-print.png": {
+    "mtime": 1780797636.335783,
+    "ast_hash": "ee27154e85988bc851eb79c3607d28ab",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\hrcloud.png": {
+    "mtime": 1763551310.2249181,
+    "ast_hash": "057a378f57e60e0bef3b95a5fd55a2e0",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\login_screenshot.png": {
+    "mtime": 1762728824.9521716,
+    "ast_hash": "6e6899066dfb30b83aa74f573ff32581",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\logo.jpg": {
+    "mtime": 1762728824.9544466,
+    "ast_hash": "b696758b4b62862c5c1d537885c2d3bc",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\logo.png": {
+    "mtime": 1762728824.9557786,
+    "ast_hash": "a65ca7c26409b09cf0aa33ea89009964",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\main_screenshot.png": {
+    "mtime": 1762728824.9557786,
+    "ast_hash": "50945eb5053e640274bd3ed64308d95c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\orgchart.png": {
+    "mtime": 1762728824.9557786,
+    "ast_hash": "577a8c294f066b971d01d82d8802ad6c",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\page.png": {
+    "mtime": 1762728824.9557786,
+    "ast_hash": "0ed91a8da3e77ca7b1cf3c41af9776d7",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\remove.png": {
+    "mtime": 1762728824.9557786,
+    "ast_hash": "5fee537fbc6526756ffa1fdaa4bf04f8",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\\u65e0\u6807\u9898.png": {
+    "mtime": 1762728824.9660358,
+    "ast_hash": "965e31560fcdd3a4841884e73bcff85b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\brand.svg": {
+    "mtime": 1777002077.6839716,
+    "ast_hash": "2bed59c6caef50ae813383ea2be9109b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\dark-brand.svg": {
+    "mtime": 1777002077.6849728,
+    "ast_hash": "2f0bddadefc5ba64d67223b022a755ff",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\favicon-152x152.png": {
+    "mtime": 1777002077.685972,
+    "ast_hash": "01bc354ffd2bae2f7cd6cf2bc8752d16",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\favicon-96x96.png": {
+    "mtime": 1777002077.685972,
+    "ast_hash": "96a62a9f2da6f65dc38a8a9524f7a727",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\img\\avatar.png": {
+    "mtime": 1777002077.6869724,
+    "ast_hash": "0138cf5588cf181d1627f15ca9697f0b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\img\\blazorstudio.png": {
+    "mtime": 1777002077.6900568,
+    "ast_hash": "ec73c77d0c0b185dae27115ea0d7327b",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\img\\lines-alt.svg": {
+    "mtime": 1762728825.2110732,
+    "ast_hash": "17646d62667b96503f77c349a07b4f5f",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\img\\lines.svg": {
+    "mtime": 1762728825.2110732,
+    "ast_hash": "d59845dc3aa5bc6515d9eb185e04fc93",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\src\\Server.UI\\wwwroot\\img\\pattern.svg": {
+    "mtime": 1762728825.2110732,
+    "ast_hash": "c9c61904b2d8f0623e00f9c06be2bbd5",
+    "semantic_hash": ""
+  },
+  "D:\\github\\CleanArchitectureWithBlazorServer\\doc\\real-time-updates.mp4": {
+    "mtime": 1762728824.9557786,
+    "ast_hash": "13aeca3ecb0907640e60d86480c91dbd",
+    "semantic_hash": ""
   }
 }
