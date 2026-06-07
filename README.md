@@ -57,6 +57,9 @@ Experience the application in action:
 [![Digital Product Passport](doc/094553.png)](https://materialpassport.blazorserver.com/)
 **EU Digital Product Passport** - [Live Demo](https://materialpassport.blazorserver.com/)
 
+[![Delivery Print](doc/deliver-print.png)](https://delivery-note.blazorserver.com/)
+**Delivery Print** - [GitHub](https://github.com/neozhu/delivery-print) | [Live Demo](https://delivery-note.blazorserver.com/)
+
 ## 🛠️ Technology Stack
 
 | Layer | Technologies |
