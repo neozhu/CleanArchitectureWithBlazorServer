@@ -13,13 +13,13 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
-        <PackageReference Include="Mapster" Version="10.0.7" />
+        <PackageReference Include="Mapster" Version="10.0.8" />
         <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
         
         <PackageReference Include="FluentValidation" Version="12.1.1" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.9" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     </ItemGroup>
     <ItemGroup>
