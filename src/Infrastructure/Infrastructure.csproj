@@ -9,18 +9,18 @@
     </PropertyGroup>
     <ItemGroup>
     
-        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.20.0" />
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.21.0" />
         <PackageReference Include="OpenAI" Version="2.13.0" />
         <PackageReference Include="MaxMind.GeoIP2" Version="6.1.0" />
         <PackageReference Include="ClosedXML" Version="0.105.1" />
-        <PackageReference Include="MailKit" Version="4.17.0" />
-        <PackageReference Include="MimeKit" Version="4.17.0" />
-        <PackageReference Include="Scriban" Version="7.2.6" />
-        <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.7.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.11" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="10.0.11" />
+        <PackageReference Include="MailKit" Version="4.18.0" />
+        <PackageReference Include="MimeKit" Version="4.18.0" />
+        <PackageReference Include="Scriban" Version="7.4.0" />
+        <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.8.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.12" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="10.0.12" />
         <PackageReference Include="Minio" Version="7.0.0" />
-        <PackageReference Include="QuestPDF" Version="2026.8.0" />
+        <PackageReference Include="QuestPDF" Version="2026.9.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.3.0" />
