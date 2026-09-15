@@ -1,0 +1,58 @@
+/* Theme.cs owns palette, typography (14px root), and layout values.
+   The drawer gradient and its fixed white contrast have no MudBlazor equivalents. */
+.studio-navigation {
+    --studio-drawer-top: #243042;
+    --studio-drawer-bottom: #0b0f17;
+    --studio-drawer-border: #202a3b;
+    --studio-drawer-contrast: #fff;
+    display: contents;
+}
+
+.studio-navigation ::deep .studio-navigation {
+    background: linear-gradient(to bottom, var(--studio-drawer-top), var(--mud-palette-drawer-background) 50%, var(--studio-drawer-bottom));
+    border-inline-end: 1px solid var(--studio-drawer-border);
+    color: var(--mud-palette-drawer-text);
+    user-select: none;
+    font-family: var(--mud-typography-default-family);
+}
+
+.studio-navigation ::deep .mud-typography { font-family: var(--mud-typography-default-family); }
+.studio-navigation ::deep .mud-drawer-content { overflow: hidden; }
+.studio-navigation ::deep .studio-navigation-brand { height: var(--mud-appbar-height); min-height: var(--mud-appbar-height); padding: 0 20px; align-items: center; flex-shrink: 0; }
+.studio-navigation ::deep .studio-navigation-brand > .mud-stack { min-width: 0; gap: 12px; }
+.studio-navigation ::deep .studio-navigation-brand .mud-menu { min-width: 0; }
+.studio-navigation ::deep .studio-navigation-brand .mud-menu-activator { width: 100%; }
+.studio-navigation ::deep .studio-navigation-brand .mud-typography-h6 { font-size: var(--mud-typography-subtitle1-size); font-weight: var(--mud-typography-h6-weight); line-height: 1.25; letter-spacing: -.025em; color: var(--studio-drawer-contrast); }
+.studio-navigation ::deep .studio-navigation-brand .mud-typography-subtitle2 { margin-top: 0 !important; font-size: var(--mud-typography-caption-size); font-weight: var(--mud-typography-default-weight); color: var(--mud-palette-drawer-icon) !important; }
+.studio-navigation ::deep .studio-navigation-brand .mud-icon-button { margin: 0 !important; padding: 4px; color: var(--mud-palette-drawer-icon); border-radius: calc(var(--mud-default-borderradius) * .75); }
+.studio-navigation ::deep .studio-navigation-brand .mud-icon-button svg { width: 16px; height: 16px; }
+.studio-navigation ::deep .studio-navigation-brand .ml-4 { margin: 0 !important; flex-shrink: 0; }
+.studio-navigation ::deep .studio-navigation-menu { flex: 1; min-height: 0; overflow-y: auto; padding: 8px 12px; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--mud-palette-drawer-icon) 25%, var(--mud-palette-drawer-background)) transparent; }
+.studio-navigation-section { padding: 0 12px 8px; margin-top: 24px; }
+.studio-navigation-section:first-child { margin-top: 0; }
+.studio-navigation-section ::deep .mud-typography { color: color-mix(in srgb, var(--mud-palette-drawer-icon) 80%, transparent); font-size: var(--mud-typography-overline-size); line-height: 15px; letter-spacing: .05em; text-transform: uppercase; }
+.studio-navigation-section b { font-weight: var(--mud-typography-h6-weight); }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-link { padding: 8px 12px !important; min-height: 36px; border: 0; border-radius: var(--mud-default-borderradius); color: var(--mud-palette-drawer-text); font-size: var(--mud-typography-subtitle1-size); line-height: 20px; transition: color 150ms, background-color 150ms; }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-link-text { margin-inline-start: 12px; font-weight: var(--mud-typography-default-weight); }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-link-text > .d-flex { align-items: center; gap: 8px; }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-link-icon { color: var(--mud-palette-drawer-icon); width: 16px; height: 16px; }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-link-expand-icon { color: color-mix(in srgb, var(--mud-palette-drawer-icon) 70%, var(--mud-palette-drawer-background)); fill: currentColor; width: 14px; height: 14px; }
+.studio-navigation ::deep .studio-navigation-menu.mud-navmenu-default .mud-nav-link-expand-icon.mud-transform { fill: currentColor; }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-link:hover:not(.mud-nav-link-disabled) { color: var(--studio-drawer-contrast); background: color-mix(in srgb, var(--studio-drawer-contrast) 6%, transparent); }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-group .mud-navmenu { margin: 4px 0 0; margin-inline: 16px 0; padding: 0; padding-inline: 12px 4px; border-inline-start: 1px solid color-mix(in srgb, var(--studio-drawer-contrast) 10%, transparent); }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-group .mud-navmenu > .mud-nav-item:not(:last-child) { margin-bottom: 2px; }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-group .mud-navmenu .mud-nav-link { padding: 6px 12px !important; min-height: 28px; border-radius: calc(var(--mud-default-borderradius) * .75); color: var(--mud-palette-drawer-icon); font-size: var(--mud-typography-default-size); line-height: 16px; }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-group .mud-navmenu .mud-nav-link-text { margin: 0; }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-link.active:not(.mud-nav-link-disabled) { color: var(--studio-drawer-contrast); background: color-mix(in srgb, var(--studio-drawer-contrast) 10%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--studio-drawer-contrast) 10%, transparent); }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-link.active .mud-nav-link-text { font-weight: var(--mud-typography-button-weight); }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-link.active::after { content: ""; width: 6px; height: 6px; flex-shrink: 0; margin-inline-start: 8px; align-self: center; background: var(--studio-drawer-contrast); border-radius: 50%; }
+.studio-navigation ::deep .studio-navigation-menu .mud-nav-link-disabled { color: var(--mud-palette-drawer-icon); opacity: .55; cursor: not-allowed; }
+.studio-navigation ::deep .studio-navigation-status.mud-chip { margin: 0; padding: 2px 8px; height: auto; color: var(--mud-palette-drawer-text); background: color-mix(in srgb, var(--studio-drawer-contrast) 6%, transparent); border: 1px solid color-mix(in srgb, var(--studio-drawer-contrast) 8%, transparent); font-size: var(--mud-typography-overline-size) !important; line-height: 15px; font-weight: var(--mud-typography-button-weight); white-space: nowrap; }
+.studio-navigation-footer { padding: 12px; flex-shrink: 0; margin-top: auto; }
+.studio-navigation-copyright { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; padding: 0 8px; font-size: var(--mud-typography-overline-size); line-height: 15px; color: color-mix(in srgb, var(--mud-palette-drawer-icon) 70%, var(--mud-palette-drawer-background)); }
+.studio-navigation ::deep a:focus-visible,
+.studio-navigation ::deep button:focus-visible { outline: 2px solid var(--mud-palette-text-secondary); outline-offset: -2px; }
+
+@media (prefers-reduced-motion: reduce) {
+    .studio-navigation ::deep .studio-navigation-menu .mud-nav-link { transition: none; }
+}

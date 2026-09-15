@@ -35,15 +35,17 @@ public static class Theme
 
                 Black = "#020617", // Deep blue-black, more texture
                 White = "#ffffff",
-                AppbarBackground = "#f8fafc", // Very light blue-gray, modern
-                AppbarText = "#0a0a0a",
+                AppbarBackground = "#ffffff",
+                AppbarText = "#64748b",
                 Background = "#f8fafc", // Very light blue-gray, modern
                 Surface = "#ffffff",
-                DrawerBackground = "#ffffff",
+                BackgroundGray = "#f1f5f9",
+                DrawerBackground = "#121824",
+                DrawerText = "#cbd5e1",
                 TextPrimary = "#0f172a", // Deep blue-gray, modern professional
                 TextSecondary = "#64748b", // Neutral gray, hierarchy
 
-                DrawerIcon = "#71717a",
+                DrawerIcon = "#94a3b8",
 
                 TextDisabled = "#94a3b8", // Soft gray
                 ActionDefault = "#262626",
@@ -91,10 +93,10 @@ public static class Theme
                 Surface = "#171717", // Deeper surface color
                 AppbarBackground = "#0c0a09",
                 AppbarText = "#fafafa",
-                DrawerText = "#fafafa",
-                DrawerIcon = "#a1a1aa",
+                DrawerText = "#cbd5e1",
+                DrawerIcon = "#94a3b8",
 
-                DrawerBackground = "#0c0a09",
+                DrawerBackground = "#121824",
                 TextPrimary = "#fafafa", // shadcn/ui white text
                 TextSecondary = "#a1a1aa", // Neutral gray secondary text
                 TextDisabled = "rgba(161, 161, 170, 0.5)",
@@ -117,15 +119,16 @@ public static class Theme
             LayoutProperties = new LayoutProperties
             {
                 AppbarHeight = "64px", // More modern height
-                DefaultBorderRadius = "8px", // More modern border radius
-                DrawerWidthLeft = "280px", // Wider sidebar
+                DefaultBorderRadius = "6px", // More modern border radius
+                DrawerWidthLeft = "256px",
+                DrawerWidthRight = "256px",
                 DrawerMiniWidthRight= "260px"
             },
             Typography = new Typography
             {
                 Default = new DefaultTypography
                 {
-                    FontSize = ".875rem",
+                    FontSize = ".857rem",
                     FontWeight = "400",
                     LineHeight = "1.43",
                     LetterSpacing = "normal",
@@ -184,53 +187,53 @@ public static class Theme
                 },
                 Button = new ButtonTypography
                 {
-                    FontSize = ".875rem",
+                    FontSize = ".857rem",
                     FontWeight = "500",
-                    LineHeight = "1.75rem",
+                    LineHeight = "1.33333",
                     LetterSpacing = "0.01em",
                     TextTransform = "none"
                 },
                 Subtitle1 = new Subtitle1Typography
                 {
-                    FontSize = "1rem",
+                    FontSize = "0.929rem",
                     FontWeight = "500",
-                    LineHeight = "1.75rem",
+                    LineHeight = "1.42857",
                     LetterSpacing = ".00714em",
                 },
                 Subtitle2 = new Subtitle2Typography
                 {
-                    FontSize = ".875rem",
+                    FontSize = ".785714rem",
                     FontWeight = "400",
-                    LineHeight = "1.5rem",
+                    LineHeight = "1.25",
                     LetterSpacing = "normal"
                 },
                 Body1 = new Body1Typography
                 {
-                    FontSize = ".875rem",
+                    FontSize = ".857rem",
                     FontWeight = "400",
-                    LineHeight = "1.5rem",
+                    LineHeight = "1.5",
                     LetterSpacing = "normal"
                 },
                 Body2 = new Body2Typography
                 {
-                    FontSize = ".75rem",
+                    FontSize = ".857rem",
                     FontWeight = "400",
-                    LineHeight = "1.25rem",
+                    LineHeight = "1.33333",
                     LetterSpacing = "0.01em"
                 },
                 Caption = new CaptionTypography
                 {
-                    FontSize = "0.75rem", 
+                    FontSize = ".785714rem",
                     FontWeight = "400",
-                    LineHeight = "1.25rem",
+                    LineHeight = "1.25",
                     LetterSpacing = "0.02em"
                    
                 },
                 Overline = new OverlineTypography
                 {
-                    FontSize = "0.75rem",
+                    FontSize = ".714286rem",
                     FontWeight = "500",
-                    LineHeight = "1.5rem",
+                    LineHeight = "1.5",
                     LetterSpacing = "0.08em",
                     TextTransform = "uppercase"
                 }

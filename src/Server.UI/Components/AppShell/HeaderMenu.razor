@@ -1,9 +1,10 @@
-@inject IStringLocalizer<HeaderMenu> L
-<MudAppBar Class=""
-           Elevation="0"
-           Style="backdrop-filter: blur(6px) !important; -webkit-backdrop-filter: blur(6px) !important">
+﻿@inject IStringLocalizer<HeaderMenu> L
+<div class="studio-header">
+<MudAppBar Class="studio-header"
+           Elevation="0">
     <MudTooltip Arrow="true" Text="@L["Toggle menu"]">
-        <MudToggleIconButton Class="mr-3"
+        <MudToggleIconButton Class="studio-header-toggle"
+                             aria-label="@L["Toggle menu"]"
                              Color="@Color.Default"
                              Icon="@Icons.Material.Filled.MenuOpen"
                              Size="Size.Medium"
@@ -13,14 +14,8 @@
                              ToggledIcon="@Icons.Material.Filled.Menu"/>
 
     </MudTooltip>
-    <MudHidden Breakpoint="Breakpoint.SmAndDown">
-        <MudTooltip Arrow="true"
-                    Text="@L["Search (Cmd + K)"]">
-            <MudIconButton Color="Color.Default"
-                           Edge="Edge.Start"
-                           Icon="@Icons.Material.Filled.Search"
-                           OnClick="OpenSearchDialog"/>
-        </MudTooltip>
+   
+         
         <MudSpacer/>
         <MudTooltip Arrow="true"
                     Text="@L["Navigate to GitHub"]">
@@ -32,38 +27,17 @@
         </MudTooltip>
         <LanguageSelector/>
         <NotificationMenu/>
-        <MudTooltip Text="@(RightToLeft ? L["Toggle right-to-left"] : L["Toggle left-to-right"])">
-            <MudIconButton Class="mx-1"
-                           Icon="@(RightToLeft ? Icons.Material.Filled.FormatTextdirectionLToR : Icons.Material.Filled.FormatTextdirectionRToL)"
-                           Color="Color.Default"
-                           OnClick="@(e => RightToLeftToggle.InvokeAsync())"/>
-        </MudTooltip>
-    </MudHidden>
-    <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-        <MudTooltip Arrow="true"
-                    Text="@L["Search (Cmd + K)"]">
-            <MudIconButton Color="Color.Default"
-                           Edge="Edge.Start"
-                           Icon="@Icons.Material.Filled.Search"
-                           OnClick="OpenSearchDialog"/>
-        </MudTooltip>
-        <MudSpacer/>
-        <NotificationMenu/>
-    </MudHidden>
+     
 
-    <MudDivider Class="mx-3 my-5" DividerType="DividerType.Middle" Vertical="true" FlexItem="true"></MudDivider>
+    <MudDivider Class="studio-header-divider" Vertical="true" FlexItem="true" />
     <MudText Color="@Color.Primary" Typo="Typo.h5">
         @L[ApplicationSettings.Company]
     </MudText>
 </MudAppBar>
+</div>
 
 @code
 {
-    [EditorRequired] [Parameter] public bool IsDarkMode { get; set; }
     [EditorRequired] [Parameter] public bool NavigationMenuDrawerOpen { get; set; }
     [EditorRequired] [Parameter] public EventCallback ToggleNavigationMenuDrawer { get; set; }
-    [EditorRequired] [Parameter] public EventCallback OpenSearchDialog { get; set; }
-    [EditorRequired] [Parameter] public bool RightToLeft { get; set; }
-    [EditorRequired] [Parameter] public EventCallback RightToLeftToggle { get; set; }
-    [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
 }

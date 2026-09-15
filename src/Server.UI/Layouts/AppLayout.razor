@@ -2,7 +2,6 @@
 @inherits LayoutComponentBase
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 
-@inject LayoutService LayoutService
 @implements IDisposable
 <MudLayout>
     <AuthorizeView>
@@ -11,19 +10,14 @@
         </NotAuthorized>
         <Authorized>
             <HeaderMenu NavigationMenuDrawerOpen="_navigationMenuDrawerOpen"
-                        OpenSearchDialog="OpenSearchDialog"
-                        IsDarkMode="@LayoutService.IsDarkMode"
                         ToggleNavigationMenuDrawer="ToggleNavigationMenuDrawer"
-                        RightToLeft="@LayoutService.IsRTL"
-                        RightToLeftToggle="LayoutService.ToggleRightToLeft"
-                        OnSettingClick="@(() => themeSettings?.OpenSetting())" />
+                       />
             <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@(UserProfileState.Value.AssignedRoles??[])"
                             DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler"
-                            OnSettingClick="@(() => themeSettings?.OpenSetting())"/>
-            <ThemesMenu @ref="themeSettings" UserPreferences="@LayoutService.UserPreferences"
-                        UserPreferencesChanged="LayoutService.UpdateUserPreferences"/>
-           
-            <MudMainContent>
+                            />
+
+            <div class="studio-main-content">
+            <MudMainContent Class="studio-main-content">
                 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4 mt-4">
                     <ErrorBoundary @ref="ErrorBoundary">
                         <ChildContent>
@@ -35,6 +29,7 @@
                     </ErrorBoundary>
                 </MudContainer>
             </MudMainContent>
+            </div>
           
             <UserLoginState />
         </Authorized>
@@ -46,9 +41,7 @@
 {
 	private bool _commandPaletteOpen;
 	private bool _navigationMenuDrawerOpen = true;
-	private bool _themingDrawerOpen;
 	private ErrorBoundary? ErrorBoundary { set; get; }
-	private ThemesMenu? themeSettings { set; get; }
 	[CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
 
 	protected override async Task OnInitializedAsync()
@@ -89,41 +82,10 @@
         _navigationMenuDrawerOpen = state;
     }
 
-    protected void ThemingDrawerOpenChangedHandler(bool state)
-    {
-        _themingDrawerOpen = state;
-    }
-
     protected void ToggleNavigationMenuDrawer()
     {
         _navigationMenuDrawerOpen = !_navigationMenuDrawerOpen;
     }
 
-    private async Task OpenSearchDialog()
-    {
-        if (!_commandPaletteOpen)
-        {
-            var options = new DialogOptions
-            {
-                NoHeader = true,
-                MaxWidth = MaxWidth.Medium,
-                FullWidth = true
-            };
-
-			_commandPaletteOpen = true;
-			try
-			{
-				await DialogServiceHelper.ShowDialogAsync<SearchDialog>(
-					"",
-					_ => Task.CompletedTask,
-					configureParameters: null,
-					options: options,
-					onCancel: () => Task.CompletedTask);
-			}
-			finally
-			{
-				_commandPaletteOpen = false;
-			}
-        }
-    }
+    
 }

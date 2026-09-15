@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blazor Studio - Contacts</title>
+  <!-- 引入现代无衬线字体 Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入 Lucide 官方图标库 -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .master-card {
+      border: 1px solid #e6eaf0;
+      border-radius: 10px;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased flex h-screen overflow-hidden">
+
+  <!-- ==================== 1. 一体化深色侧边栏 (顶部精准提亮 5%: #243042) ==================== -->
+  <aside class="w-64 bg-gradient-to-b from-[#243042] via-[#121824] to-[#0B0F17] border-r border-[#202A3B] flex flex-col justify-between shrink-0 h-full select-none text-slate-300">
+    
+    <!-- 品牌 Logo -->
+    <div class="h-16 px-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#172033] to-[#2B3B5E] text-white flex items-center justify-center border border-white/10">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-semibold text-sm text-white tracking-tight leading-tight">Blazor Studio</span>
+          <span class="text-[11px] text-slate-400 font-normal">Europe</span>
+        </div>
+      </div>
+      <button class="text-slate-400 hover:text-white p-1 rounded-md transition-colors">
+        <i data-lucide="chevrons-up-down" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- 菜单列表 -->
+    <div class="flex-1 overflow-y-auto px-3 py-2 space-y-6 text-sm">
+      <div>
+        <div class="px-3 pb-2 text-[10px] font-semibold tracking-wider text-slate-400/80 uppercase">Application</div>
+        <nav class="space-y-1">
+          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+            <i data-lucide="home" class="w-4 h-4 text-slate-400"></i>
+            <span>Home</span>
+          </a>
+
+          <div>
+            <button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+              <div class="flex items-center gap-3">
+                <i data-lucide="shopping-cart" class="w-4 h-4 text-slate-400"></i>
+                <span>E-Commerce</span>
+              </div>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500"></i>
+            </button>
+            
+            <div class="ml-4 pl-3 border-l border-white/[0.10] space-y-1 mt-1">
+              <a href="#" class="block px-3 py-1.5 text-xs text-slate-400 hover:text-white rounded-md hover:bg-white/[0.04] transition-colors">Products</a>
+              <a href="#" class="block px-3 py-1.5 text-xs text-slate-400 hover:text-white rounded-md hover:bg-white/[0.04] transition-colors">Documents</a>
+              
+              <div class="pr-1">
+                <a href="#" class="flex items-center justify-between px-3 py-1.5 text-xs font-medium text-white bg-white/10 rounded-md border border-white/10 transition-all">
+                  <span>Contacts</span>
+                  <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+            <i data-lucide="message-square" class="w-4 h-4 text-slate-400"></i>
+            <span>Chatbot</span>
+          </a>
+
+          <div class="flex items-center justify-between px-3 py-2 text-slate-400">
+            <div class="flex items-center gap-3">
+              <i data-lucide="bar-chart-2" class="w-4 h-4 text-slate-400"></i>
+              <span>Analytics</span>
+            </div>
+            <span class="text-[10px] bg-white/[0.06] border border-white/[0.08] text-slate-300 font-medium px-2 py-0.5 rounded-full">Coming Soon</span>
+          </div>
+
+          <div class="flex items-center justify-between px-3 py-2 text-slate-400">
+            <div class="flex items-center gap-3">
+              <i data-lucide="credit-card" class="w-4 h-4 text-slate-400"></i>
+              <span>Banking</span>
+            </div>
+            <span class="text-[10px] bg-white/[0.06] border border-white/[0.08] text-slate-300 font-medium px-2 py-0.5 rounded-full">Coming Soon</span>
+          </div>
+        </nav>
+      </div>
+
+      <div>
+        <div class="px-3 pb-2 text-[10px] font-semibold tracking-wider text-slate-400/80 uppercase">Management</div>
+        <nav class="space-y-1">
+          <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+            <div class="flex items-center gap-3">
+                <i data-lucide="shield-check" class="w-4 h-4 text-slate-400"></i>
+              <span>Authorization</span>
+            </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-600"></i>
+          </a>
+          <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+            <div class="flex items-center gap-3">
+              <i data-lucide="sliders" class="w-4 h-4 text-slate-400"></i>
+              <span>System</span>
+            </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-600"></i>
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- 底部用户信息栏 -->
+    <div class="p-3">
+      <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] transition-all cursor-pointer">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="relative">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=faces" class="w-8 h-8 rounded-full ring-1 ring-white/20" alt="Avatar">
+            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-[#0B0F17]"></span>
+          </div>
+          <div class="truncate">
+            <p class="text-xs font-semibold text-white leading-tight">Administrator</p>
+            <p class="text-[11px] text-slate-400 leading-tight mt-0.5">Admin</p>
+          </div>
+        </div>
+        <i data-lucide="more-vertical" class="w-4 h-4 text-slate-400 hover:text-white"></i>
+      </div>
+      <div class="mt-2.5 flex justify-between px-2 text-[10px] text-slate-500">
+        <span>@2026 Copyright</span>
+        <span>v2.16</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================== 2. 主工作区 ==================== -->
+  <div class="flex-1 flex flex-col h-full overflow-hidden">
+    
+    <!-- 顶部导航栏 -->
+    <header class="h-16 bg-white border-b border-[#e6eaf0] px-6 flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2">
+        <button class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors" title="Toggle Sidebar">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <button class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-400 hover:border-slate-300 hover:text-slate-600 transition-colors ml-2">
+          <i data-lucide="search" class="w-3.5 h-3.5"></i>
+          <span>Search anything...</span>
+          <kbd class="ml-4 font-mono text-[10px] bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 text-slate-500">⌘K</kbd>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors">
+          <i data-lucide="github" class="w-4 h-4"></i>
+        </button>
+        <button class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors">
+          <i data-lucide="languages" class="w-4 h-4"></i>
+        </button>
+        
+        <button class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors relative">
+          <i data-lucide="bell" class="w-4 h-4"></i>
+          <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+        </button>
+        
+        <button class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>
+        </button>
+
+        <div class="h-4 w-[1px] bg-slate-200 mx-1"></div>
+
+        <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Company</span>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- 3. 主工作区画布 -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-5 bg-gradient-to-br from-slate-50 via-slate-100/50 to-slate-100/30">
+      
+      <!-- 统一主大卡片 -->
+      <div class="bg-white master-card flex flex-col overflow-hidden">
+        
+        <!-- 卡片首部 -->
+        <div class="px-6 pt-5 pb-4 flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-[#e6eaf0]">
+          <div>
+            <!-- 面包屑 -->
+            <nav class="flex items-center gap-1.5 text-[11px] text-slate-400 mb-2 select-none leading-none">
+              <a href="#" class="hover:text-slate-700 transition-colors">Application</a>
+              <i data-lucide="chevron-right" class="w-3 h-3 text-slate-300 stroke-[2.5]"></i>
+              <a href="#" class="hover:text-slate-700 transition-colors">E-Commerce</a>
+              <i data-lucide="chevron-right" class="w-3 h-3 text-slate-300 stroke-[2.5]"></i>
+              <span class="text-slate-700 font-medium">Contacts</span>
+            </nav>
+
+            <!-- 标题 + 数量徽章 -->
+            <div class="flex items-center gap-2.5">
+              <h1 class="text-[22px] font-semibold text-slate-900 tracking-tight leading-none">Contacts</h1>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200/80 leading-none">2 Total</span>
+            </div>
+
+            <!-- Description -->
+            <p class="text-xs text-slate-500 mt-1.5 leading-normal">Manage people, external clients, and business relationship pipelines.</p>
+          </div>
+
+          <!-- 右侧操作按钮组 -->
+          <div class="flex items-center gap-2 shrink-0 pt-0.5">
+            <button class="h-9 inline-flex items-center gap-1.5 px-3 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-slate-500"></i>
+              <span>Refresh</span>
+            </button>
+
+            <button class="h-9 inline-flex items-center gap-1.5 px-3 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors">
+              <i data-lucide="download" class="w-3.5 h-3.5 text-slate-500"></i>
+              <span>Export</span>
+            </button>
+
+            <!-- #172033 主按钮 -->
+            <button class="h-9 inline-flex items-center gap-1.5 px-3.5 rounded-lg bg-[#172033] hover:bg-[#222F4B] text-white text-xs font-medium transition-colors active:scale-[0.98]">
+              <i data-lucide="plus" class="w-4 h-4 stroke-[2.5]"></i>
+              <span>New Contact</span>
+            </button>
+
+            <button class="h-9 w-9 inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
+              <i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 卡片工具栏 -->
+        <div class="px-6 py-3 bg-slate-50/50 border-b border-[#e6eaf0] flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-2.5 flex-1 max-w-lg">
+            <div class="relative">
+              <button class="h-9 inline-flex items-center gap-2 px-3 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors min-w-[110px] justify-between">
+                <div class="flex items-center gap-1.5">
+                  <i data-lucide="list-filter" class="w-3.5 h-3.5 text-slate-400"></i>
+                  <span>All Status</span>
+                </div>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+              </button>
+            </div>
+
+            <div class="relative flex-1">
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+              <input 
+                type="text" 
+                placeholder="Filter by name, email, country..." 
+                class="w-full h-9 pl-10 pr-8.5 rounded-lg border border-slate-200 bg-white text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#172033] focus:ring-1 focus:ring-[#172033] transition-all"
+              >
+              <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 font-mono bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5 leading-none">/</span>
+            </div>
+          </div>
+
+          <!-- 多选统计指示器 -->
+          <div class="flex items-center gap-2 text-xs text-slate-500">
+            <span class="inline-block w-2 h-2 rounded-full bg-slate-300"></span>
+            <span class="font-medium text-slate-600">0 selected</span>
+            <button class="text-[#172033] hover:text-[#222F4B] font-medium transition-colors ml-1">Clear</button>
+          </div>
+        </div>
+
+        <!-- 卡片数据主体 -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#F6F8FA] border-b border-[#e6eaf0] text-[11px] font-medium text-slate-500 uppercase tracking-wide select-none">
+                <th class="w-12 px-6 py-2.5 text-center">
+                  <input type="checkbox" class="rounded border-slate-300 text-[#172033] focus:ring-[#172033]/20 cursor-pointer">
+                </th>
+                <th class="px-4 py-2.5 cursor-pointer hover:text-slate-900 transition-colors group">
+                  <div class="flex items-center gap-1">
+                    <span>Contact</span>
+                    <i data-lucide="chevrons-up-down" class="w-3 h-3 text-slate-400 group-hover:text-slate-700"></i>
+                  </div>
+                </th>
+                <th class="px-4 py-2.5">Status</th>
+                <th class="px-4 py-2.5">Email</th>
+                <th class="px-4 py-2.5">Phone Number</th>
+                <th class="px-4 py-2.5">Country</th>
+                <th class="px-4 py-2.5 cursor-pointer hover:text-slate-900 transition-colors group">
+                  <div class="flex items-center gap-1">
+                    <span>Last Modified By</span>
+                    <i data-lucide="chevrons-up-down" class="w-3 h-3 text-slate-400 group-hover:text-slate-700"></i>
+                  </div>
+                </th>
+                <th class="w-24 px-6 py-2.5 text-right">Actions</th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-[#e6eaf0] text-xs text-slate-600">
+              <!-- 行 1: Austin Powers -->
+              <tr class="hover:bg-slate-50/80 transition-colors group">
+                <td class="px-6 py-3 text-center">
+                  <input type="checkbox" class="rounded border-slate-300 text-[#172033] focus:ring-[#172033]/20 cursor-pointer">
+                </td>
+
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-full bg-slate-100 text-[#172033] font-semibold text-[11px] flex items-center justify-center border border-slate-200 shrink-0">
+                      AP
+                    </div>
+                    <div>
+                      <span class="font-semibold text-slate-900 group-hover:text-[#172033] transition-colors block leading-tight">
+                        Austin Powers
+                      </span>
+                      <span class="text-[11px] text-slate-400 block leading-tight mt-0.5">International Man Of Mystery 1998</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60 leading-tight">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Active
+                  </span>
+                </td>
+
+                <td class="px-4 py-3 font-mono text-[11px] text-slate-600">austin@danger.powers</td>
+                <td class="px-4 py-3 text-slate-600 font-mono text-[11px]">112</td>
+                
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] bg-slate-100 text-slate-700 font-medium">
+                    🇬🇧 Groove
+                  </span>
+                </td>
+
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop&crop=faces" class="w-5 h-5 rounded-full ring-1 ring-slate-200" alt="Admin">
+                    <div>
+                      <span class="text-slate-800 font-medium block leading-none">Administrator</span>
+                      <span class="text-[10px] text-slate-400 leading-none mt-0.5 block">2 days ago</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="px-6 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+                    <button title="Copy Email" class="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded transition-colors">
+                      <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button title="Edit" class="p-1 text-slate-400 hover:text-[#172033] hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button title="More" class="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded transition-colors">
+                      <i data-lucide="more-vertical" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- 行 2: Mick Json -->
+              <tr class="hover:bg-slate-50/80 transition-colors group">
+                <td class="px-6 py-3 text-center">
+                  <input type="checkbox" class="rounded border-slate-300 text-[#172033] focus:ring-[#172033]/20 cursor-pointer">
+                </td>
+
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-full bg-slate-100 text-[#172033] font-semibold text-[11px] flex items-center justify-center border border-slate-200 shrink-0">
+                      MJ
+                    </div>
+                    <div>
+                      <span class="font-semibold text-slate-900 group-hover:text-[#172033] transition-colors block leading-tight">
+                        Mick Json
+                      </span>
+                      <span class="text-[11px] text-slate-400 block leading-tight mt-0.5">sales manager</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200/60 leading-tight">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                    Lead
+                  </span>
+                </td>
+
+                <td class="px-4 py-3 font-mono text-[11px] text-slate-600">json@gmail.com</td>
+                <td class="px-4 py-3 text-slate-600 font-mono text-[11px]">+1 13874 983 9212</td>
+
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] bg-slate-100 text-slate-700 font-medium">
+                    🇸🇬 新加坡
+                  </span>
+                </td>
+
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop&crop=faces" class="w-5 h-5 rounded-full ring-1 ring-slate-200" alt="Admin">
+                    <div>
+                      <span class="text-slate-800 font-medium block leading-none">Administrator</span>
+                      <span class="text-[10px] text-slate-400 leading-none mt-0.5 block">4 days ago</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="px-6 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+                    <button title="Copy Email" class="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded transition-colors">
+                      <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button title="Edit" class="p-1 text-slate-400 hover:text-[#172033] hover:bg-slate-100 rounded transition-colors">
+                      <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button title="More" class="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded transition-colors">
+                      <i data-lucide="more-vertical" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 卡片底栏分页 -->
+        <div class="px-6 py-2.5 border-t border-[#e6eaf0] bg-white flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div class="flex items-center gap-2">
+            <span>Showing <span class="font-medium text-slate-800">1</span> to <span class="font-medium text-slate-800">2</span> of <span class="font-medium text-slate-800">2</span> contacts</span>
+          </div>
+
+          <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2">
+              <span>Rows per page:</span>
+              <button class="h-7 inline-flex items-center gap-1.5 px-2 rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-medium transition-colors">
+                <span>10</span>
+                <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1">
+              <button disabled class="p-1 rounded-md text-slate-300 cursor-not-allowed">
+                <i data-lucide="chevrons-left" class="w-3.5 h-3.5"></i>
+              </button>
+              <button disabled class="p-1 rounded-md text-slate-300 cursor-not-allowed">
+                <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+              </button>
+              <button class="p-1 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </button>
+              <button class="p-1 rounded-md text-slate-600 hover:bg-slate-100 transition-colors">
+                <i data-lucide="chevrons-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- 右下角帮助入口 -->
+    <div class="fixed bottom-5 right-5 flex items-center gap-2">
+      <button title="Keyboard Shortcuts & Help" class="h-9 px-3 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-[#172033] hover:border-slate-300 flex items-center gap-1.5 text-xs font-medium transition-all hover:bg-slate-50 active:scale-95">
+        <i data-lucide="help-circle" class="w-3.5 h-3.5 text-slate-400"></i>
+        <span>Help & Guide</span>
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

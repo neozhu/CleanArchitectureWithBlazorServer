@@ -1,9 +1,6 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.SystemLogs.DTOs
 @using CleanArchitecture.Blazor.Application.Features.SystemLogs.Queries.ChatData
 @using ApexCharts
-@implements IDisposable
-
-@inject LayoutService LayoutService
 @inject IStringLocalizer<SystemLogs> L
 
 <div class="d-flex flex-grow-1 mb-5">
@@ -38,12 +35,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var isDarkMode = LayoutService.IsDarkMode;
-        var colors = isDarkMode ? new List<string> { "#0277BD", "#039BE5" } : new List<string> { "#1976D2", "#90CAF9" };
+        var colors = new List<string> { "#1976D2", "#90CAF9" };
         Options.Chart.Background = "transparent";
         Options.Theme = new Theme
             {
-                Mode = isDarkMode ? Mode.Dark : Mode.Light,
+                Mode = Mode.Light,
             };
 
         Options.Fill = new Fill
@@ -99,29 +95,6 @@
                 }
             };
 
-        LayoutService.MajorUpdateOccurred += LayoutServiceOnMajorUpdateOccurred;
-
         Data = await Mediator.Send(new SystemLogsTimeLineChatDataQuery());
-    }
-
-    private async Task LayoutServiceOnMajorUpdateOccurred()
-    {
-       
-            var isDarkMode = LayoutService.IsDarkMode;
-            var colors = isDarkMode ? new List<string> { "#0277BD", "#039BE5" } : new List<string> { "#1976D2", "#90CAF9" };
-            Options.Theme.Mode = isDarkMode ? Mode.Dark : Mode.Light;
-            Options.Fill.Gradient.GradientToColors = colors;
-
-            // await Chart.UpdateOptionsAsync(true, true, false);
-            // await Chart.RenderAsync();
-            // StateHasChanged();
-        
-    }
-
-
-    public void Dispose()
-    {
-        LayoutService.MajorUpdateOccurred -= LayoutServiceOnMajorUpdateOccurred;
-        GC.SuppressFinalize(this);
     }
 }

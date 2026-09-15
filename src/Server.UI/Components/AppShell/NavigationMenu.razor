@@ -1,25 +1,25 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu
 @using CleanArchitecture.Blazor.Server.UI.Services.Navigation
 @inject IMenuService MenuService
-@inject LayoutService LayoutService
 @inject IStringLocalizer<NavigationMenu> L
 
+<div class="studio-navigation">
 <MudDrawer Breakpoint="Breakpoint.Md"
-           Class="side-menu"
+           Class="side-menu studio-navigation"
            Elevation="0"
            Open="DrawerOpen"
            OpenChanged="@(e => DrawerOpenChanged.InvokeAsync(e))"
            Variant="DrawerVariant.Responsive">
-    <MudDrawerHeader Class="d-flex pa-0">
+    <MudDrawerHeader Class="studio-navigation-brand">
         <TenantSelector />
     </MudDrawerHeader>
 
-    <MudNavMenu>
+    <MudNavMenu Class="studio-navigation-menu">
         @foreach (var section in MenuSections.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
         {
             @if (section is not null)
             {
-                <div class="@(LayoutService.IsRTL ? "mr-6" : "ml-6") my-3">
+                <div class="studio-navigation-section">
                     <MudText Typo="Typo.subtitle1">
                         <b>
                             @(L[section.Title])
@@ -43,7 +43,7 @@
                                             @if (menuItem.PageStatus != PageStatus.Completed)
                                             {
                                                 <MudSpacer/>
-                                                <MudChip T="string" Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
+                                                <MudChip T="string" Class="studio-navigation-status" Size="Size.Small" Variant="Variant.Text">
                                                     @(L[menuItem.PageStatus.GetDisplayName()])
                                                 </MudChip>
                                             }
@@ -60,7 +60,7 @@
                                     @if (sectionItem.PageStatus != PageStatus.Completed)
                                     {
                                         <MudSpacer/>
-                                        <MudChip T="string" Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
+                                        <MudChip T="string" Class="studio-navigation-status" Size="Size.Small" Variant="Variant.Text">
 											@(L[sectionItem.PageStatus.GetDisplayName()])
                                         </MudChip>
                                     }
@@ -73,44 +73,20 @@
         }
     </MudNavMenu>
 
-    <MudDivider Class="mt-auto"></MudDivider>
-    
+    <div class="studio-navigation-footer">
     @* 用户信息显示区域 - 使用独立组件 *@
-    <UserInfoCard OnSettingClick="OnSettingClick" />
+    <UserInfoCard />
     
-    <MudNavMenu Class="d-flex justify-space-between pa-2">
-        <MudLink Href="#" Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">@L[ApplicationSettings.Copyright]</MudLink>
-        <MudText Class="" Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">@L["version"] @ApplicationSettings.Version</MudText>
-    </MudNavMenu>
+    <div class="studio-navigation-copyright">
+        <span>@L[ApplicationSettings.Copyright]</span>
+        <span>@L["version"] @ApplicationSettings.Version</span>
+    </div>
+    </div>
 
 </MudDrawer>
+</div>
 
 
-@if (LayoutService.IsRTL)
-{
-    <style>
-        .mud-nav-link.active:not(.mud-nav-link-disabled) {
-            border-left: 3px solid var(--mud-palette-primary);
-            background-color: rgba(var(--mud-palette-primary-rgb), 0.1);
-        }
-
-        .side-menu {
-            border-left: 1px solid var(--mud-palette-table-lines)
-        }
-    </style>
-}
-else
-{
-    <style>
-        .mud-nav-link.active:not(.mud-nav-link-disabled) {
-            border-right: 3px solid var(--mud-palette-primary);
-        }
-
-        .side-menu {
-            border-right: 1px solid var(--mud-palette-table-lines)
-        }
-    </style>
-}
 
 @code
 {
@@ -121,8 +97,6 @@ else
 
     private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
     [EditorRequired] [Parameter] public string[] Roles { get; set; } = Array.Empty<string>();
-    
-    [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
 
     private bool Expanded(MenuSectionItemModel menu)
     {

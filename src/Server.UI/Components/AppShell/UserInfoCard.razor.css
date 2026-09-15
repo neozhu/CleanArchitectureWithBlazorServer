@@ -1,0 +1,16 @@
+.studio-user-card { padding: 10px; border-radius: calc(var(--mud-default-borderradius) * 1.5); background: color-mix(in srgb, var(--studio-drawer-contrast) 4%, transparent); border: 1px solid color-mix(in srgb, var(--studio-drawer-contrast) 6%, transparent); transition: background-color 150ms; }
+.studio-user-card:hover,
+.studio-user-card:focus-within { background: color-mix(in srgb, var(--studio-drawer-contrast) 8%, transparent); }
+.studio-user-avatar { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex-shrink: 0; }
+.studio-user-avatar ::deep .mud-avatar { box-shadow: 0 0 0 1px color-mix(in srgb, var(--studio-drawer-contrast) 20%, transparent); }
+.studio-user-card ::deep .studio-user-name,
+.studio-user-card ::deep .studio-user-role { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.25; }
+.studio-user-card ::deep .studio-user-name { font-size: var(--mud-typography-default-size); font-weight: var(--mud-typography-h6-weight); color: var(--studio-drawer-contrast); }
+.studio-user-card ::deep .studio-user-role { margin-top: 2px; font-size: var(--mud-typography-caption-size); color: var(--mud-palette-drawer-icon); }
+.studio-user-card ::deep .studio-user-more { padding: 0; color: var(--mud-palette-drawer-icon); }
+.studio-user-card ::deep .studio-user-more svg { width: 16px; height: 16px; }
+.studio-user-card ::deep .studio-user-more:hover { color: var(--studio-drawer-contrast); }
+
+@media (prefers-reduced-motion: reduce) {
+    .studio-user-card { transition: none; }
+}

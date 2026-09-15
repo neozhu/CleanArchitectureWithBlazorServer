@@ -7,10 +7,8 @@ using CleanArchitecture.Blazor.Server.UI.Hubs;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Services;
 using CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
-using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
 using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
-using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Localization;
@@ -97,10 +95,8 @@ public static class DependencyInjection
             .AddScoped<HubClient>();
         services
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
-            .AddScoped<LayoutService>()
             .AddScoped<DialogServiceHelper>()
             .AddScoped<BlazorDownloadFileService>()
-            .AddScoped<IUserPreferencesService, UserPreferencesService>()
             .AddScoped<IMenuService, MenuService>()
             .AddScoped<InMemoryNotificationService>()
             .AddScoped<INotificationService>(sp =>
