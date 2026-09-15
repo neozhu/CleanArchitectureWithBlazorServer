@@ -29,21 +29,36 @@
 }
 
 .contacts-card__breadcrumb {
-    gap: 0.25rem;
     margin-bottom: 0.6rem;
-    color: var(--mud-palette-text-secondary);
-    font-size: 0.6875rem;
 }
 
-.contacts-card__breadcrumb ::deep .mud-icon-root {
+.contacts-card__breadcrumb ::deep .mud-breadcrumbs {
+    padding: 0;
+    line-height: 1.25;
+}
+
+.contacts-card__breadcrumb ::deep .mud-breadcrumb-item > a {
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.75rem;
+    opacity: 0.75;
+}
+
+.contacts-card__breadcrumb ::deep .mud-breadcrumb-separator {
+    align-items: center;
+    padding: 0;
+    margin: 0 0.25rem;
+}
+
+.contacts-card__breadcrumb ::deep .mud-breadcrumb-separator .mud-icon-root {
     width: 0.875rem;
     height: 0.875rem;
     color: var(--mud-palette-action-disabled);
 }
 
-.contacts-card__breadcrumb strong {
+.contacts-card__breadcrumb ::deep .mud-breadcrumb-item:last-child > a {
     color: var(--mud-palette-text-primary);
     font-weight: 600;
+    opacity: 1;
 }
 
 .contacts-card__title-row { gap: 0.625rem; }

@@ -19,15 +19,15 @@
 <MudPaper Class="contacts-card" Elevation="0">
     <header class="contacts-card__header">
         <div class="contacts-card__heading">
-            <div class="contacts-card__breadcrumb" aria-label="Breadcrumb">
-                <span>@L["Application"]</span>
-                <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
-                <span>@L["E-Commerce"]</span>
-                <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
-                <strong>@L["Contacts"]</strong>
+            <div class="contacts-card__breadcrumb">
+                <MudBreadcrumbs Items="_breadcrumbItems">
+                    <SeparatorTemplate>
+                        <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+                    </SeparatorTemplate>
+                </MudBreadcrumbs>
             </div>
             <MudText Typo="Typo.h4">@L[_contactDto.GetClassDescription()]</MudText>
-            <MudText Typo="Typo.body2" Class="mud-text-secondary">
+            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
                 @L["Manage people, external clients, and business relationship pipelines."]
             </MudText>
         </div>
@@ -75,7 +75,6 @@
     </header>
 
     <MudDataGrid ServerData="@(ServerReload)"
-                 Class="contacts-grid"
                  Elevation="0"
                  FixedHeader="true"
                  FixedFooter="false"
@@ -173,6 +172,7 @@
     private HashSet<ContactDto> _selectedContacts = new HashSet<ContactDto>();
     private MudDataGrid<ContactDto> _contactsGrid = default!;
     private ContactDto _contactDto = new();
+    private List<BreadcrumbItem> _breadcrumbItems = [];
     private bool _loading;
     private bool _uploading;
     private bool _exporting;
@@ -185,6 +185,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _breadcrumbItems =
+        [
+            new BreadcrumbItem(L["Application"], href: null),
+            new BreadcrumbItem(L["E-Commerce"], href: null),
+            new BreadcrumbItem(L["Contacts"], href: null, disabled: true)
+        ];
         Title = $"{ApplicationSettings.AppName} - {L[_contactDto.GetClassDescription()]}";
         _accessRights = await PermissionService.GetAccessRightsAsync<ContactsAccessRights>();
     }
