@@ -119,7 +119,7 @@ public static class Theme
             LayoutProperties = new LayoutProperties
             {
                 AppbarHeight = "64px", // More modern height
-                DefaultBorderRadius = "6px", // More modern border radius
+                DefaultBorderRadius = "4px", // More modern border radius
                 DrawerWidthLeft = "256px",
                 DrawerWidthRight = "256px",
                 DrawerMiniWidthRight= "260px"
