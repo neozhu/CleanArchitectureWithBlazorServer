@@ -189,7 +189,7 @@ public static class Theme
                 {
                     FontSize = ".857rem",
                     FontWeight = "500",
-                    LineHeight = "2",
+                    LineHeight = "1.75",
                     LetterSpacing = "0.01em",
                     TextTransform = "none"
                 },

@@ -16,10 +16,10 @@
 @attribute [Authorize(Policy = Permissions.Contacts.View)]
 <PageTitle>@Title</PageTitle>
 
-<MudPaper Class="contacts-card" Elevation="0">
-    <header class="contacts-card__header">
-        <div class="contacts-card__heading">
-            <div class="contacts-card__breadcrumb">
+<MudPaper Class="page-card" Elevation="0">
+    <header class="page-card__header d-flex flex-column flex-sm-row align-start justify-space-between gap-4">
+        <div class="page-card__heading">
+            <div class="page-card__breadcrumb d-flex align-center">
                 <MudBreadcrumbs Items="_breadcrumbItems">
                     <SeparatorTemplate>
                         <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
@@ -32,7 +32,7 @@
             </MudText>
         </div>
 
-        <div class="contacts-card__actions">
+        <div class="d-flex flex-wrap justify-start justify-sm-end gap-2">
             <MudButton Variant="Variant.Outlined" Disabled="@_loading" OnClick="OnRefresh"
                        StartIcon="@Icons.Material.Outlined.Refresh">@AppStrings.Refresh</MudButton>
 
@@ -74,6 +74,22 @@
         </div>
     </header>
 
+    <section class="page-card__filter-region" aria-label="@L["Contact filters"]">
+        <div class="page-card__filters d-flex flex-column flex-sm-row align-stretch align-sm-center gap-2">
+            <MudEnumSelect Class="page-card__view-select" TEnum="ContactListView"
+                           ValueChanged="OnListViewChanged" Value="_contactsQuery.ListView" Dense="true"
+                           Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.Start"
+                           AdornmentIcon="@Icons.Material.Outlined.FilterList" Label="@AppStrings.ListView" />
+            @if (_accessRights.Search)
+            {
+                <MudTextField T="string" Class="page-card__search" ValueChanged="OnSearch"
+                              Value="@_contactsQuery.Keyword" Placeholder="@L["Filter by name, email, country..."]"
+                              Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
+            }
+        </div>
+    </section>
+
     <MudDataGrid ServerData="@(ServerReload)"
                  Elevation="0"
                  FixedHeader="true"
@@ -87,24 +103,6 @@
                  RowClick="@(s=>OnDataGridRowClick(s.Item))"
                  @bind-SelectedItems="_selectedContacts"
                  Hover="true" @ref="_contactsGrid">
-        <ToolBarContent>
-            <div class="contacts-card__toolbar">
-                <div class="contacts-card__filters">
-                    <MudEnumSelect Class="contacts-card__view-select" TEnum="ContactListView"
-                                   ValueChanged="OnListViewChanged" Value="_contactsQuery.ListView" Dense="true"
-                                   Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.Start"
-                                   AdornmentIcon="@Icons.Material.Outlined.FilterList" Label="@AppStrings.ListView" />
-                    @if (_accessRights.Search)
-                    {
-                        <MudTextField T="string" Class="contacts-card__search" ValueChanged="OnSearch"
-                                      Value="@_contactsQuery.Keyword" Placeholder="@L["Filter by name, email, country..."]"
-                                      Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
-                    }
-                </div>
-
-            </div>
-        </ToolBarContent>
         <Columns>
             <SelectColumn ShowInFooter="false"></SelectColumn>
             <TemplateColumn HeaderStyle="width:92px;text-align:right" Title="@AppStrings.Actions" Sortable="false">
@@ -141,7 +139,7 @@
                 <CellTemplate>
 
                     <div class="d-flex flex-column">
-                        <MudText Typo="Typo.body2" Class="contacts-card__contact-name">@context.Item.Name</MudText>
+                        <MudText Typo="Typo.body2">@context.Item.Name</MudText>
                         <MudText Typo="Typo.caption" Class="mud-text-secondary">@context.Item.Description</MudText>
                     </div>
 
