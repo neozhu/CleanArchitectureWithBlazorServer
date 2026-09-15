@@ -166,9 +166,9 @@ public static class Theme
                 },
                 H4 = new H4Typography
                 {
-                    FontSize = "1.5rem",
+                    FontSize = "1.375rem",
                     FontWeight = "600",
-                    LineHeight = "1.75rem",
+                    LineHeight = "1.5rem",
                     LetterSpacing = "-0.025em"
                 },
                 H5 = new H5Typography
@@ -189,7 +189,7 @@ public static class Theme
                 {
                     FontSize = ".857rem",
                     FontWeight = "500",
-                    LineHeight = "1.33333",
+                    LineHeight = "2",
                     LetterSpacing = "0.01em",
                     TextTransform = "none"
                 },
