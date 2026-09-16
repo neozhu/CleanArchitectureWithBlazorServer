@@ -15,124 +15,135 @@
 
 <PageTitle>@Title</PageTitle>
 
-<MudDataGrid @ref="_table" FixedHeader="true"
-             FixedFooter="false"
-             @bind-RowsPerPage="_defaultPageSize"
-             Hover="true"
-             MultiSelection="true"
-             @bind-SelectedItems="_selectedItems"
-             ReadOnly="false"
-             EditMode="DataGridEditMode.Cell"
-             T="PicklistSetDto"
-             CommittedItemChanges="@CommittedItemChanges"
-             ServerData="ServerReload">
-    <ToolBarContent>
-        <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
-            <!-- Left Toolbar: Icon, Title and List View -->
-            <MudStack Row AlignItems="AlignItems.Start">
-                <MudIcon Icon="@Icons.Material.Filled.ViewList" Size="Size.Large" />
-                <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1" Class="mb-2">@L[SelectedItem.GetClassDescription()]</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="PickListView" Value="_picklistQuery.ListView"
-                                   ValueChanged="OnChangedListView" Dense="true" Label="@L["List View"]">
+<MudPaper Class="page-card" Elevation="0">
+    <header class="page-card__header d-flex flex-column flex-sm-row align-start justify-space-between gap-4">
+        <div class="page-card__heading">
+            <div class="page-card__breadcrumb d-flex align-center">
+                <MudBreadcrumbs Items="_breadcrumbItems">
+                    <SeparatorTemplate>
+                        <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+                    </SeparatorTemplate>
+                </MudBreadcrumbs>
+            </div>
+            <MudText Typo="Typo.h4">@L[SelectedItem.GetClassDescription()]</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                @L["Manage system picklists, lookup values, and dictionary entries."]
+            </MudText>
+        </div>
+
+        <div class="d-flex flex-wrap align-center justify-start justify-sm-end gap-2">
+            <MudButton Variant="Variant.Outlined" Disabled="@_loading" OnClick="OnRefresh"
+                       StartIcon="@Icons.Material.Outlined.Refresh">@AppStrings.Refresh</MudButton>
+
+            @if (_accessRights.Create)
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Add"
+                           OnClick="OnCreate">@AppStrings.New</MudButton>
+            }
+            @if (_accessRights.Export)
+            {
+                <MudButton Variant="Variant.Outlined" Disabled="@_exporting" OnClick="OnExport"
+                           StartIcon="@Icons.Material.Outlined.Download">@AppStrings.Export</MudButton>
+            }
+            <MudMenu TransformOrigin="Origin.TopRight" AnchorOrigin="Origin.BottomRight"
+                     Icon="@Icons.Material.Filled.MoreHoriz" AriaLabel="@AppStrings.More">
+                @if (_accessRights.Delete)
+                {
+                    <MudMenuItem Disabled="@(_selectedItems.Count == 0)" OnClick="OnDeleteChecked">@AppStrings.Delete</MudMenuItem>
+                }
+                @if (_accessRights.Import)
+                {
+                    <MudMenuItem>
+                        <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
+                            <CustomContent>
+                                <MudButton Class="pa-0 ma-0"
+                                           OnClick="@context.OpenFilePickerAsync"
+                                           Style="font-weight:400;text-transform:none;"
+                                           Variant="Variant.Text"
+                                           Disabled="@_uploading">
+                                    @AppStrings.Import
+                                </MudButton>
+                            </CustomContent>
+                            <SelectedTemplate></SelectedTemplate>
+                        </MudFileUpload>
+                    </MudMenuItem>
+                }
+            </MudMenu>
+        </div>
+    </header>
+
+    <section class="page-card__filter-region" aria-label="@L["Picklist filters"]">
+        <div class="page-card__filters d-flex flex-column flex-sm-row align-stretch align-sm-center gap-2">
+            <MudEnumSelect Class="page-card__view-select" TEnum="PickListView" Value="_picklistQuery.ListView"
+                           ValueChanged="OnChangedListView" Dense="true"
+                           Variant="Variant.Outlined" Margin="Margin.Dense"
+                           Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.FilterList"
+                           Label="@L["List View"]">
+            </MudEnumSelect>
+            @if (_accessRights.Search)
+            {
+                <MudEnumSelect TEnum="Picklist?" Class="page-card__view-select"
+                               Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true"
+                               ValueChanged="OnPicklistSearch" Dense="true"
+                               Variant="Variant.Outlined" Margin="Margin.Dense"
+                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.BookmarkBorder"
+                               Label="@L["Picklist"]" />
+                <MudTextField T="string" Class="page-card__search"
+                              Value="@_picklistQuery.Keyword" ValueChanged="OnKeywordSearch"
+                              Placeholder="@AppStrings.Search"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                              IconSize="Size.Small" />
+            }
+        </div>
+    </section>
+
+    <MudDataGrid @ref="_table" FixedHeader="true"
+                 Elevation="0"
+                 FixedFooter="false"
+                 @bind-RowsPerPage="_defaultPageSize"
+                 Hover="true"
+                 MultiSelection="true"
+                 @bind-SelectedItems="_selectedItems"
+                 ReadOnly="false"
+                 EditMode="DataGridEditMode.Cell"
+                 T="PicklistSetDto"
+                 CommittedItemChanges="@CommittedItemChanges"
+                 ServerData="ServerReload">
+        <Columns>
+            <SelectColumn ShowInFooter="false" />
+            <PropertyColumn Property="x => x.Name" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Name)]">
+                <EditTemplate>
+                    <MudEnumSelect @bind-Value="@context.Item.Name" TEnum="Picklist" Placeholder="@L["Select picklist name"]" Required="true">
                     </MudEnumSelect>
-                </MudStack>
-            </MudStack>
-            <!-- Right Toolbar: Actions and Search -->
-            <MudStack Spacing="2" AlignItems="AlignItems.End">
-                <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
-                    <MudButton Disabled="@_loading"
-                               OnClick="OnRefresh"
-                               StartIcon="@Icons.Material.Outlined.Refresh">
-                        @AppStrings.Refresh
-                    </MudButton>
-                    @if (_accessRights.Create)
-                    {
-                        <MudButton StartIcon="@Icons.Material.Outlined.Add"
-                                   OnClick="OnCreate">
-                            @AppStrings.New
-                        </MudButton>
-                    }
-                    @if (_accessRights.Delete)
-                    {
-                        <MudButton Disabled="@(_selectedItems.Count == 0)"
-                                   StartIcon="@Icons.Material.Outlined.DeleteOutline"
-                                   OnClick="OnDeleteChecked">
-                            @AppStrings.Delete
-                        </MudButton>
-                    }
-                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@AppStrings.More">
-                        
-                        @if (_accessRights.Export)
-                        {
-                            <MudMenuItem Disabled="@_exporting"
-                                         OnClick="OnExport">
-                                @AppStrings.Export
-                            </MudMenuItem>
-                        }
-                        @if (_accessRights.Import)
-                        {
-                            <MudMenuItem>
-                                <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
-                                    <CustomContent>
-                                        <MudButton Class="pa-0 ma-0"
-                                                   OnClick="@context.OpenFilePickerAsync"
-                                                   Style="font-weight:400;text-transform:none;"
-                                                   Variant="Variant.Text"
-                                                   Disabled="@_uploading">
-                                            @AppStrings.Import
-                                        </MudButton>
-                                    </CustomContent>
-                                    <SelectedTemplate></SelectedTemplate>
-                                </MudFileUpload>
-                            </MudMenuItem>
-                        }
-                    </MudMenu>
-                </MudStack>
-                <MudStack Row Spacing="1">
-                    @if (_accessRights.Search)
-                    {
-                        <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true"
-                                       ValueChanged="OnPicklistSearch" Style="width:160px" FullWidth="true" />
-                        <MudTextField T="string" Value="@_picklistQuery.Keyword" ValueChanged="OnKeywordSearch" Placeholder="@AppStrings.Search"
-                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
-                    }
-                </MudStack>
-            </MudStack>
-        </MudStack>
-    </ToolBarContent>
-    <Columns>
-        <PropertyColumn Property="x => x.Name" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Name)]">
-            <EditTemplate>
-                <MudEnumSelect @bind-Value="@context.Item.Name" TEnum="Picklist" Placeholder="@L["Select picklist name"]" Required="true">
-                </MudEnumSelect>
-            </EditTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.Value" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Value)]" />
-        <PropertyColumn Property="x => x.Text" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Text)]" />
-        <PropertyColumn Property="x => x.Description" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Description)]" />
-        <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Delete" Sortable="false">
-            <CellTemplate>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" aria-label="@AppStrings.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
-            </CellTemplate>
-            <EditTemplate>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" aria-label="@AppStrings.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
-            </EditTemplate>
-        </TemplateColumn>
-    </Columns>
-    <NoRecordsContent>
-        <MudDataGridStatus Icon="@Icons.Material.TwoTone.ListAlt"
-                           Text="@L["No Picklist Items Found"]"
-                           SubText="@L["Try adjusting your search or filter to find what you're looking for."]" />
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudDataGridStatus IsLoading="true"
-                           Text="@L["Loading Picklist Items..."]" />
-    </LoadingContent>
-    <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
-    </PagerContent>
-</MudDataGrid>
+                </EditTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.Value" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Value)]" />
+            <PropertyColumn Property="x => x.Text" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Text)]" />
+            <PropertyColumn Property="x => x.Description" Title="@L[SelectedItem.GetMemberDisplayName(x => x.Description)]" />
+            <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Delete" Sortable="false">
+                <CellTemplate>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" aria-label="@AppStrings.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
+                </CellTemplate>
+                <EditTemplate>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" aria-label="@AppStrings.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
+                </EditTemplate>
+            </TemplateColumn>
+        </Columns>
+        <NoRecordsContent>
+            <MudDataGridStatus Icon="@Icons.Material.TwoTone.ListAlt"
+                               Text="@L["No Picklist Items Found"]"
+                               SubText="@L["Try adjusting your search or filter to find what you're looking for."]" />
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudDataGridStatus IsLoading="true"
+                               Text="@L["Loading Picklist Items..."]" />
+        </LoadingContent>
+        <PagerContent>
+            <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
 
 @code {
     #region Fields & Properties
@@ -141,6 +152,7 @@
     private UserProfile UserProfile => UserProfileState.Value;
     private MudDataGrid<PicklistSetDto> _table = null!;
     public string Title { get; set; } = "Picklist";
+    private List<BreadcrumbItem> _breadcrumbItems = [];
     private IList<PicklistSetDto> _keyValueList = new List<PicklistSetDto>();
     private HashSet<PicklistSetDto> _selectedItems = new();
     private PicklistSetDto SelectedItem { get; set; } = new();
@@ -165,6 +177,12 @@
     protected override async Task OnInitializedAsync()
     {
         Title = $"{ApplicationSettings.AppName} - {L[SelectedItem.GetClassDescription()]}";
+        _breadcrumbItems =
+        [
+            new BreadcrumbItem(L["Application"], href: null),
+            new BreadcrumbItem(L["System"], href: null),
+            new BreadcrumbItem(L[SelectedItem.GetClassDescription()], href: null, disabled: true)
+        ];
         _accessRights = await PermissionService.GetAccessRightsAsync<PicklistSetsAccessRights>();
     }
 

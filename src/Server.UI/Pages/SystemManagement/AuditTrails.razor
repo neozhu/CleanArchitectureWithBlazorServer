@@ -11,64 +11,69 @@
 @inject IStringLocalizer<AuditTrails> L
 <PageTitle>@Title</PageTitle>
 
-<MudDataGrid ServerData="@(ServerReload)"
-			 T="AuditTrailDto"
-			 FixedHeader="true"
-			 FixedFooter="false"
-			 @bind-RowsPerPage="_defaultPageSize"
-			 Loading="@_loading"
-			 Hover="true" @ref="_auditTrailGrid">
-	<ToolBarContent>
-		<MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
-			<!-- Left Toolbar: Icon, Title and List View -->
-			<MudStack Row AlignItems="AlignItems.Start">
-				<MudIcon Icon="@Icons.Material.Filled.ReceiptLong" Size="Size.Large" />
-				<MudStack Spacing="0">
-					<MudText Typo="Typo.subtitle1" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
-					<MudEnumSelect Style="min-width:120px"
-								   TEnum="AuditTrailListView"
-								   ValueChanged="OnListViewChanged"
-								   Value="_auditTrailsQuery.ListView"
-								   Dense="true"
-								   Label="@L["List View"]">
-					</MudEnumSelect>
-				</MudStack>
-			</MudStack>
-			<!-- Right Toolbar: Actions and Search -->
-			<MudStack Spacing="2" AlignItems="AlignItems.End">
-				<MudStack Row AlignItems="AlignItems.Center" Spacing="1">
-					<MudButton OnClick="OnRefreshAuditTrails"
-							   StartIcon="@Icons.Material.Outlined.Refresh">
-						@AppStrings.Refresh
-					</MudButton>
-				</MudStack>
-				<MudStack Row Spacing="1" AlignItems="AlignItems.End">
-					<!-- Search by audit type -->
-					<MudEnumSelect TEnum="AuditType?"
-								   Placeholder="@L["Search by audit type"]"
-								   Value="_auditTrailsQuery.AuditType"
-								   Clearable="true"
-								   ValueChanged="OnAuditTypeSearch"
-								   Style="min-width:120px"
-								   FullWidth="true">
-					</MudEnumSelect>
-					<!-- Keyword search (hidden on small screens) -->
-					<MudHidden Breakpoint="Breakpoint.SmAndDown">
-						<MudTextField T="string"
-									  Value="_auditTrailsQuery.Keyword"
-									  ValueChanged="OnKeywordSearch"
-									  Placeholder="Search"
-									  Adornment="Adornment.End"
-									  Style="min-width:120px"
-									  FullWidth="true"
-									  AdornmentIcon="@Icons.Material.Filled.Search"
-									  IconSize="Size.Small">
-						</MudTextField>
-					</MudHidden>
-				</MudStack>
-			</MudStack>
-		</MudStack>
-	</ToolBarContent>
+<MudPaper Class="page-card" Elevation="0">
+	<header class="page-card__header d-flex flex-column flex-sm-row align-start justify-space-between gap-4">
+		<div class="page-card__heading">
+			<div class="page-card__breadcrumb d-flex align-center">
+				<MudBreadcrumbs Items="_breadcrumbItems">
+					<SeparatorTemplate>
+						<MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+					</SeparatorTemplate>
+				</MudBreadcrumbs>
+			</div>
+			<MudText Typo="Typo.h4">@L[_currentDto.GetClassDescription()]</MudText>
+			<MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+				@L["Track historical data modifications, user operations, and audit records."]
+			</MudText>
+		</div>
+
+		<div class="d-flex flex-wrap align-center justify-start justify-sm-end gap-2">
+			<MudButton Variant="Variant.Outlined" Disabled="@_loading" OnClick="OnRefreshAuditTrails"
+					   StartIcon="@Icons.Material.Outlined.Refresh">@AppStrings.Refresh</MudButton>
+		</div>
+	</header>
+
+	<section class="page-card__filter-region" aria-label="@L["Audit trail filters"]">
+		<div class="page-card__filters d-flex flex-column flex-sm-row align-stretch align-sm-center gap-2">
+			<MudEnumSelect Class="page-card__view-select"
+						   TEnum="AuditTrailListView"
+						   ValueChanged="OnListViewChanged"
+						   Value="_auditTrailsQuery.ListView"
+						   Dense="true"
+						   Variant="Variant.Outlined" Margin="Margin.Dense"
+						   Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.FilterList"
+						   Label="@L["List View"]">
+			</MudEnumSelect>
+			<MudEnumSelect Class="page-card__view-select"
+						   TEnum="AuditType?"
+						   Placeholder="@L["Search by audit type"]"
+						   Value="_auditTrailsQuery.AuditType"
+						   Clearable="true"
+						   ValueChanged="OnAuditTypeSearch"
+						   Dense="true"
+						   Variant="Variant.Outlined" Margin="Margin.Dense"
+						   Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Category"
+						   Label="@L["Audit Type"]">
+			</MudEnumSelect>
+			<MudTextField T="string" Class="page-card__search"
+						  Value="_auditTrailsQuery.Keyword"
+						  ValueChanged="OnKeywordSearch"
+						  Placeholder="@AppStrings.Search"
+						  Variant="Variant.Outlined" Margin="Margin.Dense"
+						  Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+						  IconSize="Size.Small">
+			</MudTextField>
+		</div>
+	</section>
+
+	<MudDataGrid ServerData="@(ServerReload)"
+				 Elevation="0"
+				 T="AuditTrailDto"
+				 FixedHeader="true"
+				 FixedFooter="false"
+				 @bind-RowsPerPage="_defaultPageSize"
+				 Loading="@_loading"
+				 Hover="true" @ref="_auditTrailGrid">
 	<Columns>
 		<HierarchyColumn T="AuditTrailDto" ButtonDisabledFunc="@(x => x.AuditType == AuditType.None)" />
 		<PropertyColumn Property="x => x.TableName" Title="@L[_currentDto.GetMemberDisplayName(x => x.TableName)]" />
@@ -97,7 +102,7 @@
 	<ChildRowContent>
 		<MudCard Elevation="0" Class="pa-2">
 			<MudCardContent>
-				<MudText Typo="Typo.overline" Class="ml-2">@L["Modifications in"] @context.Item.TableName.ToLower()</MudText>
+				<MudText Typo="Typo.overline" Class="ml-2">@L["Modifications in"] @context.Item.TableName?.ToLower()</MudText>
 				<MudDivider Class="mb-2" />
 
 				<MudSimpleTable Hover="false" Dense Elevation="0" Bordered="false">
@@ -137,6 +142,7 @@
 		<MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
 	</PagerContent>
 </MudDataGrid>
+</MudPaper>
 
 @code {
 	// Public page title
@@ -144,6 +150,7 @@
 
 	// Private fields using underscore and camelCase naming
 	private MudDataGrid<AuditTrailDto> _auditTrailGrid = null!;
+	private List<BreadcrumbItem> _breadcrumbItems = [];
 	private bool _loading;
 	private int _defaultPageSize = 15;
 	private readonly AuditTrailDto _currentDto = new();
@@ -158,6 +165,12 @@
 	{
 		// Set page title based on current DTO's class description
 		Title = $"{ApplicationSettings.AppName} - {L[_currentDto.GetClassDescription()]}";
+		_breadcrumbItems =
+		[
+			new BreadcrumbItem(L["Application"], href: null),
+			new BreadcrumbItem(L["System"], href: null),
+			new BreadcrumbItem(L[_currentDto.GetClassDescription()], href: null, disabled: true)
+		];
 		_accessRights = await PermissionService.GetAccessRightsAsync<AuditTrailsAccessRights>();
 	}
 

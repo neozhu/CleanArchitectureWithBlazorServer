@@ -104,13 +104,8 @@ public class MenuService : IMenuService
                             Title = "Profile",
                             Href = "/user/profile",
                             PageStatus = PageStatus.Completed
-                        },
-                        new()
-                        {
-                            Title = "Login History",
-                            Href = "/pages/identity/loginaudits",
-                            PageStatus = PageStatus.Completed
-                        },
+                        }
+                        
                     }
                 },
                 new()
@@ -130,12 +125,6 @@ public class MenuService : IMenuService
                         {
                             Title = "Audit Trails",
                             Href = "/system/audittrails",
-                            PageStatus = PageStatus.Completed
-                        },
-                        new()
-                        {
-                            Title = "Email Templates",
-                            Href = "/pages/system/email-templates",
                             PageStatus = PageStatus.Completed
                         },
                         new()

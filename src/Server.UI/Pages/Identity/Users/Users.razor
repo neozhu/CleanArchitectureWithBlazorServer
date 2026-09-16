@@ -35,133 +35,153 @@
 
 <PageTitle>@_pageTitle</PageTitle>
 
-<MudDataGrid T="ApplicationUserDto" @ref="_dataGrid" FixedHeader="true" FixedFooter="false"
-             @bind-RowsPerPage="_defaultPageSize" Hover="true" SelectOnRowClick="false" MultiSelection="true"
-             @bind-SelectedItems="_selectedUsers" Loading="@_isLoading" ServerData="@(LoadServerData)">
-    <ToolBarContent>
-        <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
-            <MudStack Row AlignItems="AlignItems.Start">
-                <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large" />
-                <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1" Class="mb-2">@L["Users"]</MudText>
-                    <MudSelect T="string" Style="min-width:120px" ValueChanged="HandleTenantListViewChangedAsync"
-                               Value="@_selectedTenantId" Dense="true" Label="@L["List View"]">
-                        <MudSelectItem T="string" Value="@string.Empty">@L["ALL"]</MudSelectItem>
-                        @foreach (var tenant in TenantService.DataSource)
-                        {
-                            <MudSelectItem T="string" Value="@tenant.Id">@tenant.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudStack>
-            </MudStack>
-            <MudStack Spacing="2" AlignItems="AlignItems.End">
-                <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
-                    <MudButton Disabled="@_isLoading" OnClick="RefreshDataGridAsync"
-                               StartIcon="@Icons.Material.Outlined.Refresh">
-                        @AppStrings.Refresh
-                    </MudButton>
-                    @if (_accessRights.Create)
-                    {
-                        <MudButton StartIcon="@Icons.Material.Outlined.Add" OnClick="CreateUserAsync">
-                            @AppStrings.New
-                        </MudButton>
-                    }
-                    @if (_accessRights.Delete)
-                    {
-                        <MudButton Disabled="@(!_selectedUsers.Any())" StartIcon="@Icons.Material.Outlined.DeleteOutline"
-                                   OnClick="DeleteCheckedUsersAsync">
-                            @AppStrings.Delete
-                        </MudButton>
-                    }
-                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight"
-                             EndIcon="@Icons.Material.Filled.MoreVert" Label="@AppStrings.More">
+<MudPaper Class="page-card" Elevation="0">
+    <header class="page-card__header d-flex flex-column flex-sm-row align-start justify-space-between gap-4">
+        <div class="page-card__heading">
+            <div class="page-card__breadcrumb d-flex align-center">
+                <MudBreadcrumbs Items="_breadcrumbItems">
+                    <SeparatorTemplate>
+                        <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+                    </SeparatorTemplate>
+                </MudBreadcrumbs>
+            </div>
+            <MudText Typo="Typo.h4">@L[_currentUserDto.GetClassDescription()]</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                @L["Manage user profiles, role assignments, and system access rights."]
+            </MudText>
+        </div>
 
-                        @if (_accessRights.Export)
-                        {
-                            <MudMenuItem Disabled="@_isExporting" OnClick="ExportUsersAsync">
-                                @AppStrings.Export
-                            </MudMenuItem>
-                        }
-                        @if (_accessRights.Import)
-                        {
-                            <MudMenuItem>
-                                <MudFileUpload T="IBrowserFile" FilesChanged="ImportDataAsync" Accept=".xlsx">
-                                    <CustomContent>
-                                        <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;" OnClick="@context.OpenFilePickerAsync"
-                                                   Variant="Variant.Text" Disabled="@_isUploading">
-                                            @AppStrings.Import
-                                        </MudButton>
-                                    </CustomContent>
-                                    <SelectedTemplate></SelectedTemplate>
-                                </MudFileUpload>
-                            </MudMenuItem>
-                        }
-                    </MudMenu>
-                </MudStack>
-                <MudStack Row Spacing="1">
-                    @if (_accessRights.Search)
+        <div class="d-flex flex-wrap align-center justify-start justify-sm-end gap-2">
+            <MudButton Variant="Variant.Outlined" Disabled="@_isLoading" OnClick="RefreshDataGridAsync"
+                       StartIcon="@Icons.Material.Outlined.Refresh">@AppStrings.Refresh</MudButton>
+
+            @if (_accessRights.Create)
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Add"
+                           OnClick="CreateUserAsync">@AppStrings.New</MudButton>
+            }
+            @if (_accessRights.Export)
+            {
+                <MudButton Variant="Variant.Outlined" Disabled="@_isExporting" OnClick="ExportUsersAsync"
+                           StartIcon="@Icons.Material.Outlined.Download">@AppStrings.Export</MudButton>
+            }
+            <MudMenu TransformOrigin="Origin.TopRight" AnchorOrigin="Origin.BottomRight"
+                     Icon="@Icons.Material.Filled.MoreHoriz" AriaLabel="@AppStrings.More">
+                @if (_accessRights.Delete)
+                {
+                    <MudMenuItem Disabled="@(!_selectedUsers.Any())" OnClick="DeleteCheckedUsersAsync">@AppStrings.Delete</MudMenuItem>
+                }
+                @if (_accessRights.Import)
+                {
+                    <MudMenuItem>
+                        <MudFileUpload T="IBrowserFile" FilesChanged="ImportDataAsync" Accept=".xlsx">
+                            <CustomContent>
+                                <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;" OnClick="@context.OpenFilePickerAsync"
+                                           Variant="Variant.Text" Disabled="@_isUploading">
+                                    @AppStrings.Import
+                                </MudButton>
+                            </CustomContent>
+                            <SelectedTemplate></SelectedTemplate>
+                        </MudFileUpload>
+                    </MudMenuItem>
+                }
+            </MudMenu>
+        </div>
+    </header>
+
+    <section class="page-card__filter-region" aria-label="@L["User filters"]">
+        <div class="page-card__filters d-flex flex-column flex-sm-row align-stretch align-sm-center gap-2">
+            <MudSelect T="string" Class="page-card__view-select"
+                       ValueChanged="HandleTenantListViewChangedAsync"
+                       Value="@_selectedTenantId" Dense="true"
+                       Variant="Variant.Outlined" Margin="Margin.Dense"
+                       Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.FilterList"
+                       Label="@L["List View"]">
+                <MudSelectItem T="string" Value="@string.Empty">@L["ALL"]</MudSelectItem>
+                @foreach (var tenant in TenantService.DataSource)
+                {
+                    <MudSelectItem T="string" Value="@tenant.Id">@tenant.Name</MudSelectItem>
+                }
+            </MudSelect>
+            @if (_accessRights.Search)
+            {
+                <MudSelect T="string" Class="page-card__view-select"
+                           Placeholder="@L["Search by role name"]"
+                           Value="@_searchRole" Clearable="true"
+                           ValueChanged="HandleRoleSearchAsync" Dense="true"
+                           Variant="Variant.Outlined" Margin="Margin.Dense"
+                           Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Shield"
+                           Label="@L["Role"]">
+                    @if (RoleService.DataSource.Any())
                     {
-                        <MudSelect T="string" Placeholder="@L["Search by role name"]" Value="@_searchRole"
-                                   Clearable="true" ValueChanged="HandleRoleSearchAsync" Style="width:150px">
-                            @if (RoleService.DataSource.Any())
-                            {
-                                @foreach (var role in RoleService.DataSource.Select(r => r.Name).Distinct())
-                                {
-                                    <MudSelectItem Value="@role">@role</MudSelectItem>
-                                }
-                            }
-                        </MudSelect>
-                        <MudTextField T="string" Immediate="false" ValueChanged="HandleUserSearchAsync" Value="@_searchString"
-                                      Placeholder="@AppStrings.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
-                        </MudTextField>
+                        @foreach (var role in RoleService.DataSource.Select(r => r.Name).Distinct())
+                        {
+                            <MudSelectItem Value="@role">@role</MudSelectItem>
+                        }
                     }
-                </MudStack>
-            </MudStack>
-        </MudStack>
-    </ToolBarContent>
-    <Columns>
-        <SelectColumn ShowInFooter="false" />
-        <TemplateColumn HeaderStyle="width:60px" Title="@AppStrings.Actions" Sortable="false">
-            <CellTemplate>
-                @if (_accessRights.Edit || _accessRights.Delete || _accessRights.ManageRoles ||
-                                                                _accessRights.RestPassword || _accessRights.SendRestPasswordMail || _accessRights.ManagePermissions)
-                {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small" Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info"
-                             AnchorOrigin="Origin.CenterLeft">
-                        @if (_accessRights.Edit)
-                        {
-                            <MudMenuItem OnClick="@(() => EditUserAsync(context.Item))">@AppStrings.Edit</MudMenuItem>
-                        }
-                        @if (_accessRights.Delete)
-                        {
-                            <MudMenuItem OnClick="@(() => DeleteUserAsync(context.Item))">@AppStrings.Delete</MudMenuItem>
-                        }
-                        @if (_accessRights.ManagePermissions)
-                        {
-                            <MudMenuItem OnClick="@(() => OpenPermissionsDrawerAsync(context.Item))">@L["Set Permissions"]</MudMenuItem>
-                        }
-                        @if (_accessRights.SendRestPasswordMail)
-                        {
-                            <MudMenuItem OnClick="@(() => SendResetPasswordEmailAsync(context.Item))">@L["Send Reset Password Email"]</MudMenuItem>
-                        }
-                        @if (_accessRights.RestPassword)
-                        {
-                            <MudMenuItem Disabled="@(!context.Item.IsActive)"
-                                         OnClick="@(() => OpenResetPasswordDialogAsync(context.Item))">@L["Reset Password"]</MudMenuItem>
-                        }
-                    </MudMenu>
-                }
-                else
-                {
-                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.DoNotTouch"
-                               IconColor="Color.Secondary" Size="Size.Small" Color="Color.Surface">
-                        @AppStrings.NoAllowed
-                    </MudButton>
-                }
-            </CellTemplate>
-        </TemplateColumn>
+                </MudSelect>
+                <MudTextField T="string" Class="page-card__search"
+                              Immediate="false" ValueChanged="HandleUserSearchAsync"
+                              Value="@_searchString" Placeholder="@AppStrings.Search"
+                              Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                              IconSize="Size.Small">
+                </MudTextField>
+            }
+        </div>
+    </section>
+
+    <MudDataGrid T="ApplicationUserDto" @ref="_dataGrid"
+                 Elevation="0"
+                 FixedHeader="true" FixedFooter="false"
+                 @bind-RowsPerPage="_defaultPageSize" Hover="true" SelectOnRowClick="false" MultiSelection="true"
+                 @bind-SelectedItems="_selectedUsers" Loading="@_isLoading" ServerData="@(LoadServerData)">
+        <Columns>
+            <SelectColumn ShowInFooter="false" />
+            <TemplateColumn HeaderStyle="width:92px;text-align:right" Title="@AppStrings.Actions" Sortable="false">
+                <CellTemplate>
+                    @if (_accessRights.Edit || _accessRights.Delete || _accessRights.ManageRoles ||
+                         _accessRights.RestPassword || _accessRights.SendRestPasswordMail || _accessRights.ManagePermissions)
+                    {
+                        <MudMenu Icon="@Icons.Material.Filled.MoreVert" Variant="Variant.Text" Size="Size.Small" Dense="true"
+                                 AriaLabel="@AppStrings.Actions" AnchorOrigin="Origin.CenterLeft">
+                            @if (_accessRights.Edit)
+                            {
+                                <MudMenuItem OnClick="@(() => EditUserAsync(context.Item))">@AppStrings.Edit</MudMenuItem>
+                            }
+                            @if (_accessRights.Delete)
+                            {
+                                <MudMenuItem OnClick="@(() => DeleteUserAsync(context.Item))">@AppStrings.Delete</MudMenuItem>
+                            }
+                            @if (_accessRights.ManagePermissions)
+                            {
+                                <MudMenuItem OnClick="@(() => OpenPermissionsDrawerAsync(context.Item))">@L["Set Permissions"]</MudMenuItem>
+                            }
+                            @if (_accessRights.SendRestPasswordMail)
+                            {
+                                <MudMenuItem OnClick="@(() => SendResetPasswordEmailAsync(context.Item))">@L["Send Reset Password Email"]</MudMenuItem>
+                            }
+                            @if (_accessRights.RestPassword)
+                            {
+                                <MudMenuItem Disabled="@(!context.Item.IsActive)"
+                                             OnClick="@(() => OpenResetPasswordDialogAsync(context.Item))">@L["Reset Password"]</MudMenuItem>
+                            }
+                        </MudMenu>
+                    }
+                    else
+                    {
+                        <MudTooltip Text="@AppStrings.NoAllowed" Delay="300">
+                            <MudIconButton Variant="Variant.Outlined"
+                                           Disabled="true"
+                                           Icon="@Icons.Material.Filled.DoNotTouch"
+                                           Size="Size.Small"
+                                           Color="Color.Surface">
+                                @AppStrings.NoAllowed
+                            </MudIconButton>
+                        </MudTooltip>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
         <PropertyColumn Property="x => x.Tenant"
                         Title="@L[_currentUserDto.GetMemberDisplayName(x => x.Tenant)]">
             <CellTemplate>
@@ -238,6 +258,7 @@
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
+</MudPaper>
 
 <PermissionsDrawer OnAssignAllChanged="AssignAllPermissionsAsync" Waiting="@_isProcessing"
                    OnOpenChanged="HandlePermissionsDrawerOpenChanged" Open="_showPermissionsDrawer" Permissions="_permissions"
@@ -257,6 +278,7 @@
 
     // Page state and data
     private int _defaultPageSize = 15;
+    private List<BreadcrumbItem> _breadcrumbItems = [];
     private HashSet<ApplicationUserDto> _selectedUsers = new();
     private readonly ApplicationUserDto _currentUserDto = new();
     private string _searchString = string.Empty;
@@ -285,6 +307,12 @@
     protected override async Task OnInitializedAsync()
     {
         _pageTitle = $"{ApplicationSettings.AppName} - {L[_currentUserDto.GetClassDescription()]}";
+        _breadcrumbItems =
+        [
+            new BreadcrumbItem(L["Application"], href: null),
+            new BreadcrumbItem(L["Authorization"], href: null),
+            new BreadcrumbItem(L[_currentUserDto.GetClassDescription()], href: null, disabled: true)
+        ];
         InitializeServices();
         _accessRights = await PermissionService.GetAccessRightsAsync<UsersAccessRights>();
         await RoleService.InitializeAsync();

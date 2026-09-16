@@ -13,51 +13,73 @@
 <PageTitle>@Title</PageTitle>
 
 <LogsLineCharts></LogsLineCharts>
+
+<MudPaper Class="page-card" Elevation="0">
+    <header class="page-card__header d-flex flex-column flex-sm-row align-start justify-space-between gap-4">
+        <div class="page-card__heading">
+            <div class="page-card__breadcrumb d-flex align-center">
+                <MudBreadcrumbs Items="_breadcrumbItems">
+                    <SeparatorTemplate>
+                        <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+                    </SeparatorTemplate>
+                </MudBreadcrumbs>
+            </div>
+            <MudText Typo="Typo.h4">@L["Logs"]</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                @L["Monitor real-time system events, application diagnostics, and runtime logs."]
+            </MudText>
+        </div>
+
+        <div class="d-flex flex-wrap align-center justify-start justify-sm-end gap-2">
+            <MudButton Variant="Variant.Outlined" Disabled="@_loading" OnClick="@(() => OnRefresh())"
+                       StartIcon="@Icons.Material.Outlined.Refresh">@AppStrings.Refresh</MudButton>
+
+            @if (_accessRights.Purge)
+            {
+                <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                           Disabled="@(_clearing)"
+                           OnClick="@(OnPurge)"
+                           StartIcon="@Icons.Material.Outlined.ClearAll">
+                    @L["Clear Logs"]
+                </MudButton>
+            }
+        </div>
+    </header>
+
+    <section class="page-card__filter-region" aria-label="@L["Log filters"]">
+        <div class="page-card__filters d-flex flex-column flex-sm-row align-stretch align-sm-center gap-2">
+            <MudEnumSelect Class="page-card__view-select" TEnum="SystemLogListView"
+                           ValueChanged="OnChangedListView" Value="_systemLogsQuery.ListView" Dense="true"
+                           Variant="Variant.Outlined" Margin="Margin.Dense"
+                           Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.FilterList"
+                           Label="@L["List View"]">
+            </MudEnumSelect>
+            <MudEnumSelect Class="page-card__view-select" TEnum="LogLevel?"
+                           Placeholder="@L["Search by level"]" Value="@_systemLogsQuery.Level"
+                           Clearable="true" ValueChanged="OnChangedLevel" Dense="true"
+                           Variant="Variant.Outlined" Margin="Margin.Dense"
+                           Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Layers"
+                           Label="@L["Level"]">
+            </MudEnumSelect>
+            <MudTextField T="string" Class="page-card__search"
+                          ValueChanged="@(OnSearch)" Value="@_systemLogsQuery.Keyword"
+                          Placeholder="@AppStrings.Search"
+                          Variant="Variant.Outlined" Margin="Margin.Dense"
+                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                          IconSize="Size.Small">
+            </MudTextField>
+        </div>
+    </section>
+
 <MudDataGrid T="SystemLogDto"
              ServerData="@(ServerReload)"
+             Elevation="0"
              FixedHeader="true"
              FixedFooter="false"
              RowsPerPage="@_defaultPageSize"
-             Style="min-height:700px"
              Loading="@_loading"
              ColumnResizeMode="ResizeMode.Column"
              Hover="true" @ref="_table">
-    <ToolBarContent>
-        <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
-            <MudStack Row AlignItems="AlignItems.Start">
-                <MudIcon Icon="@Icons.Material.Filled.BarChart" Size="Size.Large" />
-                <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1" Class="mb-2">@L["Logs"]</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="SystemLogListView" ValueChanged="OnChangedListView" Value="_systemLogsQuery.ListView" Dense="true" Label="@L["List View"]">
-                    </MudEnumSelect>
-                </MudStack>
-            </MudStack>
-            <MudStack Spacing="2" AlignItems="AlignItems.End">
-               <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
-                    <MudButton 
-                               OnClick="@(() => OnRefresh())"
-                               StartIcon="@Icons.Material.Outlined.Refresh">
-                        @AppStrings.Refresh
-                    </MudButton>
-                    @if (_accessRights.Purge)
-                    {
-                        <MudButton 
-                        Disabled="@(_clearing)"
-                        OnClick="@(OnPurge)"
-                        StartIcon="@Icons.Material.Outlined.ClearAll">
-                            @L["Clear Logs"]
-                        </MudButton>
-                    }
-				</MudStack>
-                <MudStack Row Spacing="1">
-                    <MudEnumSelect TEnum="LogLevel?" Placeholder="@L["Search by level"]" Value="@_systemLogsQuery.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
-                    <MudTextField T="string" Style="min-width:120px" ValueChanged="@(OnSearch)" Value="@_systemLogsQuery.Keyword" Placeholder="Search" Adornment="Adornment.End"
-                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
-                    </MudTextField>
-                </MudStack>
-            </MudStack>
-        </MudStack>
-    </ToolBarContent>
     <Columns>
         <HierarchyColumn T="SystemLogDto" ButtonDisabledFunc="@(x => string.IsNullOrEmpty(x.Message))" />
         <PropertyColumn Style="width:130px" Property="x => x.TimeStamp" Title="@L[_currentDto.GetMemberDisplayName(x => x.TimeStamp)]">
@@ -208,6 +230,7 @@
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
+</MudPaper>
 
 
 @code
@@ -215,6 +238,7 @@
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     private UserProfile UserProfile => UserProfileState.Value;
     private string Title { get; set; } = "Logs";
+    private List<BreadcrumbItem> _breadcrumbItems = [];
     private string _searchString = string.Empty;
     private MudDataGrid<SystemLogDto> _table = default!;
     private readonly SystemLogDto _currentDto = new();
@@ -228,6 +252,12 @@
     protected override async Task OnInitializedAsync()
     {
         Title =$"{ApplicationSettings.AppName} - { L["Logs"]}";
+        _breadcrumbItems =
+        [
+            new BreadcrumbItem(L["Application"], href: null),
+            new BreadcrumbItem(L["System"], href: null),
+            new BreadcrumbItem(L["Logs"], href: null, disabled: true)
+        ];
         _accessRights = await PermissionService.GetAccessRightsAsync<LogsAccessRights>();
     }
 
