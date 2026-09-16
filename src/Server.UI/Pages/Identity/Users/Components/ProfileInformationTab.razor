@@ -37,7 +37,8 @@
                 <!-- Floating Camera Action Menu Button -->
                 <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopLeft" Dense="true">
                     <ActivatorContent Context="menuContext">
-                        <button type="button" class="profile-avatar-camera-btn" title="@L["Change avatar"]">
+                        <button type="button" class="profile-avatar-camera-btn" title="@L["Change avatar"]"
+                                aria-label="@L["Change avatar"]" @onclick="menuContext.ToggleAsync">
                             <MudIcon Icon="@Icons.Material.Filled.PhotoCamera" Size="MudBlazor.Size.Small" />
                         </button>
                     </ActivatorContent>

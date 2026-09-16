@@ -10,15 +10,15 @@
 
 .profile-avatar-wrapper {
     position: relative;
-    width: 88px;
-    height: 88px;
+    width: 112px;
+    height: 112px;
     flex-shrink: 0;
 }
 
 .profile-avatar {
-    width: 88px !important;
-    height: 88px !important;
-    font-size: 2rem !important;
+    width: 112px !important;
+    height: 112px !important;
+    font-size: 2.5rem !important;
     font-weight: 600;
     box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
     border: 3px solid var(--mud-palette-surface);
@@ -29,8 +29,8 @@
     position: absolute;
     bottom: -2px;
     right: -2px;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 8px;
     background: var(--mud-palette-surface);
     border: 1px solid var(--mud-palette-lines-default);
