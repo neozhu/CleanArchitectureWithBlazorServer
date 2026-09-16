@@ -1,7 +1,6 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
 @layout MainLayout
 @inherits LayoutComponentBase
-@inject LayoutService LayoutService
 @inject IStringLocalizer<PublicLayout> L
 <MudLayout>
     <MudAppBar Elevation="0" Style="backdrop-filter: blur(6px) !important; -webkit-backdrop-filter: blur(6px) !important; background: var(--mud-palette-appbar-background); color: var(--mud-palette-appbar-text);" >
@@ -25,12 +24,6 @@
                                Target="_blank"/>
             </MudTooltip>
             <LanguageSelector/>
-            <MudTooltip Text="@(LayoutService.IsRTL ? "Toggle right-to-left" : "Toggle left-to-right")">
-                <MudIconButton Class="mx-1"
-                               Icon="@(LayoutService.IsRTL ? Icons.Material.Filled.FormatTextdirectionLToR : Icons.Material.Filled.FormatTextdirectionRToL)"
-                               Color="Color.Default"
-                               OnClick="@(e => LayoutService.ToggleRightToLeft())"/>
-            </MudTooltip>
             <AuthorizeView>
                 <Authorized>
                     <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">

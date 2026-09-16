@@ -6,6 +6,10 @@
     <MudSpacer></MudSpacer>
     <div class="d-flex align-center gap-1">
 
+        @if (OnCancelButtonClick.HasDelegate)
+        {
+            <MudButton OnClick="@Cancel">@AppStrings.Cancel</MudButton>
+        }
         @if (OnSaveButtonClick.HasDelegate)
         {
             <MudLoadingButton Loading="@Saving"  OnClick="@Save">@AppStrings.Save</MudLoadingButton>
@@ -38,6 +42,8 @@
     [Parameter]
     public bool Saving { get; set; }
     [Parameter]
+    public EventCallback OnCancelButtonClick { get; set; }
+    [Parameter]
     public EventCallback OnSaveButtonClick { get; set; }
     [Parameter]
     public EventCallback OnGoEditClick { get; set; }
@@ -56,6 +62,13 @@
         if (OnSaveButtonClick.HasDelegate)
         {
             await OnSaveButtonClick.InvokeAsync();
+        }
+    }
+    private async Task Cancel()
+    {
+        if (OnCancelButtonClick.HasDelegate)
+        {
+            await OnCancelButtonClick.InvokeAsync();
         }
     }
     private async Task GoEdit()

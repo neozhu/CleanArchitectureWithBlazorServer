@@ -1,4 +1,5 @@
 ﻿:root {
+    font-size: 14px;
     --cell-padding: 1em;       
     --cell-padding-x: 1em;
     --cell-padding-y: 0.5em; 
@@ -15,6 +16,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+ 
 }
 
 .mud-chip.mud-chip-size-medium {
@@ -73,11 +75,6 @@
 
 .mud-button-outlined-size-small {
     font-size: var(--mud-typography-body2-size);
-}
-
-.mud-grid.readonly-grid > .mud-grid-item {
-    border-bottom: 1px solid var(--mud-palette-table-lines);
-    padding-bottom: 4px;
 }
 
 .mud-nav-link {
@@ -159,4 +156,98 @@
     background-color: color-mix(in srgb, var(--mud-palette-overlay-dark) 70%, transparent) !important;
     backdrop-filter: blur(10px) saturate(120%);
     -webkit-backdrop-filter: blur(10px) saturate(120%);
+}
+
+.page-card {
+    overflow: hidden;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 12px;
+    background: var(--mud-palette-surface);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.page-card__header {
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+}
+
+.page-card__heading {
+    min-width: 0;
+}
+
+.page-card__breadcrumb {
+    margin-bottom: 0.6rem;
+}
+
+.page-card__breadcrumb .mud-breadcrumbs {
+    padding: 0;
+    line-height: 1.25;
+}
+
+.page-card__breadcrumb .mud-breadcrumb-item > a {
+    color: var(--mud-palette-text-secondary);
+    font-size: 0.75rem;
+    opacity: 0.75;
+}
+
+.page-card__breadcrumb .mud-breadcrumb-separator {
+    align-items: center;
+    padding: 0;
+    margin: 0 0.25rem;
+}
+
+.page-card__breadcrumb .mud-breadcrumb-separator .mud-icon-root {
+    width: 0.875rem;
+    height: 0.875rem;
+    color: var(--mud-palette-action-disabled);
+}
+
+.page-card__breadcrumb .mud-breadcrumb-item:last-child > a {
+    color: var(--mud-palette-text-primary);
+    font-weight: 600;
+    opacity: 1;
+}
+
+.page-card__filters {
+    flex: 1 1 30rem;
+    max-width: 38rem;
+}
+
+.page-card__view-select {
+    flex: 0 0 10rem;
+}
+
+.page-card__search {
+    flex: 1 1 18rem;
+}
+
+.page-card__filter-region {
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+    background: #F7F8FA;
+}
+
+.page-card__footer,
+.page-card__foot {
+    padding: 0.875rem 1.5rem;
+    border-top: 1px solid var(--mud-palette-lines-default);
+    background: #F7F8FA;
+}
+
+@media (max-width: 760px) {
+    .page-card__header {
+        padding-inline: 1rem;
+    }
+
+    .page-card__view-select,
+    .page-card__search {
+        flex-basis: auto;
+        width: 100%;
+    }
+
+    .page-card__filter-region,
+    .page-card__footer,
+    .page-card__foot {
+        padding-inline: 1rem;
+    }
 }

@@ -2,45 +2,85 @@
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById
+
 @inherits MudComponentBase
 @inject IStringLocalizer<Contacts> L
 @attribute [Authorize(Policy = Permissions.Contacts.View)]
+
 <PageTitle>@Title</PageTitle>
-<Breadcrumbs  OnGoEditClick="GoEdit" OnDeleteClick="Delete" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
 
 @if (_contact != null)
 {
-    <MudCard Class="pa-2">
-        <MudCardHeader>
-            <CardHeaderContent>
-                 <MudText Typo="Typo.h6">@L["Contact"]</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudGrid Spacing="3" Class="readonly-grid">
+    <MudPaper Class="page-card" Elevation="0">
+        <header class="page-card__header d-flex flex-column flex-sm-row align-start justify-space-between gap-4">
+            <div class="page-card__heading">
+                <div class="page-card__breadcrumb d-flex align-center">
+                    <MudBreadcrumbs Items="_breadcrumbItems">
+                        <SeparatorTemplate>
+                            <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+                        </SeparatorTemplate>
+                    </MudBreadcrumbs>
+                </div>
+                <MudText Typo="Typo.h4">@_contact.Name</MudText>
+                <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                    @L["Manage people, external clients, and business relationship pipelines."]
+                </MudText>
+            </div>
+            <div class="d-flex flex-wrap align-center justify-start justify-sm-end gap-2">
+                <MudButton Color="Color.Default" StartIcon="@Icons.Material.Outlined.ArrowBack" Variant="Variant.Outlined" OnClick="GoBack">@AppStrings.GoBack</MudButton>
+                @if (_accessRights.Edit)
+                {
+                    <MudButton Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Edit" Variant="Variant.Outlined" OnClick="GoEdit">@AppStrings.Edit</MudButton>
+                }
+                @if (_accessRights.Delete)
+                {
+                    <MudButton Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" Variant="Variant.Outlined" OnClick="Delete">@AppStrings.Delete</MudButton>
+                }
+            </div>
+        </header>
+
+        <section class="pa-4">
+            <MudGrid Spacing="3">
                 <MudItem xs="12" md="6"> 
-                        <ReadOnlyField Label="@L[_contact.GetMemberDisplayName(x=>x.Name)]" Value="_contact.Name"></ReadOnlyField>
+                    <ReadOnlyField Label="@L[_contact.GetMemberDisplayName(x => x.Name)]" Value="_contact.Name"></ReadOnlyField>
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyField Label="@L[_contact.GetMemberDisplayName(x=>x.Description)]" Value="_contact.Description"></ReadOnlyField>
+                <MudItem xs="12" md="6"> 
+                    <ReadOnlyField Label="@L[_contact.GetMemberDisplayName(x => x.Description)]" Value="_contact.Description"></ReadOnlyField>
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyField Label="@L[_contact.GetMemberDisplayName(x=>x.Email)]" Value="_contact.Email"></ReadOnlyField>
+                <MudItem xs="12" md="6"> 
+                    <ReadOnlyField Label="@L[_contact.GetMemberDisplayName(x => x.Email)]" Value="_contact.Email"></ReadOnlyField>
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyField Label="@L[_contact.GetMemberDisplayName(x=>x.PhoneNumber)]" Value="_contact.PhoneNumber"></ReadOnlyField>
+                <MudItem xs="12" md="6"> 
+                    <ReadOnlyField Label="@L[_contact.GetMemberDisplayName(x => x.PhoneNumber)]" Value="_contact.PhoneNumber"></ReadOnlyField>
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyField Label="@L[_contact.GetMemberDisplayName(x=>x.Country)]" Value="_contact.Country"></ReadOnlyField>
+                <MudItem xs="12" md="6"> 
+                    <ReadOnlyField Label="@L[_contact.GetMemberDisplayName(x => x.Country)]" Value="_contact.Country"></ReadOnlyField>
                 </MudItem> 
-
             </MudGrid>
-        </MudCardContent>
-        <MudCardActions></MudCardActions>
-    </MudCard>
- }
+        </section>
 
- 
+        <footer class="page-card__footer d-flex flex-column flex-sm-row align-center justify-space-between gap-3">
+            <div class="d-flex align-center gap-2">
+                <MudIcon Icon="@Icons.Material.Outlined.AccessTime" Size="Size.Small" Class="mud-text-secondary" />
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                    @L["Last modified"] <strong class="mud-text-primary">@GetLastModifiedText()</strong> @L["by"] <strong class="mud-text-primary">@GetLastModifiedBy()</strong>
+                </MudText>
+            </div>
+
+            <div class="d-flex align-center gap-2">
+                <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="GoBack">
+                    @AppStrings.GoBack
+                </MudButton>
+                @if (_accessRights.Edit)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="GoEdit">
+                        @AppStrings.Edit
+                    </MudButton>
+                }
+            </div>
+        </footer>
+    </MudPaper>
+}
 
 @code {
     public string Title { get; private set; } = string.Empty;
@@ -48,14 +88,18 @@
     public int Id { get; set; }
     private List<BreadcrumbItem>? _breadcrumbItems = [];
     private ContactDto? _contact;
+    private ContactsAccessRights _accessRights = new();
+    private UserProfile UserProfile => UserProfileState.Value;
+
     protected override async Task OnInitializedAsync()
     {
-        Title = $"{ApplicationSettings.AppName} - { L["Contact"] }";
+        Title = $"{ApplicationSettings.AppName} - {L["Contact"]}";
         _breadcrumbItems = new List<BreadcrumbItem>
         {
             new BreadcrumbItem(L["Home"], href: "/"),
             new BreadcrumbItem(L["Contacts"], href: "/pages/contacts")
         };
+        _accessRights = await PermissionService.GetAccessRightsAsync<ContactsAccessRights>();
         var result = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
         result.Map(data =>
         {
@@ -68,13 +112,19 @@
         {
             Snackbar.Add(errors, MudBlazor.Severity.Error);
         });
-
     }
-    void GoEdit()
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/pages/contacts");
+    }
+
+    private void GoEdit()
     {
         Navigation.NavigateTo($"/pages/contacts/edit/{Id}");
     }
-    async Task Delete()
+
+    private async Task Delete()
     {
         if (_contact is null) return;
         var contentText = string.Format(AppStrings.DeleteConfirmation, _contact.Name);
@@ -83,8 +133,29 @@
         {
             await InvokeAsync(() =>
             {
-                Navigation.NavigateTo($"/pages/contacts");
+                Navigation.NavigateTo("/pages/contacts");
             });
         });
+    }
+
+    private string GetLastModifiedText()
+    {
+        var dt = _contact?.LastModifiedAt ?? _contact?.CreatedAt;
+        if (!dt.HasValue) return "just now";
+        var diff = DateTime.UtcNow - dt.Value;
+        if (diff.TotalMinutes < 1) return "just now";
+        if (diff.TotalMinutes < 60) return $"{(int)diff.TotalMinutes} mins ago";
+        if (diff.TotalHours < 24) return $"{(int)diff.TotalHours} hours ago";
+        if (diff.TotalDays < 30) return $"{(int)diff.TotalDays} days ago";
+        return dt.ToLocalTime(UserProfile?.LocalTimeOffset, "yyyy-MM-dd") ?? string.Empty;
+    }
+
+    private string GetLastModifiedBy()
+    {
+        return _contact?.LastModifiedBy?.DisplayName
+               ?? _contact?.LastModifiedBy?.UserName
+               ?? _contact?.CreatedBy?.DisplayName
+               ?? _contact?.CreatedBy?.UserName
+               ?? Users.Administrator;
     }
 }

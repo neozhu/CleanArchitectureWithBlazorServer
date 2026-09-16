@@ -30,7 +30,14 @@ public class UpdateContactCommand: ICacheInvalidatorRequest<Result<int>>
     public string? PhoneNumber {get;set;} 
     [Display(Name = "Country")]
     public string? Country {get;set;} 
-
+    [Display(Name = "Created By")]
+    public UserBriefDto? CreatedBy { get; set; }
+    [Display(Name = "Last Modified By")]
+    public UserBriefDto? LastModifiedBy { get; set; }
+    [Display(Name = "Created At")]
+    public DateTime? CreatedAt { get; set; }
+    [Display(Name = "Last Modified At")]
+    public DateTime? LastModifiedAt { get; set; }
       public string CacheKey => ContactCacheKey.GetAllCacheKey;
       public IEnumerable<string>? Tags => ContactCacheKey.Tags;
 

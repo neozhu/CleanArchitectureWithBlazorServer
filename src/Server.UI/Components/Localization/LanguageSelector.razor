@@ -2,7 +2,6 @@
 @using Microsoft.Extensions.Options
 
 @inject IOptions<RequestLocalizationOptions> LocalizationOptions
-@inject LayoutService LayoutService
 @inject IUserProfileState UserProfileState
 <MudTooltip Text="@CurrentLanguage">
     <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Class="mx-1" Icon="@Icons.Material.Outlined.Translate" Color="Color.Default" Dense="true">
@@ -42,11 +41,5 @@
         await UserProfileState.UpdateAsync(profile => profile with { LanguageCode = languageCode });
         Navigation.NavigateTo(Navigation.BaseUri + "?culture=" + languageCode, true);
 
-        if (new CultureInfo(languageCode).TextInfo.IsRightToLeft)
-            await LayoutService.SetRightToLeft();
-        else
-            await LayoutService.SetLeftToRight();
-
-       
     }
 }

@@ -1,5 +1,4 @@
 ﻿@page "/public/index"
-@inject LayoutService LayoutService
 
 <style>
 	/* ==============================================
@@ -282,7 +281,7 @@
 </style>
 
 <!-- Main Wrapper with Dynamic Theme Class -->
-<div class="tech-bg-wrapper @(IsDarkMode ? "" : "light-theme")">
+<div class="tech-bg-wrapper light-theme">
 
 	<!-- Hero Section -->
 	<div class="hero-section">
@@ -374,7 +373,7 @@
 					</div>
 					<MudText Typo="Typo.h5" Class="mb-3 font-bold" Color="Color.Inherit">Modern UI/UX</MudText>
 					<MudText Style="color: var(--text-secondary);">
-						Beautiful, responsive interface built with MudBlazor 8 components, featuring dynamic theming and smooth transitions.
+						Beautiful, responsive interface built with MudBlazor components and a consistent visual system.
 					</MudText>
 				</MudCard>
 			</MudItem>
@@ -387,7 +386,7 @@
 					</div>
 					<MudText Typo="Typo.h5" Class="mb-3 font-bold" Color="Color.Inherit">Global Scale</MudText>
 					<MudText Style="color: var(--text-secondary);">
-						Enterprise-grade localization infrastructure supporting dynamic language switching and RTL layouts out of the box.
+						Enterprise-grade localization infrastructure supporting dynamic language switching out of the box.
 					</MudText>
 				</MudCard>
 			</MudItem>
@@ -502,8 +501,3 @@
 		</MudContainer>
 	</div>
 </div>
-
-@code {
-	// Expose the Dark Mode state to the view to toggle CSS variables
-	public bool IsDarkMode => LayoutService.IsDarkMode;
-}

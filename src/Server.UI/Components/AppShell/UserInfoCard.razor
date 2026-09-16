@@ -5,8 +5,8 @@
 @inject IUserProfileState UserProfileState
 @implements IDisposable
 
-<div class="pa-4">
-    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+<div class="studio-user-card">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
         @if (UserProfile is null || string.IsNullOrEmpty(UserProfile.UserId))
         {
             <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
@@ -17,22 +17,24 @@
         }
         else
         {
-            <MudAvatar Style="width: 32px; height: 32px;">
-                @if (string.IsNullOrEmpty(UserProfile.ProfilePictureDataUrl))
-                {
-                    @(string.IsNullOrEmpty(UserProfile.UserName) ? "" : UserProfile.UserName.First())
-                }
-                else
-                {
-                    <MudImage Src="@UserProfile.ProfilePictureDataUrl"></MudImage>
-                }
-            </MudAvatar>
+            <div class="studio-user-avatar">
+                <MudAvatar Style="width: 32px; height: 32px;">
+                    @if (string.IsNullOrEmpty(UserProfile.ProfilePictureDataUrl))
+                    {
+                        @(string.IsNullOrEmpty(UserProfile.UserName) ? "" : UserProfile.UserName.First())
+                    }
+                    else
+                    {
+                        <MudImage Src="@UserProfile.ProfilePictureDataUrl" Alt="@UserProfile.DisplayName"></MudImage>
+                    }
+                </MudAvatar>
+            </div>
             
             <MudStack Justify="Justify.SpaceBetween" Spacing="0" Style="flex: 1; min-width: 0;">
-                <MudText Typo="Typo.body2" Style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <MudText Typo="Typo.body2" Class="studio-user-name">
                     @UserProfile.DisplayName
                 </MudText>
-                <MudText Typo="Typo.caption" Class="mud-secondary-text" Style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <MudText Typo="Typo.caption" Class="studio-user-role">
                     @UserProfile.DefaultRole
                 </MudText>
             </MudStack>
@@ -40,7 +42,7 @@
         
         <MudMenu AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" LockScroll="true">
             <ActivatorContent>
-				<MudIconButton Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" OnClick="@context.ToggleAsync" />
+                <MudIconButton Class="studio-user-more" aria-label="@L["User menu"]" Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" OnClick="@context.ToggleAsync" />
             </ActivatorContent>
             <ChildContent>
                 <div style="min-width: 240px;">
@@ -73,12 +75,7 @@
                             <MudText Typo="Typo.body2">@L["Profile"]</MudText>
                         </div>
                     </MudMenuItem>
-                    <MudMenuItem OnClick="OnSettingClick">
-                        <div class="d-flex align-center">
-                            <MudIcon Class="mx-2" Icon="@Icons.Material.Filled.Settings" />
-                            <MudText Typo="Typo.body2">@L["Settings"]</MudText>
-                        </div>
-                    </MudMenuItem>
+
                     <MudDivider Class="my-2" />
                     <div class="mx-4 mb-2">
                         <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
@@ -101,8 +98,6 @@
 
 @code
 {
-    [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
-    
     private UserProfile UserProfile => UserProfileState.Value;
 
     protected override void OnInitialized()

@@ -7,42 +7,68 @@
 @attribute [Authorize(Policy = Permissions.Contacts.Create)]
 
 <PageTitle>@Title</PageTitle>
-<Breadcrumbs OnSaveButtonClick="OnSubmit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
 
-    <MudCard Class="pa-2">
-        <MudCardHeader>
-            <CardHeaderContent>
-                 <MudText Typo="Typo.h6">@L["New Contact"]</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
+<MudPaper Class="page-card" Elevation="0">
+    <header class="page-card__header d-flex flex-column flex-sm-row align-start justify-space-between gap-4">
+        <div class="page-card__heading">
+            <div class="page-card__breadcrumb d-flex align-center">
+                <MudBreadcrumbs Items="_breadcrumbItems">
+                    <SeparatorTemplate>
+                        <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+                    </SeparatorTemplate>
+                </MudBreadcrumbs>
+            </div>
+            <MudText Typo="Typo.h4">@L["New Contact"]</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                @L["Manage people, external clients, and business relationship pipelines."]
+            </MudText>
+        </div>
+        <div class="d-flex flex-wrap align-center justify-start justify-sm-end gap-2">
+            <MudLoadingButton Color="Color.Default" StartIcon="@Icons.Material.Outlined.Cancel" Variant="Variant.Outlined" Loading="@_saving" OnClick="OnCancel">@AppStrings.Cancel</MudLoadingButton>
+            <MudLoadingButton Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Save" Variant="Variant.Outlined" Loading="@_saving" OnClick="OnSubmit">@AppStrings.Save</MudLoadingButton>
+        </div>
+    </header>
+
+    <section class="pa-4">
         <MudForm Model="@_command" @ref="@_contactForm" Validation="@(Validator.ValidateValue(_command))">
             <MudGrid Spacing="2">
                 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_command.GetMemberDisplayName(x=>x.Name)]" @bind-Value="_command.Name" For="@(() => _command.Name)" Required="true" RequiredError="@L["name is required."]" Placeholder="@L["Enter name"]"></MudTextField>
+                    <MudTextField Label="@L[_command.GetMemberDisplayName(x=>x.Name)]" @bind-Value="_command.Name" For="@(() => _command.Name)" Required="true" RequiredError="@L["name is required."]" Placeholder="@L["Enter name"]"></MudTextField>
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_command.GetMemberDisplayName(x=>x.Description)]"  For="@(() => _command.Description)" @bind-Value="_command.Description" Placeholder="@L["Enter description number"]"></MudTextField>
+                <MudItem xs="12" md="6"> 
+                    <MudTextField Label="@L[_command.GetMemberDisplayName(x=>x.Description)]" For="@(() => _command.Description)" @bind-Value="_command.Description" Placeholder="@L["Enter description number"]"></MudTextField>
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_command.GetMemberDisplayName(x=>x.Email)]" @bind-Value="_command.Email" For="@(() => _command.Email)" Required="false" RequiredError="@L["email is required."]" Placeholder="@L["Enter email"]"></MudTextField>
+                <MudItem xs="12" md="6"> 
+                    <MudTextField Label="@L[_command.GetMemberDisplayName(x=>x.Email)]" @bind-Value="_command.Email" For="@(() => _command.Email)" Required="false" RequiredError="@L["email is required."]" Placeholder="@L["Enter email"]"></MudTextField>
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_command.GetMemberDisplayName(x=>x.PhoneNumber)]" @bind-Value="_command.PhoneNumber" For="@(() => _command.PhoneNumber)" Required="false" RequiredError="@L["phone number is required."]" Placeholder="@L["Enter phone number"]"></MudTextField>
+                <MudItem xs="12" md="6"> 
+                    <MudTextField Label="@L[_command.GetMemberDisplayName(x=>x.PhoneNumber)]" @bind-Value="_command.PhoneNumber" For="@(() => _command.PhoneNumber)" Required="false" RequiredError="@L["phone number is required."]" Placeholder="@L["Enter phone number"]"></MudTextField>
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[_command.GetMemberDisplayName(x=>x.Country)]" @bind-Value="_command.Country" For="@(() => _command.Country)" Required="false" RequiredError="@L["country is required."]" Placeholder="@L["Enter country"]"></MudTextField>
+                <MudItem xs="12" md="6"> 
+                    <MudTextField Label="@L[_command.GetMemberDisplayName(x=>x.Country)]" @bind-Value="_command.Country" For="@(() => _command.Country)" Required="false" RequiredError="@L["country is required."]" Placeholder="@L["Enter country"]"></MudTextField>
                 </MudItem> 
-
             </MudGrid>
         </MudForm>
-        </MudCardContent>
-         <MudCardActions Class="d-flex justify-end gap-2">
-                    <MudLoadingButton Color="Color.Primary" Variant="Variant.Outlined" Loading="@_saving" OnClick="OnSubmit">@AppStrings.Save</MudLoadingButton>
-         </MudCardActions>
-        </MudCard>
+    </section>
 
- 
+    <footer class="page-card__footer d-flex flex-column flex-sm-row align-center justify-space-between gap-3">
+        <div class="d-flex align-center gap-2">
+            <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" Class="mud-text-secondary" />
+            <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                @L["Fill in the required information to create a new contact."]
+            </MudText>
+        </div>
+
+        <div class="d-flex align-center gap-2">
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="OnCancel">
+                @AppStrings.Cancel
+            </MudButton>
+            <MudLoadingButton Variant="Variant.Filled" Color="Color.Primary" Loading="@_saving" OnClick="OnSubmit">
+                @AppStrings.Save
+            </MudLoadingButton>
+        </div>
+    </footer>
+</MudPaper>
 
 @code {
     public string Title { get; private set; }= string.Empty;
@@ -61,6 +87,12 @@
         };
         return Task.CompletedTask;
     }
+
+    private void OnCancel()
+    {
+        Navigation.NavigateTo("/pages/contacts");
+    }
+
     async Task OnSubmit()
     {
         try
@@ -74,7 +106,7 @@
                 data=>
                 {
                     Snackbar.Add(AppStrings.SaveSuccess, MudBlazor.Severity.Info);
-                    Navigation.NavigateTo("/pages/Contacts");
+                    Navigation.NavigateTo("/pages/contacts");
                 },
                 errors=>
                 {

@@ -1,0 +1,12 @@
+.studio-main-content {
+    display: contents;
+}
+
+.studio-main-content ::deep .studio-main-content {
+    background: linear-gradient(
+        to bottom right,
+        var(--mud-palette-background),
+        color-mix(in srgb, var(--mud-palette-background-gray) 50%, var(--mud-palette-background)),
+        color-mix(in srgb, var(--mud-palette-background-gray) 30%, var(--mud-palette-background))
+    );
+}
