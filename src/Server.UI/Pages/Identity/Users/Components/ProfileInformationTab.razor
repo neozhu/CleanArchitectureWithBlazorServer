@@ -35,31 +35,39 @@
                 }
 
                 <!-- Floating Camera Action Menu Button -->
-                <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopLeft" Dense="true">
+                <MudMenu AnchorOrigin="Origin.BottomCenter"
+                         TransformOrigin="Origin.TopLeft"
+                         PopoverClass="user-photo-upload__menu">
                     <ActivatorContent Context="menuContext">
-                        <button type="button" class="profile-avatar-camera-btn" title="@L["Change avatar"]"
-                                aria-label="@L["Change avatar"]" @onclick="menuContext.ToggleAsync">
-                            <MudIcon Icon="@Icons.Material.Filled.PhotoCamera" Size="MudBlazor.Size.Small" />
-                        </button>
+                        <MudIconButton Icon="@Icons.Material.Filled.PhotoCamera"
+                                       Size="MudBlazor.Size.Small"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Surface"
+                                       Class="user-photo-upload__icon"
+                                       aria-label="@L["Change avatar"]"
+                                       OnClick="@menuContext.ToggleAsync" />
                     </ActivatorContent>
                     <ChildContent>
-                        <MudMenuItem Icon="@Icons.Material.Outlined.FileUpload">
-                            <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="HandleFileChangedAsync" Class="d-block w-100">
-                                <CustomContent Context="uploadContext">
-                                    <span class="d-inline-block w-100" @onclick="@uploadContext.OpenFilePickerAsync">
-                                        @L["Upload photo"]
-                                    </span>
-                                </CustomContent>
-                                <SelectedTemplate Context="selectedContext"></SelectedTemplate>
-                            </MudFileUpload>
+                        <MudMenuItem Icon="@Icons.Material.Outlined.FileUpload"
+                                     OnClick="OpenProfilePhotoPickerAsync">
+                            @L["Upload photo"]
                         </MudMenuItem>
                         <MudMenuItem Icon="@Icons.Material.Outlined.DeleteOutline"
-                                     Disabled="@(string.IsNullOrEmpty(_profileModel.ProfilePictureDataUrl))"
-                                     OnClick="HandleRemovePhotoAsync">
+                                     Disabled="@string.IsNullOrWhiteSpace(_profileModel.ProfilePictureDataUrl)"
+                                     OnClick="RemoveProfilePhoto">
                             @L["Remove photo"]
                         </MudMenuItem>
                     </ChildContent>
                 </MudMenu>
+                <MudFileUpload @ref="_profilePhotoUpload"
+                               T="IBrowserFile"
+                               Accept=".jpg, .jpeg, .png, .webp"
+                               FilesChanged="HandleFileChangedAsync"
+                               Style="display:none;">
+                    <CustomContent Context="uploadContext"></CustomContent>
+                    <SelectedTemplate Context="selectedUploadContext"></SelectedTemplate>
+                </MudFileUpload>
+                
             </div>
 
             <div class="profile-header-info">
@@ -152,6 +160,7 @@
 }
  
 @code {
+    private MudFileUpload<IBrowserFile> _profilePhotoUpload = null!;
     private UserProfile UserProfile => UserProfileState.Value;
     private ChangeUserProfileModel? _profileModel { get; set; } = null!;
     private UserManager<ApplicationUser> _userManager { get; set; } = null!;
@@ -207,22 +216,21 @@
         }
     }
     
+    private Task OpenProfilePhotoPickerAsync()
+    {
+        return _profilePhotoUpload.OpenFilePickerAsync();
+    }
     private async Task HandleFileChangedAsync(IBrowserFile file)
     {
         await UploadProfilePhotoAsync(file);
     }
 
-    private async Task HandleRemovePhotoAsync()
+    private void RemoveProfilePhoto()
     {
-        if (_profileModel == null) return;
-
-        _profileModel.ProfilePictureDataUrl = null;
-        await UserProfileState.UpdateAsync(profile => profile with
+        if (_profileModel is not null)
         {
-            ProfilePictureDataUrl = null
-        });
-
-        Snackbar.Add(L["The avatar has been removed"], Severity.Info);
+            _profileModel.ProfilePictureDataUrl = null;
+        }
     }
 
     private async Task HandleValidSubmitAsync(EditContext context)
