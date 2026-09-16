@@ -15,13 +15,19 @@
     flex-shrink: 0;
 }
 
-.profile-avatar {
+.profile-avatar-wrapper ::deep .profile-avatar {
     width: 112px !important;
     height: 112px !important;
     font-size: 2.5rem !important;
     font-weight: 600;
     box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
     border: 3px solid var(--mud-palette-surface);
+}
+
+.profile-avatar-wrapper ::deep .mud-menu {
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
 
 /* 相机小按钮（悬浮在头像右下角） */
