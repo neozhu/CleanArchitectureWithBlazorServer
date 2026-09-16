@@ -1,0 +1,240 @@
+/* ==========================================================================
+   Profile Page Styles
+   ========================================================================== */
+
+.profile-card {
+    border-radius: 12px;
+    background: var(--mud-palette-surface);
+    border: 1px solid var(--mud-palette-lines-default);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Hero / User Banner Section
+   -------------------------------------------------------------------------- */
+.profile-hero {
+    padding: 1.5rem 1.75rem;
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--mud-palette-primary) 6%, var(--mud-palette-surface)) 0%,
+        var(--mud-palette-surface) 100%
+    );
+}
+
+.profile-hero__container {
+    width: 100%;
+}
+
+.profile-hero__avatar-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.profile-hero__avatar {
+    width: 72px;
+    height: 72px;
+    font-size: 1.75rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+    border: 3px solid var(--mud-palette-surface);
+}
+
+.profile-hero__info {
+    min-width: 0;
+}
+
+.profile-hero__name {
+    font-weight: 600;
+    color: var(--mud-palette-text-primary);
+    line-height: 1.25;
+}
+
+.profile-hero__chip {
+    font-weight: 500;
+    height: 22px;
+}
+
+.profile-hero__meta {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--mud-typography-caption-size);
+    color: var(--mud-palette-text-secondary);
+    line-height: 1.25;
+}
+
+/* --------------------------------------------------------------------------
+   Modern Tab Navigation
+   -------------------------------------------------------------------------- */
+.profile-tabs-wrapper ::deep .mud-tabs {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+.profile-tabs-wrapper ::deep .mud-tabs-tabbar {
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+    background: var(--mud-palette-surface);
+    padding: 0 1.5rem;
+}
+
+.profile-tabs-wrapper ::deep .mud-tab {
+    min-height: 48px;
+    padding: 0.75rem 1.25rem;
+    font-size: var(--mud-typography-body2-size);
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0.01em;
+    color: var(--mud-palette-text-secondary);
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.profile-tabs-wrapper ::deep .mud-tab:hover {
+    color: var(--mud-palette-text-primary);
+}
+
+.profile-tabs-wrapper ::deep .mud-tab.mud-tab-active {
+    color: var(--mud-palette-primary);
+    font-weight: 600;
+}
+
+.profile-tabs-wrapper ::deep .mud-tab-slider {
+    background-color: var(--mud-palette-primary);
+    height: 2px;
+}
+
+.profile-tabs-wrapper ::deep .profile-tabs__panels {
+    padding: 1.75rem 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Profile Tab Content Sections
+   -------------------------------------------------------------------------- */
+.profile-section {
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+}
+
+.profile-section:last-of-type {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.profile-section__header {
+    margin-bottom: 1.25rem;
+}
+
+.profile-section__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--mud-palette-text-primary);
+    line-height: 1.4;
+}
+
+.profile-section__desc {
+    font-size: var(--mud-typography-caption-size);
+    color: var(--mud-palette-text-secondary);
+    margin-top: 0.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   Avatar Upload Card
+   -------------------------------------------------------------------------- */
+.profile-avatar-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--mud-palette-lines-default);
+    background: var(--mud-palette-background-grey);
+    margin-bottom: 1.75rem;
+}
+
+.profile-avatar-card__image {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--mud-palette-surface);
+}
+
+.profile-avatar-card__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-avatar-card__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--mud-palette-text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.profile-avatar-card__hint {
+    font-size: var(--mud-typography-caption-size);
+    color: var(--mud-palette-text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   Security / Password Card Container
+   -------------------------------------------------------------------------- */
+.profile-security-card {
+    max-width: 580px;
+    margin: 0 auto;
+}
+
+.profile-security-tips {
+    padding: 0.875rem 1rem;
+    border-radius: 8px;
+    background: var(--mud-palette-background-grey);
+    border: 1px solid var(--mud-palette-lines-default);
+    margin-bottom: 1.25rem;
+}
+
+.profile-security-tips ul {
+    margin: 0.5rem 0 0 1.25rem;
+    padding: 0;
+}
+
+.profile-security-tips li {
+    font-size: var(--mud-typography-caption-size);
+    color: var(--mud-palette-text-secondary);
+    line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   Org Chart Container
+   -------------------------------------------------------------------------- */
+.profile-orgchart-container {
+    border-radius: 10px;
+    border: 1px solid var(--mud-palette-lines-default);
+    background: var(--mud-palette-surface);
+    overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .profile-hero {
+        padding: 1.25rem 1rem;
+    }
+    
+    .profile-avatar-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .profile-tabs-wrapper ::deep .mud-tabs-tabbar {
+        padding: 0 0.5rem;
+    }
+
+    .profile-tabs-wrapper ::deep .profile-tabs__panels {
+        padding: 1.25rem 1rem;
+    }
+}

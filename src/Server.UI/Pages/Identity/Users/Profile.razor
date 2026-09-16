@@ -2,28 +2,69 @@
 
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@inject IStringLocalizer<Profile> L
 
+@implements IDisposable
+@inject IStringLocalizer<Profile> L
 
 <PageTitle>@ApplicationSettings.AppName - @L["Profile"]</PageTitle>
 
+<MudPaper Class="page-card profile-card" Elevation="0">
+    <!-- Header -->
+    <header class="page-card__header d-flex flex-column flex-sm-row align-start justify-space-between gap-4">
+        <div class="page-card__heading">
+            <div class="page-card__breadcrumb d-flex align-center">
+                <MudBreadcrumbs Items="_breadcrumbItems">
+                    <SeparatorTemplate>
+                        <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+                    </SeparatorTemplate>
+                </MudBreadcrumbs>
+            </div>
+            <MudText Typo="Typo.h4">@L["Profile"]</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                @L["Manage personal profile, security credentials, and organization hierarchy."]
+            </MudText>
+        </div>
+    </header>
 
-<MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true"
-         ApplyEffectsToContainer="true" Class="mt-8" TabPanelsClass="py-5">
-    <MudTabPanel Text="@L["Profile"]">
-        <ProfileInformationTab />
-    </MudTabPanel>
-    <MudTabPanel Text="@L["Change Password"]">
-        <ChangePasswordTab />
-    </MudTabPanel>
-    <MudTabPanel Text="@L["Org Chart"]">
-        <OrgChartTab />
-    </MudTabPanel>
-
-
-</MudTabs>
-
+    <!-- Tabs Section -->
+    <div class="profile-tabs-wrapper">
+        <MudTabs Rounded="false" Border="false" Elevation="0" ApplyEffectsToContainer="false"
+                 Class="profile-tabs" TabPanelsClass="profile-tabs__panels">
+            <MudTabPanel Text="@L["Profile"]" Icon="@Icons.Material.Outlined.Person">
+                <ProfileInformationTab />
+            </MudTabPanel>
+            <MudTabPanel Text="@L["Change Password"]" Icon="@Icons.Material.Outlined.Lock">
+                <ChangePasswordTab />
+            </MudTabPanel>
+            <MudTabPanel Text="@L["Org Chart"]" Icon="@Icons.Material.Outlined.AccountTree">
+                <OrgChartTab />
+            </MudTabPanel>
+        </MudTabs>
+    </div>
+</MudPaper>
 
 @code {
-   
+    private UserProfile UserProfile => UserProfileState.Value;
+    private List<BreadcrumbItem> _breadcrumbItems = [];
+
+    protected override void OnInitialized()
+    {
+        _breadcrumbItems =
+        [
+            new BreadcrumbItem(L["Application"], href: null),
+            new BreadcrumbItem(L["Authorization"], href: null),
+            new BreadcrumbItem(L["Profile"], href: null, disabled: true)
+        ];
+        UserProfileState.Changed += OnUserProfileChanged;
+    }
+
+    private void OnUserProfileChanged(object? sender, UserProfile e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        UserProfileState.Changed -= OnUserProfileChanged;
+    }
 }

@@ -1,0 +1,135 @@
+/* --------------------------------------------------------------------------
+   Profile Avatar & User Summary Header
+   -------------------------------------------------------------------------- */
+.profile-avatar-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.profile-avatar-wrapper {
+    position: relative;
+    width: 88px;
+    height: 88px;
+    flex-shrink: 0;
+}
+
+.profile-avatar {
+    width: 88px !important;
+    height: 88px !important;
+    font-size: 2rem !important;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    border: 3px solid var(--mud-palette-surface);
+}
+
+/* 相机小按钮（悬浮在头像右下角） */
+.profile-avatar-camera-btn {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--mud-palette-surface);
+    border: 1px solid var(--mud-palette-lines-default);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--mud-palette-text-primary);
+    transition: all 0.2s ease-in-out;
+    padding: 0;
+    outline: none;
+    z-index: 2;
+}
+
+.profile-avatar-camera-btn:hover {
+    background: var(--mud-palette-background-grey);
+    border-color: var(--mud-palette-lines-inputs);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.18);
+    transform: scale(1.05);
+}
+
+.profile-avatar-camera-btn:active {
+    transform: scale(0.95);
+}
+
+/* 右侧用户信息 */
+.profile-header-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+
+.profile-header-name {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--mud-palette-text-primary);
+    line-height: 1.25;
+}
+
+.profile-header-email {
+    font-size: 0.875rem;
+    color: var(--mud-palette-text-secondary);
+    margin-top: 0.25rem;
+    line-height: 1.3;
+}
+
+/* 黑色圆角胶囊药丸徽章 */
+.profile-role-pill {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    margin-top: 0.5rem;
+    padding: 0.2rem 0.75rem;
+    background-color: var(--mud-palette-black);
+    color: var(--mud-palette-white);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+}
+
+/* 表单分块结构 */
+.profile-section {
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+}
+
+.profile-section:last-of-type {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.profile-section__header {
+    margin-bottom: 1.25rem;
+}
+
+.profile-section__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--mud-palette-text-primary);
+    line-height: 1.4;
+}
+
+.profile-section__desc {
+    font-size: var(--mud-typography-caption-size);
+    color: var(--mud-palette-text-secondary);
+    margin-top: 0.25rem;
+}
+
+/* 移动端自适应 */
+@media (max-width: 600px) {
+    .profile-avatar-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
