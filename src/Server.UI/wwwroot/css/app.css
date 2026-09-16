@@ -77,11 +77,6 @@
     font-size: var(--mud-typography-body2-size);
 }
 
-.mud-grid.readonly-grid > .mud-grid-item {
-    border-bottom: 1px solid var(--mud-palette-table-lines);
-    padding-bottom: 4px;
-}
-
 .mud-nav-link {
     white-space: normal !important;
     padding: var(--nav-padding-y) var(--nav-padding-x) !important;

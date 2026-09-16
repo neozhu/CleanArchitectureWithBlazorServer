@@ -1,0 +1,92 @@
+.readonly-field {
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Text 风格：简洁下划线 */
+.readonly-field--text {
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--mud-palette-lines-default);
+}
+
+.readonly-field--text:hover {
+    border-bottom-color: var(--mud-palette-lines-inputs);
+}
+
+.readonly-field--text .readonly-field__content {
+    min-height: 1.25rem;
+}
+
+/* Outlined 风格：精致方框卡片 */
+.readonly-field--outlined {
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 8px;
+    background-color: var(--mud-palette-background-grey);
+}
+
+.readonly-field--outlined:hover {
+    border-color: var(--mud-palette-lines-inputs);
+    background-color: var(--mud-palette-surface);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.readonly-field__label {
+    font-size: var(--mud-typography-caption-size);
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--mud-palette-text-secondary);
+    margin-bottom: 0.35rem;
+    letter-spacing: 0.01em;
+}
+
+.readonly-field__content {
+    display: flex;
+    align-items: center;
+    min-height: 1.5rem;
+}
+
+.readonly-field__value {
+    font-size: var(--mud-typography-body2-size);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--mud-palette-text-primary);
+    word-break: break-word;
+}
+
+.readonly-field__empty {
+    font-size: var(--mud-typography-body2-size);
+    color: var(--mud-palette-text-disabled);
+    font-style: normal;
+}
+
+.readonly-field__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+/* Dense 模式：横向对齐 */
+.readonly-field--dense {
+    flex-direction: row;
+    align-items: center;
+}
+
+.readonly-field--text.readonly-field--dense {
+    padding-bottom: 0.375rem;
+}
+
+.readonly-field--outlined.readonly-field--dense {
+    padding: 0.375rem 0.75rem;
+}
+
+.readonly-field--dense .readonly-field__label {
+    flex: 0 0 120px;
+    margin-bottom: 0;
+    padding-right: 0.75rem;
+}
+
+.readonly-field--dense .readonly-field__content {
+    flex: 1 1 auto;
+}
