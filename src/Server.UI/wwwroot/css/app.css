@@ -232,6 +232,13 @@
     background: #F7F8FA;
 }
 
+.page-card__footer,
+.page-card__foot {
+    padding: 0.875rem 1.5rem;
+    border-top: 1px solid var(--mud-palette-lines-default);
+    background: #F7F8FA;
+}
+
 @media (max-width: 760px) {
     .page-card__header {
         padding-inline: 1rem;
@@ -243,7 +250,9 @@
         width: 100%;
     }
 
-    .page-card__filter-region {
+    .page-card__filter-region,
+    .page-card__footer,
+    .page-card__foot {
         padding-inline: 1rem;
     }
 }

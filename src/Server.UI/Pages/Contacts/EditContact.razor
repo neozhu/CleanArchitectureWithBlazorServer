@@ -1,5 +1,6 @@
 ﻿@page "/pages/contacts/edit/{id:int}"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update
+@using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById
 @using CleanArchitecture.Blazor.Server.UI.Components.Presence
 
@@ -27,7 +28,7 @@
                     @L["Manage people, external clients, and business relationship pipelines."]
                 </MudText>
             </div>
-            <div class="d-flex flex-wrap justify-start justify-sm-end gap-2">
+            <div class="d-flex flex-wrap align-center justify-start justify-sm-end gap-2">
                 <MudLoadingButton Color="Color.Default" StartIcon="@Icons.Material.Outlined.Cancel" Variant="Variant.Outlined" Loading="@_saving" OnClick="OnCancel">@AppStrings.Cancel</MudLoadingButton>
                 <MudLoadingButton Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Save" Variant="Variant.Outlined" Loading="@_saving" OnClick="OnSubmit">@AppStrings.Save</MudLoadingButton>
             </div>
@@ -57,6 +58,23 @@
                 </MudGrid>
             </MudForm>
         </section>
+        <footer class="page-card__footer d-flex flex-column flex-sm-row align-center justify-space-between gap-3">
+            <div class="d-flex align-center gap-2">
+                <MudIcon Icon="@Icons.Material.Outlined.AccessTime" Size="Size.Small" Class="mud-text-secondary" />
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                    @L["Last modified"] <strong class="mud-text-primary">@GetLastModifiedText()</strong> @L["by"] <strong class="mud-text-primary">@GetLastModifiedBy()</strong>
+                </MudText>
+            </div>
+
+            <div class="d-flex align-center gap-2">
+                <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="OnCancel">
+                    @AppStrings.Cancel
+                </MudButton>
+                <MudLoadingButton Variant="Variant.Filled" Color="Color.Primary" Loading="@_saving" OnClick="OnSubmit">
+                    @AppStrings.Save
+                </MudLoadingButton>
+            </div>
+        </footer>
     </MudPaper>
 }
 
@@ -70,6 +88,7 @@
     private bool _saving = false;
     private List<BreadcrumbItem>? _breadcrumbItems = [];
     private UpdateContactCommand? _command;
+    private UserProfile UserProfile => UserProfileState.Value;
     protected override async Task OnInitializedAsync()
     {
         Title = $"{ApplicationSettings.AppName} - {L["Edit Contact"]}";
@@ -108,6 +127,11 @@
             result.Match(
                 data =>
                 {
+                    if (_command != null)
+                    {
+                        _command.LastModifiedAt = DateTime.UtcNow;
+                        _command.LastModifiedBy = new UserBriefDto { DisplayName = UserProfile?.DisplayName ?? UserProfile?.UserName };
+                    }
                     Snackbar.Add(AppStrings.SaveSuccess, MudBlazor.Severity.Info);
                 },
                 errors =>
@@ -119,5 +143,26 @@
         {
             _saving = false;
         }
+    }
+
+    private string GetLastModifiedText()
+    {
+        var dt = _command?.LastModifiedAt ?? _command?.CreatedAt;
+        if (!dt.HasValue) return "just now";
+        var diff = DateTime.UtcNow - dt.Value;
+        if (diff.TotalMinutes < 1) return "just now";
+        if (diff.TotalMinutes < 60) return $"{(int)diff.TotalMinutes} mins ago";
+        if (diff.TotalHours < 24) return $"{(int)diff.TotalHours} hours ago";
+        if (diff.TotalDays < 30) return $"{(int)diff.TotalDays} days ago";
+        return dt.ToLocalTime(UserProfile?.LocalTimeOffset, "yyyy-MM-dd") ?? string.Empty;
+    }
+
+    private string GetLastModifiedBy()
+    {
+        return _command?.LastModifiedBy?.DisplayName
+               ?? _command?.LastModifiedBy?.UserName
+               ?? _command?.CreatedBy?.DisplayName
+               ?? _command?.CreatedBy?.UserName
+               ?? Users.Administrator;
     }
 }
