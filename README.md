@@ -35,7 +35,7 @@ The solution is intended to serve both as a **reference implementation** for Bla
 
 Experience the application in action:
 
-[![Application Demo](doc/blazorstudio.png)](https://www.youtube.com/watch?v=hCsHSNAs-70)
+[![Blazor Studio application demo](doc/blazor-studio-showcase.png)](https://www.youtube.com/watch?v=hCsHSNAs-70)
 
 **Live Demo**: [architecture.blazorserver.com](https://architecture.blazorserver.com/)
 
