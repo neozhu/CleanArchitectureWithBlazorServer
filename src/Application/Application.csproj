@@ -13,7 +13,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
-        <PackageReference Include="Mapster" Version="10.0.12" />
+        <PackageReference Include="Mapster" Version="10.0.13" />
         <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
         
