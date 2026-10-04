@@ -74,17 +74,11 @@ Experience the application in action:
 
 ## 🏗️ Architecture Overview
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Server.UI     │    │  Application    │    │     Domain      │
-│   (Blazor)      │───▶│   (Business)    │───▶│   (Entities)    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                        │                        
-         │              ┌─────────────────┐               
-         └─────────────▶│ Infrastructure  │               
-                        │   (Data/IO)     │               
-                        └─────────────────┘               
-```
+The diagram shows runtime calls and domain model usage. Application calls Infrastructure implementations through Application-owned interfaces; these arrows do not represent compile-time project references.
+
+![CleanBlazorServerPro architecture: Blazor UI, Application use cases, Domain models, and Infrastructure adapters](doc/architecture.svg)
+
+[Download the interactive Archify diagram](doc/architecture.html) and open it locally to inspect source references, switch themes, and export images. 
 
 ### Layer Responsibilities
 
