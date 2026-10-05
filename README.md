@@ -59,6 +59,12 @@ Experience the application in action:
 
 **[Explore the Live Demo](https://materialpassport.blazorserver.com/)**
 
+[![HR Cloud](doc/hrhub-marketing.png)](https://hrcloud.blazorserver.com/)
+
+**HR Cloud (HRHub)** is a labor outsourcing HR service platform connecting employers, suppliers, and HR teams. It integrates employee management, device-based attendance tracking, shift-based work hours, and automated monthly billing in one workflow.
+
+**[GitHub](https://github.com/neozhu/hrhub)** | **[Explore the Live Demo](https://hrcloud.blazorserver.com/)**
+
 ## 🛠️ Technology Stack
 
 | Layer | Technologies |
