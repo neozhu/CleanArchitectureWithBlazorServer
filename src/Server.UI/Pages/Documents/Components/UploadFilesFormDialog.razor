@@ -1,11 +1,7 @@
-﻿@using SixLabors.ImageSharp.Processing
-@using SixLabors.ImageSharp
-@using SixLabors.ImageSharp.Formats.Png
-@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
+﻿@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Upload
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using System.Buffers
-@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 
 @inject IFileUploadService UploadService
 @inject IStringLocalizer<Documents> L
@@ -152,28 +148,7 @@
                         using var imgStream = new MemoryStream();
                         await filestream.CopyToAsync(imgStream);
                         imgStream.Position = 0;
-                        using var outStream = new MemoryStream();
-                        using (var image = Image.Load(imgStream))
-                        {
-                            var scale = 0m;
-                            if (image.Width > 1600)
-                            {
-                                scale = 0.3m;
-                            }
-                            else if (image.Width <= 1600 && image.Width > 800)
-                            {
-                                scale = 0.5m;
-                            }
-                            else
-                            {
-                                scale = 0.9m;
-                            }
-
-                            image.Mutate(
-                                i => i.AutoOrient().Resize(Convert.ToInt32(image.Width * scale), 0));
-                            image.Save(outStream, PngFormat.Instance);
-                        }
-
+                        using var outStream = await ImageProcessor.ResizeAndCompressToPngAsync(imgStream);
                         var request = new UploadRequest(uploaded.FileName, UploadType.Document, outStream.ToArray());
                         list.Add(request);
                     }

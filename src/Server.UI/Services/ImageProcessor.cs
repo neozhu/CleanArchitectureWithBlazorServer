@@ -1,9 +1,6 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using Size = SixLabors.ImageSharp.Size;
-using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode;
+﻿using SkiaSharp;
 namespace CleanArchitecture.Blazor.Server.UI.Services;
+
 public static class ImageProcessor
 {
     /// <summary>
@@ -20,33 +17,90 @@ public static class ImageProcessor
         int maxHeight = 1200,
         int quality = 80)
     {
-        // Ensure the stream is at the beginning
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxWidth);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxHeight);
+        if (quality is < 0 or > 100)
+            throw new ArgumentOutOfRangeException(nameof(quality));
+
         sourceStream.Position = 0;
+        using var input = new MemoryStream();
+        await sourceStream.CopyToAsync(input);
+        using var image = SKBitmap.Decode(input.ToArray())
+            ?? throw new InvalidDataException("Unable to decode the image.");
 
-        // Load image from stream
-        using var image = await Image.LoadAsync(sourceStream);
-
-        // Resize with center-crop to exact target size (no distortion)
-        image.Mutate(x => x.Resize(new ResizeOptions
+        // Resize with center-crop to exact target size (no distortion).
+        var scale = Math.Max((float)maxWidth / image.Width, (float)maxHeight / image.Height);
+        var width = maxWidth / scale;
+        var height = maxHeight / scale;
+        var left = (image.Width - width) / 2;
+        var top = (image.Height - height) / 2;
+        using var resized = new SKBitmap(maxWidth, maxHeight);
+        using (var canvas = new SKCanvas(resized))
+        using (var source = SKImage.FromBitmap(image))
         {
-            Size = new Size(maxWidth, maxHeight),
-            Mode = ResizeMode.Crop,
-            Position = AnchorPositionMode.Center
-        }));
+            canvas.Clear(SKColors.White);
+            canvas.DrawImage(source, new SKRect(left, top, left + width, top + height),
+                new SKRect(0, 0, maxWidth, maxHeight), new SKSamplingOptions(SKFilterMode.Linear));
+        }
 
-        // Create new stream for the resized image
-        var resizedStream = new MemoryStream();
+        return Encode(resized, SKEncodedImageFormat.Jpeg, quality);
+    }
 
-        // Save as JPEG with compression
-        await image.SaveAsJpegAsync(resizedStream, new JpegEncoder
+    public static async Task<MemoryStream> ResizeAndCompressToPngAsync(Stream sourceStream)
+    {
+        sourceStream.Position = 0;
+        using var input = new MemoryStream();
+        await sourceStream.CopyToAsync(input);
+        using var data = SKData.CreateCopy(input.ToArray());
+        using var codec = SKCodec.Create(data)
+            ?? throw new InvalidDataException("Unable to decode the image.");
+        using var image = SKBitmap.Decode(codec)
+            ?? throw new InvalidDataException("Unable to decode the image.");
+
+        var scale = image.Width > 1600 ? 0.3m : image.Width > 800 ? 0.5m : 0.9m;
+        var swapsDimensions = codec.EncodedOrigin is SKEncodedOrigin.LeftTop or SKEncodedOrigin.RightTop
+            or SKEncodedOrigin.RightBottom or SKEncodedOrigin.LeftBottom;
+        var width = swapsDimensions ? image.Height : image.Width;
+        var height = swapsDimensions ? image.Width : image.Height;
+        var targetWidth = Math.Max(1, Convert.ToInt32(image.Width * scale));
+        var targetHeight = Math.Max(1, (int)Math.Round((double)height * targetWidth / width));
+        using var resized = new SKBitmap(targetWidth, targetHeight);
+        using (var canvas = new SKCanvas(resized))
+        using (var source = SKImage.FromBitmap(image))
         {
-            Quality = quality // Compression level (0-100)
-        });
+            canvas.Clear(SKColors.Transparent);
+            canvas.Scale((float)targetWidth / width, (float)targetHeight / height);
+            // Apply EXIF orientation before resizing, including mirrored orientations.
+            var (sx, kx, tx, ky, sy, ty) = codec.EncodedOrigin switch
+            {
+                SKEncodedOrigin.TopRight => (-1f, 0f, (float)width, 0f, 1f, 0f),
+                SKEncodedOrigin.BottomRight => (-1f, 0f, (float)width, 0f, -1f, (float)height),
+                SKEncodedOrigin.BottomLeft => (1f, 0f, 0f, 0f, -1f, (float)height),
+                SKEncodedOrigin.LeftTop => (0f, 1f, 0f, 1f, 0f, 0f),
+                SKEncodedOrigin.RightTop => (0f, -1f, (float)width, 1f, 0f, 0f),
+                SKEncodedOrigin.RightBottom => (0f, -1f, (float)width, -1f, 0f, (float)height),
+                SKEncodedOrigin.LeftBottom => (0f, 1f, 0f, -1f, 0f, (float)height),
+                _ => (1f, 0f, 0f, 0f, 1f, 0f)
+            };
+            var orientation = new SKMatrix
+            {
+                ScaleX = sx, SkewX = kx, TransX = tx,
+                SkewY = ky, ScaleY = sy, TransY = ty, Persp2 = 1
+            };
+            canvas.Concat(in orientation);
+            canvas.DrawImage(source, new SKRect(0, 0, image.Width, image.Height),
+                new SKSamplingOptions(SKFilterMode.Linear));
+        }
 
-        // Reset position to beginning of stream
-        resizedStream.Position = 0;
+        return Encode(resized, SKEncodedImageFormat.Png, 100);
+    }
 
-        return resizedStream;
+    private static MemoryStream Encode(SKBitmap bitmap, SKEncodedImageFormat format, int quality)
+    {
+        using var image = SKImage.FromBitmap(bitmap);
+        using var data = image.Encode(format, quality)
+            ?? throw new InvalidDataException("Unable to encode the image.");
+        return new MemoryStream(data.ToArray());
     }
 
     /// <summary>
