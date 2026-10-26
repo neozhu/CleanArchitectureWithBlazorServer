@@ -65,6 +65,12 @@ Experience the application in action:
 
 **[GitHub](https://github.com/neozhu/hrhub)** | **[Explore the Live Demo](https://hrcloud.blazorserver.com/)**
 
+[![Visitor Training](doc/visitorTraining.png)](https://visitor-training-client.blazorserver.com/)
+
+**Visitor Training** provides a visitor-facing training client and a management portal.
+
+**[Training Client](https://visitor-training-client.blazorserver.com/)** | **[Management Portal](https://visitor-training.blazorserver.com/)**
+
 ## 🛠️ Technology Stack
 
 | Layer | Technologies |
