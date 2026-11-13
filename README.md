@@ -12,7 +12,7 @@
 
 This repository provides a **production-grade Blazor Server solution template** designed in strict accordance with **Clean Architecture principles** and modern **enterprise application standards**.
 
-Built on **.NET 10**, the template demonstrates a **well-structured, scalable, and maintainable architecture** for developing complex business systems. It integrates **advanced code generation capabilities**, **AI-assisted development workflows**, and **specification-driven design patterns**, enabling teams to accelerate development while preserving architectural consistency and code quality.
+Built on **.NET 11**, the template demonstrates a **well-structured, scalable, and maintainable architecture** for developing complex business systems. It integrates **advanced code generation capabilities**, **AI-assisted development workflows**, and **specification-driven design patterns**, enabling teams to accelerate development while preserving architectural consistency and code quality.
 
 The solution is intended to serve both as a **reference implementation** for Blazor Clean Architecture best practices and as a **ready-to-use foundation** for enterprise-level applications that require long-term maintainability, extensibility, and high development efficiency.
 
@@ -76,7 +76,7 @@ Experience the application in action:
 | Layer | Technologies |
 |-------|-------------|
 | **Frontend** | Blazor Server, MudBlazor, SignalR |
-| **Backend** | .NET 10, ASP.NET Core, MediatR, FluentValidation |
+| **Backend** | .NET 11, ASP.NET Core, MediatR, FluentValidation |
 | **Database** | Entity Framework Core, MSSQL/PostgreSQL/SQLite |
 | **Authentication** | ASP.NET Core Identity, OAuth 2.0, JWT |
 | **Caching** | FusionCache, Redis |
@@ -221,8 +221,8 @@ The project includes a comprehensive [Development Workflow](docs/) with:
 
 ### Prerequisites
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-- [Visual Studio 2022](https://visualstudio.microsoft.com/) or [Rider](https://www.jetbrains.com/rider/)
+- [.NET 11 SDK](https://dotnet.microsoft.com/download/dotnet/11.0)
+- [Visual Studio 2026 (18.12 or later)](https://visualstudio.microsoft.com/) or [Rider](https://www.jetbrains.com/rider/)
 - [Docker Desktop](https://www.docker.com/) (optional)
 
 ### Installation
@@ -405,7 +405,7 @@ volumes:
 Install the EF Core CLI version that matches the project:
 
 ```bash
-dotnet tool install --global dotnet-ef --version 10.0.11
+dotnet tool install --global dotnet-ef --version 11.0.0
 ```
 
 Create a migration and apply it to the configured SQL Server database:

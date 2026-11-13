@@ -45,7 +45,7 @@ public class MailService : IMailService
                 await client.AuthenticateAsync(_smtpOptions.UserName, _smtpOptions.Password);
             }
 
-            await client.SendAsync(message);
+            await client.SendAsync(new SmtpSendRequest(message));
             await client.DisconnectAsync(true);
 
             _logger.LogInformation("Email sent successfully to {To}", to);

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
         <RootNamespace>CleanArchitecture.Blazor.Domain</RootNamespace>
         <AssemblyName>CleanArchitecture.Blazor.Domain</AssemblyName>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -11,20 +11,20 @@
 
     <ItemGroup>
         <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.14" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.14" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="11.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="11.0.0" />
         <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="10.0.1" />
         <PackageReference Include="EntityFrameworkCore.Exceptions.Sqlite" Version="10.0.1" />
         <PackageReference Include="EntityFrameworkCore.Exceptions.SqlServer" Version="10.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="10.0.14" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="11.0.0" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="11.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="11.0.0" />
         <PackageReference Include="EFCore.NamingConventions" Version="10.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.14" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.14" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="11.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="11.0.0" />
   
-        <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.14" />
+        <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="11.0.0" />
     </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@
     <PropertyGroup>
         <RootNamespace>CleanArchitecture.Blazor.Server.UI</RootNamespace>
         <AssemblyName>CleanArchitecture.Blazor.Server.UI</AssemblyName>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>false</InvariantGlobalization>
@@ -19,18 +19,18 @@
        
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.25" />
         <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.14" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="11.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="11.0.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="MudBlazor" Version="9.12.0" />
-        <PackageReference Include="Blazor-ApexCharts" Version="7.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.14">
+        <PackageReference Include="Blazor-ApexCharts" Version="8.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="11.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="SkiaSharp" Version="4.154.0" />
+        <PackageReference Include="SkiaSharp" Version="4.156.0" />
         
     </ItemGroup>
  

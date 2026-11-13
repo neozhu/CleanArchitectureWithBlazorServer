@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
         <RootNamespace>CleanArchitecture.Blazor.Infrastructure</RootNamespace>
         <AssemblyName>CleanArchitecture.Blazor.Infrastructure</AssemblyName>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -9,18 +9,18 @@
     </PropertyGroup>
     <ItemGroup>
     
-        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.27.0" />
-        <PackageReference Include="OpenAI" Version="2.14.0" />
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.28.0" />
+        <PackageReference Include="OpenAI" Version="2.15.0" />
         <PackageReference Include="MaxMind.GeoIP2" Version="6.1.0" />
         <PackageReference Include="ClosedXML" Version="0.105.1" />
-        <PackageReference Include="MailKit" Version="4.18.2" />
-        <PackageReference Include="MimeKit" Version="4.18.2" />
-        <PackageReference Include="Scriban" Version="7.5.3" />
+        <PackageReference Include="MailKit" Version="5.0.0" />
+        <PackageReference Include="MimeKit" Version="5.0.0" />
+        <PackageReference Include="Scriban" Version="7.6.1" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.9.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.14" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="10.0.14" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="11.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="11.0.0" />
         <PackageReference Include="Minio" Version="7.0.0" />
-        <PackageReference Include="QuestPDF" Version="2026.9.1" />
+        <PackageReference Include="QuestPDF" Version="2026.9.2" />
         <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.3.0" />

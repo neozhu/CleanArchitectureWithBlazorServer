@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
         <RootNamespace>CleanArchitecture.Blazor.Application</RootNamespace>
         <AssemblyName>CleanArchitecture.Blazor.Application</AssemblyName>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -13,13 +13,13 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
-        <PackageReference Include="Mapster" Version="10.0.13" />
+        <PackageReference Include="Mapster" Version="10.0.14" />
         <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
         
         <PackageReference Include="FluentValidation" Version="12.2.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.14" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="11.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     </ItemGroup>
     <ItemGroup>
